@@ -1,7 +1,10 @@
 import sys
 import collections
+from random import shuffle
+from datetime import datetime
+from os import path
 
-from utility import read_csv
+from utility import read_csv, save_csv
 
 """Small utility file for concatenating iot-23 dataset files. 
 
@@ -20,6 +23,10 @@ def normalize_labels(rows, idx):
 LABEL = 'label'
 h1, r1 = read_csv(sys.argv[1])
 h2, r2 = read_csv(sys.argv[2])
+DT_STR = datetime.now().strftime("%Y%m%d_%H%M%S")
+FILENAME = f'dataset_{DT_STR}.csv'
+OUT_DIR = 'data'
+
 
 if h1 != h2:
     print('(!) Headers do not match, cannot merge incompatible data')
@@ -32,10 +39,10 @@ if LABEL not in h1:
     sys.exit(1)
 
 LABEL_IDX = h1.index(LABEL)
-normalize_labels(r1, LABEL_IDX)
-normalize_labels(r2, LABEL_IDX)
-TROWS = len(r1) + len(r2)
-CLASS_LABELS = [r[LABEL_IDX] for r in r1 + r2]
+ALL_ROWS = r1 + r2
+normalize_labels(ALL_ROWS, LABEL_IDX)
+TROWS = len(ALL_ROWS)
+CLASS_LABELS = [r[LABEL_IDX] for r in ALL_ROWS]
 UNIQUE_LABELS = list(set(CLASS_LABELS))
 LABEL_FREQ = collections.Counter(CLASS_LABELS)
 
@@ -46,3 +53,8 @@ for label in UNIQUE_LABELS:
           f'{str(freq).rjust(10)}',
           f'{perc:.2f}'.rjust(10), '%')
 print(f'Total rows: {TROWS}')
+
+shuffle(ALL_ROWS)
+
+save_csv(path.join(OUT_DIR, FILENAME), ALL_ROWS, h1)
+print('')

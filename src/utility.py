@@ -1,5 +1,5 @@
-from csv import reader
-from typing import Tuple
+from csv import reader, writer
+from typing import Tuple, List
 
 
 def read_csv(path: str) -> Tuple[list, list]:
@@ -21,5 +21,19 @@ def read_csv(path: str) -> Tuple[list, list]:
     return header, rows
 
 
-def save_csv(content: str, filename: str):
-    pass
+def save_csv(filename: str, rows: List[List], headers: List = None):
+    """saves CSV file
+
+    Arguments:
+        filename: where to save file (with path and extension)
+        rows: list of data rows
+        headers: csv file headers (optional)
+    """
+    with open(filename, 'w') as fp:
+        w = writer(fp)
+
+        if headers:
+            w.writerow(headers)
+
+        for row in rows:
+            w.writerow(row)
