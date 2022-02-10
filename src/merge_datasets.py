@@ -6,7 +6,8 @@ from os import path
 
 from utility import read_csv, save_csv
 
-"""Small utility file for concatenating iot-23 dataset files. 
+"""
+This is a utility script for concatenating two csv files into one. 
 
 Arguments:
     input_1: path to CSV file
@@ -27,26 +28,24 @@ DT_STR = datetime.now().strftime("%Y%m%d_%H%M%S")
 FILENAME = f'dataset_{DT_STR}.csv'
 OUT_DIR = 'data'
 
-
 if h1 != h2:
     print('(!) Headers do not match, cannot merge incompatible data')
     print('headers 1: ', ','.join(h1))
     print('headers 2: ', ','.join(h2))
     sys.exit(1)
 
-if LABEL not in h1:
-    print(f'(!) Class label "{LABEL}" not found in dataset')
-    sys.exit(1)
-
-LABEL_IDX = h1.index(LABEL)
-ALL_ROWS = r1 + r2
-normalize_labels(ALL_ROWS, LABEL_IDX)
+# merge rows and find index of label column
+ALL_ROWS, LABEL_IDX = r1 + r2, h1.index(LABEL)
 TROWS = len(ALL_ROWS)
+
+# make all labels same letter case
+normalize_labels(ALL_ROWS, LABEL_IDX)
+
 CLASS_LABELS = [r[LABEL_IDX] for r in ALL_ROWS]
-UNIQUE_LABELS = list(set(CLASS_LABELS))
 LABEL_FREQ = collections.Counter(CLASS_LABELS)
 
-for label in UNIQUE_LABELS:
+# print some stats on each label
+for label in list(set(CLASS_LABELS)):
     freq = LABEL_FREQ[label]
     perc = 100 * freq / TROWS
     print(f'{label.ljust(10)} ',
@@ -54,7 +53,7 @@ for label in UNIQUE_LABELS:
           f'{perc:.2f}'.rjust(10), '%')
 print(f'Total rows: {TROWS}')
 
-shuffle(ALL_ROWS)
+shuffle(ALL_ROWS)  # maybe these need to be in chronological order?
 
 save_csv(path.join(OUT_DIR, FILENAME), ALL_ROWS, h1)
-print('')
+print('done.')
