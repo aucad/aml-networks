@@ -1,0 +1,152 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.trees.J48 -C 0.25 -M 2
+Relation:     dataset_train1-weka.filters.unsupervised.attribute.Remove-R23-weka.filters.unsupervised.attribute.Remove-R21-weka.filters.unsupervised.attribute.Remove-R14-weka.filters.unsupervised.attribute.Remove-R13-weka.filters.unsupervised.attribute.Remove-R1-2
+Instances:    16791
+Attributes:   17
+              id.orig_h
+              id.orig_p
+              id.resp_h
+              id.resp_p
+              proto
+              service
+              duration
+              orig_bytes
+              resp_bytes
+              conn_state
+              missed_bytes
+              history
+              orig_pkts
+              orig_ip_bytes
+              resp_pkts
+              resp_ip_bytes
+              label
+Test mode:    10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+J48 pruned tree
+------------------
+
+id.resp_p <= 5353
+|   orig_pkts <= 0
+|   |   resp_pkts <= 0: malicious (5520.0)
+|   |   resp_pkts > 0: benign (16.0)
+|   orig_pkts > 0
+|   |   orig_ip_bytes <= 40
+|   |   |   id.orig_h = 192.168.1.195
+|   |   |   |   id.resp_p <= 53: benign (37.0)
+|   |   |   |   id.resp_p > 53: malicious (51.0)
+|   |   |   id.orig_h = 192.168.2.3: benign (99.0)
+|   |   |   id.orig_h = 192.168.1.197: benign (0.0)
+|   |   |   id.orig_h = 169.254.15.115: benign (0.0)
+|   |   |   id.orig_h = 0.0.0.0: benign (0.0)
+|   |   |   id.orig_h = fe80::482:6d20:b3e:adf4: benign (0.0)
+|   |   |   id.orig_h = 192.168.1.132: benign (0.0)
+|   |   |   id.orig_h = fe80::80e6:50ff:fe12:1464: benign (0.0)
+|   |   |   id.orig_h = 192.168.2.1: benign (0.0)
+|   |   |   id.orig_h = 192.168.1.199: benign (0.0)
+|   |   |   id.orig_h = 192.168.69.178: benign (0.0)
+|   |   |   id.orig_h = fe80::5bcc:698e:39d5:cdf: benign (0.0)
+|   |   |   id.orig_h = 192.168.69.73: benign (0.0)
+|   |   |   id.orig_h = fe80::4eef:c0ff:fe27:561e: benign (0.0)
+|   |   |   id.orig_h = fe80::1847:a1bd:8d13:f43c: benign (0.0)
+|   |   |   id.orig_h = fe80::211:32ff:fe8d:ffe2: benign (0.0)
+|   |   |   id.orig_h = 192.168.69.200: benign (0.0)
+|   |   |   id.orig_h = 185.244.25.183: benign (0.0)
+|   |   |   id.orig_h = ::: benign (0.0)
+|   |   |   id.orig_h = 192.168.1.158: benign (0.0)
+|   |   |   id.orig_h = fe80::1c5c:213d:7cf8:890: benign (0.0)
+|   |   |   id.orig_h = 192.168.69.129: benign (0.0)
+|   |   |   id.orig_h = 192.168.69.192: benign (0.0)
+|   |   |   id.orig_h = 192.168.4.2: benign (0.0)
+|   |   |   id.orig_h = 192.168.69.136: benign (0.0)
+|   |   |   id.orig_h = fe80::106c:9e5b:3af8:9cf: benign (0.0)
+|   |   |   id.orig_h = fe80::18:e207:b314:641b: benign (0.0)
+|   |   |   id.orig_h = 192.168.69.241: benign (0.0)
+|   |   |   id.orig_h = fe80::82e6:50ff:fe21:867c: benign (0.0)
+|   |   |   id.orig_h = fe80::1060:27a7:f64c:dec9: benign (0.0)
+|   |   |   id.orig_h = 192.168.1.1: benign (0.0)
+|   |   |   id.orig_h = 255.255.255.255: benign (0.0)
+|   |   |   id.orig_h = 192.168.69.17: benign (0.0)
+|   |   |   id.orig_h = fe80::183b:7564:dbcc:3eca: benign (0.0)
+|   |   |   id.orig_h = fe80::ad:a9ad:1b82:2e67: benign (0.0)
+|   |   |   id.orig_h = fe80::14c5:8f26:563a:f0cb: benign (0.0)
+|   |   |   id.orig_h = fe80::6a05:71ff:fe67:dff2: benign (0.0)
+|   |   orig_ip_bytes > 40
+|   |   |   resp_ip_bytes <= 18511: benign (8266.0/9.0)
+|   |   |   resp_ip_bytes > 18511
+|   |   |   |   id.orig_h = 192.168.1.195: benign (12.0)
+|   |   |   |   id.orig_h = 192.168.2.3: benign (9.0)
+|   |   |   |   id.orig_h = 192.168.1.197: malicious (3.0)
+|   |   |   |   id.orig_h = 169.254.15.115: benign (0.0)
+|   |   |   |   id.orig_h = 0.0.0.0: benign (0.0)
+|   |   |   |   id.orig_h = fe80::482:6d20:b3e:adf4: benign (0.0)
+|   |   |   |   id.orig_h = 192.168.1.132: benign (1.0)
+|   |   |   |   id.orig_h = fe80::80e6:50ff:fe12:1464: benign (0.0)
+|   |   |   |   id.orig_h = 192.168.2.1: benign (0.0)
+|   |   |   |   id.orig_h = 192.168.1.199: malicious (7.0)
+|   |   |   |   id.orig_h = 192.168.69.178: benign (0.0)
+|   |   |   |   id.orig_h = fe80::5bcc:698e:39d5:cdf: benign (0.0)
+|   |   |   |   id.orig_h = 192.168.69.73: benign (0.0)
+|   |   |   |   id.orig_h = fe80::4eef:c0ff:fe27:561e: benign (0.0)
+|   |   |   |   id.orig_h = fe80::1847:a1bd:8d13:f43c: benign (0.0)
+|   |   |   |   id.orig_h = fe80::211:32ff:fe8d:ffe2: benign (0.0)
+|   |   |   |   id.orig_h = 192.168.69.200: benign (0.0)
+|   |   |   |   id.orig_h = 185.244.25.183: benign (0.0)
+|   |   |   |   id.orig_h = ::: benign (0.0)
+|   |   |   |   id.orig_h = 192.168.1.158: benign (1.0)
+|   |   |   |   id.orig_h = fe80::1c5c:213d:7cf8:890: benign (0.0)
+|   |   |   |   id.orig_h = 192.168.69.129: benign (0.0)
+|   |   |   |   id.orig_h = 192.168.69.192: benign (0.0)
+|   |   |   |   id.orig_h = 192.168.4.2: benign (0.0)
+|   |   |   |   id.orig_h = 192.168.69.136: benign (0.0)
+|   |   |   |   id.orig_h = fe80::106c:9e5b:3af8:9cf: benign (0.0)
+|   |   |   |   id.orig_h = fe80::18:e207:b314:641b: benign (0.0)
+|   |   |   |   id.orig_h = 192.168.69.241: benign (0.0)
+|   |   |   |   id.orig_h = fe80::82e6:50ff:fe21:867c: benign (0.0)
+|   |   |   |   id.orig_h = fe80::1060:27a7:f64c:dec9: benign (0.0)
+|   |   |   |   id.orig_h = 192.168.1.1: benign (3.0)
+|   |   |   |   id.orig_h = 255.255.255.255: benign (0.0)
+|   |   |   |   id.orig_h = 192.168.69.17: benign (0.0)
+|   |   |   |   id.orig_h = fe80::183b:7564:dbcc:3eca: benign (0.0)
+|   |   |   |   id.orig_h = fe80::ad:a9ad:1b82:2e67: benign (0.0)
+|   |   |   |   id.orig_h = fe80::14c5:8f26:563a:f0cb: benign (0.0)
+|   |   |   |   id.orig_h = fe80::6a05:71ff:fe67:dff2: benign (0.0)
+id.resp_p > 5353
+|   proto = tcp: malicious (2762.0/1.0)
+|   proto = udp: benign (4.0/1.0)
+|   proto = icmp: malicious (0.0)
+
+Number of Leaves  : 	81
+
+Size of the tree : 	90
+
+
+Time taken to build model: 0.35 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances       16778               99.9226 %
+Incorrectly Classified Instances        13                0.0774 %
+Kappa statistic                          0.9985
+Mean absolute error                      0.0011
+Root mean squared error                  0.0268
+Relative absolute error                  0.2213 %
+Root relative squared error              5.3594 %
+Total Number of Instances            16791     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.999    0.001    0.999      0.999    0.999      0.998    1.000     1.000     malicious
+                 0.999    0.001    0.999      0.999    0.999      0.998    1.000     0.999     benign
+Weighted Avg.    0.999    0.001    0.999      0.999    0.999      0.998    1.000     0.999     
+
+=== Confusion Matrix ===
+
+    a    b   <-- classified as
+ 8344    8 |    a = malicious
+    5 8434 |    b = benign
+
