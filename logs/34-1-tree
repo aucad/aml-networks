@@ -1,0 +1,487 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.trees.J48 -C 0.25 -M 2
+Relation:     CTU-Malware-Capture-34-1-labeled
+Instances:    23145
+Attributes:   12
+              proto
+              duration
+              orig_bytes
+              resp_bytes
+              conn_state
+              missed_bytes
+              history
+              orig_pkts
+              orig_ip_bytes
+              resp_pkts
+              resp_ip_bytes
+              label
+Test mode:    10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+J48 pruned tree
+------------------
+
+proto = tcp
+|   conn_state = S0
+|   |   orig_pkts <= 239: Malicious (5389.0/90.0)
+|   |   orig_pkts > 239
+|   |   |   duration <= 1.680038: Benign (4.0)
+|   |   |   duration > 1.680038: Malicious (24.0/4.0)
+|   conn_state = SF: Benign (13.0)
+|   conn_state = S3: Malicious (1584.0)
+|   conn_state = RSTR: Malicious (53.0)
+|   conn_state = S1: Malicious (4.0)
+|   conn_state = OTH: Malicious (14260.0)
+proto = udp: Benign (1814.0/2.0)
+
+Number of Leaves  : 	9
+
+Size of the tree : 	13
+
+
+Time taken to build model: 0.13 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances       23047               99.5766 %
+Incorrectly Classified Instances        98                0.4234 %
+Kappa statistic                          0.9716
+Mean absolute error                      0.0082
+Root mean squared error                  0.0644
+Relative absolute error                  5.3982 %
+Root relative squared error             23.3398 %
+Total Number of Instances            23145     
+
+=== Confusion Matrix ===
+
+     a     b   <-- classified as
+  1827    96 |     a = Benign
+     2 21220 |     b = Malicious
+
+
+=== Re-evaluation on test set ===
+
+User supplied test set
+Relation:     CTU-Malware-Capture-44-1-labeled
+Instances:     unknown (yet). Reading incrementally
+Attributes:   12
+
+=== Summary ===
+
+Correctly Classified Instances         220               94.4206 %
+Incorrectly Classified Instances        13                5.5794 %
+Kappa statistic                          0.6388
+Mean absolute error                      0.0577
+Root mean squared error                  0.2362
+Total Number of Instances              233     
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+ 207   1 |   a = Benign
+  12  13 |   b = Malicious
+
+
+=== Re-evaluation on test set ===
+
+User supplied test set
+Relation:     CTU-Malware-Capture-44-1-labeled
+Instances:     unknown (yet). Reading incrementally
+Attributes:   12
+
+=== Predictions on user test set ===
+
+    inst#     actual  predicted error prediction
+        1 2:Malicious   1:Benign   +   1 
+        2 2:Malicious 2:Malicious       0.983 
+        3 2:Malicious 2:Malicious       0.983 
+        4 2:Malicious 2:Malicious       0.983 
+        5 2:Malicious   1:Benign   +   1 
+        6 2:Malicious   1:Benign   +   1 
+        7 2:Malicious 2:Malicious       0.983 
+        8 2:Malicious 2:Malicious       0.983 
+        9 2:Malicious 2:Malicious       0.983 
+       10 2:Malicious   1:Benign   +   1 
+       11 2:Malicious   1:Benign   +   1 
+       12 2:Malicious   1:Benign   +   1 
+       13 2:Malicious 2:Malicious       0.983 
+       14   1:Benign   1:Benign       0.999 
+       15 2:Malicious 2:Malicious       0.983 
+       16   1:Benign   1:Benign       0.999 
+       17 2:Malicious 2:Malicious       0.983 
+       18 2:Malicious 2:Malicious       0.983 
+       19   1:Benign   1:Benign       0.999 
+       20   1:Benign   1:Benign       0.999 
+       21   1:Benign   1:Benign       0.999 
+       22 2:Malicious   1:Benign   +   1 
+       23 2:Malicious   1:Benign   +   1 
+       24 2:Malicious 2:Malicious       0.983 
+       25   1:Benign   1:Benign       0.999 
+       26 2:Malicious 2:Malicious       0.983 
+       27   1:Benign   1:Benign       0.999 
+       28 2:Malicious 2:Malicious       0.983 
+       29 2:Malicious   1:Benign   +   1 
+       30 2:Malicious   1:Benign   +   1 
+       31   1:Benign   1:Benign       0.999 
+       32 2:Malicious   1:Benign   +   1 
+       33   1:Benign   1:Benign       0.999 
+       34   1:Benign   1:Benign       0.999 
+       35   1:Benign   1:Benign       0.999 
+       36   1:Benign   1:Benign       0.999 
+       37   1:Benign   1:Benign       0.999 
+       38   1:Benign   1:Benign       0.999 
+       39   1:Benign   1:Benign       0.999 
+       40   1:Benign   1:Benign       0.999 
+       41   1:Benign   1:Benign       0.999 
+       42   1:Benign   1:Benign       0.999 
+       43   1:Benign   1:Benign       0.999 
+       44   1:Benign   1:Benign       0.999 
+       45   1:Benign   1:Benign       0.999 
+       46   1:Benign 2:Malicious   +   1 
+       47   1:Benign   1:Benign       0.999 
+       48   1:Benign   1:Benign       0.999 
+       49   1:Benign   1:Benign       0.999 
+       50   1:Benign   1:Benign       0.999 
+       51   1:Benign   1:Benign       0.999 
+       52   1:Benign   1:Benign       0.999 
+       53   1:Benign   1:Benign       0.999 
+       54   1:Benign   1:Benign       0.999 
+       55   1:Benign   1:Benign       0.999 
+       56   1:Benign   1:Benign       0.999 
+       57   1:Benign   1:Benign       0.999 
+       58   1:Benign   1:Benign       0.999 
+       59   1:Benign   1:Benign       1 
+       60   1:Benign   1:Benign       0.999 
+       61   1:Benign   1:Benign       0.999 
+       62   1:Benign   1:Benign       0.999 
+       63   1:Benign   1:Benign       0.999 
+       64   1:Benign   1:Benign       0.999 
+       65   1:Benign   1:Benign       0.999 
+       66   1:Benign   1:Benign       0.999 
+       67   1:Benign   1:Benign       0.999 
+       68   1:Benign   1:Benign       0.999 
+       69   1:Benign   1:Benign       0.999 
+       70   1:Benign   1:Benign       0.999 
+       71   1:Benign   1:Benign       0.999 
+       72   1:Benign   1:Benign       0.999 
+       73   1:Benign   1:Benign       0.999 
+       74   1:Benign   1:Benign       0.999 
+       75   1:Benign   1:Benign       0.999 
+       76   1:Benign   1:Benign       0.999 
+       77   1:Benign   1:Benign       0.999 
+       78   1:Benign   1:Benign       0.999 
+       79   1:Benign   1:Benign       0.999 
+       80   1:Benign   1:Benign       0.999 
+       81   1:Benign   1:Benign       0.999 
+       82   1:Benign   1:Benign       0.999 
+       83   1:Benign   1:Benign       0.999 
+       84   1:Benign   1:Benign       0.999 
+       85   1:Benign   1:Benign       0.999 
+       86   1:Benign   1:Benign       0.999 
+       87   1:Benign   1:Benign       0.999 
+       88   1:Benign   1:Benign       0.999 
+       89   1:Benign   1:Benign       0.999 
+       90   1:Benign   1:Benign       0.999 
+       91   1:Benign   1:Benign       0.999 
+       92   1:Benign   1:Benign       0.999 
+       93   1:Benign   1:Benign       0.999 
+       94   1:Benign   1:Benign       0.999 
+       95   1:Benign   1:Benign       0.999 
+       96   1:Benign   1:Benign       0.999 
+       97   1:Benign   1:Benign       0.999 
+       98   1:Benign   1:Benign       0.999 
+       99   1:Benign   1:Benign       0.999 
+      100   1:Benign   1:Benign       0.999 
+      101   1:Benign   1:Benign       0.999 
+      102   1:Benign   1:Benign       0.999 
+      103   1:Benign   1:Benign       0.999 
+      104   1:Benign   1:Benign       0.999 
+      105   1:Benign   1:Benign       0.999 
+      106   1:Benign   1:Benign       0.999 
+      107   1:Benign   1:Benign       0.999 
+      108   1:Benign   1:Benign       0.999 
+      109   1:Benign   1:Benign       0.999 
+      110   1:Benign   1:Benign       0.999 
+      111   1:Benign   1:Benign       0.999 
+      112   1:Benign   1:Benign       0.999 
+      113   1:Benign   1:Benign       0.999 
+      114   1:Benign   1:Benign       0.999 
+      115   1:Benign   1:Benign       0.999 
+      116   1:Benign   1:Benign       0.999 
+      117   1:Benign   1:Benign       0.999 
+      118   1:Benign   1:Benign       0.999 
+      119   1:Benign   1:Benign       0.999 
+      120   1:Benign   1:Benign       0.999 
+      121   1:Benign   1:Benign       0.999 
+      122   1:Benign   1:Benign       0.999 
+      123   1:Benign   1:Benign       0.999 
+      124   1:Benign   1:Benign       0.999 
+      125   1:Benign   1:Benign       0.999 
+      126   1:Benign   1:Benign       0.999 
+      127   1:Benign   1:Benign       0.999 
+      128   1:Benign   1:Benign       0.999 
+      129   1:Benign   1:Benign       0.999 
+      130   1:Benign   1:Benign       0.999 
+      131   1:Benign   1:Benign       0.999 
+      132   1:Benign   1:Benign       0.999 
+      133   1:Benign   1:Benign       0.999 
+      134   1:Benign   1:Benign       0.999 
+      135   1:Benign   1:Benign       0.999 
+      136   1:Benign   1:Benign       0.999 
+      137   1:Benign   1:Benign       0.999 
+      138   1:Benign   1:Benign       0.999 
+      139   1:Benign   1:Benign       0.999 
+      140   1:Benign   1:Benign       0.999 
+      141   1:Benign   1:Benign       0.999 
+      142   1:Benign   1:Benign       0.999 
+      143   1:Benign   1:Benign       0.999 
+      144   1:Benign   1:Benign       0.999 
+      145   1:Benign   1:Benign       0.999 
+      146   1:Benign   1:Benign       0.999 
+      147   1:Benign   1:Benign       0.999 
+      148   1:Benign   1:Benign       0.999 
+      149   1:Benign   1:Benign       0.999 
+      150   1:Benign   1:Benign       0.999 
+      151   1:Benign   1:Benign       0.999 
+      152   1:Benign   1:Benign       0.999 
+      153   1:Benign   1:Benign       0.999 
+      154   1:Benign   1:Benign       0.999 
+      155   1:Benign   1:Benign       0.999 
+      156   1:Benign   1:Benign       0.999 
+      157   1:Benign   1:Benign       0.999 
+      158   1:Benign   1:Benign       0.999 
+      159   1:Benign   1:Benign       0.999 
+      160   1:Benign   1:Benign       0.999 
+      161   1:Benign   1:Benign       0.999 
+      162   1:Benign   1:Benign       0.999 
+      163   1:Benign   1:Benign       0.999 
+      164   1:Benign   1:Benign       0.999 
+      165   1:Benign   1:Benign       0.999 
+      166   1:Benign   1:Benign       0.999 
+      167   1:Benign   1:Benign       0.999 
+      168   1:Benign   1:Benign       0.999 
+      169   1:Benign   1:Benign       0.999 
+      170   1:Benign   1:Benign       0.999 
+      171   1:Benign   1:Benign       0.999 
+      172   1:Benign   1:Benign       0.999 
+      173   1:Benign   1:Benign       0.999 
+      174   1:Benign   1:Benign       0.999 
+      175   1:Benign   1:Benign       0.999 
+      176   1:Benign   1:Benign       0.999 
+      177   1:Benign   1:Benign       0.999 
+      178   1:Benign   1:Benign       0.999 
+      179   1:Benign   1:Benign       0.999 
+      180   1:Benign   1:Benign       0.999 
+      181   1:Benign   1:Benign       0.999 
+      182   1:Benign   1:Benign       0.999 
+      183   1:Benign   1:Benign       0.999 
+      184   1:Benign   1:Benign       0.999 
+      185   1:Benign   1:Benign       0.999 
+      186   1:Benign   1:Benign       0.999 
+      187   1:Benign   1:Benign       0.999 
+      188   1:Benign   1:Benign       0.999 
+      189   1:Benign   1:Benign       0.999 
+      190   1:Benign   1:Benign       0.999 
+      191   1:Benign   1:Benign       0.999 
+      192   1:Benign   1:Benign       0.999 
+      193   1:Benign   1:Benign       0.999 
+      194   1:Benign   1:Benign       0.999 
+      195   1:Benign   1:Benign       0.999 
+      196   1:Benign   1:Benign       0.999 
+      197   1:Benign   1:Benign       0.999 
+      198   1:Benign   1:Benign       0.999 
+      199   1:Benign   1:Benign       0.999 
+      200   1:Benign   1:Benign       0.999 
+      201   1:Benign   1:Benign       0.999 
+      202   1:Benign   1:Benign       0.999 
+      203   1:Benign   1:Benign       0.999 
+      204   1:Benign   1:Benign       0.999 
+      205   1:Benign   1:Benign       0.999 
+      206   1:Benign   1:Benign       0.999 
+      207   1:Benign   1:Benign       0.999 
+      208   1:Benign   1:Benign       0.999 
+      209   1:Benign   1:Benign       0.999 
+      210   1:Benign   1:Benign       0.999 
+      211   1:Benign   1:Benign       0.999 
+      212   1:Benign   1:Benign       0.999 
+      213   1:Benign   1:Benign       0.999 
+      214   1:Benign   1:Benign       0.999 
+      215   1:Benign   1:Benign       0.999 
+      216   1:Benign   1:Benign       0.999 
+      217   1:Benign   1:Benign       0.999 
+      218   1:Benign   1:Benign       0.999 
+      219   1:Benign   1:Benign       0.999 
+      220   1:Benign   1:Benign       0.999 
+      221   1:Benign   1:Benign       0.999 
+      222   1:Benign   1:Benign       0.999 
+      223   1:Benign   1:Benign       0.999 
+      224   1:Benign   1:Benign       0.999 
+      225   1:Benign   1:Benign       0.999 
+      226   1:Benign   1:Benign       0.999 
+      227   1:Benign   1:Benign       0.999 
+      228   1:Benign   1:Benign       0.999 
+      229 2:Malicious   1:Benign   +   0.999 
+      230   1:Benign   1:Benign       0.999 
+      231   1:Benign   1:Benign       0.999 
+      232   1:Benign   1:Benign       0.999 
+      233   1:Benign   1:Benign       0.999 
+
+=== Summary ===
+
+Correctly Classified Instances         220               94.4206 %
+Incorrectly Classified Instances        13                5.5794 %
+Kappa statistic                          0.6388
+Mean absolute error                      0.0577
+Root mean squared error                  0.2362
+Total Number of Instances              233     
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+ 207   1 |   a = Benign
+  12  13 |   b = Malicious
+
+
+=== Re-evaluation on test set ===
+
+User supplied test set
+Relation:     honeypot7
+Instances:     unknown (yet). Reading incrementally
+Attributes:   12
+
+=== Predictions on user test set ===
+
+    inst#     actual  predicted error prediction
+        1        1:?   1:Benign       0.999 
+        2        1:?   1:Benign       0.999 
+        3        1:?   1:Benign       0.999 
+        4        1:?   1:Benign       0.999 
+        5        1:?   1:Benign       0.999 
+        6        1:?   1:Benign       0.999 
+        7        1:?   1:Benign       0.999 
+        8        1:? 2:Malicious       0.922 
+        9        1:? 2:Malicious       0.922 
+       10        1:? 2:Malicious       0.922 
+       11        1:? 2:Malicious       0.922 
+       12        1:?   1:Benign       0.999 
+       13        1:?   1:Benign       0.999 
+       14        1:? 2:Malicious       0.995 
+       15        1:? 2:Malicious       0.995 
+       16        1:? 2:Malicious       0.995 
+       17        1:? 2:Malicious       0.922 
+       18        1:? 2:Malicious       0.922 
+       19        1:? 2:Malicious       0.922 
+       20        1:?   1:Benign       0.999 
+       21        1:?   1:Benign       0.999 
+       22        1:? 2:Malicious       0.922 
+       23        1:?   1:Benign       0.999 
+       24        1:? 2:Malicious       0.922 
+       25        1:? 2:Malicious       0.995 
+       26        1:?   1:Benign       0.999 
+       27        1:? 2:Malicious       0.995 
+       28        1:?   1:Benign       0.999 
+       29        1:?   1:Benign       0.999 
+       30        1:?   1:Benign       0.999 
+       31        1:? 2:Malicious       0.995 
+       32        1:? 2:Malicious       0.922 
+       33        1:? 2:Malicious       0.922 
+       34        1:? 2:Malicious       0.922 
+       35        1:?   1:Benign       0.999 
+       36        1:? 2:Malicious       0.922 
+       37        1:? 2:Malicious       0.995 
+       38        1:? 2:Malicious       0.995 
+       39        1:? 2:Malicious       0.995 
+       40        1:?   1:Benign       0.999 
+       41        1:?   1:Benign       0.999 
+       42        1:?   1:Benign       0.999 
+       43        1:?   1:Benign       0.999 
+       44        1:?   1:Benign       0.999 
+       45        1:?   1:Benign       0.999 
+       46        1:? 2:Malicious       0.922 
+       47        1:? 2:Malicious       0.922 
+       48        1:? 2:Malicious       0.922 
+       49        1:?   1:Benign       0.999 
+       50        1:? 2:Malicious       0.922 
+       51        1:?   1:Benign       0.999 
+       52        1:?   1:Benign       0.999 
+       53        1:?   1:Benign       0.999 
+       54        1:?   1:Benign       0.999 
+       55        1:?   1:Benign       0.999 
+       56        1:?   1:Benign       0.999 
+       57        1:? 2:Malicious       0.922 
+       58        1:? 2:Malicious       0.922 
+       59        1:? 2:Malicious       0.922 
+       60        1:?   1:Benign       0.999 
+       61        1:? 2:Malicious       0.922 
+       62        1:?   1:Benign       0.999 
+       63        1:?   1:Benign       0.999 
+       64        1:?   1:Benign       0.999 
+       65        1:?   1:Benign       0.999 
+       66        1:? 2:Malicious       0.922 
+       67        1:? 2:Malicious       0.922 
+       68        1:? 2:Malicious       0.922 
+       69        1:?   1:Benign       0.999 
+       70        1:? 2:Malicious       0.922 
+       71        1:?   1:Benign       0.999 
+       72        1:?   1:Benign       0.999 
+       73        1:?   1:Benign       0.999 
+       74        1:?   1:Benign       0.999 
+       75        1:? 2:Malicious       0.922 
+       76        1:? 2:Malicious       0.922 
+       77        1:? 2:Malicious       0.922 
+       78        1:?   1:Benign       0.999 
+       79        1:? 2:Malicious       0.922 
+       80        1:?   1:Benign       0.999 
+       81        1:?   1:Benign       0.999 
+       82        1:?   1:Benign       0.999 
+       83        1:?   1:Benign       0.999 
+       84        1:? 2:Malicious       0.922 
+       85        1:? 2:Malicious       0.922 
+       86        1:? 2:Malicious       0.922 
+       87        1:?   1:Benign       0.999 
+       88        1:? 2:Malicious       0.922 
+       89        1:?   1:Benign       0.999 
+       90        1:?   1:Benign       0.999 
+       91        1:?   1:Benign       0.999 
+       92        1:?   1:Benign       0.999 
+       93        1:? 2:Malicious       0.922 
+       94        1:? 2:Malicious       0.922 
+       95        1:? 2:Malicious       0.922 
+       96        1:?   1:Benign       0.999 
+       97        1:? 2:Malicious       0.922 
+       98        1:?   1:Benign       0.999 
+       99        1:?   1:Benign       0.999 
+      100        1:?   1:Benign       0.999 
+      101        1:?   1:Benign       0.999 
+      102        1:?   1:Benign       0.999 
+      103        1:?   1:Benign       0.999 
+      104        1:? 2:Malicious       0.922 
+      105        1:? 2:Malicious       0.922 
+      106        1:? 2:Malicious       0.922 
+      107        1:?   1:Benign       0.999 
+      108        1:?   1:Benign       0.999 
+      109        1:? 2:Malicious       0.922 
+      110        1:?   1:Benign       0.999 
+      111        1:?   1:Benign       0.999 
+      112        1:?   1:Benign       0.999 
+      113        1:?   1:Benign       0.999 
+      114        1:? 2:Malicious       0.922 
+      115        1:? 2:Malicious       0.922 
+      116        1:? 2:Malicious       0.922 
+      117        1:?   1:Benign       0.999 
+      118        1:?   1:Benign       0.999 
+      119        1:? 2:Malicious       0.922 
+      120        1:?   1:Benign       0.999 
+      121        1:?   1:Benign       0.999 
+      122        1:?   1:Benign       0.999 
+      123        1:?   1:Benign       0.999 
+      124        1:?   1:Benign       0.999 
+
+=== Summary ===
+
+Total Number of Instances                0     
+Ignored Class Unknown Instances                124     
+

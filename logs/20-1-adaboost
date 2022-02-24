@@ -1,0 +1,454 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.meta.AdaBoostM1 -P 100 -S 1 -I 10 -W weka.classifiers.trees.DecisionStump
+Relation:     CTU-Malware-Capture-20-1-labeled
+Instances:    3209
+Attributes:   12
+              proto
+              duration
+              orig_bytes
+              resp_bytes
+              conn_state
+              missed_bytes
+              history
+              orig_pkts
+              orig_ip_bytes
+              resp_pkts
+              resp_ip_bytes
+              label
+Test mode:    10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+AdaBoostM1: Base classifiers and their weights: 
+
+Decision Stump
+
+Classifications
+
+proto = udp : Benign
+proto != udp : Malicious
+proto is missing : Benign
+
+Class distributions
+
+proto = udp
+Benign	Malicious	
+1.0	0.0	
+proto != udp
+Benign	Malicious	
+0.058823529411764705	0.9411764705882353	
+proto is missing
+Benign	Malicious	
+0.9950140230601433	0.004985976939856653	
+
+
+Weight: 8.07
+
+Decision Stump
+
+Classifications
+
+history = S : Malicious
+history != S : Benign
+history is missing : Benign
+
+Class distributions
+
+history = S
+Benign	Malicious	
+0.0	1.0	
+history != S
+Benign	Malicious	
+0.9995314696236139	4.6853037638607263E-4	
+history is missing
+Benign	Malicious	
+0.997506234413965	0.0024937655860349326	
+
+
+Weight: 7.67
+
+Decision Stump
+
+Classifications
+
+orig_bytes <= 1761.0 : Benign
+orig_bytes > 1761.0 : Malicious
+orig_bytes is missing : Benign
+
+Class distributions
+
+orig_bytes <= 1761.0
+Benign	Malicious	
+0.997845756139595	0.0021542438604050334	
+orig_bytes > 1761.0
+Benign	Malicious	
+-5.307205109925703E-17	1.0	
+orig_bytes is missing
+Benign	Malicious	
+0.9980449657869012	0.0019550342130987743	
+
+
+Weight: 6.89
+
+Decision Stump
+
+Classifications
+
+history = S : Malicious
+history != S : Malicious
+history is missing : Malicious
+
+Class distributions
+
+history = S
+Benign	Malicious	
+0.0	1.0	
+history != S
+Benign	Malicious	
+0.49949270272381635	0.5005072972761837	
+history is missing
+Benign	Malicious	
+0.24974635136190337	0.7502536486380966	
+
+
+Weight: 1.1
+
+Decision Stump
+
+Classifications
+
+history = S : Malicious
+history != S : Benign
+history is missing : Benign
+
+Class distributions
+
+history = S
+Benign	Malicious	
+0.0	1.0	
+history != S
+Benign	Malicious	
+0.7498732399859763	0.2501267600140237	
+history is missing
+Benign	Malicious	
+0.5000000000000101	0.4999999999999898	
+
+
+Weight: 1.61
+
+Decision Stump
+
+Classifications
+
+orig_ip_bytes <= 166.0 : Benign
+orig_ip_bytes > 166.0 : Malicious
+orig_ip_bytes is missing : Malicious
+
+Class distributions
+
+orig_ip_bytes <= 166.0
+Benign	Malicious	
+0.7078658434077162	0.29213415659228376	
+orig_ip_bytes > 166.0
+Benign	Malicious	
+0.0032399958008888408	0.9967600041991111	
+orig_ip_bytes is missing
+Benign	Malicious	
+0.30004057554851554	0.6999594244514845	
+
+
+Weight: 1.95
+
+Decision Stump
+
+Classifications
+
+proto = udp : Benign
+proto != udp : Malicious
+proto is missing : Malicious
+
+Class distributions
+
+proto = udp
+Benign	Malicious	
+1.0	0.0	
+proto != udp
+Benign	Malicious	
+0.09463349171972536	0.9053665082802747	
+proto is missing
+Benign	Malicious	
+0.17787139600196977	0.8221286039980303	
+
+
+Weight: 2.36
+
+Decision Stump
+
+Classifications
+
+orig_ip_bytes <= 30.0 : Benign
+orig_ip_bytes > 30.0 : Malicious
+orig_ip_bytes is missing : Benign
+
+Class distributions
+
+orig_ip_bytes <= 30.0
+Benign	Malicious	
+1.0	0.0	
+orig_ip_bytes > 30.0
+Benign	Malicious	
+0.1005816378706996	0.8994183621293004	
+orig_ip_bytes is missing
+Benign	Malicious	
+0.5502908189353587	0.44970918106464136	
+
+
+Weight: 2.94
+
+Decision Stump
+
+Classifications
+
+history = S : Malicious
+history != S : Benign
+history is missing : Benign
+
+Class distributions
+
+history = S
+Benign	Malicious	
+0.0	1.0	
+history != S
+Benign	Malicious	
+0.90269240845673	0.09730759154326991	
+history is missing
+Benign	Malicious	
+0.7632384786675029	0.2367615213324971	
+
+
+Weight: 2.41
+
+Decision Stump
+
+Classifications
+
+orig_bytes <= 1761.0 : Benign
+orig_bytes > 1761.0 : Malicious
+orig_bytes is missing : Benign
+
+Class distributions
+
+orig_bytes <= 1761.0
+Benign	Malicious	
+0.967132985862817	0.03286701413718297	
+orig_bytes > 1761.0
+Benign	Malicious	
+-6.270943737969811E-15	1.0000000000000062	
+orig_bytes is missing
+Benign	Malicious	
+0.7337424104030646	0.2662575895969354	
+
+
+Weight: 2.39
+
+Number of performed Iterations: 10
+
+
+Time taken to build model: 0.1 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances        3207               99.9377 %
+Incorrectly Classified Instances         2                0.0623 %
+Kappa statistic                          0.9372
+Mean absolute error                      0.0006
+Root mean squared error                  0.025 
+Relative absolute error                  6.072  %
+Root relative squared error             35.433  %
+Total Number of Instances             3209     
+
+=== Confusion Matrix ===
+
+    a    b   <-- classified as
+ 3192    1 |    a = Benign
+    1   15 |    b = Malicious
+
+
+=== Re-evaluation on test set ===
+
+User supplied test set
+Relation:     CTU-Malware-Capture-44-1-labeled
+Instances:     unknown (yet). Reading incrementally
+Attributes:   12
+
+=== Summary ===
+
+Correctly Classified Instances         221               94.8498 %
+Incorrectly Classified Instances        12                5.1502 %
+Kappa statistic                          0.6592
+Mean absolute error                      0.0511
+Root mean squared error                  0.2247
+Total Number of Instances              233     
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+ 208   0 |   a = Benign
+  12  13 |   b = Malicious
+
+
+=== Re-evaluation on test set ===
+
+User supplied test set
+Relation:     honeypot7
+Instances:     unknown (yet). Reading incrementally
+Attributes:   12
+
+=== Summary ===
+
+Total Number of Instances                0     
+Ignored Class Unknown Instances                124     
+
+
+=== Re-evaluation on test set ===
+
+User supplied test set
+Relation:     honeypot7
+Instances:     unknown (yet). Reading incrementally
+Attributes:   12
+
+=== Predictions on user test set ===
+
+    inst#     actual  predicted error prediction
+        1        1:?   1:Benign       0.999 
+        2        1:?   1:Benign       1 
+        3        1:?   1:Benign       1 
+        4        1:?   1:Benign       1 
+        5        1:?   1:Benign       1 
+        6        1:?   1:Benign       1 
+        7        1:?   1:Benign       1 
+        8        1:?   1:Benign       1 
+        9        1:?   1:Benign       1 
+       10        1:?   1:Benign       1 
+       11        1:?   1:Benign       1 
+       12        1:?   1:Benign       0.999 
+       13        1:?   1:Benign       1 
+       14        1:?   1:Benign       1 
+       15        1:?   1:Benign       1 
+       16        1:?   1:Benign       1 
+       17        1:?   1:Benign       1 
+       18        1:?   1:Benign       1 
+       19        1:?   1:Benign       1 
+       20        1:?   1:Benign       1 
+       21        1:?   1:Benign       0.999 
+       22        1:?   1:Benign       1 
+       23        1:?   1:Benign       1 
+       24        1:?   1:Benign       1 
+       25        1:?   1:Benign       1 
+       26        1:?   1:Benign       1 
+       27        1:?   1:Benign       1 
+       28        1:?   1:Benign       1 
+       29        1:?   1:Benign       1 
+       30        1:?   1:Benign       1 
+       31        1:?   1:Benign       1 
+       32        1:?   1:Benign       1 
+       33        1:?   1:Benign       1 
+       34        1:?   1:Benign       1 
+       35        1:?   1:Benign       0.999 
+       36        1:?   1:Benign       1 
+       37        1:?   1:Benign       1 
+       38        1:?   1:Benign       1 
+       39        1:?   1:Benign       1 
+       40        1:?   1:Benign       1 
+       41        1:?   1:Benign       1 
+       42        1:?   1:Benign       1 
+       43        1:?   1:Benign       1 
+       44        1:?   1:Benign       1 
+       45        1:?   1:Benign       1 
+       46        1:?   1:Benign       1 
+       47        1:?   1:Benign       1 
+       48        1:?   1:Benign       1 
+       49        1:?   1:Benign       0.999 
+       50        1:?   1:Benign       1 
+       51        1:?   1:Benign       1 
+       52        1:?   1:Benign       1 
+       53        1:?   1:Benign       1 
+       54        1:?   1:Benign       1 
+       55        1:?   1:Benign       1 
+       56        1:?   1:Benign       1 
+       57        1:?   1:Benign       1 
+       58        1:?   1:Benign       1 
+       59        1:?   1:Benign       1 
+       60        1:?   1:Benign       0.999 
+       61        1:?   1:Benign       1 
+       62        1:?   1:Benign       1 
+       63        1:?   1:Benign       1 
+       64        1:?   1:Benign       1 
+       65        1:?   1:Benign       1 
+       66        1:?   1:Benign       1 
+       67        1:?   1:Benign       1 
+       68        1:?   1:Benign       1 
+       69        1:?   1:Benign       0.999 
+       70        1:?   1:Benign       1 
+       71        1:?   1:Benign       1 
+       72        1:?   1:Benign       1 
+       73        1:?   1:Benign       1 
+       74        1:?   1:Benign       1 
+       75        1:?   1:Benign       1 
+       76        1:?   1:Benign       1 
+       77        1:?   1:Benign       1 
+       78        1:?   1:Benign       0.999 
+       79        1:?   1:Benign       1 
+       80        1:?   1:Benign       1 
+       81        1:?   1:Benign       1 
+       82        1:?   1:Benign       1 
+       83        1:?   1:Benign       1 
+       84        1:?   1:Benign       1 
+       85        1:?   1:Benign       1 
+       86        1:?   1:Benign       1 
+       87        1:?   1:Benign       0.999 
+       88        1:?   1:Benign       1 
+       89        1:?   1:Benign       1 
+       90        1:?   1:Benign       1 
+       91        1:?   1:Benign       1 
+       92        1:?   1:Benign       1 
+       93        1:?   1:Benign       1 
+       94        1:?   1:Benign       1 
+       95        1:?   1:Benign       1 
+       96        1:?   1:Benign       0.999 
+       97        1:?   1:Benign       1 
+       98        1:?   1:Benign       1 
+       99        1:?   1:Benign       1 
+      100        1:?   1:Benign       1 
+      101        1:?   1:Benign       1 
+      102        1:?   1:Benign       1 
+      103        1:?   1:Benign       1 
+      104        1:?   1:Benign       1 
+      105        1:?   1:Benign       1 
+      106        1:?   1:Benign       1 
+      107        1:?   1:Benign       1 
+      108        1:?   1:Benign       0.999 
+      109        1:?   1:Benign       1 
+      110        1:?   1:Benign       1 
+      111        1:?   1:Benign       1 
+      112        1:?   1:Benign       1 
+      113        1:?   1:Benign       1 
+      114        1:?   1:Benign       1 
+      115        1:?   1:Benign       1 
+      116        1:?   1:Benign       1 
+      117        1:?   1:Benign       1 
+      118        1:?   1:Benign       0.999 
+      119        1:?   1:Benign       1 
+      120        1:?   1:Benign       1 
+      121        1:?   1:Benign       1 
+      122        1:?   1:Benign       1 
+      123        1:?   1:Benign       1 
+      124        1:?   1:Benign       1 
+
+=== Summary ===
+
+Total Number of Instances                0     
+Ignored Class Unknown Instances                124     
+

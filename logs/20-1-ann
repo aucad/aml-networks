@@ -1,0 +1,44 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.functions.VotedPerceptron -I 1 -E 1.0 -S 1 -M 10000
+Relation:     CTU-Malware-Capture-20-1-labeled
+Instances:    3209
+Attributes:   12
+              proto
+              duration
+              orig_bytes
+              resp_bytes
+              conn_state
+              missed_bytes
+              history
+              orig_pkts
+              orig_ip_bytes
+              resp_pkts
+              resp_ip_bytes
+              label
+Test mode:    10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+VotedPerceptron: Number of perceptrons=2125
+
+Time taken to build model: 0.08 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances         969               30.1963 %
+Incorrectly Classified Instances      2240               69.8037 %
+Kappa statistic                         -0.0002
+Mean absolute error                      0.698 
+Root mean squared error                  0.8355
+Relative absolute error               6802.2693 %
+Root relative squared error           1186.0976 %
+Total Number of Instances             3209     
+
+=== Confusion Matrix ===
+
+    a    b   <-- classified as
+  958 2235 |    a = Benign
+    5   11 |    b = Malicious
+
