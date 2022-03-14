@@ -11,17 +11,15 @@ What is the prediction accuracy in these scenarios (compared to [previous](../2-
  
 Training set: CTU-IoT-Malware-Capture-1-1 (Hide and Seek)
 
+- Source: [https://mcfp.felk.cvut.cz/.../CTU-IoT-Malware-Capture-1-1][1]
+- Preprocessed: [data/CTU-IoT-Malware-Capture-1-1.csv][2]
+
 46.5 % benign, 53.5 % malicious
 
 | Label                     | Flows   | 
 | :------------------------ | ------: |
 | Benign                    | 469275  |
-| PartOfAHorizontalPortScan | 539465  | 
-| C&C	                    |      8  |
-
-Source: <https://mcfp.felk.cvut.cz/publicDatasets/IoT-23-Dataset/IndividualScenarios/CTU-IoT-Malware-Capture-1-1/>
-
-Preprocessed version: data/CTU-IoT-Malware-Capture-1-1.csv
+| Malicious                 | 539473  |
 
 12 attributes:
 
@@ -37,3 +35,7 @@ Preprocessed version: data/CTU-IoT-Malware-Capture-1-1.csv
 - resp_pkts
 - resp_ip_bytes
 - label
+
+
+[1]: https://mcfp.felk.cvut.cz/publicDatasets/IoT-23-Dataset/IndividualScenarios/CTU-IoT-Malware-Capture-1-1
+[2]: https://github.com/iotcad/module-2/blob/44967f3e6aa6288a4eb806face3bf21686f89851/data/CTU-IoT-Malware-Capture-1-1.csv
