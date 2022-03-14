@@ -14,27 +14,25 @@ Training set: CTU-IoT-Malware-Capture-1-1 (Hide and Seek)
 - Source: [https://mcfp.felk.cvut.cz/.../CTU-IoT-Malware-Capture-1-1][1]
 - Preprocessed: [data/CTU-IoT-Malware-Capture-1-1.csv][2]
 
-46.5 % benign, 53.5 % malicious
-
-| Label                     | Flows   | 
-| :------------------------ | ------: |
-| Benign                    | 469275  |
-| Malicious                 | 539473  |
+| Label                     | Flows   | Ratio   |
+| :------------------------ | ------: | :-----: |
+| Benign                    | 469275  |  46.5 % |
+| Malicious                 | 539473  |  53.5 % |
 
 12 attributes:
 
-- proto
-- duration
-- orig_bytes
-- resp_bytes
-- conn_state
-- missed_bytes
-- history
-- orig_pkts
-- orig_ip_bytes
-- resp_pkts
-- resp_ip_bytes
-- label
+Proto, duration, orig_bytes, resp_bytes, conn_state, missed_bytes, history, orig_pkts, orig_ip_bytes, resp_pkts, 
+resp_ip_bytes, label
+
+## Results
+
+#### Naive Bayes
+
+
+
+
+
+
 
 
 [1]: https://mcfp.felk.cvut.cz/publicDatasets/IoT-23-Dataset/IndividualScenarios/CTU-IoT-Malware-Capture-1-1
