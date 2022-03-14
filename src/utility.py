@@ -2,18 +2,19 @@ from csv import reader, writer
 from typing import Tuple, List
 
 
-def read_csv(path: str) -> Tuple[list, list]:
+def read_csv(path: str, delimiter=None) -> Tuple[list, list]:
     """read some CSV file and split into headers and rows
 
     Arguments:
         path: file path to a CSV file
+        delimiter: optional delimiter
 
     Returns:
         Tuple where first item is data headers (list)
         and second is row of data
     """
     with open(path, 'r') as read_obj:
-        csv_reader = reader(read_obj)
+        csv_reader = reader(read_obj, delimiter=delimiter)
         all_rows = [row for row in csv_reader]
         header = all_rows[0]
         rows = all_rows[1:]
