@@ -4,17 +4,17 @@ These are logged prediction results of training on Aposemat IoT-23 dataset.
 
 Evaluated on these algorithms: AdaBoost, ann, naive bayes, SVM, decision tree.
 
-12 attributes: Proto, duration, orig_bytes, resp_bytes, conn_state, 
+12 attributes: proto, duration, orig_bytes, resp_bytes, conn_state, 
 missed_bytes, history, orig_pkts, orig_ip_bytes, resp_pkts, resp_ip_bytes, 
 label.
 
 using 10-folds cross-validation.
 
-## 20-1 logs
+## Malware Capture 20-1
 
 Train on CTU Malware Capture 20-1 (highly benign).
 
-Test on Honeypot-7 and Malware-Capture-44.
+Test on Honeypot-7 (all benign) and Malware-Capture-44 (mostly benign).
 
 |                               | Benign | Malicious |      Ratio | 
 |-------------------------------|:------:|:---------:|-----------:|
@@ -34,11 +34,11 @@ Test on Honeypot-7 and Malware-Capture-44.
 
 ![img](20-1-tree.png)
 
-## 34-1 logs
+## Malware Capture 34-1 logs
 
 Train on CTU Malware Capture 34-1 (highly malicious).
 
-Test on Honeypot-7 and Malware-Capture-44.
+Test on Honeypot-7 (all benign) and Malware-Capture-44 (mostly benign).
 
 |                               | Benign | Malicious |   Ratio | 
 |-------------------------------|:------:|:---------:|--------:|
@@ -64,11 +64,13 @@ Test on Honeypot-7 and Malware-Capture-44.
 [2]: https://github.com/iotcad/sensor-data/blob/611d9ff5e768c74fc8a5f7ea2ef52a974b85eeae/iot-23/CTU-Malware-Capture-44-1-labeled.csv
 [3]: https://github.com/iotcad/sensor-data/blob/611d9ff5e768c74fc8a5f7ea2ef52a974b85eeae/iot-23/CTU-Malware-Capture-34-1-labeled.csv
 [4]: https://github.com/iotcad/sensor-data/blob/611d9ff5e768c74fc8a5f7ea2ef52a974b85eeae/iot-23/CTU-Honeypot-Capture-7-1-labeled.csv
+
 [AB0]: 20-1-adaboost
 [AN0]: 20-1-ann
 [DT0]: 20-1-tree
 [NB0]: 20-1-bayes
 [SV0]: 20-1-svm
+
 [AB1]: 34-1-adaboost
 [AN1]: 34-1-ann
 [DT1]: 34-1-tree
