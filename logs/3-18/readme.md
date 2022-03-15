@@ -1,4 +1,4 @@
-# Training logs
+# Iot-23 50/50 split test
 
 These are logged results of training on Aposemat IoT-23 dataset.
 

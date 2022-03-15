@@ -1,4 +1,4 @@
-# Training logs
+# IoT-23 Training logs
 
 These are logged prediction results of training on Aposemat IoT-23 dataset.
 
