@@ -12,7 +12,7 @@ What is the prediction accuracy in these scenarios (compared to [previous result
 **Training set**: CTU-IoT-Malware-Capture-1-1 (Hide and Seek)
 
 - Source: [https://mcfp.felk.cvut.cz/.../CTU-IoT-Malware-Capture-1-1][1]
-- Preprocessed: [data/CTU-IoT-Malware-Capture-1-1.csv][2]
+- Preprocessed: [CTU-IoT-Malware-Capture-1-1.csv][2]
 
 | Label     | Flows   | Ratio   |
 | :-------- | ------: | :-----: |
@@ -35,11 +35,14 @@ resp_ip_bytes, label
 | :------------------ | ----------: | ---------: | ---------: |
 | [Adaboost][AB]      |             |            |            |
 | [ANN][AN]           |             |            |            |
-| [Decision tree][DT] |             |            |            |
+| [Decision tree][DT] |   95.6873 % |  92.7419 % |  99.5708 % |
 | [Naive Bayes][NB]   |   63.7226 % |  23.3871 % |  90.5579 % |
 | [SVM][SV]           |             |            |            |  
 
 
+Decision tree
+
+![img][dt.jpeg]
 
 
 [1]: https://mcfp.felk.cvut.cz/publicDatasets/IoT-23-Dataset/IndividualScenarios/CTU-IoT-Malware-Capture-1-1
