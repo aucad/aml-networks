@@ -27,12 +27,12 @@ Test on Honeypot-7 and Malware-Capture-44.
 | Method               |  Training | Honeypot-7 | Malware-44 |
 |:---------------------|----------:|-----------:|-----------:|
 | [Adaboost][AB0]      | 99.9377 % |      100 % |  94.8498 % |
-| [ANN][AN0]           | 30.1963 % |          - |          - |
-| [Decision tree][DT0] |         - |     92.5 % |  98.7124 % |
-| [Naive Bayes][NB0]   | 99.3768 % |       55 % |  93.9914 % |
-| [SVM][SV0]           |         - |          - |      100 % |  
+| [ANN][AN0]           | 30.1963 % |        0 % |  10.7296 % |
+| [Decision tree][DT0] | 99.9688 % |  92.7419 % |  98.7124 % |
+| [Naive Bayes][NB0]   | 99.3768 % |  56.4516 % |  93.9914 % |
+| [SVM][SV0]           | 99.9377 % |      100 % |      100 % |  
 
-values marked as `-` not captured in log. 
+![img](20-1-tree.png)
 
 ## 34-1 logs
 

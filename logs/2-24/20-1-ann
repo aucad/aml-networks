@@ -22,7 +22,7 @@ Test mode:    10-fold cross-validation
 
 VotedPerceptron: Number of perceptrons=2125
 
-Time taken to build model: 0.08 seconds
+Time taken to build model: 0.15 seconds
 
 === Stratified cross-validation ===
 === Summary ===
@@ -36,9 +36,441 @@ Relative absolute error               6802.2693 %
 Root relative squared error           1186.0976 %
 Total Number of Instances             3209     
 
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.300    0.313    0.995      0.300    0.461      -0.002   0.494     0.995     Benign
+                 0.688    0.700    0.005      0.688    0.010      -0.002   0.494     0.005     Malicious
+Weighted Avg.    0.302    0.314    0.990      0.302    0.459      -0.002   0.494     0.990     
+
 === Confusion Matrix ===
 
     a    b   <-- classified as
   958 2235 |    a = Benign
     5   11 |    b = Malicious
+
+
+=== Re-evaluation on test set ===
+
+User supplied test set
+Relation:     CTU-Honeypot-Capture-7-1-labeled
+Instances:     unknown (yet). Reading incrementally
+Attributes:   12
+
+=== Predictions on user test set ===
+
+    inst#     actual  predicted error prediction
+        1   1:Benign 2:Malicious   +   1 
+        2   1:Benign 2:Malicious   +   1 
+        3   1:Benign 2:Malicious   +   1 
+        4   1:Benign 2:Malicious   +   1 
+        5   1:Benign 2:Malicious   +   1 
+        6   1:Benign 2:Malicious   +   1 
+        7   1:Benign 2:Malicious   +   1 
+        8   1:Benign 2:Malicious   +   1 
+        9   1:Benign 2:Malicious   +   1 
+       10   1:Benign 2:Malicious   +   1 
+       11   1:Benign 2:Malicious   +   1 
+       12   1:Benign 2:Malicious   +   1 
+       13   1:Benign 2:Malicious   +   1 
+       14   1:Benign 2:Malicious   +   1 
+       15   1:Benign 2:Malicious   +   1 
+       16   1:Benign 2:Malicious   +   1 
+       17   1:Benign 2:Malicious   +   1 
+       18   1:Benign 2:Malicious   +   1 
+       19   1:Benign 2:Malicious   +   1 
+       20   1:Benign 2:Malicious   +   1 
+       21   1:Benign 2:Malicious   +   1 
+       22   1:Benign 2:Malicious   +   1 
+       23   1:Benign 2:Malicious   +   1 
+       24   1:Benign 2:Malicious   +   1 
+       25   1:Benign 2:Malicious   +   1 
+       26   1:Benign 2:Malicious   +   1 
+       27   1:Benign 2:Malicious   +   1 
+       28   1:Benign 2:Malicious   +   1 
+       29   1:Benign 2:Malicious   +   1 
+       30   1:Benign 2:Malicious   +   1 
+       31   1:Benign 2:Malicious   +   1 
+       32   1:Benign 2:Malicious   +   1 
+       33   1:Benign 2:Malicious   +   1 
+       34   1:Benign 2:Malicious   +   1 
+       35   1:Benign 2:Malicious   +   1 
+       36   1:Benign 2:Malicious   +   1 
+       37   1:Benign 2:Malicious   +   1 
+       38   1:Benign 2:Malicious   +   1 
+       39   1:Benign 2:Malicious   +   1 
+       40   1:Benign 2:Malicious   +   1 
+       41   1:Benign 2:Malicious   +   1 
+       42   1:Benign 2:Malicious   +   1 
+       43   1:Benign 2:Malicious   +   1 
+       44   1:Benign 2:Malicious   +   1 
+       45   1:Benign 2:Malicious   +   1 
+       46   1:Benign 2:Malicious   +   1 
+       47   1:Benign 2:Malicious   +   1 
+       48   1:Benign 2:Malicious   +   1 
+       49   1:Benign 2:Malicious   +   1 
+       50   1:Benign 2:Malicious   +   1 
+       51   1:Benign 2:Malicious   +   1 
+       52   1:Benign 2:Malicious   +   1 
+       53   1:Benign 2:Malicious   +   1 
+       54   1:Benign 2:Malicious   +   1 
+       55   1:Benign 2:Malicious   +   1 
+       56   1:Benign 2:Malicious   +   1 
+       57   1:Benign 2:Malicious   +   1 
+       58   1:Benign 2:Malicious   +   1 
+       59   1:Benign 2:Malicious   +   1 
+       60   1:Benign 2:Malicious   +   1 
+       61   1:Benign 2:Malicious   +   1 
+       62   1:Benign 2:Malicious   +   1 
+       63   1:Benign 2:Malicious   +   1 
+       64   1:Benign 2:Malicious   +   1 
+       65   1:Benign 2:Malicious   +   1 
+       66   1:Benign 2:Malicious   +   1 
+       67   1:Benign 2:Malicious   +   1 
+       68   1:Benign 2:Malicious   +   1 
+       69   1:Benign 2:Malicious   +   1 
+       70   1:Benign 2:Malicious   +   1 
+       71   1:Benign 2:Malicious   +   1 
+       72   1:Benign 2:Malicious   +   1 
+       73   1:Benign 2:Malicious   +   1 
+       74   1:Benign 2:Malicious   +   1 
+       75   1:Benign 2:Malicious   +   1 
+       76   1:Benign 2:Malicious   +   1 
+       77   1:Benign 2:Malicious   +   1 
+       78   1:Benign 2:Malicious   +   1 
+       79   1:Benign 2:Malicious   +   1 
+       80   1:Benign 2:Malicious   +   1 
+       81   1:Benign 2:Malicious   +   1 
+       82   1:Benign 2:Malicious   +   1 
+       83   1:Benign 2:Malicious   +   1 
+       84   1:Benign 2:Malicious   +   1 
+       85   1:Benign 2:Malicious   +   1 
+       86   1:Benign 2:Malicious   +   1 
+       87   1:Benign 2:Malicious   +   1 
+       88   1:Benign 2:Malicious   +   1 
+       89   1:Benign 2:Malicious   +   1 
+       90   1:Benign 2:Malicious   +   1 
+       91   1:Benign 2:Malicious   +   1 
+       92   1:Benign 2:Malicious   +   1 
+       93   1:Benign 2:Malicious   +   1 
+       94   1:Benign 2:Malicious   +   1 
+       95   1:Benign 2:Malicious   +   1 
+       96   1:Benign 2:Malicious   +   1 
+       97   1:Benign 2:Malicious   +   1 
+       98   1:Benign 2:Malicious   +   1 
+       99   1:Benign 2:Malicious   +   1 
+      100   1:Benign 2:Malicious   +   1 
+      101   1:Benign 2:Malicious   +   1 
+      102   1:Benign 2:Malicious   +   1 
+      103   1:Benign 2:Malicious   +   1 
+      104   1:Benign 2:Malicious   +   1 
+      105   1:Benign 2:Malicious   +   1 
+      106   1:Benign 2:Malicious   +   1 
+      107   1:Benign 2:Malicious   +   1 
+      108   1:Benign 2:Malicious   +   1 
+      109   1:Benign 2:Malicious   +   1 
+      110   1:Benign 2:Malicious   +   1 
+      111   1:Benign 2:Malicious   +   1 
+      112   1:Benign 2:Malicious   +   1 
+      113   1:Benign 2:Malicious   +   1 
+      114   1:Benign 2:Malicious   +   1 
+      115   1:Benign 2:Malicious   +   1 
+      116   1:Benign 2:Malicious   +   1 
+      117   1:Benign 2:Malicious   +   1 
+      118   1:Benign 2:Malicious   +   1 
+      119   1:Benign 2:Malicious   +   1 
+      120   1:Benign 2:Malicious   +   1 
+      121   1:Benign 2:Malicious   +   1 
+      122   1:Benign 2:Malicious   +   1 
+      123   1:Benign 2:Malicious   +   1 
+      124   1:Benign 2:Malicious   +   1 
+
+=== Summary ===
+
+Correctly Classified Instances           0                0      %
+Incorrectly Classified Instances       124              100      %
+Kappa statistic                          0     
+Mean absolute error                      1     
+Root mean squared error                  1     
+Total Number of Instances              124     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.000    ?        ?          0.000    ?          ?        ?         1.000     Benign
+                 ?        1.000    0.000      ?        ?          ?        ?         ?         Malicious
+Weighted Avg.    0.000    ?        ?          0.000    ?          ?        ?         1.000     
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+   0 124 |   a = Benign
+   0   0 |   b = Malicious
+
+
+=== Re-evaluation on test set ===
+
+User supplied test set
+Relation:     CTU-Malware-Capture-44-1-labeled
+Instances:     unknown (yet). Reading incrementally
+Attributes:   12
+
+=== Predictions on user test set ===
+
+    inst#     actual  predicted error prediction
+        1 2:Malicious 2:Malicious       1 
+        2 2:Malicious 2:Malicious       1 
+        3 2:Malicious 2:Malicious       1 
+        4 2:Malicious 2:Malicious       1 
+        5 2:Malicious 2:Malicious       1 
+        6 2:Malicious 2:Malicious       1 
+        7 2:Malicious 2:Malicious       1 
+        8 2:Malicious 2:Malicious       1 
+        9 2:Malicious 2:Malicious       1 
+       10 2:Malicious 2:Malicious       1 
+       11 2:Malicious 2:Malicious       1 
+       12 2:Malicious 2:Malicious       1 
+       13 2:Malicious 2:Malicious       1 
+       14   1:Benign 2:Malicious   +   1 
+       15 2:Malicious 2:Malicious       1 
+       16   1:Benign 2:Malicious   +   1 
+       17 2:Malicious 2:Malicious       1 
+       18 2:Malicious 2:Malicious       1 
+       19   1:Benign 2:Malicious   +   1 
+       20   1:Benign 2:Malicious   +   1 
+       21   1:Benign 2:Malicious   +   1 
+       22 2:Malicious 2:Malicious       1 
+       23 2:Malicious 2:Malicious       1 
+       24 2:Malicious 2:Malicious       1 
+       25   1:Benign 2:Malicious   +   1 
+       26 2:Malicious 2:Malicious       1 
+       27   1:Benign 2:Malicious   +   1 
+       28 2:Malicious 2:Malicious       1 
+       29 2:Malicious 2:Malicious       1 
+       30 2:Malicious 2:Malicious       1 
+       31   1:Benign 2:Malicious   +   1 
+       32 2:Malicious 2:Malicious       1 
+       33   1:Benign 2:Malicious   +   1 
+       34   1:Benign 2:Malicious   +   1 
+       35   1:Benign 2:Malicious   +   1 
+       36   1:Benign 2:Malicious   +   1 
+       37   1:Benign 2:Malicious   +   1 
+       38   1:Benign 2:Malicious   +   1 
+       39   1:Benign 2:Malicious   +   1 
+       40   1:Benign 2:Malicious   +   1 
+       41   1:Benign 2:Malicious   +   1 
+       42   1:Benign 2:Malicious   +   1 
+       43   1:Benign 2:Malicious   +   1 
+       44   1:Benign 2:Malicious   +   1 
+       45   1:Benign 2:Malicious   +   1 
+       46   1:Benign 2:Malicious   +   1 
+       47   1:Benign 2:Malicious   +   1 
+       48   1:Benign 2:Malicious   +   1 
+       49   1:Benign 2:Malicious   +   1 
+       50   1:Benign 2:Malicious   +   1 
+       51   1:Benign 2:Malicious   +   1 
+       52   1:Benign 2:Malicious   +   1 
+       53   1:Benign 2:Malicious   +   1 
+       54   1:Benign 2:Malicious   +   1 
+       55   1:Benign 2:Malicious   +   1 
+       56   1:Benign 2:Malicious   +   1 
+       57   1:Benign 2:Malicious   +   1 
+       58   1:Benign 2:Malicious   +   1 
+       59   1:Benign 2:Malicious   +   1 
+       60   1:Benign 2:Malicious   +   1 
+       61   1:Benign 2:Malicious   +   1 
+       62   1:Benign 2:Malicious   +   1 
+       63   1:Benign 2:Malicious   +   1 
+       64   1:Benign 2:Malicious   +   1 
+       65   1:Benign 2:Malicious   +   1 
+       66   1:Benign 2:Malicious   +   1 
+       67   1:Benign 2:Malicious   +   1 
+       68   1:Benign 2:Malicious   +   1 
+       69   1:Benign 2:Malicious   +   1 
+       70   1:Benign 2:Malicious   +   1 
+       71   1:Benign 2:Malicious   +   1 
+       72   1:Benign 2:Malicious   +   1 
+       73   1:Benign 2:Malicious   +   1 
+       74   1:Benign 2:Malicious   +   1 
+       75   1:Benign 2:Malicious   +   1 
+       76   1:Benign 2:Malicious   +   1 
+       77   1:Benign 2:Malicious   +   1 
+       78   1:Benign 2:Malicious   +   1 
+       79   1:Benign 2:Malicious   +   1 
+       80   1:Benign 2:Malicious   +   1 
+       81   1:Benign 2:Malicious   +   1 
+       82   1:Benign 2:Malicious   +   1 
+       83   1:Benign 2:Malicious   +   1 
+       84   1:Benign 2:Malicious   +   1 
+       85   1:Benign 2:Malicious   +   1 
+       86   1:Benign 2:Malicious   +   1 
+       87   1:Benign 2:Malicious   +   1 
+       88   1:Benign 2:Malicious   +   1 
+       89   1:Benign 2:Malicious   +   1 
+       90   1:Benign 2:Malicious   +   1 
+       91   1:Benign 2:Malicious   +   1 
+       92   1:Benign 2:Malicious   +   1 
+       93   1:Benign 2:Malicious   +   1 
+       94   1:Benign 2:Malicious   +   1 
+       95   1:Benign 2:Malicious   +   1 
+       96   1:Benign 2:Malicious   +   1 
+       97   1:Benign 2:Malicious   +   1 
+       98   1:Benign 2:Malicious   +   1 
+       99   1:Benign 2:Malicious   +   1 
+      100   1:Benign 2:Malicious   +   1 
+      101   1:Benign 2:Malicious   +   1 
+      102   1:Benign 2:Malicious   +   1 
+      103   1:Benign 2:Malicious   +   1 
+      104   1:Benign 2:Malicious   +   1 
+      105   1:Benign 2:Malicious   +   1 
+      106   1:Benign 2:Malicious   +   1 
+      107   1:Benign 2:Malicious   +   1 
+      108   1:Benign 2:Malicious   +   1 
+      109   1:Benign 2:Malicious   +   1 
+      110   1:Benign 2:Malicious   +   1 
+      111   1:Benign 2:Malicious   +   1 
+      112   1:Benign 2:Malicious   +   1 
+      113   1:Benign 2:Malicious   +   1 
+      114   1:Benign 2:Malicious   +   1 
+      115   1:Benign 2:Malicious   +   1 
+      116   1:Benign 2:Malicious   +   1 
+      117   1:Benign 2:Malicious   +   1 
+      118   1:Benign 2:Malicious   +   1 
+      119   1:Benign 2:Malicious   +   1 
+      120   1:Benign 2:Malicious   +   1 
+      121   1:Benign 2:Malicious   +   1 
+      122   1:Benign 2:Malicious   +   1 
+      123   1:Benign 2:Malicious   +   1 
+      124   1:Benign 2:Malicious   +   1 
+      125   1:Benign 2:Malicious   +   1 
+      126   1:Benign 2:Malicious   +   1 
+      127   1:Benign 2:Malicious   +   1 
+      128   1:Benign 2:Malicious   +   1 
+      129   1:Benign 2:Malicious   +   1 
+      130   1:Benign 2:Malicious   +   1 
+      131   1:Benign 2:Malicious   +   1 
+      132   1:Benign 2:Malicious   +   1 
+      133   1:Benign 2:Malicious   +   1 
+      134   1:Benign 2:Malicious   +   1 
+      135   1:Benign 2:Malicious   +   1 
+      136   1:Benign 2:Malicious   +   1 
+      137   1:Benign 2:Malicious   +   1 
+      138   1:Benign 2:Malicious   +   1 
+      139   1:Benign 2:Malicious   +   1 
+      140   1:Benign 2:Malicious   +   1 
+      141   1:Benign 2:Malicious   +   1 
+      142   1:Benign 2:Malicious   +   1 
+      143   1:Benign 2:Malicious   +   1 
+      144   1:Benign 2:Malicious   +   1 
+      145   1:Benign 2:Malicious   +   1 
+      146   1:Benign 2:Malicious   +   1 
+      147   1:Benign 2:Malicious   +   1 
+      148   1:Benign 2:Malicious   +   1 
+      149   1:Benign 2:Malicious   +   1 
+      150   1:Benign 2:Malicious   +   1 
+      151   1:Benign 2:Malicious   +   1 
+      152   1:Benign 2:Malicious   +   1 
+      153   1:Benign 2:Malicious   +   1 
+      154   1:Benign 2:Malicious   +   1 
+      155   1:Benign 2:Malicious   +   1 
+      156   1:Benign 2:Malicious   +   1 
+      157   1:Benign 2:Malicious   +   1 
+      158   1:Benign 2:Malicious   +   1 
+      159   1:Benign 2:Malicious   +   1 
+      160   1:Benign 2:Malicious   +   1 
+      161   1:Benign 2:Malicious   +   1 
+      162   1:Benign 2:Malicious   +   1 
+      163   1:Benign 2:Malicious   +   1 
+      164   1:Benign 2:Malicious   +   1 
+      165   1:Benign 2:Malicious   +   1 
+      166   1:Benign 2:Malicious   +   1 
+      167   1:Benign 2:Malicious   +   1 
+      168   1:Benign 2:Malicious   +   1 
+      169   1:Benign 2:Malicious   +   1 
+      170   1:Benign 2:Malicious   +   1 
+      171   1:Benign 2:Malicious   +   1 
+      172   1:Benign 2:Malicious   +   1 
+      173   1:Benign 2:Malicious   +   1 
+      174   1:Benign 2:Malicious   +   1 
+      175   1:Benign 2:Malicious   +   1 
+      176   1:Benign 2:Malicious   +   1 
+      177   1:Benign 2:Malicious   +   1 
+      178   1:Benign 2:Malicious   +   1 
+      179   1:Benign 2:Malicious   +   1 
+      180   1:Benign 2:Malicious   +   1 
+      181   1:Benign 2:Malicious   +   1 
+      182   1:Benign 2:Malicious   +   1 
+      183   1:Benign 2:Malicious   +   1 
+      184   1:Benign 2:Malicious   +   1 
+      185   1:Benign 2:Malicious   +   1 
+      186   1:Benign 2:Malicious   +   1 
+      187   1:Benign 2:Malicious   +   1 
+      188   1:Benign 2:Malicious   +   1 
+      189   1:Benign 2:Malicious   +   1 
+      190   1:Benign 2:Malicious   +   1 
+      191   1:Benign 2:Malicious   +   1 
+      192   1:Benign 2:Malicious   +   1 
+      193   1:Benign 2:Malicious   +   1 
+      194   1:Benign 2:Malicious   +   1 
+      195   1:Benign 2:Malicious   +   1 
+      196   1:Benign 2:Malicious   +   1 
+      197   1:Benign 2:Malicious   +   1 
+      198   1:Benign 2:Malicious   +   1 
+      199   1:Benign 2:Malicious   +   1 
+      200   1:Benign 2:Malicious   +   1 
+      201   1:Benign 2:Malicious   +   1 
+      202   1:Benign 2:Malicious   +   1 
+      203   1:Benign 2:Malicious   +   1 
+      204   1:Benign 2:Malicious   +   1 
+      205   1:Benign 2:Malicious   +   1 
+      206   1:Benign 2:Malicious   +   1 
+      207   1:Benign 2:Malicious   +   1 
+      208   1:Benign 2:Malicious   +   1 
+      209   1:Benign 2:Malicious   +   1 
+      210   1:Benign 2:Malicious   +   1 
+      211   1:Benign 2:Malicious   +   1 
+      212   1:Benign 2:Malicious   +   1 
+      213   1:Benign 2:Malicious   +   1 
+      214   1:Benign 2:Malicious   +   1 
+      215   1:Benign 2:Malicious   +   1 
+      216   1:Benign 2:Malicious   +   1 
+      217   1:Benign 2:Malicious   +   1 
+      218   1:Benign 2:Malicious   +   1 
+      219   1:Benign 2:Malicious   +   1 
+      220   1:Benign 2:Malicious   +   1 
+      221   1:Benign 2:Malicious   +   1 
+      222   1:Benign 2:Malicious   +   1 
+      223   1:Benign 2:Malicious   +   1 
+      224   1:Benign 2:Malicious   +   1 
+      225   1:Benign 2:Malicious   +   1 
+      226   1:Benign 2:Malicious   +   1 
+      227   1:Benign 2:Malicious   +   1 
+      228   1:Benign 2:Malicious   +   1 
+      229 2:Malicious 2:Malicious       1 
+      230   1:Benign 2:Malicious   +   1 
+      231   1:Benign 2:Malicious   +   1 
+      232   1:Benign 2:Malicious   +   1 
+      233   1:Benign 2:Malicious   +   1 
+
+=== Summary ===
+
+Correctly Classified Instances          25               10.7296 %
+Incorrectly Classified Instances       208               89.2704 %
+Kappa statistic                          0     
+Mean absolute error                      0.8927
+Root mean squared error                  0.9448
+Total Number of Instances              233     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.000    0.000    ?          0.000    ?          ?        0.500     0.893     Benign
+                 1.000    1.000    0.107      1.000    0.194      ?        0.500     0.107     Malicious
+Weighted Avg.    0.107    0.107    ?          0.107    ?          ?        0.500     0.808     
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+   0 208 |   a = Benign
+   0  25 |   b = Malicious
 
