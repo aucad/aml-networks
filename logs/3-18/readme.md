@@ -26,18 +26,20 @@ resp_ip_bytes, label
 
 **Tests**
 
-- Test: [CTU-Malware-Capture-44-1][3]: benign: 211, malicious: 26 
-- Test: [Honeypot-7][4]: benign: 130, malicious: 0
-- Test: [CTU-Malware-Capture-34-1][3]: benign: 1923, malicious: 21222 
+| Test                          | Benign    | Malicious | Ratio   | 
+| ----------------------------- | :-------: | :-------: | ------: |
+| [Honeypot-7][4]               | 130       | 0         | 100 / 0 |
+| [CTU-Malware-Capture-44-1][3] | 211       | 26        | 90 / 10 |
+| [CTU-Malware-Capture-34-1][5] | 1923      | 21222     | 8 / 92  |
 
 ## Accuracy
 
 | Method              | Training    | Honeypot-7 | Malware-44 | Malware-34 |
 | :------------------ | ----------: | ---------: | ---------: | ---------: |
-| [Adaboost][AB]      |    95.665 % |  92.7419 % |  98.7124 % |            |
+| [Adaboost][AB]      |    95.665 % |  92.7419 % |  98.7124 % |  61.4754 % |
 | [ANN][AN]           |             |            |            |            |
-| [Decision tree][DT] |   95.6873 % |  92.7419 % |  99.5708 % |            |
-| [Naive Bayes][NB]   |   63.7226 % |  23.3871 % |  90.5579 % |            |
+| [Decision tree][DT] |   95.6873 % |  92.7419 % |  99.5708 % |  63.1148 % |
+| [Naive Bayes][NB]   |   63.7226 % |  23.3871 % |  90.5579 % |  69.6721 % |
 | [SVM][SV]           |             |            |            |            |  
 
 
@@ -50,7 +52,8 @@ Decision tree
 [2]: https://github.com/iotcad/module-2/blob/44967f3e6aa6288a4eb806face3bf21686f89851/data/CTU-IoT-Malware-Capture-1-1.csv
 [3]: https://github.com/iotcad/sensor-data/blob/611d9ff5e768c74fc8a5f7ea2ef52a974b85eeae/iot-23/CTU-Malware-Capture-44-1-labeled.csv
 [4]: https://github.com/iotcad/sensor-data/blob/611d9ff5e768c74fc8a5f7ea2ef52a974b85eeae/iot-23/CTU-Honeypot-Capture-7-1-labeled.csv
-[NB]: naive-bayes
+[5]: https://github.com/iotcad/sensor-data/blob/0412e9b52bed951f7a1283e2b08ea52f78cc90ba/iot-23/12-attr/CTU-Malware-Capture-34-1-labeled.csv
+[NB]: bayes
 [DT]: tree
 [SV]: svm
 [AN]: ann

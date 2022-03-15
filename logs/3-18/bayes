@@ -252,6 +252,146 @@ Weighted Avg.    0.637    0.320    0.758      0.637    0.603      0.394    0.954
   15123 454152 |      b = Benign
 
 
+=== Re-evaluation on test set ===
+
+User supplied test set
+Relation:     CTU-Honeypot-7
+Instances:     unknown (yet). Reading incrementally
+Attributes:   12
+
+=== Predictions on user test set ===
+
+    inst#     actual  predicted error prediction
+        1        1:?   2:Benign       1 
+        2        1:? 1:Malicious       1 
+        3        1:? 1:Malicious       1 
+        4        1:? 1:Malicious       1 
+        5        1:? 1:Malicious       1 
+        6        1:? 1:Malicious       1 
+        7        1:? 1:Malicious       1 
+        8        1:? 1:Malicious       1 
+        9        1:?   2:Benign       1 
+       10        1:? 1:Malicious       0.985 
+       11        1:?   2:Benign       1 
+       12        1:?   2:Benign       1 
+       13        1:? 1:Malicious       1 
+       14        1:? 1:Malicious       1 
+       15        1:? 1:Malicious       1 
+       16        1:? 1:Malicious       1 
+       17        1:? 1:Malicious       1 
+       18        1:? 1:Malicious       1 
+       19        1:? 1:Malicious       1 
+       20        1:? 1:Malicious       1 
+       21        1:?   2:Benign       1 
+       22        1:? 1:Malicious       1 
+       23        1:? 1:Malicious       1 
+       24        1:?   2:Benign       1 
+       25        1:? 1:Malicious       1 
+       26        1:? 1:Malicious       1 
+       27        1:? 1:Malicious       1 
+       28        1:? 1:Malicious       1 
+       29        1:? 1:Malicious       1 
+       30        1:? 1:Malicious       1 
+       31        1:? 1:Malicious       1 
+       32        1:?   2:Benign       1 
+       33        1:? 1:Malicious       0.985 
+       34        1:?   2:Benign       1 
+       35        1:?   2:Benign       1 
+       36        1:? 1:Malicious       1 
+       37        1:? 1:Malicious       1 
+       38        1:? 1:Malicious       1 
+       39        1:? 1:Malicious       1 
+       40        1:? 1:Malicious       1 
+       41        1:? 1:Malicious       1 
+       42        1:? 1:Malicious       1 
+       43        1:? 1:Malicious       1 
+       44        1:? 1:Malicious       1 
+       45        1:? 1:Malicious       1 
+       46        1:?   2:Benign       1 
+       47        1:? 1:Malicious       0.985 
+       48        1:?   2:Benign       1 
+       49        1:?   2:Benign       1 
+       50        1:? 1:Malicious       1 
+       51        1:? 1:Malicious       1 
+       52        1:? 1:Malicious       1 
+       53        1:? 1:Malicious       1 
+       54        1:? 1:Malicious       1 
+       55        1:? 1:Malicious       1 
+       56        1:? 1:Malicious       1 
+       57        1:?   2:Benign       1 
+       58        1:? 1:Malicious       0.985 
+       59        1:?   2:Benign       1 
+       60        1:?   2:Benign       1 
+       61        1:? 1:Malicious       1 
+       62        1:? 1:Malicious       1 
+       63        1:? 1:Malicious       1 
+       64        1:? 1:Malicious       1 
+       65        1:? 1:Malicious       1 
+       66        1:?   2:Benign       1 
+       67        1:? 1:Malicious       0.985 
+       68        1:?   2:Benign       1 
+       69        1:? 1:Malicious       1 
+       70        1:? 1:Malicious       1 
+       71        1:? 1:Malicious       1 
+       72        1:? 1:Malicious       1 
+       73        1:? 1:Malicious       1 
+       74        1:? 1:Malicious       1 
+       75        1:?   2:Benign       1 
+       76        1:? 1:Malicious       0.985 
+       77        1:?   2:Benign       1 
+       78        1:? 1:Malicious       1 
+       79        1:? 1:Malicious       1 
+       80        1:? 1:Malicious       1 
+       81        1:? 1:Malicious       1 
+       82        1:? 1:Malicious       1 
+       83        1:? 1:Malicious       1 
+       84        1:?   2:Benign       1 
+       85        1:? 1:Malicious       0.985 
+       86        1:?   2:Benign       1 
+       87        1:?   2:Benign       1 
+       88        1:? 1:Malicious       1 
+       89        1:? 1:Malicious       1 
+       90        1:? 1:Malicious       1 
+       91        1:? 1:Malicious       1 
+       92        1:? 1:Malicious       1 
+       93        1:?   2:Benign       1 
+       94        1:? 1:Malicious       0.985 
+       95        1:?   2:Benign       1 
+       96        1:? 1:Malicious       1 
+       97        1:? 1:Malicious       1 
+       98        1:? 1:Malicious       1 
+       99        1:? 1:Malicious       1 
+      100        1:? 1:Malicious       1 
+      101        1:? 1:Malicious       1 
+      102        1:? 1:Malicious       1 
+      103        1:? 1:Malicious       1 
+      104        1:?   2:Benign       1 
+      105        1:? 1:Malicious       0.985 
+      106        1:?   2:Benign       1 
+      107        1:? 1:Malicious       1 
+      108        1:? 1:Malicious       1 
+      109        1:? 1:Malicious       1 
+      110        1:? 1:Malicious       1 
+      111        1:? 1:Malicious       1 
+      112        1:? 1:Malicious       1 
+      113        1:? 1:Malicious       1 
+      114        1:?   2:Benign       1 
+      115        1:? 1:Malicious       0.985 
+      116        1:?   2:Benign       1 
+      117        1:? 1:Malicious       1 
+      118        1:?   2:Benign       1 
+      119        1:? 1:Malicious       1 
+      120        1:? 1:Malicious       1 
+      121        1:? 1:Malicious       1 
+      122        1:? 1:Malicious       1 
+      123        1:? 1:Malicious       1 
+      124        1:? 1:Malicious       1 
+
+=== Summary ===
+
+Total Number of Instances                0     
+Ignored Class Unknown Instances                124     
+
 
 === Re-evaluation on test set ===
 
@@ -676,4 +816,34 @@ Weighted Avg.    0.906    0.750    0.896      0.906    0.876      0.331    ?    
    a   b   <-- classified as
    4  21 |   a = Malicious
    1 207 |   b = Benign
+
+
+=== Re-evaluation on test set ===
+
+User supplied test set
+Relation:     CTU-Malware-Capture-34-1
+Instances:     unknown (yet). Reading incrementally
+Attributes:   12
+
+=== Summary ===
+
+Correctly Classified Instances          85               69.6721 %
+Incorrectly Classified Instances        37               30.3279 %
+Kappa statistic                          0.3648
+Mean absolute error                      0.3049
+Root mean squared error                  0.5177
+Total Number of Instances              122     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.528    0.174    0.700      0.528    0.602      0.374    ?         ?         Malicious
+                 0.826    0.472    0.695      0.826    0.755      0.374    ?         ?         Benign
+Weighted Avg.    0.697    0.342    0.697      0.697    0.689      0.374    ?         ?         
+
+=== Confusion Matrix ===
+
+  a  b   <-- classified as
+ 28 25 |  a = Malicious
+ 12 57 |  b = Benign
 

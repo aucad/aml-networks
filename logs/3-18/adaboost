@@ -342,3 +342,33 @@ Weighted Avg.    0.927    ?        1.000      0.927    0.962      ?        ?    
    0   0 |   a = Malicious
    9 115 |   b = Benign
 
+
+=== Re-evaluation on test set ===
+
+User supplied test set
+Relation:     CTU-Malware-Capture-34-1
+Instances:     unknown (yet). Reading incrementally
+Attributes:   12
+
+=== Summary ===
+
+Correctly Classified Instances          75               61.4754 %
+Incorrectly Classified Instances        47               38.5246 %
+Kappa statistic                          0.2891
+Mean absolute error                      0.3895
+Root mean squared error                  0.5727
+Total Number of Instances              122     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 1.000    0.681    0.530      1.000    0.693      0.411    ?         ?         Malicious
+                 0.319    0.000    1.000      0.319    0.484      0.411    ?         ?         Benign
+Weighted Avg.    0.615    0.296    0.796      0.615    0.574      0.411    ?         ?         
+
+=== Confusion Matrix ===
+
+  a  b   <-- classified as
+ 53  0 |  a = Malicious
+ 47 22 |  b = Benign
+
