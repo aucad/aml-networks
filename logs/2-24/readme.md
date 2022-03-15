@@ -12,6 +12,10 @@ using 10-folds cross-validation.
 
 ## 20-1 logs
 
+Train on CTU Malware Capture 20-1 (highly benign).
+
+Test on Honeypot-7 and Malware-Capture-44.
+
 |                               | Benign | Malicious |      Ratio | 
 |-------------------------------|:------:|:---------:|-----------:|
 | [CTU-Malware-Capture-20-1][1] |  3193  |    16     | 99.5 / 0.5 |
@@ -31,6 +35,10 @@ using 10-folds cross-validation.
 values marked as `-` not captured in log. 
 
 ## 34-1 logs
+
+Train on CTU Malware Capture 34-1 (highly malicious).
+
+Test on Honeypot-7 and Malware-Capture-44.
 
 |                               | Benign | Malicious |   Ratio | 
 |-------------------------------|:------:|:---------:|--------:|
