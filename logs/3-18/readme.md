@@ -28,21 +28,22 @@ resp_ip_bytes, label
 
 - Test: [CTU-Malware-Capture-44-1][3]: benign: 211, malicious: 26 
 - Test: [Honeypot-7][4]: benign: 130, malicious: 0
+- Test: [CTU-Malware-Capture-34-1][3]: benign: 1923, malicious: 21222 
 
 ## Accuracy
 
-| Method              | Training    | Honeypot-7 | Malware-44 |
-| :------------------ | ----------: | ---------: | ---------: |
-| [Adaboost][AB]      |             |            |            |
-| [ANN][AN]           |             |            |            |
-| [Decision tree][DT] |   95.6873 % |  92.7419 % |  99.5708 % |
-| [Naive Bayes][NB]   |   63.7226 % |  23.3871 % |  90.5579 % |
-| [SVM][SV]           |             |            |            |  
+| Method              | Training    | Honeypot-7 | Malware-44 | Malware-34 |
+| :------------------ | ----------: | ---------: | ---------: | ---------: |
+| [Adaboost][AB]      |    95.665 % |  92.7419 % |  98.7124 % |            |
+| [ANN][AN]           |             |            |            |            |
+| [Decision tree][DT] |   95.6873 % |  92.7419 % |  99.5708 % |            |
+| [Naive Bayes][NB]   |   63.7226 % |  23.3871 % |  90.5579 % |            |
+| [SVM][SV]           |             |            |            |            |  
 
 
 Decision tree
 
-![img](dt.jpeg)
+![img](tree-viz.jpeg)
 
 
 [1]: https://mcfp.felk.cvut.cz/publicDatasets/IoT-23-Dataset/IndividualScenarios/CTU-IoT-Malware-Capture-1-1

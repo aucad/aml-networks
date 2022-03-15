@@ -1,0 +1,344 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.meta.AdaBoostM1 -P 100 -S 1 -I 10 -W weka.classifiers.trees.DecisionStump
+Relation:     CTU-IoT-Malware-Capture-1-1
+Instances:    1008748
+Attributes:   12
+              proto
+              duration
+              orig_bytes
+              resp_bytes
+              conn_state
+              missed_bytes
+              history
+              orig_pkts
+              orig_ip_bytes
+              resp_pkts
+              resp_ip_bytes
+              label
+Test mode:    10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+AdaBoostM1: Base classifiers and their weights: 
+
+Decision Stump
+
+Classifications
+
+proto = tcp : Malicious
+proto != tcp : Benign
+proto is missing : Malicious
+
+Class distributions
+
+proto = tcp
+Malicious	Benign	
+0.9250686806120034	0.07493131938799659	
+proto != tcp
+Malicious	Benign	
+7.988459026253836E-5	0.9999201154097375	
+proto is missing
+Malicious	Benign	
+0.5347946166931682	0.4652053833068318	
+
+
+Weight: 3.09
+
+Decision Stump
+
+Classifications
+
+proto = tcp : Benign
+proto != tcp : Benign
+proto is missing : Benign
+
+Class distributions
+
+proto = tcp
+Malicious	Benign	
+0.3587392725162767	0.6412607274837233	
+proto != tcp
+Malicious	Benign	
+0.0017599446816467656	0.9982400553183532	
+proto is missing
+Malicious	Benign	
+0.27988532752939316	0.7201146724706068	
+
+
+Weight: 0.95
+
+Decision Stump
+
+Classifications
+
+proto = tcp : Malicious
+proto != tcp : Benign
+proto is missing : Benign
+
+Class distributions
+
+proto = tcp
+Malicious	Benign	
+0.5900543909724739	0.40994560902752614	
+proto != tcp
+Malicious	Benign	
+0.004515647066148736	0.9954843529338513	
+proto is missing
+Malicious	Benign	
+0.4999999999942124	0.5000000000057877	
+
+
+Weight: 0.63
+
+Decision Stump
+
+Classifications
+
+proto = tcp : Benign
+proto != tcp : Benign
+proto is missing : Benign
+
+Class distributions
+
+proto = tcp
+Malicious	Benign	
+0.4340237791750405	0.5659762208249595	
+proto != tcp
+Malicious	Benign	
+0.008442169542238339	0.9915578304577617	
+proto is missing
+Malicious	Benign	
+0.3836622520337069	0.616337747966293	
+
+
+Weight: 0.47
+
+Decision Stump
+
+Classifications
+
+proto = tcp : Malicious
+proto != tcp : Benign
+proto is missing : Malicious
+
+Class distributions
+
+proto = tcp
+Malicious	Benign	
+0.5519567071553371	0.44804329284466293	
+proto != tcp
+Malicious	Benign	
+0.013492919316178603	0.9865070806838214	
+proto is missing
+Malicious	Benign	
+0.5000000000059802	0.4999999999940198	
+
+
+Weight: 0.38
+
+Decision Stump
+
+Classifications
+
+proto = tcp : Benign
+proto != tcp : Benign
+proto is missing : Benign
+
+Class distributions
+
+proto = tcp
+Malicious	Benign	
+0.4572355349638114	0.5427644650361886	
+proto != tcp
+Malicious	Benign	
+0.01960926790139031	0.9803907320986097	
+proto is missing
+Malicious	Benign	
+0.42146249228415633	0.5785375077158437	
+
+
+Weight: 0.32
+
+Decision Stump
+
+Classifications
+
+proto = tcp : Malicious
+proto != tcp : Benign
+proto is missing : Benign
+
+Class distributions
+
+proto = tcp
+Malicious	Benign	
+0.5362601785174126	0.46373982148258736	
+proto != tcp
+Malicious	Benign	
+0.026722162839294804	0.9732778371607052	
+proto is missing
+Malicious	Benign	
+0.49999999999177447	0.5000000000082255	
+
+
+Weight: 0.27
+
+Decision Stump
+
+Classifications
+
+proto = tcp : Benign
+proto != tcp : Benign
+proto is missing : Benign
+
+Class distributions
+
+proto = tcp
+Malicious	Benign	
+0.46859374140439747	0.5314062585956025	
+proto != tcp
+Malicious	Benign	
+0.03475394786304974	0.9652460521369502	
+proto is missing
+Malicious	Benign	
+0.4411594892083376	0.5588405107916625	
+
+
+Weight: 0.24
+
+Decision Stump
+
+Classifications
+
+proto = tcp : Malicious
+proto != tcp : Benign
+proto is missing : Malicious
+
+Class distributions
+
+proto = tcp
+Malicious	Benign	
+0.5276385519964162	0.4723614480035838	
+proto != tcp
+Malicious	Benign	
+0.043620306541885624	0.9563796934581144	
+proto is missing
+Malicious	Benign	
+0.5000000000131897	0.4999999999868102	
+
+
+Weight: 0.21
+
+Decision Stump
+
+Classifications
+
+proto = tcp : Benign
+proto != tcp : Benign
+proto is missing : Benign
+
+Class distributions
+
+proto = tcp
+Malicious	Benign	
+0.4753760101342392	0.5246239898657609	
+proto != tcp
+Malicious	Benign	
+0.05323224526368266	0.9467677547363174	
+proto is missing
+Malicious	Benign	
+0.4533245764608554	0.5466754235391446	
+
+
+Weight: 0.19
+
+Number of performed Iterations: 10
+
+
+Time taken to build model: 28.96 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances      965019               95.665  %
+Incorrectly Classified Instances     43729                4.335  %
+Kappa statistic                          0.9123
+Mean absolute error                      0.0838
+Root mean squared error                  0.2003
+Relative absolute error                 16.8431 %
+Root relative squared error             40.1615 %
+Total Number of Instances          1008748     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 1.000    0.093    0.925      1.000    0.961      0.916    ?         ?         Malicious
+                 0.907    0.000    1.000      0.907    0.951      0.916    ?         ?         Benign
+Weighted Avg.    0.957    0.050    0.960      0.957    0.956      0.916    ?         ?         
+
+=== Confusion Matrix ===
+
+      a      b   <-- classified as
+ 539439     34 |      a = Malicious
+  43695 425580 |      b = Benign
+
+
+=== Re-evaluation on test set ===
+
+User supplied test set
+Relation:     CTU-Malware-Capture-44-1
+Instances:     unknown (yet). Reading incrementally
+Attributes:   12
+
+=== Summary ===
+
+Correctly Classified Instances         230               98.7124 %
+Incorrectly Classified Instances         3                1.2876 %
+Kappa statistic                          0.934 
+Mean absolute error                      0.0216
+Root mean squared error                  0.1105
+Total Number of Instances              233     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.960    0.010    0.923      0.960    0.941      0.934    ?         ?         Malicious
+                 0.990    0.040    0.995      0.990    0.993      0.934    ?         ?         Benign
+Weighted Avg.    0.987    0.037    0.987      0.987    0.987      0.934    ?         ?         
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+  24   1 |   a = Malicious
+   2 206 |   b = Benign
+
+
+=== Re-evaluation on test set ===
+
+User supplied test set
+Relation:     CTU-Honeypot-7
+Instances:     unknown (yet). Reading incrementally
+Attributes:   12
+
+=== Summary ===
+
+Correctly Classified Instances         115               92.7419 %
+Incorrectly Classified Instances         9                7.2581 %
+Kappa statistic                          0     
+Mean absolute error                      0.0678
+Root mean squared error                  0.2475
+Total Number of Instances              124     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 ?        0.073    0.000      ?        ?          ?        ?         ?         Malicious
+                 0.927    ?        1.000      0.927    0.962      ?        ?         ?         Benign
+Weighted Avg.    0.927    ?        1.000      0.927    0.962      ?        ?         ?         
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+   0   0 |   a = Malicious
+   9 115 |   b = Benign
+
