@@ -32,6 +32,8 @@ Test on Honeypot-7 (all benign) and Malware-Capture-44 (mostly benign).
 | [Naive Bayes][NB0]   | 99.3768 % |  56.4516 % |  93.9914 % |
 | [SVM][SV0]           | 99.9377 % |      100 % |      100 % |  
 
+**Decision tree**
+
 ![img](20-1-tree.png)
 
 ## Malware Capture 34-1 logs

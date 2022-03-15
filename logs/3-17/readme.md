@@ -42,9 +42,8 @@ label
 | [Decision tree][DT] | 95.6873 % |                   92.7419 % |                      99.5708 % |                         63.1148 % |
 | [Naive Bayes][NB]   | 63.7226 % |                   23.3871 % |                      90.5579 % |                         69.6721 % |
 | [SVM][SV]           |           |                             |                                |                                   |  
-    
 
-Decision tree
+**Decision tree**
 
 ![img](tree-viz.jpeg)
 
