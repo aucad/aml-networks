@@ -1,0 +1,141 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.functions.VotedPerceptron -I 1 -E 1.0 -S 1 -M 10000
+Relation:     CTU-IoT-Malware-Capture-1-1-sampled
+Instances:    252186
+Attributes:   12
+              proto
+              duration
+              orig_bytes
+              resp_bytes
+              conn_state
+              missed_bytes
+              history
+              orig_pkts
+              orig_ip_bytes
+              resp_pkts
+              resp_ip_bytes
+              label
+Test mode:    10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+VotedPerceptron: Number of perceptrons=10000
+
+Time taken to build model: 139.17 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances      240277               95.2777 %
+Incorrectly Classified Instances     11909                4.7223 %
+Kappa statistic                          0.9045
+Mean absolute error                      0.0472
+Root mean squared error                  0.2173
+Relative absolute error                  9.4906 %
+Root relative squared error             43.5674 %
+Total Number of Instances           252186     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 1.000    0.101    0.919      1.000    0.958      0.909    0.949     0.919     Malicious
+                 0.899    0.000    1.000      0.899    0.947      0.909    0.951     0.948     Benign
+Weighted Avg.    0.953    0.054    0.957      0.953    0.953      0.909    0.950     0.932     
+
+=== Confusion Matrix ===
+
+      a      b   <-- classified as
+ 134860      8 |      a = Malicious
+  11901 105417 |      b = Benign
+
+
+=== Re-evaluation on test set ===
+
+User supplied test set
+Relation:     CTU-Honeypot-Capture-7-1-labeled
+Instances:     unknown (yet). Reading incrementally
+Attributes:   12
+
+=== Summary ===
+
+Correctly Classified Instances         111               89.5161 %
+Incorrectly Classified Instances        13               10.4839 %
+Kappa statistic                          0     
+Mean absolute error                      0.1048
+Root mean squared error                  0.3238
+Total Number of Instances              124     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 ?        0.105    0.000      ?        ?          ?        ?         ?         Malicious
+                 0.895    ?        1.000      0.895    0.945      ?        ?         1.000     Benign
+Weighted Avg.    0.895    ?        1.000      0.895    0.945      ?        ?         1.000     
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+   0   0 |   a = Malicious
+  13 111 |   b = Benign
+
+
+=== Re-evaluation on test set ===
+
+User supplied test set
+Relation:     CTU-Malware-Capture-44-1-labeled
+Instances:     unknown (yet). Reading incrementally
+Attributes:   12
+
+=== Summary ===
+
+Correctly Classified Instances         230               98.7124 %
+Incorrectly Classified Instances         3                1.2876 %
+Kappa statistic                          0.934 
+Mean absolute error                      0.0129
+Root mean squared error                  0.1135
+Total Number of Instances              233     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.960    0.010    0.923      0.960    0.941      0.934    0.975     0.890     Malicious
+                 0.990    0.040    0.995      0.990    0.993      0.934    0.975     0.994     Benign
+Weighted Avg.    0.987    0.037    0.987      0.987    0.987      0.934    0.975     0.983     
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+  24   1 |   a = Malicious
+   2 206 |   b = Benign
+
+
+=== Re-evaluation on test set ===
+
+User supplied test set
+Relation:     CTU-Malware-Capture-34-1-labeled
+Instances:     unknown (yet). Reading incrementally
+Attributes:   12
+
+=== Summary ===
+
+Correctly Classified Instances          75               61.4754 %
+Incorrectly Classified Instances        47               38.5246 %
+Kappa statistic                          0.2891
+Mean absolute error                      0.3852
+Root mean squared error                  0.6207
+Total Number of Instances              122     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 1.000    0.681    0.530      1.000    0.693      0.411    0.659     0.530     Malicious
+                 0.319    0.000    1.000      0.319    0.484      0.411    0.659     0.704     Benign
+Weighted Avg.    0.615    0.296    0.796      0.615    0.574      0.411    0.659     0.628     
+
+=== Confusion Matrix ===
+
+  a  b   <-- classified as
+ 53  0 |  a = Malicious
+ 47 22 |  b = Benign
+
