@@ -42,7 +42,7 @@ resp_ip_bytes, label
 
 Decision tree
 
-![img][dt.jpeg]
+![img](dt.jpeg)
 
 
 [1]: https://mcfp.felk.cvut.cz/publicDatasets/IoT-23-Dataset/IndividualScenarios/CTU-IoT-Malware-Capture-1-1
