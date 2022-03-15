@@ -1,4 +1,4 @@
-# Iot-23 50/50 split test
+# IoT-23 50/50 split test
 
 These are logged results of training on Aposemat IoT-23 dataset.
 
@@ -7,7 +7,7 @@ Goal: train on 50/50 split data
 - test on highly benign data
 - test on highly malicious data
 
-What is the prediction accuracy in these scenarios (compared to [previous results](../2-24/readme.md))?
+What is the prediction accuracy in these scenarios? (compare to [previous results](../2-24))
  
 **Training set**: CTU-IoT-Malware-Capture-1-1 (Hide and Seek)
 
@@ -34,14 +34,14 @@ resp_ip_bytes, label
 
 ## Accuracy
 
-| Method              |  Training | Honeypot-7 (Benign) | Malware-44 (Mostly Benign) | Malware-34 (Mostly Malicious) |
-|:--------------------|----------:|--------------------:|---------------------------:|------------------------------:|
-| [Adaboost][AB]      |  95.665 % |           92.7419 % |                  98.7124 % |                     61.4754 % |
-| [ANN][AN]           |           |                     |                            |                               |
-| [Decision tree][DT] | 95.6873 % |           92.7419 % |                  99.5708 % |                     63.1148 % |
-| [Naive Bayes][NB]   | 63.7226 % |           23.3871 % |                  90.5579 % |                     69.6721 % |
-| [SVM][SV]           |           |                     |                            |                               |  
-
+| Method              |  Training | Honeypot-7 (All Benign) | Malware-44 (Mostly Benign) | Malware-34 (Mostly Malicious) |
+|:--------------------|----------:|------------------------:|---------------------------:|------------------------------:|
+| [Adaboost][AB]      |  95.665 % |               92.7419 % |                  98.7124 % |                     61.4754 % |
+| [ANN][AN]           |           |                         |                            |                               |
+| [Decision tree][DT] | 95.6873 % |               92.7419 % |                  99.5708 % |                     63.1148 % |
+| [Naive Bayes][NB]   | 63.7226 % |               23.3871 % |                  90.5579 % |                     69.6721 % |
+| [SVM][SV]           |           |                         |                            |                               |  
+    
 
 Decision tree
 
