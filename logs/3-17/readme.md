@@ -7,7 +7,9 @@ Goal: train on 50/50 split data
 - test on highly benign data
 - test on highly malicious data
 
-What is the prediction accuracy in these scenarios? (compare to [previous results](../2-24))
+What is the prediction accuracy in these scenarios? 
+
+(compare to [previous results](../2-24))
  
 **Training set**: CTU-IoT-Malware-Capture-1-1 (Hide and Seek)
 
@@ -19,10 +21,9 @@ What is the prediction accuracy in these scenarios? (compare to [previous result
 | Benign    | 469275 | 46.5 % |
 | Malicious | 539473 | 53.5 % |
 
-12 attributes:
-
-Proto, duration, orig_bytes, resp_bytes, conn_state, missed_bytes, history, orig_pkts, orig_ip_bytes, resp_pkts, 
-resp_ip_bytes, label
+12 attributes: proto, duration, orig_bytes, resp_bytes, conn_state, 
+missed_bytes, history, orig_pkts, orig_ip_bytes, resp_pkts, resp_ip_bytes, 
+label
 
 **Tests**
 
