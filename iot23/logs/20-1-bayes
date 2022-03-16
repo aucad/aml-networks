@@ -100,7 +100,7 @@ resp_ip_bytes
 
 
 
-Time taken to build model: 0.01 seconds
+Time taken to build model: 0.02 seconds
 
 === Stratified cross-validation ===
 === Summary ===
@@ -186,4 +186,34 @@ Weighted Avg.    0.940    0.465    0.939      0.940    0.931      0.641    0.995
    a   b   <-- classified as
  207   1 |   a = Benign
   13  12 |   b = Malicious
+
+
+=== Re-evaluation on test set ===
+
+User supplied test set
+Relation:     CTU-Malware-Capture-8-1-labeled
+Instances:     unknown (yet). Reading incrementally
+Attributes:   12
+
+=== Summary ===
+
+Correctly Classified Instances         112               99.115  %
+Incorrectly Classified Instances         1                0.885  %
+Kappa statistic                          0     
+Mean absolute error                      0.0048
+Root mean squared error                  0.051 
+Total Number of Instances              113     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.991    ?        1.000      0.991    0.996      ?        ?         1.000     Benign
+                 ?        0.009    0.000      ?        ?          ?        ?         ?         Malicious
+Weighted Avg.    0.991    ?        1.000      0.991    0.996      ?        ?         1.000     
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+ 112   1 |   a = Benign
+   0   0 |   b = Malicious
 
