@@ -100,7 +100,7 @@ resp_ip_bytes
 
 
 
-Time taken to build model: 0.02 seconds
+Time taken to build model: 0 seconds
 
 === Stratified cross-validation ===
 === Summary ===
@@ -117,9 +117,9 @@ Total Number of Instances             3209
 === Detailed Accuracy By Class ===
 
                  TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 0.997    0.688    0.997      0.997    0.997      0.331    0.998     1.000     Benign
-                 0.313    0.003    0.357      0.313    0.333      0.331    0.997     0.465     Malicious
-Weighted Avg.    0.994    0.684    0.993      0.994    0.994      0.331    0.998     0.997     
+                 0.997    0.688    0.997      0.997    0.997      0.331    ?         ?         Benign
+                 0.313    0.003    0.357      0.313    0.333      0.331    ?         ?         Malicious
+Weighted Avg.    0.994    0.684    0.993      0.994    0.994      0.331    ?         ?         
 
 === Confusion Matrix ===
 
@@ -137,24 +137,24 @@ Attributes:   12
 
 === Summary ===
 
-Correctly Classified Instances          70               56.4516 %
-Incorrectly Classified Instances        54               43.5484 %
+Correctly Classified Instances          72               55.3846 %
+Incorrectly Classified Instances        58               44.6154 %
 Kappa statistic                          0     
-Mean absolute error                      0.4355
-Root mean squared error                  0.6599
-Total Number of Instances              124     
+Mean absolute error                      0.4462
+Root mean squared error                  0.6679
+Total Number of Instances              130     
 
 === Detailed Accuracy By Class ===
 
                  TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 0.565    ?        1.000      0.565    0.722      ?        ?         1.000     Benign
-                 ?        0.435    0.000      ?        ?          ?        ?         ?         Malicious
-Weighted Avg.    0.565    ?        1.000      0.565    0.722      ?        ?         1.000     
+                 0.554    ?        1.000      0.554    0.713      ?        ?         ?         Benign
+                 ?        0.446    0.000      ?        ?          ?        ?         ?         Malicious
+Weighted Avg.    0.554    ?        1.000      0.554    0.713      ?        ?         ?         
 
 === Confusion Matrix ===
 
   a  b   <-- classified as
- 70 54 |  a = Benign
+ 72 58 |  a = Benign
   0  0 |  b = Malicious
 
 
@@ -167,25 +167,25 @@ Attributes:   12
 
 === Summary ===
 
-Correctly Classified Instances         219               93.9914 %
-Incorrectly Classified Instances        14                6.0086 %
-Kappa statistic                          0.6024
-Mean absolute error                      0.0421
-Root mean squared error                  0.1802
-Total Number of Instances              233     
+Correctly Classified Instances         223               94.0928 %
+Incorrectly Classified Instances        14                5.9072 %
+Kappa statistic                          0.6209
+Mean absolute error                      0.0414
+Root mean squared error                  0.1787
+Total Number of Instances              237     
 
 === Detailed Accuracy By Class ===
 
                  TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 0.995    0.520    0.941      0.995    0.967      0.641    0.994     0.999     Benign
-                 0.480    0.005    0.923      0.480    0.632      0.641    0.996     0.935     Malicious
-Weighted Avg.    0.940    0.465    0.939      0.940    0.931      0.641    0.995     0.992     
+                 0.995    0.500    0.942      0.995    0.968      0.657    ?         ?         Benign
+                 0.500    0.005    0.929      0.500    0.650      0.657    ?         ?         Malicious
+Weighted Avg.    0.941    0.446    0.940      0.941    0.933      0.657    ?         ?         
 
 === Confusion Matrix ===
 
    a   b   <-- classified as
- 207   1 |   a = Benign
-  13  12 |   b = Malicious
+ 210   1 |   a = Benign
+  13  13 |   b = Malicious
 
 
 === Re-evaluation on test set ===
@@ -197,23 +197,23 @@ Attributes:   12
 
 === Summary ===
 
-Correctly Classified Instances         112               99.115  %
-Incorrectly Classified Instances         1                0.885  %
-Kappa statistic                          0     
-Mean absolute error                      0.0048
-Root mean squared error                  0.051 
-Total Number of Instances              113     
+Correctly Classified Instances        2179               20.9459 %
+Incorrectly Classified Instances      8224               79.0541 %
+Kappa statistic                         -0.0004
+Mean absolute error                      0.5142
+Root mean squared error                  0.6055
+Total Number of Instances            10403     
 
 === Detailed Accuracy By Class ===
 
                  TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 0.991    ?        1.000      0.991    0.996      ?        ?         1.000     Benign
-                 ?        0.009    0.000      ?        ?          ?        ?         ?         Malicious
-Weighted Avg.    0.991    ?        1.000      0.991    0.996      ?        ?         1.000     
+                 0.999    1.000    0.209      0.999    0.346      -0.027   ?         ?         Benign
+                 0.000    0.001    0.000      0.000    0.000      -0.027   ?         ?         Malicious
+Weighted Avg.    0.209    0.210    0.044      0.209    0.073      -0.027   ?         ?         
 
 === Confusion Matrix ===
 
-   a   b   <-- classified as
- 112   1 |   a = Benign
-   0   0 |   b = Malicious
+    a    b   <-- classified as
+ 2179    2 |    a = Benign
+ 8222    0 |    b = Malicious
 

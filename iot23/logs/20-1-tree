@@ -48,9 +48,9 @@ Total Number of Instances             3209
 === Detailed Accuracy By Class ===
 
                  TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 1.000    0.000    1.000      1.000    1.000      0.970    1.000     1.000     Benign
-                 1.000    0.000    0.941      1.000    0.970      0.970    1.000     0.887     Malicious
-Weighted Avg.    1.000    0.000    1.000      1.000    1.000      0.970    1.000     0.999     
+                 1.000    0.000    1.000      1.000    1.000      0.970    ?         ?         Benign
+                 1.000    0.000    0.941      1.000    0.970      0.970    ?         ?         Malicious
+Weighted Avg.    1.000    0.000    1.000      1.000    1.000      0.970    ?         ?         
 
 === Confusion Matrix ===
 
@@ -78,14 +78,44 @@ Total Number of Instances              124
 === Detailed Accuracy By Class ===
 
                  TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 0.927    ?        1.000      0.927    0.962      ?        ?         1.000     Benign
+                 0.927    ?        1.000      0.927    0.962      ?        ?         ?         Benign
                  ?        0.073    0.000      ?        ?          ?        ?         ?         Malicious
-Weighted Avg.    0.927    ?        1.000      0.927    0.962      ?        ?         1.000     
+Weighted Avg.    0.927    ?        1.000      0.927    0.962      ?        ?         ?         
 
 === Confusion Matrix ===
 
    a   b   <-- classified as
  115   9 |   a = Benign
+   0   0 |   b = Malicious
+
+
+=== Re-evaluation on test set ===
+
+User supplied test set
+Relation:     CTU-Honeypot-Capture-7-1-labeled
+Instances:     unknown (yet). Reading incrementally
+Attributes:   12
+
+=== Summary ===
+
+Correctly Classified Instances         120               92.3077 %
+Incorrectly Classified Instances        10                7.6923 %
+Kappa statistic                          0     
+Mean absolute error                      0.0743
+Root mean squared error                  0.2611
+Total Number of Instances              130     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.923    ?        1.000      0.923    0.960      ?        ?         ?         Benign
+                 ?        0.077    0.000      ?        ?          ?        ?         ?         Malicious
+Weighted Avg.    0.923    ?        1.000      0.923    0.960      ?        ?         ?         
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+ 120  10 |   a = Benign
    0   0 |   b = Malicious
 
 
@@ -98,23 +128,53 @@ Attributes:   12
 
 === Summary ===
 
-Correctly Classified Instances         230               98.7124 %
-Incorrectly Classified Instances         3                1.2876 %
-Kappa statistic                          0.934 
+Correctly Classified Instances         234               98.7342 %
+Incorrectly Classified Instances         3                1.2658 %
+Kappa statistic                          0.9363
 Mean absolute error                      0.0184
-Root mean squared error                  0.1107
-Total Number of Instances              233     
+Root mean squared error                  0.1098
+Total Number of Instances              237     
 
 === Detailed Accuracy By Class ===
 
                  TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 0.990    0.040    0.995      0.990    0.993      0.934    0.975     0.994     Benign
-                 0.960    0.010    0.923      0.960    0.941      0.934    0.975     0.890     Malicious
-Weighted Avg.    0.987    0.037    0.987      0.987    0.987      0.934    0.975     0.983     
+                 0.991    0.038    0.995      0.991    0.993      0.936    ?         ?         Benign
+                 0.962    0.009    0.926      0.962    0.943      0.936    ?         ?         Malicious
+Weighted Avg.    0.987    0.035    0.988      0.987    0.987      0.936    ?         ?         
 
 === Confusion Matrix ===
 
    a   b   <-- classified as
- 206   2 |   a = Benign
-   1  24 |   b = Malicious
+ 209   2 |   a = Benign
+   1  25 |   b = Malicious
+
+
+=== Re-evaluation on test set ===
+
+User supplied test set
+Relation:     CTU-Malware-Capture-8-1-labeled
+Instances:     unknown (yet). Reading incrementally
+Attributes:   12
+
+=== Summary ===
+
+Correctly Classified Instances       10401               99.9808 %
+Incorrectly Classified Instances         2                0.0192 %
+Kappa statistic                          0.9994
+Mean absolute error                      0.0467
+Root mean squared error                  0.0539
+Total Number of Instances            10403     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.999    0.000    1.000      0.999    1.000      0.999    ?         ?         Benign
+                 1.000    0.001    1.000      1.000    1.000      0.999    ?         ?         Malicious
+Weighted Avg.    1.000    0.001    1.000      1.000    1.000      0.999    ?         ?         
+
+=== Confusion Matrix ===
+
+    a    b   <-- classified as
+ 2179    2 |    a = Benign
+    0 8222 |    b = Malicious
 
