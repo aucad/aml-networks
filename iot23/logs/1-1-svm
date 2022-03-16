@@ -138,7 +138,7 @@ Number of kernel evaluations: 1570689945 (31.79% cached)
 
 
 
-Time taken to build model: 795.27 seconds
+Time taken to build model: 885.78 seconds
 
 === Stratified cross-validation ===
 === Summary ===
@@ -175,25 +175,25 @@ Attributes:   12
 
 === Summary ===
 
-Correctly Classified Instances         115               92.7419 %
-Incorrectly Classified Instances         9                7.2581 %
+Correctly Classified Instances         121               93.0769 %
+Incorrectly Classified Instances         9                6.9231 %
 Kappa statistic                          0     
-Mean absolute error                      0.0726
-Root mean squared error                  0.2694
-Total Number of Instances              124     
+Mean absolute error                      0.0692
+Root mean squared error                  0.2631
+Total Number of Instances              130     
 
 === Detailed Accuracy By Class ===
 
                  TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 ?        0.073    0.000      ?        ?          ?        ?         ?         Malicious
-                 0.927    ?        1.000      0.927    0.962      ?        ?         1.000     Benign
-Weighted Avg.    0.927    ?        1.000      0.927    0.962      ?        ?         1.000     
+                 ?        0.069    0.000      ?        ?          ?        ?         ?         Malicious
+                 0.931    ?        1.000      0.931    0.964      ?        ?         1.000     Benign
+Weighted Avg.    0.931    ?        1.000      0.931    0.964      ?        ?         1.000     
 
 === Confusion Matrix ===
 
    a   b   <-- classified as
    0   0 |   a = Malicious
-   9 115 |   b = Benign
+   9 121 |   b = Benign
 
 
 === Re-evaluation on test set ===
@@ -205,53 +205,53 @@ Attributes:   12
 
 === Summary ===
 
-Correctly Classified Instances         230               98.7124 %
-Incorrectly Classified Instances         3                1.2876 %
-Kappa statistic                          0.934 
-Mean absolute error                      0.0129
-Root mean squared error                  0.1135
-Total Number of Instances              233     
+Correctly Classified Instances         234               98.7342 %
+Incorrectly Classified Instances         3                1.2658 %
+Kappa statistic                          0.9363
+Mean absolute error                      0.0127
+Root mean squared error                  0.1125
+Total Number of Instances              237     
 
 === Detailed Accuracy By Class ===
 
                  TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 0.960    0.010    0.923      0.960    0.941      0.934    0.975     0.890     Malicious
-                 0.990    0.040    0.995      0.990    0.993      0.934    0.975     0.994     Benign
-Weighted Avg.    0.987    0.037    0.987      0.987    0.987      0.934    0.975     0.983     
+                 0.962    0.009    0.926      0.962    0.943      0.936    0.976     0.895     Malicious
+                 0.991    0.038    0.995      0.991    0.993      0.936    0.976     0.994     Benign
+Weighted Avg.    0.987    0.035    0.988      0.987    0.987      0.936    0.976     0.983     
 
 === Confusion Matrix ===
 
    a   b   <-- classified as
-  24   1 |   a = Malicious
-   2 206 |   b = Benign
+  25   1 |   a = Malicious
+   2 209 |   b = Benign
 
 
 === Re-evaluation on test set ===
 
 User supplied test set
-Relation:     CTU-Malware-Capture-34-1-labeled
+Relation:     CTU-Malware-Capture-8-1-labeled
 Instances:     unknown (yet). Reading incrementally
 Attributes:   12
 
 === Summary ===
 
-Correctly Classified Instances          75               61.4754 %
-Incorrectly Classified Instances        47               38.5246 %
-Kappa statistic                          0.2891
-Mean absolute error                      0.3852
-Root mean squared error                  0.6207
-Total Number of Instances              122     
+Correctly Classified Instances       10401               99.9808 %
+Incorrectly Classified Instances         2                0.0192 %
+Kappa statistic                          0.9994
+Mean absolute error                      0.0002
+Root mean squared error                  0.0139
+Total Number of Instances            10403     
 
 === Detailed Accuracy By Class ===
 
                  TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 1.000    0.681    0.530      1.000    0.693      0.411    0.659     0.530     Malicious
-                 0.319    0.000    1.000      0.319    0.484      0.411    0.659     0.704     Benign
-Weighted Avg.    0.615    0.296    0.796      0.615    0.574      0.411    0.659     0.628     
+                 1.000    0.001    1.000      1.000    1.000      0.999    1.000     1.000     Malicious
+                 0.999    0.000    1.000      0.999    1.000      0.999    1.000     0.999     Benign
+Weighted Avg.    1.000    0.001    1.000      1.000    1.000      0.999    1.000     1.000     
 
 === Confusion Matrix ===
 
-  a  b   <-- classified as
- 53  0 |  a = Malicious
- 47 22 |  b = Benign
+    a    b   <-- classified as
+ 8222    0 |    a = Malicious
+    2 2179 |    b = Benign
 
