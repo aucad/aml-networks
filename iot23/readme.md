@@ -18,9 +18,9 @@ label.
 
 ## Malware Capture 20-1 (benign)
 
-| Datasets                      |       | Benign | Malicious |      Ratio | 
-|:------------------------------|:------|:------:|:---------:|-----------:|
-| [CTU-Malware-Capture-20-1][1] | Train |  3193  |    16     | 99.5 / 0.5 |
+| Training dataset              | Benign | Malicious |      Ratio | 
+|:------------------------------|:------:|:---------:|-----------:|
+| [CTU-Malware-Capture-20-1][1] |  3193  |    16     | 99.5 / 0.5 |
 
 **Accuracy**
 
@@ -40,9 +40,9 @@ label.
 
 ## Malware Capture 34-1 (malicious)
 
-| Datasets                      |       | Benign | Malicious |   Ratio | 
-|-------------------------------|-------|:------:|:---------:|--------:|
-| [CTU-Malware-Capture-34-1][3] | Train |  1923  |   21222   |  8 / 92 |
+| Training dataset              | Benign | Malicious |  Ratio | 
+|-------------------------------|:------:|:---------:|-------:|
+| [CTU-Malware-Capture-34-1][3] |  1923  |   21222   | 8 / 92 |
 
 **Accuracy**
 
@@ -62,7 +62,7 @@ label.
 
 ## Malware Capture 1-1: 50/50 split
 
-| Dataset name                     | Benign | Malicious |         Ratio | 
+| Training dataset                 | Benign | Malicious |         Ratio | 
 |:---------------------------------|:------:|:---------:|--------------:|
 | [CTU-IoT-Malware-Capture-1-1][6] | 117318 |  134868   |   46.5 / 53.5 |
 
