@@ -17,19 +17,18 @@ CTU Malware Capture 20-1 is a highly benign dataset.
 | Datasets                      |       | Benign | Malicious |      Ratio | 
 |-------------------------------|:------|:------:|:---------:|-----------:|
 | [CTU-Malware-Capture-20-1][1] | Train |  3193  |    16     | 99.5 / 0.5 |
-| [CTU-Malware-Capture-44-1][2] | Test  |  211   |    26     |    90 / 10 |
 | [Honeypot-7][4]               | Test  |  120   |     0     |    100 / 0 |
-| [CTU Malware Capture 8-1][5]  | Test  |  2181  |   8222    |    20 / 80 |
+| [CTU-Malware-Capture-44-1][2] | Test  |  211   |    26     |    90 / 10 | 
 
 **Accuracy**
 
-| Method               |  Training | Honeypot-7 | Malware-44 | Malware-8 |
-|:---------------------|----------:|-----------:|-----------:|----------:|
-| [Adaboost][AB0]      | 99.9377 % |      100 % |  94.8498 % |           |
-| [ANN][AN0]           | 30.1963 % |        0 % |  10.7296 % |           |
-| [Decision tree][DT0] | 99.9688 % |  92.7419 % |  98.7124 % |           |
-| [Naive Bayes][NB0]   | 99.3768 % |  56.4516 % |  93.9914 % |  99.115 % |
-| [SVM][SV0]           | 99.9377 % |      100 % |      100 % |           |
+| Method               |  Training | Honeypot-7<br/>(All Benign) | Malware-44<br/>(Mostly Benign) |
+|:---------------------|----------:|----------------------------:|-------------------------------:|
+| [Adaboost][AB0]      | 99.9377 % |                       100 % |                      94.8498 % |
+| [ANN][AN0]           | 30.1963 % |                         0 % |                      10.7296 % |
+| [Decision tree][DT0] | 99.9688 % |                   92.7419 % |                      98.7124 % |
+| [Naive Bayes][NB0]   | 99.3768 % |                   56.4516 % |                      93.9914 % |
+| [SVM][SV0]           | 99.9377 % |                       100 % |                          100 % |
 
 <br/><br/>
 
@@ -42,65 +41,47 @@ CTU Malware Capture 20-1 is a highly benign dataset.
 
 ## Malware Capture 34-1 (malicious)
 
-Train on CTU Malware Capture 34-1 (highly malicious).
-
-Test on Honeypot-7 (all benign) and Malware-Capture-44 (mostly benign).
+CTU Malware Capture 34-1 is a highly malicious dataset.
 
 | Datasets                      |       | Benign | Malicious |   Ratio | 
 |-------------------------------|-------|:------:|:---------:|--------:|
 | [CTU-Malware-Capture-34-1][3] | Train |  1923  |   21222   |  8 / 92 |
-| [CTU-Malware-Capture-44-1][2] | Test  |  211   |    26     | 90 / 10 |
 | [Honeypot-7][4]               | Test  |  120   |     0     | 100 / 0 |
-| [CTU Malware Capture 8-1][5]  | Test  |  2181  |   8222    | 20 / 80 |
+| [CTU-Malware-Capture-44-1][2] | Test  |  211   |    26     | 90 / 10 |
 
 **Accuracy**
 
-| Method               |  Training | Honeypot-7 | Malware-44 | Malware-8 |
-|:---------------------|----------:|-----------:|-----------:|-----------|
-| [Adaboost][AB1]      | 99.5118 % |  56.4516 % |  98.7124 % |           |
-| [ANN][AN1]           | 91.8859 % |  10.4839 % |   6.4378 % |           |
-| [Decision tree][DT1] | 99.5766 % |  56.4516 % |  94.4206 % |           |
-| [Naive Bayes][NB1]   | 99.5463 % |  48.3871 % |   95.279 % |           |
-| [SVM][SV1]           | 99.5723 % |  54.8387 % |  94.8498 % |           |  
+| Method               |  Training | Honeypot-7<br/>(All Benign) | Malware-44<br/>(Mostly Benign) |
+|:---------------------|----------:|----------------------------:|-------------------------------:|
+| [Adaboost][AB1]      | 99.5118 % |                   56.4516 % |                      98.7124 % |
+| [ANN][AN1]           | 91.8859 % |                   10.4839 % |                       6.4378 % |
+| [Decision tree][DT1] | 99.5766 % |                   56.4516 % |                      94.4206 % |
+| [Naive Bayes][NB1]   | 99.5463 % |                   48.3871 % |                       95.279 % |
+| [SVM][SV1]           | 99.5723 % |                   54.8387 % |                      94.8498 % |  
 
 **Decision tree**
 
 ![img](logs/34-1-tree.png)
 
-## IoT-23 50/50 split test
+## Malware Capture 1-1: 50/50 split
 
-These are logged results of training on Aposemat IoT-23 dataset.
-
-Goal: train on 50/50 split data
-
-- test on highly benign data
-- test on highly malicious data
-
-What is the prediction accuracy in these scenarios?
-
-(compare to [previous results](../2-24))
+Goal: train on 50/50 split data; test on both highly benign and malicious data.
 
 **Training set**: CTU-IoT-Malware-Capture-1-1 (Hide and Seek)
 
 - Original: [https://mcfp.felk.cvut.cz/.../CTU-IoT-Malware-Capture-1-1][8]
 - Preprocessed: [CTU-IoT-Malware-Capture-1-1.csv][6]
 - Sampled, 25% with replacement: [CTU-IoT-Malware-Capture-1-1-sampled.csv][7]
+- ANN and SVM were trained on sampled data
 
-| Label     |  Flows | Ratio  |
-|:----------|-------:|:------:|
-| Benign    | 469275 | 46.5 % |
-| Malicious | 539473 | 53.5 % |
+**Datasets**
 
-12 attributes: proto, duration, orig_bytes, resp_bytes, conn_state,
-missed_bytes, history, orig_pkts, orig_ip_bytes, resp_pkts, resp_ip_bytes, label
-
-**Tests**
-
-| Dataset name                  | Benign | Malicious |   Ratio | 
-|:------------------------------|:------:|:---------:|--------:|
-| [Honeypot-7][4]               |  130   |     0     | 100 / 0 |
-| [CTU-Malware-Capture-44-1][2] |  211   |    26     | 90 / 10 |
-| [CTU-Malware-Capture-34-1][3] |  1923  |   21222   |  8 / 92 |
+| Dataset name                     |       | Benign | Malicious |     Ratio | 
+|:---------------------------------|-------|:------:|:---------:|----------:|
+| [CTU-IoT-Malware-Capture-1-1][6] | Train | 469275 |  539473   | 46.5/53.5 |
+| [Honeypot-7][4]                  | Test  |  130   |     0     |   100 / 0 |
+| [CTU-Malware-Capture-44-1][2]    | Test  |  211   |    26     |   90 / 10 |
+| [CTU-Malware-Capture-34-1][3]    | Test  |  1923  |   21222   |    8 / 92 |
 
 ## Accuracy
 
@@ -112,7 +93,6 @@ missed_bytes, history, orig_pkts, orig_ip_bytes, resp_pkts, resp_ip_bytes, label
 | [Naive Bayes][NB2]   |            63.7226 % |                   23.3871 % |                      90.5579 % |                         69.6721 % |
 | [SVM][SV2]           |            95.6782 % |                   92.7419 % |                      98.7124 % |                         61.4754 % |  
 
-ANN and SVM were trained on sampled data
 
 **Decision tree**
 
