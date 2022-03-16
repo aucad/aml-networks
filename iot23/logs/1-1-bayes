@@ -1,8 +1,8 @@
 === Run information ===
 
 Scheme:       weka.classifiers.bayes.NaiveBayes 
-Relation:     CTU-IoT-Malware-Capture-1-1
-Instances:    1008748
+Relation:     CTU-IoT-Malware-Capture-1-1-sampled
+Instances:    252186
 Attributes:   12
               proto
               duration
@@ -27,823 +27,274 @@ Attribute       Malicious    Benign
                    (0.53)    (0.47)
 ====================================
 proto
-  tcp             539440.0   43696.0
-  udp                 35.0  408160.0
-  icmp                 1.0   17422.0
-  [total]         539476.0  469278.0
+  tcp             134861.0   10956.0
+  udp                  9.0  102117.0
+  icmp                 1.0    4248.0
+  [total]         134871.0  117321.0
 
 duration
-  mean               3.179     3.352
-  std. dev.         2.9506    9.5974
-  weight sum        189291     23157
-  precision         0.0176    0.0176
+  mean              3.1725    3.1305
+  std. dev.         2.4637    8.3812
+  weight sum         47399      5797
+  precision         0.0381    0.0381
 
 orig_bytes
-  mean              1.9008    28.657
-  std. dev.        11.0075   59.3321
-  weight sum        189291     23157
-  precision        13.0296   13.0296
+  mean              1.8326   27.8425
+  std. dev.        10.7761   63.7716
+  weight sum         47399      5797
+  precision         12.288    12.288
 
 resp_bytes
-  mean             11.6098   16.3787
-  std. dev.       103.7658   27.7583
-  weight sum        189291     23157
-  precision        18.8491   18.8491
+  mean             10.9008   13.0758
+  std. dev.        98.2871   21.5936
+  weight sum         47399      5797
+  precision        11.3051   11.3051
 
 conn_state
-  S0              526635.0  444596.0
-  REJ               3919.0     429.0
-  SF                7278.0    6605.0
-  OTH                  1.0   17422.0
-  RSTOS0              10.0     189.0
-  RSTR              1460.0       7.0
-  S2                  38.0       4.0
-  RSTRH               46.0      22.0
-  RSTO                48.0       1.0
-  S1                  26.0       3.0
-  SH                  23.0       8.0
-  [total]         539484.0  469286.0
+  SF                1768.0    1648.0
+  S0              131729.0  111266.0
+  REJ                957.0      93.0
+  RSTR               374.0       4.0
+  RSTOS0               4.0      53.0
+  RSTO                15.0       1.0
+  SH                  13.0       3.0
+  S2                   7.0       1.0
+  RSTRH                7.0      10.0
+  S1                   4.0       2.0
+  OTH                  1.0    4248.0
+  [total]         134879.0  117329.0
 
 missed_bytes
   mean                   0         0
   std. dev.         0.0017    0.0017
-  weight sum        539473    469275
+  weight sum        134868    117318
   precision           0.01      0.01
 
 history
-  S               526601.0   43006.0
-  Sr                3919.0     429.0
-  D                   35.0  401573.0
-  Dd                   1.0    6570.0
-  R                    1.0     182.0
-  ShAdaFr              3.0       1.0
-  ShAfFa              33.0       1.0
-  ShAdfFa              9.0       1.0
-  ShAF                17.0       4.0
-  ^r                  46.0       1.0
-  ShADadfR            29.0       1.0
-  ShA                 25.0       3.0
-  ShADr              165.0       1.0
-  ShADFr               5.0       1.0
-  ShAdDafF          2745.0       1.0
-  ShAr                29.0       3.0
-  ShADafr            121.0       1.0
-  ShADarfF             2.0       1.0
-  ShAFr                8.0       1.0
-  ShAdDaFf          1259.0       1.0
-  ShAdDaTFf           12.0       1.0
-  ShADF                7.0       1.0
-  ShAdDaTF             2.0       1.0
-  SaR                  7.0       2.0
-  ShAdDtafF           25.0       1.0
-  ShADadRf             7.0       1.0
-  ShAdDaFr           278.0       1.0
-  ShAdDaFRf            4.0       1.0
-  ShADadfF          1386.0       1.0
-  ShADFadfRR           2.0       1.0
-  ShADafF            741.0       1.0
-  ShAdDatFf            2.0       1.0
-  ShADadR              8.0       1.0
-  ShAdtDaFrR          11.0       1.0
-  ShAdDatFr           37.0       1.0
-  ShAdtDaFr           19.0       1.0
-  ShAdDatFrR          12.0       1.0
-  ShAdDaFrR            9.0       1.0
-  ShAdDatfF           20.0       1.0
-  D^                   1.0      19.0
-  ShADdfFa           152.0       1.0
-  ShAdDfFr           229.0       1.0
-  ShAdDafFr           50.0       1.0
-  ShADrfR              2.0       1.0
-  ShADdafR             2.0       1.0
-  ShAFf                2.0       1.0
-  ShADaF               2.0       1.0
-  ShAFa                6.0       1.0
-  ShAdDaF              8.0       1.0
-  ShAdF                2.0       1.0
-  ShAdDafrR          121.0       1.0
-  ShAdDafFrR           2.0       1.0
-  ShADfdtR             3.0       1.0
-  ShAdDarfR          116.0       1.0
-  SahAdDrfR            2.0       1.0
-  Fr                   1.0       2.0
-  ShAdDatrfR           6.0       1.0
-  ShADar             398.0       1.0
-  ShAdDr             124.0       1.0
-  HaDdR                1.0       5.0
-  ShADadFf             3.0       2.0
-  ShAdDaTfF            6.0       1.0
-  ShAdDTafF            2.0       1.0
-  ShAdDaTFfR           2.0       1.0
-  ShAdDaftF          151.0       1.0
-  ShAdFaf              2.0       1.0
-  ShAFfR               3.0       1.0
-  ShAdDafrFr           3.0       1.0
-  ShADfFr             79.0       1.0
-  ShADfrFr            41.0       1.0
-  ShrA                 1.0       2.0
-  F                   20.0       6.0
-  ShADafdtF           20.0       1.0
-  ShAdr                2.0       1.0
-  ShAdDtaFr            2.0       1.0
-  ShAdDFar             3.0       1.0
-  ShAdDarr             3.0       1.0
-  ShAdDaFfr           12.0       1.0
-  HaDdAfF              1.0      15.0
-  ShAdDaFfR           14.0       1.0
-  HaFfA                1.0       2.0
-  ShAdDafFR            9.0       1.0
-  Ar                   1.0      22.0
-  ShAdDaFRfR           2.0       1.0
-  ShAdDaFTf            4.0       1.0
-  ShADdfR              2.0       1.0
-  FfA                  2.0       1.0
-  Fa                   4.0       3.0
-  HaDdAFf              1.0      14.0
-  FaAr                 1.0       3.0
-  ShAFafR              2.0       1.0
-  HaDdAFTf             1.0       2.0
-  ShAdDaftFR           5.0       1.0
-  ShADfaF             40.0       1.0
-  ^hADafF              2.0       1.0
-  ShADfFa            111.0       1.0
-  ShAdDFfR             2.0       1.0
-  ShAfdtDFr            4.0       1.0
-  ShAdfDFr             3.0       1.0
-  HaR                  1.0       2.0
-  ^aR                  2.0       1.0
-  ShADfFrr             3.0       1.0
-  ShAdDfFa            96.0       1.0
-  ShAadDfF             5.0       1.0
-  ShADfdtFaR           2.0       1.0
-  ShAdDar              3.0       1.0
-  FaR                  3.0       2.0
-  ShAFdRfR             2.0       1.0
-  ShAdDafFrr           3.0       1.0
-  Ffa                  1.0       2.0
-  ShAdtDafF           11.0       1.0
-  ShAdDaFRRf           2.0       1.0
-  ShAdDtafFr           4.0       1.0
-  ShAdDafr             2.0       1.0
-  HaADdFf              1.0       3.0
-  HaDdTAFf             1.0       2.0
-  HafFr                1.0       2.0
-  ShADfR               2.0       1.0
-  ^hADadfR             2.0       1.0
-  ^hA                  2.0       1.0
-  ShAFdfRt             2.0       1.0
-  ^hADFr               2.0       1.0
-  ShADfrF              2.0       1.0
+  ShADadfF           336.0       1.0
+  S               131721.0   10789.0
+  Sr                 957.0      93.0
+  ShAdDaFf           310.0       1.0
+  ShADafF            193.0       1.0
+  ShAdDafF           677.0       1.0
+  ShAdDaFr            72.0       1.0
+  ShADar              96.0       1.0
   ShADfF               2.0       1.0
-  ^hADr                2.0       1.0
-  [total]         539598.0  451979.0
+  ShADafr             34.0       1.0
+  ShAdDaFfR            6.0       1.0
+  FaR                  3.0       1.0
+  ShAdDaftF           34.0       1.0
+  ShADr               37.0       1.0
+  ShAdDfFr            58.0       1.0
+  ShADfrFr             9.0       1.0
+  ShAdDarfR           37.0       1.0
+  ShAdDfFa            24.0       1.0
+  ShAdDaFrR            5.0       1.0
+  ShADadfR            10.0       1.0
+  ShAdDatFrR           3.0       1.0
+  ShAFr                4.0       1.0
+  ShAdfDFr             3.0       1.0
+  ShADfFa             22.0       1.0
+  ShADfFr             15.0       1.0
+  F                   12.0       3.0
+  ShADdfFa            35.0       1.0
+  ShAdDr              29.0       1.0
+  D                    9.0  100474.0
+  ShAdDafrR           37.0       1.0
+  ShADadFf             2.0       1.0
+  ShAdDFfR             2.0       1.0
+  ShAFa                2.0       1.0
+  ShAdtDaFrR           6.0       1.0
+  ShAr                10.0       2.0
+  ShAdDaTFf            4.0       1.0
+  FfA                  2.0       1.0
+  ShAdDafFr            9.0       1.0
+  ShAdDtafF            4.0       1.0
+  ShAdDatFr            5.0       1.0
+  ShADadR              3.0       1.0
+  ShAdDaFfr            6.0       1.0
+  ^r                   7.0       1.0
+  ShAdDarr             3.0       1.0
+  ShAdDatfF            5.0       1.0
+  ShAdfFa              2.0       1.0
+  ShAfFa               7.0       1.0
+  ShADfdtR             2.0       1.0
+  ShADfaF             11.0       1.0
+  ShAF                 4.0       1.0
+  ShAdtDaFr            4.0       1.0
+  ShADafdtF            4.0       1.0
+  ShAdDtaFr            2.0       1.0
+  ShAdDaftFR           2.0       1.0
+  SaR                  2.0       2.0
+  Fa                   2.0       1.0
+  ShAFfR               2.0       1.0
+  ShADdafR             2.0       1.0
+  ShAdDafrFr           2.0       1.0
+  ShA                  4.0       2.0
+  ShADfFrr             2.0       1.0
+  ShADadRf             2.0       1.0
+  ShAdDatrfR           3.0       1.0
+  ShAdDafFR            2.0       1.0
+  ShAdDTafF            2.0       1.0
+  ShAdtDafF            3.0       1.0
+  ShAdDaTfF            2.0       1.0
+  ShADF                3.0       1.0
+  ShAdDafFrr           2.0       1.0
+  ShAdr                2.0       1.0
+  ShAdDFar             2.0       1.0
+  ShAdaFr              2.0       1.0
+  ShAdDaFTf            2.0       1.0
+  Dd                   1.0    1640.0
+  R                    1.0      52.0
+  Ar                   1.0      10.0
+  D^                   1.0       5.0
+  HaDdAfF              1.0       5.0
+  HaDdAFf              1.0       3.0
+  Fr                   1.0       3.0
+  HaDdTAFf             1.0       2.0
+  HaADdFf              1.0       2.0
+  [total]         134950.0  113153.0
 
 orig_pkts
-  mean              2.0817    1.2121
-  std. dev.         2.3224    0.4557
-  weight sum        539473    469275
-  precision         1.1321    1.1321
+  mean              2.0391     1.185
+  std. dev.         2.2739    0.4415
+  weight sum        134868    117318
+  precision         1.1064    1.1064
 
 orig_ip_bytes
-  mean            109.7929   48.6049
-  std. dev.       118.8239   31.3806
-  weight sum        539473    469275
-  precision         2.3958    2.3958
+  mean            108.4524   48.1506
+  std. dev.       117.1165   32.1546
+  weight sum        134868    117318
+  precision         4.4838    4.4838
 
 resp_pkts
-  mean              0.2556     0.018
-  std. dev.         2.5269    0.2056
-  weight sum        539473    469275
-  precision         1.1029    1.1029
+  mean              0.2432    0.0194
+  std. dev.         2.4469    0.2135
+  weight sum        134868    117318
+  precision         1.2105    1.2105
 
 resp_ip_bytes
-  mean              15.898    1.1638
-  std. dev.        162.942   12.1866
-  weight sum        539473    469275
-  precision         8.2588    8.2588
+  mean             15.2842    1.1498
+  std. dev.       157.9222   12.1093
+  weight sum        134868    117318
+  precision         8.2068    8.2068
 
 
 
-Time taken to build model: 1.49 seconds
+Time taken to build model: 0.26 seconds
 
 === Stratified cross-validation ===
 === Summary ===
 
-Correctly Classified Instances      642800               63.7226 %
-Incorrectly Classified Instances    365948               36.2774 %
-Kappa statistic                          0.3033
-Mean absolute error                      0.3324
-Root mean squared error                  0.5478
-Relative absolute error                 66.8132 %
-Root relative squared error            109.8269 %
-Total Number of Instances          1008748     
+Correctly Classified Instances      160724               63.7323 %
+Incorrectly Classified Instances     91462               36.2677 %
+Kappa statistic                          0.3035
+Mean absolute error                      0.3265
+Root mean squared error                  0.5373
+Relative absolute error                 65.6272 %
+Root relative squared error            107.7305 %
+Total Number of Instances           252186     
 
 === Detailed Accuracy By Class ===
 
                  TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 0.350    0.032    0.926      0.350    0.508      0.394    0.954     0.927     Malicious
-                 0.968    0.650    0.564      0.968    0.713      0.394    0.954     0.965     Benign
-Weighted Avg.    0.637    0.320    0.758      0.637    0.603      0.394    0.954     0.945     
+                 0.350    0.032    0.925      0.350    0.508      0.394    0.953     0.926     Malicious
+                 0.968    0.650    0.564      0.968    0.713      0.394    0.953     0.964     Benign
+Weighted Avg.    0.637    0.320    0.757      0.637    0.603      0.394    0.953     0.944     
 
 === Confusion Matrix ===
 
       a      b   <-- classified as
- 188648 350825 |      a = Malicious
-  15123 454152 |      b = Benign
+  47213  87655 |      a = Malicious
+   3807 113511 |      b = Benign
 
 
 === Re-evaluation on test set ===
 
 User supplied test set
-Relation:     CTU-Honeypot-7
+Relation:     CTU-Honeypot-Capture-7-1-labeled
 Instances:     unknown (yet). Reading incrementally
 Attributes:   12
 
-=== Predictions on user test set ===
-
-    inst#     actual  predicted error prediction
-        1        1:?   2:Benign       1 
-        2        1:? 1:Malicious       1 
-        3        1:? 1:Malicious       1 
-        4        1:? 1:Malicious       1 
-        5        1:? 1:Malicious       1 
-        6        1:? 1:Malicious       1 
-        7        1:? 1:Malicious       1 
-        8        1:? 1:Malicious       1 
-        9        1:?   2:Benign       1 
-       10        1:? 1:Malicious       0.985 
-       11        1:?   2:Benign       1 
-       12        1:?   2:Benign       1 
-       13        1:? 1:Malicious       1 
-       14        1:? 1:Malicious       1 
-       15        1:? 1:Malicious       1 
-       16        1:? 1:Malicious       1 
-       17        1:? 1:Malicious       1 
-       18        1:? 1:Malicious       1 
-       19        1:? 1:Malicious       1 
-       20        1:? 1:Malicious       1 
-       21        1:?   2:Benign       1 
-       22        1:? 1:Malicious       1 
-       23        1:? 1:Malicious       1 
-       24        1:?   2:Benign       1 
-       25        1:? 1:Malicious       1 
-       26        1:? 1:Malicious       1 
-       27        1:? 1:Malicious       1 
-       28        1:? 1:Malicious       1 
-       29        1:? 1:Malicious       1 
-       30        1:? 1:Malicious       1 
-       31        1:? 1:Malicious       1 
-       32        1:?   2:Benign       1 
-       33        1:? 1:Malicious       0.985 
-       34        1:?   2:Benign       1 
-       35        1:?   2:Benign       1 
-       36        1:? 1:Malicious       1 
-       37        1:? 1:Malicious       1 
-       38        1:? 1:Malicious       1 
-       39        1:? 1:Malicious       1 
-       40        1:? 1:Malicious       1 
-       41        1:? 1:Malicious       1 
-       42        1:? 1:Malicious       1 
-       43        1:? 1:Malicious       1 
-       44        1:? 1:Malicious       1 
-       45        1:? 1:Malicious       1 
-       46        1:?   2:Benign       1 
-       47        1:? 1:Malicious       0.985 
-       48        1:?   2:Benign       1 
-       49        1:?   2:Benign       1 
-       50        1:? 1:Malicious       1 
-       51        1:? 1:Malicious       1 
-       52        1:? 1:Malicious       1 
-       53        1:? 1:Malicious       1 
-       54        1:? 1:Malicious       1 
-       55        1:? 1:Malicious       1 
-       56        1:? 1:Malicious       1 
-       57        1:?   2:Benign       1 
-       58        1:? 1:Malicious       0.985 
-       59        1:?   2:Benign       1 
-       60        1:?   2:Benign       1 
-       61        1:? 1:Malicious       1 
-       62        1:? 1:Malicious       1 
-       63        1:? 1:Malicious       1 
-       64        1:? 1:Malicious       1 
-       65        1:? 1:Malicious       1 
-       66        1:?   2:Benign       1 
-       67        1:? 1:Malicious       0.985 
-       68        1:?   2:Benign       1 
-       69        1:? 1:Malicious       1 
-       70        1:? 1:Malicious       1 
-       71        1:? 1:Malicious       1 
-       72        1:? 1:Malicious       1 
-       73        1:? 1:Malicious       1 
-       74        1:? 1:Malicious       1 
-       75        1:?   2:Benign       1 
-       76        1:? 1:Malicious       0.985 
-       77        1:?   2:Benign       1 
-       78        1:? 1:Malicious       1 
-       79        1:? 1:Malicious       1 
-       80        1:? 1:Malicious       1 
-       81        1:? 1:Malicious       1 
-       82        1:? 1:Malicious       1 
-       83        1:? 1:Malicious       1 
-       84        1:?   2:Benign       1 
-       85        1:? 1:Malicious       0.985 
-       86        1:?   2:Benign       1 
-       87        1:?   2:Benign       1 
-       88        1:? 1:Malicious       1 
-       89        1:? 1:Malicious       1 
-       90        1:? 1:Malicious       1 
-       91        1:? 1:Malicious       1 
-       92        1:? 1:Malicious       1 
-       93        1:?   2:Benign       1 
-       94        1:? 1:Malicious       0.985 
-       95        1:?   2:Benign       1 
-       96        1:? 1:Malicious       1 
-       97        1:? 1:Malicious       1 
-       98        1:? 1:Malicious       1 
-       99        1:? 1:Malicious       1 
-      100        1:? 1:Malicious       1 
-      101        1:? 1:Malicious       1 
-      102        1:? 1:Malicious       1 
-      103        1:? 1:Malicious       1 
-      104        1:?   2:Benign       1 
-      105        1:? 1:Malicious       0.985 
-      106        1:?   2:Benign       1 
-      107        1:? 1:Malicious       1 
-      108        1:? 1:Malicious       1 
-      109        1:? 1:Malicious       1 
-      110        1:? 1:Malicious       1 
-      111        1:? 1:Malicious       1 
-      112        1:? 1:Malicious       1 
-      113        1:? 1:Malicious       1 
-      114        1:?   2:Benign       1 
-      115        1:? 1:Malicious       0.985 
-      116        1:?   2:Benign       1 
-      117        1:? 1:Malicious       1 
-      118        1:?   2:Benign       1 
-      119        1:? 1:Malicious       1 
-      120        1:? 1:Malicious       1 
-      121        1:? 1:Malicious       1 
-      122        1:? 1:Malicious       1 
-      123        1:? 1:Malicious       1 
-      124        1:? 1:Malicious       1 
-
 === Summary ===
 
-Total Number of Instances                0     
-Ignored Class Unknown Instances                124     
-
-
-=== Re-evaluation on test set ===
-
-User supplied test set
-Relation:     CTU-Honeypot-7
-Instances:     unknown (yet). Reading incrementally
-Attributes:   12
-
-=== Predictions on user test set ===
-
-    inst#     actual  predicted error prediction
-        1   2:Benign   2:Benign       1 
-        2   2:Benign 1:Malicious   +   1 
-        3   2:Benign 1:Malicious   +   1 
-        4   2:Benign 1:Malicious   +   1 
-        5   2:Benign 1:Malicious   +   1 
-        6   2:Benign 1:Malicious   +   1 
-        7   2:Benign 1:Malicious   +   1 
-        8   2:Benign 1:Malicious   +   1 
-        9   2:Benign   2:Benign       1 
-       10   2:Benign 1:Malicious   +   0.985 
-       11   2:Benign   2:Benign       1 
-       12   2:Benign   2:Benign       1 
-       13   2:Benign 1:Malicious   +   1 
-       14   2:Benign 1:Malicious   +   1 
-       15   2:Benign 1:Malicious   +   1 
-       16   2:Benign 1:Malicious   +   1 
-       17   2:Benign 1:Malicious   +   1 
-       18   2:Benign 1:Malicious   +   1 
-       19   2:Benign 1:Malicious   +   1 
-       20   2:Benign 1:Malicious   +   1 
-       21   2:Benign   2:Benign       1 
-       22   2:Benign 1:Malicious   +   1 
-       23   2:Benign 1:Malicious   +   1 
-       24   2:Benign   2:Benign       1 
-       25   2:Benign 1:Malicious   +   1 
-       26   2:Benign 1:Malicious   +   1 
-       27   2:Benign 1:Malicious   +   1 
-       28   2:Benign 1:Malicious   +   1 
-       29   2:Benign 1:Malicious   +   1 
-       30   2:Benign 1:Malicious   +   1 
-       31   2:Benign 1:Malicious   +   1 
-       32   2:Benign   2:Benign       1 
-       33   2:Benign 1:Malicious   +   0.985 
-       34   2:Benign   2:Benign       1 
-       35   2:Benign   2:Benign       1 
-       36   2:Benign 1:Malicious   +   1 
-       37   2:Benign 1:Malicious   +   1 
-       38   2:Benign 1:Malicious   +   1 
-       39   2:Benign 1:Malicious   +   1 
-       40   2:Benign 1:Malicious   +   1 
-       41   2:Benign 1:Malicious   +   1 
-       42   2:Benign 1:Malicious   +   1 
-       43   2:Benign 1:Malicious   +   1 
-       44   2:Benign 1:Malicious   +   1 
-       45   2:Benign 1:Malicious   +   1 
-       46   2:Benign   2:Benign       1 
-       47   2:Benign 1:Malicious   +   0.985 
-       48   2:Benign   2:Benign       1 
-       49   2:Benign   2:Benign       1 
-       50   2:Benign 1:Malicious   +   1 
-       51   2:Benign 1:Malicious   +   1 
-       52   2:Benign 1:Malicious   +   1 
-       53   2:Benign 1:Malicious   +   1 
-       54   2:Benign 1:Malicious   +   1 
-       55   2:Benign 1:Malicious   +   1 
-       56   2:Benign 1:Malicious   +   1 
-       57   2:Benign   2:Benign       1 
-       58   2:Benign 1:Malicious   +   0.985 
-       59   2:Benign   2:Benign       1 
-       60   2:Benign   2:Benign       1 
-       61   2:Benign 1:Malicious   +   1 
-       62   2:Benign 1:Malicious   +   1 
-       63   2:Benign 1:Malicious   +   1 
-       64   2:Benign 1:Malicious   +   1 
-       65   2:Benign 1:Malicious   +   1 
-       66   2:Benign   2:Benign       1 
-       67   2:Benign 1:Malicious   +   0.985 
-       68   2:Benign   2:Benign       1 
-       69   2:Benign 1:Malicious   +   1 
-       70   2:Benign 1:Malicious   +   1 
-       71   2:Benign 1:Malicious   +   1 
-       72   2:Benign 1:Malicious   +   1 
-       73   2:Benign 1:Malicious   +   1 
-       74   2:Benign 1:Malicious   +   1 
-       75   2:Benign   2:Benign       1 
-       76   2:Benign 1:Malicious   +   0.985 
-       77   2:Benign   2:Benign       1 
-       78   2:Benign 1:Malicious   +   1 
-       79   2:Benign 1:Malicious   +   1 
-       80   2:Benign 1:Malicious   +   1 
-       81   2:Benign 1:Malicious   +   1 
-       82   2:Benign 1:Malicious   +   1 
-       83   2:Benign 1:Malicious   +   1 
-       84   2:Benign   2:Benign       1 
-       85   2:Benign 1:Malicious   +   0.985 
-       86   2:Benign   2:Benign       1 
-       87   2:Benign   2:Benign       1 
-       88   2:Benign 1:Malicious   +   1 
-       89   2:Benign 1:Malicious   +   1 
-       90   2:Benign 1:Malicious   +   1 
-       91   2:Benign 1:Malicious   +   1 
-       92   2:Benign 1:Malicious   +   1 
-       93   2:Benign   2:Benign       1 
-       94   2:Benign 1:Malicious   +   0.985 
-       95   2:Benign   2:Benign       1 
-       96   2:Benign 1:Malicious   +   1 
-       97   2:Benign 1:Malicious   +   1 
-       98   2:Benign 1:Malicious   +   1 
-       99   2:Benign 1:Malicious   +   1 
-      100   2:Benign 1:Malicious   +   1 
-      101   2:Benign 1:Malicious   +   1 
-      102   2:Benign 1:Malicious   +   1 
-      103   2:Benign 1:Malicious   +   1 
-      104   2:Benign   2:Benign       1 
-      105   2:Benign 1:Malicious   +   0.985 
-      106   2:Benign   2:Benign       1 
-      107   2:Benign 1:Malicious   +   1 
-      108   2:Benign 1:Malicious   +   1 
-      109   2:Benign 1:Malicious   +   1 
-      110   2:Benign 1:Malicious   +   1 
-      111   2:Benign 1:Malicious   +   1 
-      112   2:Benign 1:Malicious   +   1 
-      113   2:Benign 1:Malicious   +   1 
-      114   2:Benign   2:Benign       1 
-      115   2:Benign 1:Malicious   +   0.985 
-      116   2:Benign   2:Benign       1 
-      117   2:Benign 1:Malicious   +   1 
-      118   2:Benign   2:Benign       1 
-      119   2:Benign 1:Malicious   +   1 
-      120   2:Benign 1:Malicious   +   1 
-      121   2:Benign 1:Malicious   +   1 
-      122   2:Benign 1:Malicious   +   1 
-      123   2:Benign 1:Malicious   +   1 
-      124   2:Benign 1:Malicious   +   1 
-
-=== Summary ===
-
-Correctly Classified Instances          29               23.3871 %
-Incorrectly Classified Instances        95               76.6129 %
+Correctly Classified Instances          33               25.3846 %
+Incorrectly Classified Instances        97               74.6154 %
 Kappa statistic                          0     
-Mean absolute error                      0.7649
-Root mean squared error                  0.8739
-Total Number of Instances              124     
+Mean absolute error                      0.7457
+Root mean squared error                  0.8633
+Total Number of Instances              130     
 
 === Detailed Accuracy By Class ===
 
                  TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 ?        0.766    0.000      ?        ?          ?        ?         ?         Malicious
-                 0.234    ?        1.000      0.234    0.379      ?        ?         ?         Benign
-Weighted Avg.    0.234    ?        1.000      0.234    0.379      ?        ?         ?         
+                 ?        0.746    0.000      ?        ?          ?        ?         ?         Malicious
+                 0.254    ?        1.000      0.254    0.405      ?        ?         1.000     Benign
+Weighted Avg.    0.254    ?        1.000      0.254    0.405      ?        ?         1.000     
 
 === Confusion Matrix ===
 
   a  b   <-- classified as
   0  0 |  a = Malicious
- 95 29 |  b = Benign
+ 97 33 |  b = Benign
 
 
 === Re-evaluation on test set ===
 
 User supplied test set
-Relation:     CTU-Malware-Capture-44-1
+Relation:     CTU-Malware-Capture-44-1-labeled
 Instances:     unknown (yet). Reading incrementally
 Attributes:   12
 
-=== Predictions on user test set ===
-
-    inst#     actual  predicted error prediction
-        1 1:Malicious   2:Benign   +   1 
-        2 1:Malicious 1:Malicious       1 
-        3 1:Malicious   2:Benign   +   0.908 
-        4 1:Malicious   2:Benign   +   0.908 
-        5 1:Malicious   2:Benign   +   1 
-        6 1:Malicious   2:Benign   +   1 
-        7 1:Malicious 1:Malicious       1 
-        8 1:Malicious   2:Benign   +   0.908 
-        9 1:Malicious   2:Benign   +   0.908 
-       10 1:Malicious   2:Benign   +   1 
-       11 1:Malicious   2:Benign   +   1 
-       12 1:Malicious   2:Benign   +   1 
-       13 1:Malicious 1:Malicious       1 
-       14   2:Benign   2:Benign       1 
-       15 1:Malicious   2:Benign   +   0.908 
-       16   2:Benign   2:Benign       1 
-       17 1:Malicious   2:Benign   +   0.908 
-       18 1:Malicious   2:Benign   +   0.908 
-       19   2:Benign   2:Benign       1 
-       20   2:Benign   2:Benign       1 
-       21   2:Benign   2:Benign       1 
-       22 1:Malicious   2:Benign   +   1 
-       23 1:Malicious   2:Benign   +   1 
-       24 1:Malicious 1:Malicious       1 
-       25   2:Benign   2:Benign       1 
-       26 1:Malicious   2:Benign   +   0.908 
-       27   2:Benign   2:Benign       1 
-       28 1:Malicious   2:Benign   +   0.908 
-       29 1:Malicious   2:Benign   +   1 
-       30 1:Malicious   2:Benign   +   1 
-       31   2:Benign   2:Benign       1 
-       32 1:Malicious   2:Benign   +   1 
-       33   2:Benign   2:Benign       1 
-       34   2:Benign   2:Benign       1 
-       35   2:Benign   2:Benign       1 
-       36   2:Benign   2:Benign       1 
-       37   2:Benign   2:Benign       1 
-       38   2:Benign   2:Benign       1 
-       39   2:Benign   2:Benign       1 
-       40   2:Benign   2:Benign       1 
-       41   2:Benign   2:Benign       1 
-       42   2:Benign   2:Benign       1 
-       43   2:Benign   2:Benign       1 
-       44   2:Benign   2:Benign       1 
-       45   2:Benign   2:Benign       1 
-       46   2:Benign   2:Benign       1 
-       47   2:Benign   2:Benign       1 
-       48   2:Benign   2:Benign       1 
-       49   2:Benign   2:Benign       1 
-       50   2:Benign   2:Benign       1 
-       51   2:Benign   2:Benign       1 
-       52   2:Benign   2:Benign       1 
-       53   2:Benign   2:Benign       1 
-       54   2:Benign   2:Benign       1 
-       55   2:Benign   2:Benign       1 
-       56   2:Benign   2:Benign       1 
-       57   2:Benign   2:Benign       1 
-       58   2:Benign   2:Benign       1 
-       59   2:Benign 1:Malicious   +   0.965 
-       60   2:Benign   2:Benign       1 
-       61   2:Benign   2:Benign       1 
-       62   2:Benign   2:Benign       1 
-       63   2:Benign   2:Benign       1 
-       64   2:Benign   2:Benign       1 
-       65   2:Benign   2:Benign       1 
-       66   2:Benign   2:Benign       1 
-       67   2:Benign   2:Benign       1 
-       68   2:Benign   2:Benign       1 
-       69   2:Benign   2:Benign       1 
-       70   2:Benign   2:Benign       1 
-       71   2:Benign   2:Benign       1 
-       72   2:Benign   2:Benign       1 
-       73   2:Benign   2:Benign       1 
-       74   2:Benign   2:Benign       1 
-       75   2:Benign   2:Benign       1 
-       76   2:Benign   2:Benign       1 
-       77   2:Benign   2:Benign       1 
-       78   2:Benign   2:Benign       1 
-       79   2:Benign   2:Benign       1 
-       80   2:Benign   2:Benign       1 
-       81   2:Benign   2:Benign       1 
-       82   2:Benign   2:Benign       1 
-       83   2:Benign   2:Benign       1 
-       84   2:Benign   2:Benign       1 
-       85   2:Benign   2:Benign       1 
-       86   2:Benign   2:Benign       1 
-       87   2:Benign   2:Benign       1 
-       88   2:Benign   2:Benign       1 
-       89   2:Benign   2:Benign       1 
-       90   2:Benign   2:Benign       1 
-       91   2:Benign   2:Benign       1 
-       92   2:Benign   2:Benign       1 
-       93   2:Benign   2:Benign       1 
-       94   2:Benign   2:Benign       1 
-       95   2:Benign   2:Benign       1 
-       96   2:Benign   2:Benign       1 
-       97   2:Benign   2:Benign       1 
-       98   2:Benign   2:Benign       1 
-       99   2:Benign   2:Benign       1 
-      100   2:Benign   2:Benign       1 
-      101   2:Benign   2:Benign       1 
-      102   2:Benign   2:Benign       1 
-      103   2:Benign   2:Benign       1 
-      104   2:Benign   2:Benign       1 
-      105   2:Benign   2:Benign       1 
-      106   2:Benign   2:Benign       1 
-      107   2:Benign   2:Benign       1 
-      108   2:Benign   2:Benign       1 
-      109   2:Benign   2:Benign       1 
-      110   2:Benign   2:Benign       1 
-      111   2:Benign   2:Benign       1 
-      112   2:Benign   2:Benign       1 
-      113   2:Benign   2:Benign       1 
-      114   2:Benign   2:Benign       1 
-      115   2:Benign   2:Benign       1 
-      116   2:Benign   2:Benign       1 
-      117   2:Benign   2:Benign       1 
-      118   2:Benign   2:Benign       1 
-      119   2:Benign   2:Benign       1 
-      120   2:Benign   2:Benign       1 
-      121   2:Benign   2:Benign       1 
-      122   2:Benign   2:Benign       1 
-      123   2:Benign   2:Benign       1 
-      124   2:Benign   2:Benign       1 
-      125   2:Benign   2:Benign       1 
-      126   2:Benign   2:Benign       1 
-      127   2:Benign   2:Benign       1 
-      128   2:Benign   2:Benign       1 
-      129   2:Benign   2:Benign       1 
-      130   2:Benign   2:Benign       1 
-      131   2:Benign   2:Benign       1 
-      132   2:Benign   2:Benign       1 
-      133   2:Benign   2:Benign       1 
-      134   2:Benign   2:Benign       1 
-      135   2:Benign   2:Benign       1 
-      136   2:Benign   2:Benign       1 
-      137   2:Benign   2:Benign       1 
-      138   2:Benign   2:Benign       1 
-      139   2:Benign   2:Benign       1 
-      140   2:Benign   2:Benign       1 
-      141   2:Benign   2:Benign       1 
-      142   2:Benign   2:Benign       1 
-      143   2:Benign   2:Benign       1 
-      144   2:Benign   2:Benign       1 
-      145   2:Benign   2:Benign       1 
-      146   2:Benign   2:Benign       1 
-      147   2:Benign   2:Benign       1 
-      148   2:Benign   2:Benign       1 
-      149   2:Benign   2:Benign       1 
-      150   2:Benign   2:Benign       1 
-      151   2:Benign   2:Benign       1 
-      152   2:Benign   2:Benign       1 
-      153   2:Benign   2:Benign       1 
-      154   2:Benign   2:Benign       1 
-      155   2:Benign   2:Benign       1 
-      156   2:Benign   2:Benign       1 
-      157   2:Benign   2:Benign       1 
-      158   2:Benign   2:Benign       1 
-      159   2:Benign   2:Benign       1 
-      160   2:Benign   2:Benign       1 
-      161   2:Benign   2:Benign       1 
-      162   2:Benign   2:Benign       1 
-      163   2:Benign   2:Benign       1 
-      164   2:Benign   2:Benign       1 
-      165   2:Benign   2:Benign       1 
-      166   2:Benign   2:Benign       1 
-      167   2:Benign   2:Benign       1 
-      168   2:Benign   2:Benign       1 
-      169   2:Benign   2:Benign       1 
-      170   2:Benign   2:Benign       1 
-      171   2:Benign   2:Benign       1 
-      172   2:Benign   2:Benign       1 
-      173   2:Benign   2:Benign       1 
-      174   2:Benign   2:Benign       1 
-      175   2:Benign   2:Benign       1 
-      176   2:Benign   2:Benign       1 
-      177   2:Benign   2:Benign       1 
-      178   2:Benign   2:Benign       1 
-      179   2:Benign   2:Benign       1 
-      180   2:Benign   2:Benign       1 
-      181   2:Benign   2:Benign       1 
-      182   2:Benign   2:Benign       1 
-      183   2:Benign   2:Benign       1 
-      184   2:Benign   2:Benign       1 
-      185   2:Benign   2:Benign       1 
-      186   2:Benign   2:Benign       1 
-      187   2:Benign   2:Benign       1 
-      188   2:Benign   2:Benign       1 
-      189   2:Benign   2:Benign       1 
-      190   2:Benign   2:Benign       1 
-      191   2:Benign   2:Benign       1 
-      192   2:Benign   2:Benign       1 
-      193   2:Benign   2:Benign       1 
-      194   2:Benign   2:Benign       1 
-      195   2:Benign   2:Benign       1 
-      196   2:Benign   2:Benign       1 
-      197   2:Benign   2:Benign       1 
-      198   2:Benign   2:Benign       1 
-      199   2:Benign   2:Benign       1 
-      200   2:Benign   2:Benign       1 
-      201   2:Benign   2:Benign       1 
-      202   2:Benign   2:Benign       1 
-      203   2:Benign   2:Benign       1 
-      204   2:Benign   2:Benign       1 
-      205   2:Benign   2:Benign       1 
-      206   2:Benign   2:Benign       1 
-      207   2:Benign   2:Benign       1 
-      208   2:Benign   2:Benign       1 
-      209   2:Benign   2:Benign       1 
-      210   2:Benign   2:Benign       1 
-      211   2:Benign   2:Benign       1 
-      212   2:Benign   2:Benign       1 
-      213   2:Benign   2:Benign       1 
-      214   2:Benign   2:Benign       1 
-      215   2:Benign   2:Benign       1 
-      216   2:Benign   2:Benign       1 
-      217   2:Benign   2:Benign       1 
-      218   2:Benign   2:Benign       1 
-      219   2:Benign   2:Benign       1 
-      220   2:Benign   2:Benign       1 
-      221   2:Benign   2:Benign       1 
-      222   2:Benign   2:Benign       1 
-      223   2:Benign   2:Benign       1 
-      224   2:Benign   2:Benign       1 
-      225   2:Benign   2:Benign       1 
-      226   2:Benign   2:Benign       1 
-      227   2:Benign   2:Benign       1 
-      228   2:Benign   2:Benign       1 
-      229 1:Malicious   2:Benign   +   1 
-      230   2:Benign   2:Benign       1 
-      231   2:Benign   2:Benign       1 
-      232   2:Benign   2:Benign       1 
-      233   2:Benign   2:Benign       1 
-
 === Summary ===
 
-Correctly Classified Instances         211               90.5579 %
-Incorrectly Classified Instances        22                9.4421 %
-Kappa statistic                          0.2395
-Mean absolute error                      0.0907
-Root mean squared error                  0.2955
-Total Number of Instances              233     
+Correctly Classified Instances         215               90.7173 %
+Incorrectly Classified Instances        22                9.2827 %
+Kappa statistic                          0.283 
+Mean absolute error                      0.089 
+Root mean squared error                  0.2914
+Total Number of Instances              237     
 
 === Detailed Accuracy By Class ===
 
                  TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 0.160    0.005    0.800      0.160    0.267      0.331    ?         ?         Malicious
-                 0.995    0.840    0.908      0.995    0.950      0.331    ?         ?         Benign
-Weighted Avg.    0.906    0.750    0.896      0.906    0.876      0.331    ?         ?         
+                 0.192    0.005    0.833      0.192    0.313      0.373    0.552     0.558     Malicious
+                 0.995    0.808    0.909      0.995    0.950      0.373    0.551     0.908     Benign
+Weighted Avg.    0.907    0.720    0.901      0.907    0.880      0.373    0.551     0.869     
 
 === Confusion Matrix ===
 
    a   b   <-- classified as
-   4  21 |   a = Malicious
-   1 207 |   b = Benign
+   5  21 |   a = Malicious
+   1 210 |   b = Benign
 
 
 === Re-evaluation on test set ===
 
 User supplied test set
-Relation:     CTU-Malware-Capture-34-1
+Relation:     CTU-Malware-Capture-8-1-labeled
 Instances:     unknown (yet). Reading incrementally
 Attributes:   12
 
 === Summary ===
 
-Correctly Classified Instances          85               69.6721 %
-Incorrectly Classified Instances        37               30.3279 %
-Kappa statistic                          0.3648
-Mean absolute error                      0.3049
-Root mean squared error                  0.5177
-Total Number of Instances              122     
+Correctly Classified Instances        4235               40.7094 %
+Incorrectly Classified Instances      6168               59.2906 %
+Kappa statistic                          0.1222
+Mean absolute error                      0.5305
+Root mean squared error                  0.6888
+Total Number of Instances            10403     
 
 === Detailed Accuracy By Class ===
 
                  TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 0.528    0.174    0.700      0.528    0.602      0.374    ?         ?         Malicious
-                 0.826    0.472    0.695      0.826    0.755      0.374    ?         ?         Benign
-Weighted Avg.    0.697    0.342    0.697      0.697    0.689      0.374    ?         ?         
+                 0.250    0.001    0.999      0.250    0.400      0.255    0.999     0.999     Malicious
+                 0.999    0.750    0.261      0.999    0.414      0.255    0.999     0.999     Benign
+Weighted Avg.    0.407    0.158    0.844      0.407    0.403      0.255    0.999     0.999     
 
 === Confusion Matrix ===
 
-  a  b   <-- classified as
- 28 25 |  a = Malicious
- 12 57 |  b = Benign
+    a    b   <-- classified as
+ 2056 6166 |    a = Malicious
+    2 2179 |    b = Benign
 
