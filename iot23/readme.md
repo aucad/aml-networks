@@ -31,11 +31,14 @@ CTU Malware Capture 20-1 is a highly benign dataset.
 | [Naive Bayes][NB0]   | 99.3768 % |  56.4516 % |  93.9914 % |  99.115 % |
 | [SVM][SV0]           | 99.9377 % |      100 % |      100 % |           |
 
+<br/><br/>
+
 **Decision tree**
 
 <p align="center">
-<img src="logs/20-1-tree.png" style="max-width: 500px" />
+<img src="logs/20-1-tree.png" style="max-width: 100%;" width="800" />
 </p>
+<br/><br/>
 
 ## Malware Capture 34-1 (malicious)
 
