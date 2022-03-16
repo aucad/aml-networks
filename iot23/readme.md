@@ -1,14 +1,14 @@
 # IoT-23 Training
 
-These are logged prediction results of training on Aposemat IoT-23 dataset.
+These are results of training on [Aposemat IoT-23 dataset][0].
 
-**Classifiers:** AdaBoost, ann, naive bayes, SVM, decision tree.
+- **Classifiers:** AdaBoost, ann, naive bayes, SVM, decision tree
 
-**12 attributes:** proto, duration, orig_bytes, resp_bytes, conn_state,
+- **Attributes (12):** proto, duration, orig_bytes, resp_bytes, conn_state,
 missed_bytes, history, orig_pkts, orig_ip_bytes, resp_pkts, resp_ip_bytes,
-label.
+label
 
-**validation:** 10-folds cross-validation.
+- **Validation:** 10-folds cross-validation
 
 | Test datasets                 | Benign | Malicious |   Ratio | 
 |:------------------------------|:------:|:---------:|--------:|
@@ -80,7 +80,7 @@ label.
 
 ![img](logs/1-1-tree.png)
 
-
+[0]: https://github.com/iotcad/sensor-data/tree/main/iot-23
 [1]: https://github.com/iotcad/sensor-data/blob/611d9ff5e768c74fc8a5f7ea2ef52a974b85eeae/iot-23/CTU-Malware-Capture-20-1-labeled.csv
 [2]: https://github.com/iotcad/sensor-data/blob/611d9ff5e768c74fc8a5f7ea2ef52a974b85eeae/iot-23/CTU-Malware-Capture-44-1-labeled.csv
 [3]: https://github.com/iotcad/sensor-data/blob/611d9ff5e768c74fc8a5f7ea2ef52a974b85eeae/iot-23/CTU-Malware-Capture-34-1-labeled.csv
