@@ -66,24 +66,17 @@ label.
 
 ## Malware Capture 1-1: 50/50 split
 
-| Dataset name                     | Benign | Malicious |       Ratio | 
-|:---------------------------------|:------:|:---------:|------------:|
-| [CTU-IoT-Malware-Capture-1-1][6] | 469275 |  539473   | 46.5 / 53.5 |
-
-- Original: [https://mcfp.felk.cvut.cz/.../CTU-IoT-Malware-Capture-1-1][8]
-- Preprocessed: [CTU-IoT-Malware-Capture-1-1.csv][6]
-- Sampled, 25% with replacement: [CTU-IoT-Malware-Capture-1-1-sampled.csv][7]
-- ANN and SVM were trained on sampled data
-
-**Datasets**
+| Dataset name                     | Benign | Malicious |         Ratio | 
+|:---------------------------------|:------:|:---------:|--------------:|
+| [CTU-IoT-Malware-Capture-1-1][6] | 117318 |  134868   |   46.5 / 53.5 |
 
 **Accuracy**
 
 | Method               | Training<br/>(50/50) | Honeypot-7<br/>(All Benign) | Malware-44<br/>(Mostly Benign) | Malware-8<br/>(Mostly Malicious) |
 |:---------------------|---------------------:|----------------------------:|-------------------------------:|---------------------------------:|
-| [Adaboost][AB2]      |             95.665 % |                   92.7419 % |                      98.7124 % |                        61.4754 % |
+| [Adaboost][AB2]      |            95.6528 % |                   92.3077 % |                      98.7342 % |                        99.9808 % |
 | [ANN][AN2]           |            95.2777 % |                   89.5161 % |                      98.7124 % |                        61.4754 % |
-| [Decision tree][DT2] |            95.6873 % |                   92.7419 % |                      99.5708 % |                        63.1148 % |
+| [Decision tree][DT2] |            95.6726 % |                   99.2308 % |                      98.7342 % |                            100 % |
 | [Naive Bayes][NB2]   |            63.7226 % |                   23.3871 % |                      90.5579 % |                        69.6721 % |
 | [SVM][SV2]           |            95.6782 % |                   92.7419 % |                      98.7124 % |                        61.4754 % |  
 
@@ -91,7 +84,7 @@ label.
 
 **Decision tree**
 
-![img](logs/1-1-tree.jpeg)
+![img](logs/1-1-tree.png)
 
 
 [1]: https://github.com/iotcad/sensor-data/blob/611d9ff5e768c74fc8a5f7ea2ef52a974b85eeae/iot-23/CTU-Malware-Capture-20-1-labeled.csv
@@ -99,9 +92,7 @@ label.
 [3]: https://github.com/iotcad/sensor-data/blob/611d9ff5e768c74fc8a5f7ea2ef52a974b85eeae/iot-23/CTU-Malware-Capture-34-1-labeled.csv
 [4]: https://github.com/iotcad/sensor-data/blob/611d9ff5e768c74fc8a5f7ea2ef52a974b85eeae/iot-23/CTU-Honeypot-Capture-7-1-labeled.csv
 [5]: https://github.com/iotcad/sensor-data/blob/de0d85ec49f0e3560e2715abe5d7fcb48194be24/iot-23/CTU-Malware-Capture-8-1-labeled.csv
-[6]: https://github.com/iotcad/sensor-data/blob/0412e9b52bed951f7a1283e2b08ea52f78cc90ba/iot-23/12-attr/CTU-IoT-Malware-Capture-1-1.csv
-[7]: https://github.com/iotcad/sensor-data/blob/de0d85ec49f0e3560e2715abe5d7fcb48194be24/iot-23/12-attr/CTU-IoT-Malware-Capture-1-1-sampled.csv
-[8]: https://mcfp.felk.cvut.cz/publicDatasets/IoT-23-Dataset/IndividualScenarios/CTU-IoT-Malware-Capture-1-1
+[6]: https://github.com/iotcad/sensor-data/blob/de0d85ec49f0e3560e2715abe5d7fcb48194be24/iot-23/12-attr/CTU-IoT-Malware-Capture-1-1-sampled.csv
 
 [AB0]: logs/20-1-adaboost
 [AN0]: logs/20-1-ann

@@ -1,8 +1,8 @@
 === Run information ===
 
 Scheme:       weka.classifiers.meta.AdaBoostM1 -P 100 -S 1 -I 10 -W weka.classifiers.trees.DecisionStump
-Relation:     CTU-IoT-Malware-Capture-1-1
-Instances:    1008748
+Relation:     CTU-IoT-Malware-Capture-1-1-sampled
+Instances:    252186
 Attributes:   12
               proto
               duration
@@ -34,13 +34,13 @@ Class distributions
 
 proto = tcp
 Malicious	Benign	
-0.9250686806120034	0.07493131938799659	
+0.9248705551555053	0.07512944484449474	
 proto != tcp
 Malicious	Benign	
-7.988459026253836E-5	0.9999201154097375	
+7.520846847355012E-5	0.9999247915315265	
 proto is missing
 Malicious	Benign	
-0.5347946166931682	0.4652053833068318	
+0.5347957459970022	0.4652042540029978	
 
 
 Weight: 3.09
@@ -57,16 +57,16 @@ Class distributions
 
 proto = tcp
 Malicious	Benign	
-0.3587392725162767	0.6412607274837233	
+0.3587589741246839	0.6412410258753161	
 proto != tcp
 Malicious	Benign	
-0.0017599446816467656	0.9982400553183532	
+0.001652230218971904	0.9983477697810281	
 proto is missing
 Malicious	Benign	
-0.27988532752939316	0.7201146724706068	
+0.2798987389257478	0.7201012610742522	
 
 
-Weight: 0.95
+Weight: 0.94
 
 Decision Stump
 
@@ -74,19 +74,19 @@ Classifications
 
 proto = tcp : Malicious
 proto != tcp : Benign
-proto is missing : Benign
+proto is missing : Malicious
 
 Class distributions
 
 proto = tcp
 Malicious	Benign	
-0.5900543909724739	0.40994560902752614	
+0.5900590112576239	0.4099409887423761	
 proto != tcp
 Malicious	Benign	
-0.004515647066148736	0.9954843529338513	
+0.004239709904939777	0.9957602900950602	
 proto is missing
 Malicious	Benign	
-0.4999999999942124	0.5000000000057877	
+0.5000000000018103	0.4999999999981897	
 
 
 Weight: 0.63
@@ -103,13 +103,13 @@ Class distributions
 
 proto = tcp
 Malicious	Benign	
-0.4340237791750405	0.5659762208249595	
+0.4340071685717781	0.5659928314282218	
 proto != tcp
 Malicious	Benign	
-0.008442169542238339	0.9915578304577617	
+0.007928887815359702	0.9920711121846403	
 proto is missing
 Malicious	Benign	
-0.3836622520337069	0.616337747966293	
+0.38362206041719676	0.6163779395828033	
 
 
 Weight: 0.47
@@ -120,19 +120,19 @@ Classifications
 
 proto = tcp : Malicious
 proto != tcp : Benign
-proto is missing : Malicious
+proto is missing : Benign
 
 Class distributions
 
 proto = tcp
 Malicious	Benign	
-0.5519567071553371	0.44804329284466293	
+0.5519820185836842	0.4480179814163158	
 proto != tcp
 Malicious	Benign	
-0.013492919316178603	0.9865070806838214	
+0.012678606702109825	0.9873213932978901	
 proto is missing
 Malicious	Benign	
-0.5000000000059802	0.4999999999940198	
+0.4999999999983411	0.5000000000016589	
 
 
 Weight: 0.38
@@ -149,13 +149,13 @@ Class distributions
 
 proto = tcp
 Malicious	Benign	
-0.4572355349638114	0.5427644650361886	
+0.4572028220759383	0.5427971779240618	
 proto != tcp
 Malicious	Benign	
-0.01960926790139031	0.9803907320986097	
+0.018436961254817183	0.9815630387451828	
 proto is missing
 Malicious	Benign	
-0.42146249228415633	0.5785375077158437	
+0.4213916754355577	0.5786083245644422	
 
 
 Weight: 0.32
@@ -166,19 +166,19 @@ Classifications
 
 proto = tcp : Malicious
 proto != tcp : Benign
-proto is missing : Benign
+proto is missing : Malicious
 
 Class distributions
 
 proto = tcp
 Malicious	Benign	
-0.5362601785174126	0.46373982148258736	
+0.5362996255419257	0.4637003744580743	
 proto != tcp
 Malicious	Benign	
-0.026722162839294804	0.9732778371607052	
+0.02514264395886252	0.9748573560411374	
 proto is missing
 Malicious	Benign	
-0.49999999999177447	0.5000000000082255	
+0.5000000000021524	0.49999999999784756	
 
 
 Weight: 0.27
@@ -195,13 +195,13 @@ Class distributions
 
 proto = tcp
 Malicious	Benign	
-0.46859374140439747	0.5314062585956025	
+0.4685479829812621	0.5314520170187378	
 proto != tcp
 Malicious	Benign	
-0.03475394786304974	0.9652460521369502	
+0.032726473387476036	0.967273526612524	
 proto is missing
 Malicious	Benign	
-0.4411594892083376	0.5588405107916625	
+0.44106299507152563	0.5589370049284743	
 
 
 Weight: 0.24
@@ -212,19 +212,19 @@ Classifications
 
 proto = tcp : Malicious
 proto != tcp : Benign
-proto is missing : Malicious
+proto is missing : Benign
 
 Class distributions
 
 proto = tcp
 Malicious	Benign	
-0.5276385519964162	0.4723614480035838	
+0.5276903046143239	0.47230969538567613	
 proto != tcp
 Malicious	Benign	
-0.043620306541885624	0.9563796934581144	
+0.04111303723194509	0.958886962768055	
 proto is missing
 Malicious	Benign	
-0.5000000000131897	0.4999999999868102	
+0.49999999999827066	0.5000000000017293	
 
 
 Weight: 0.21
@@ -241,13 +241,13 @@ Class distributions
 
 proto = tcp
 Malicious	Benign	
-0.4753760101342392	0.5246239898657609	
+0.47531853295863513	0.5246814670413649	
 proto != tcp
 Malicious	Benign	
-0.05323224526368266	0.9467677547363174	
+0.050222382208293684	0.9497776177917063	
 proto is missing
 Malicious	Benign	
-0.4533245764608554	0.5466754235391446	
+0.45320493671933787	0.5467950632806622	
 
 
 Weight: 0.19
@@ -255,120 +255,120 @@ Weight: 0.19
 Number of performed Iterations: 10
 
 
-Time taken to build model: 28.96 seconds
+Time taken to build model: 5.94 seconds
 
 === Stratified cross-validation ===
 === Summary ===
 
-Correctly Classified Instances      965019               95.665  %
-Incorrectly Classified Instances     43729                4.335  %
-Kappa statistic                          0.9123
-Mean absolute error                      0.0838
-Root mean squared error                  0.2003
-Relative absolute error                 16.8431 %
-Root relative squared error             40.1615 %
-Total Number of Instances          1008748     
+Correctly Classified Instances      241223               95.6528 %
+Incorrectly Classified Instances     10963                4.3472 %
+Kappa statistic                          0.9121
+Mean absolute error                      0.084 
+Root mean squared error                  0.2006
+Relative absolute error                 16.8887 %
+Root relative squared error             40.2139 %
+Total Number of Instances           252186     
 
 === Detailed Accuracy By Class ===
 
                  TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 1.000    0.093    0.925      1.000    0.961      0.916    ?         ?         Malicious
-                 0.907    0.000    1.000      0.907    0.951      0.916    ?         ?         Benign
-Weighted Avg.    0.957    0.050    0.960      0.957    0.956      0.916    ?         ?         
+                 1.000    0.093    0.925      1.000    0.961      0.916    0.953     0.923     Malicious
+                 0.907    0.000    1.000      0.907    0.951      0.916    0.953     0.965     Benign
+Weighted Avg.    0.957    0.050    0.960      0.957    0.956      0.916    0.953     0.943     
 
 === Confusion Matrix ===
 
       a      b   <-- classified as
- 539439     34 |      a = Malicious
-  43695 425580 |      b = Benign
+ 134860      8 |      a = Malicious
+  10955 106363 |      b = Benign
 
 
 === Re-evaluation on test set ===
 
 User supplied test set
-Relation:     CTU-Malware-Capture-44-1
+Relation:     CTU-Honeypot-Capture-7-1-labeled
 Instances:     unknown (yet). Reading incrementally
 Attributes:   12
 
 === Summary ===
 
-Correctly Classified Instances         230               98.7124 %
-Incorrectly Classified Instances         3                1.2876 %
-Kappa statistic                          0.934 
-Mean absolute error                      0.0216
-Root mean squared error                  0.1105
-Total Number of Instances              233     
-
-=== Detailed Accuracy By Class ===
-
-                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 0.960    0.010    0.923      0.960    0.941      0.934    ?         ?         Malicious
-                 0.990    0.040    0.995      0.990    0.993      0.934    ?         ?         Benign
-Weighted Avg.    0.987    0.037    0.987      0.987    0.987      0.934    ?         ?         
-
-=== Confusion Matrix ===
-
-   a   b   <-- classified as
-  24   1 |   a = Malicious
-   2 206 |   b = Benign
-
-
-=== Re-evaluation on test set ===
-
-User supplied test set
-Relation:     CTU-Honeypot-7
-Instances:     unknown (yet). Reading incrementally
-Attributes:   12
-
-=== Summary ===
-
-Correctly Classified Instances         115               92.7419 %
-Incorrectly Classified Instances         9                7.2581 %
+Correctly Classified Instances         120               92.3077 %
+Incorrectly Classified Instances        10                7.6923 %
 Kappa statistic                          0     
-Mean absolute error                      0.0678
-Root mean squared error                  0.2475
-Total Number of Instances              124     
+Mean absolute error                      0.0717
+Root mean squared error                  0.2547
+Total Number of Instances              130     
 
 === Detailed Accuracy By Class ===
 
                  TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 ?        0.073    0.000      ?        ?          ?        ?         ?         Malicious
-                 0.927    ?        1.000      0.927    0.962      ?        ?         ?         Benign
-Weighted Avg.    0.927    ?        1.000      0.927    0.962      ?        ?         ?         
+                 ?        0.077    0.000      ?        ?          ?        ?         ?         Malicious
+                 0.923    ?        1.000      0.923    0.960      ?        ?         1.000     Benign
+Weighted Avg.    0.923    ?        1.000      0.923    0.960      ?        ?         1.000     
 
 === Confusion Matrix ===
 
    a   b   <-- classified as
    0   0 |   a = Malicious
-   9 115 |   b = Benign
+  10 120 |   b = Benign
 
 
 === Re-evaluation on test set ===
 
 User supplied test set
-Relation:     CTU-Malware-Capture-34-1
+Relation:     CTU-Malware-Capture-44-1-labeled
 Instances:     unknown (yet). Reading incrementally
 Attributes:   12
 
 === Summary ===
 
-Correctly Classified Instances          75               61.4754 %
-Incorrectly Classified Instances        47               38.5246 %
-Kappa statistic                          0.2891
-Mean absolute error                      0.3895
-Root mean squared error                  0.5727
-Total Number of Instances              122     
+Correctly Classified Instances         234               98.7342 %
+Incorrectly Classified Instances         3                1.2658 %
+Kappa statistic                          0.9363
+Mean absolute error                      0.0216
+Root mean squared error                  0.1097
+Total Number of Instances              237     
 
 === Detailed Accuracy By Class ===
 
                  TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 1.000    0.681    0.530      1.000    0.693      0.411    ?         ?         Malicious
-                 0.319    0.000    1.000      0.319    0.484      0.411    ?         ?         Benign
-Weighted Avg.    0.615    0.296    0.796      0.615    0.574      0.411    ?         ?         
+                 0.962    0.009    0.926      0.962    0.943      0.936    0.976     0.895     Malicious
+                 0.991    0.038    0.995      0.991    0.993      0.936    0.976     0.994     Benign
+Weighted Avg.    0.987    0.035    0.988      0.987    0.987      0.936    0.976     0.983     
 
 === Confusion Matrix ===
 
-  a  b   <-- classified as
- 53  0 |  a = Malicious
- 47 22 |  b = Benign
+   a   b   <-- classified as
+  25   1 |   a = Malicious
+   2 209 |   b = Benign
+
+
+=== Re-evaluation on test set ===
+
+User supplied test set
+Relation:     CTU-Malware-Capture-8-1-labeled
+Instances:     unknown (yet). Reading incrementally
+Attributes:   12
+
+=== Summary ===
+
+Correctly Classified Instances       10401               99.9808 %
+Incorrectly Classified Instances         2                0.0192 %
+Kappa statistic                          0.9994
+Mean absolute error                      0.0649
+Root mean squared error                  0.0736
+Total Number of Instances            10403     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 1.000    0.001    1.000      1.000    1.000      0.999    1.000     1.000     Malicious
+                 0.999    0.000    1.000      0.999    1.000      0.999    1.000     0.999     Benign
+Weighted Avg.    1.000    0.001    1.000      1.000    1.000      0.999    1.000     1.000     
+
+=== Confusion Matrix ===
+
+    a    b   <-- classified as
+ 8222    0 |    a = Malicious
+    2 2179 |    b = Benign
 
