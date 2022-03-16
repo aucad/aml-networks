@@ -59,6 +59,8 @@ CTU Malware Capture 34-1 is a highly malicious dataset.
 | [Naive Bayes][NB1]   | 99.5463 % |                   48.3871 % |                       95.279 % |
 | [SVM][SV1]           | 99.5723 % |                   54.8387 % |                      94.8498 % |  
 
+<br/><br/>
+
 **Decision tree**
 
 ![img](logs/34-1-tree.png)
@@ -93,6 +95,7 @@ Goal: train on 50/50 split data; test on both highly benign and malicious data.
 | [Naive Bayes][NB2]   |            63.7226 % |                   23.3871 % |                      90.5579 % |                         69.6721 % |
 | [SVM][SV2]           |            95.6782 % |                   92.7419 % |                      98.7124 % |                         61.4754 % |  
 
+<br/><br/>
 
 **Decision tree**
 
