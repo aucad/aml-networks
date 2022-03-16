@@ -1,0 +1,257 @@
+=== Run information ===
+
+Scheme:       weka.classifiers.functions.SMO -C 1.0 -L 0.001 -P 1.0E-12 -N 0 -V -1 -W 1 -K "weka.classifiers.functions.supportVector.PolyKernel -E 1.0 -C 250007" -calibrator "weka.classifiers.functions.Logistic -R 1.0E-8 -M -1 -num-decimal-places 4"
+Relation:     CTU-IoT-Malware-Capture-1-1-sampled
+Instances:    252186
+Attributes:   12
+              proto
+              duration
+              orig_bytes
+              resp_bytes
+              conn_state
+              missed_bytes
+              history
+              orig_pkts
+              orig_ip_bytes
+              resp_pkts
+              resp_ip_bytes
+              label
+Test mode:    10-fold cross-validation
+
+=== Classifier model (full training set) ===
+
+SMO
+
+Kernel used:
+  Linear Kernel: K(x,y) = <x,y>
+
+Classifier for classes: Malicious, Benign
+
+BinarySMO
+
+Machine linear: showing attribute weights, not support vectors.
+
+        -1.0276 * (normalized) proto=tcp
+ +       0.6126 * (normalized) proto=udp
+ +       0.415  * (normalized) proto=icmp
+ +      -0.052  * (normalized) duration
+ +       0.6698 * (normalized) orig_bytes
+ +      -0.2076 * (normalized) resp_bytes
+ +      -0.1394 * (normalized) conn_state=SF
+ +      -0.1429 * (normalized) conn_state=S0
+ +      -0.1459 * (normalized) conn_state=REJ
+ +      -0.1867 * (normalized) conn_state=RSTR
+ +       0.4727 * (normalized) conn_state=RSTOS0
+ +      -0.2154 * (normalized) conn_state=RSTO
+ +      -0.1945 * (normalized) conn_state=SH
+ +      -0.2114 * (normalized) conn_state=S2
+ +       0.4733 * (normalized) conn_state=RSTRH
+ +      -0.1248 * (normalized) conn_state=S1
+ +       0.415  * (normalized) conn_state=OTH
+ +      -0.1492 * (normalized) history=ShADadfF
+ +      -0.1496 * (normalized) history=S
+ +      -0.1459 * (normalized) history=Sr
+ +      -0.1678 * (normalized) history=ShAdDaFf
+ +      -0.1588 * (normalized) history=ShADafF
+ +      -0.1665 * (normalized) history=ShAdDafF
+ +      -0.1061 * (normalized) history=ShAdDaFr
+ +      -0.1125 * (normalized) history=ShADar
+ +      -0.1516 * (normalized) history=ShADfF
+ +      -0.1104 * (normalized) history=ShADafr
+ +      -0.153  * (normalized) history=ShAdDaFfR
+ +      -0.7626 * (normalized) history=FaR
+ +      -0.1683 * (normalized) history=ShAdDaftF
+ +      -0.1132 * (normalized) history=ShADr
+ +      -0.1606 * (normalized) history=ShAdDfFr
+ +      -0.1591 * (normalized) history=ShADfrFr
+ +      -0.1009 * (normalized) history=ShAdDarfR
+ +      -0.1369 * (normalized) history=ShAdDfFa
+ +      -0.1025 * (normalized) history=ShAdDaFrR
+ +      -0.0584 * (normalized) history=ShADadfR
+ +      -0.1025 * (normalized) history=ShAdDatFrR
+ +      -0.0993 * (normalized) history=ShAFr
+ +      -0.1586 * (normalized) history=ShAdfDFr
+ +      -0.1595 * (normalized) history=ShADfFa
+ +      -0.1598 * (normalized) history=ShADfFr
+ +      -0.0986 * (normalized) history=F
+ +      -0.1505 * (normalized) history=ShADdfFa
+ +      -0.104  * (normalized) history=ShAdDr
+ +       0.2108 * (normalized) history=D
+ +      -0.104  * (normalized) history=ShAdDafrR
+ +      -0.1411 * (normalized) history=ShADadFf
+ +      -0.1522 * (normalized) history=ShAdDFfR
+ +      -0.0749 * (normalized) history=ShAFa
+ +      -0.1024 * (normalized) history=ShAdtDaFrR
+ +      -0.1045 * (normalized) history=ShAr
+ +      -0.0231 * (normalized) history=ShAdDaTFf
+ +      -0.1509 * (normalized) history=FfA
+ +      -0.1464 * (normalized) history=ShAdDafFr
+ +      -0.1342 * (normalized) history=ShAdDtafF
+ +      -0.1027 * (normalized) history=ShAdDatFr
+ +      -0.0546 * (normalized) history=ShADadR
+ +      -0.146  * (normalized) history=ShAdDaFfr
+ +      -0.7642 * (normalized) history=^r
+ +      -0.1081 * (normalized) history=ShAdDarr
+ +      -0.1237 * (normalized) history=ShAdDatfF
+ +      -0.1454 * (normalized) history=ShAdfFa
+ +      -0.1509 * (normalized) history=ShAfFa
+ +      -0.0602 * (normalized) history=ShADfdtR
+ +      -0.1588 * (normalized) history=ShADfaF
+ +      -0.0592 * (normalized) history=ShAF
+ +      -0.1048 * (normalized) history=ShAdtDaFr
+ +      -0.1485 * (normalized) history=ShADafdtF
+ +      -0.1041 * (normalized) history=ShAdDtaFr
+ +      -0.1437 * (normalized) history=ShAdDaftFR
+ +      -0.0959 * (normalized) history=Fa
+ +      -0.1471 * (normalized) history=ShAFfR
+ +      -0.0422 * (normalized) history=ShADdafR
+ +      -0.1164 * (normalized) history=ShAdDafrFr
+ +      -0.1248 * (normalized) history=ShA
+ +      -0.159  * (normalized) history=ShADfFrr
+ +      -0.1016 * (normalized) history=ShAdDatrfR
+ +      -0.1431 * (normalized) history=ShAdDafFR
+ +      -0.1592 * (normalized) history=ShAdDTafF
+ +      -0.1253 * (normalized) history=ShAdtDafF
+ +      -0.152  * (normalized) history=ShAdDaTfF
+ +      -0.0773 * (normalized) history=ShADF
+ +      -0.1202 * (normalized) history=ShAdDafFrr
+ +      -0.1011 * (normalized) history=ShAdr
+ +      -0.1029 * (normalized) history=ShAdDFar
+ +      -0.0805 * (normalized) history=ShAdaFr
+ +      -0.1548 * (normalized) history=ShAdDaFTf
+ +       0.191  * (normalized) history=Dd
+ +       1.2353 * (normalized) history=R
+ +       1.2375 * (normalized) history=Ar
+ +       0.2109 * (normalized) history=D^
+ +       1.1295 * (normalized) history=HaDdAfF
+ +       1.7821 * (normalized) history=HaDdAFf
+ +       1.8813 * (normalized) history=Fr
+ +       1      * (normalized) history=HaDdTAFf
+ +       1      * (normalized) history=HaADdFf
+ +      -0.0929 * (normalized) orig_pkts
+ +       0.1222 * (normalized) orig_ip_bytes
+ +       0.0222 * (normalized) resp_pkts
+ +      -0.1035 * (normalized) resp_ip_bytes
+ +       0.3195
+
+Number of kernel evaluations: 1570689945 (31.79% cached)
+
+
+
+Time taken to build model: 795.27 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances      241287               95.6782 %
+Incorrectly Classified Instances     10899                4.3218 %
+Kappa statistic                          0.9126
+Mean absolute error                      0.0432
+Root mean squared error                  0.2079
+Relative absolute error                  8.6857 %
+Root relative squared error             41.679  %
+Total Number of Instances           252186     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 1.000    0.093    0.925      1.000    0.961      0.916    0.954     0.925     Malicious
+                 0.907    0.000    1.000      0.907    0.951      0.916    0.954     0.950     Benign
+Weighted Avg.    0.957    0.050    0.960      0.957    0.957      0.916    0.954     0.937     
+
+=== Confusion Matrix ===
+
+      a      b   <-- classified as
+ 134859      9 |      a = Malicious
+  10890 106428 |      b = Benign
+
+
+=== Re-evaluation on test set ===
+
+User supplied test set
+Relation:     CTU-Honeypot-Capture-7-1-labeled
+Instances:     unknown (yet). Reading incrementally
+Attributes:   12
+
+=== Summary ===
+
+Correctly Classified Instances         115               92.7419 %
+Incorrectly Classified Instances         9                7.2581 %
+Kappa statistic                          0     
+Mean absolute error                      0.0726
+Root mean squared error                  0.2694
+Total Number of Instances              124     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 ?        0.073    0.000      ?        ?          ?        ?         ?         Malicious
+                 0.927    ?        1.000      0.927    0.962      ?        ?         1.000     Benign
+Weighted Avg.    0.927    ?        1.000      0.927    0.962      ?        ?         1.000     
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+   0   0 |   a = Malicious
+   9 115 |   b = Benign
+
+
+=== Re-evaluation on test set ===
+
+User supplied test set
+Relation:     CTU-Malware-Capture-44-1-labeled
+Instances:     unknown (yet). Reading incrementally
+Attributes:   12
+
+=== Summary ===
+
+Correctly Classified Instances         230               98.7124 %
+Incorrectly Classified Instances         3                1.2876 %
+Kappa statistic                          0.934 
+Mean absolute error                      0.0129
+Root mean squared error                  0.1135
+Total Number of Instances              233     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.960    0.010    0.923      0.960    0.941      0.934    0.975     0.890     Malicious
+                 0.990    0.040    0.995      0.990    0.993      0.934    0.975     0.994     Benign
+Weighted Avg.    0.987    0.037    0.987      0.987    0.987      0.934    0.975     0.983     
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+  24   1 |   a = Malicious
+   2 206 |   b = Benign
+
+
+=== Re-evaluation on test set ===
+
+User supplied test set
+Relation:     CTU-Malware-Capture-34-1-labeled
+Instances:     unknown (yet). Reading incrementally
+Attributes:   12
+
+=== Summary ===
+
+Correctly Classified Instances          75               61.4754 %
+Incorrectly Classified Instances        47               38.5246 %
+Kappa statistic                          0.2891
+Mean absolute error                      0.3852
+Root mean squared error                  0.6207
+Total Number of Instances              122     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 1.000    0.681    0.530      1.000    0.693      0.411    0.659     0.530     Malicious
+                 0.319    0.000    1.000      0.319    0.484      0.411    0.659     0.704     Benign
+Weighted Avg.    0.615    0.296    0.796      0.615    0.574      0.411    0.659     0.628     
+
+=== Confusion Matrix ===
+
+  a  b   <-- classified as
+ 53  0 |  a = Malicious
+ 47 22 |  b = Benign
+

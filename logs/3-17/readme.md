@@ -13,8 +13,9 @@ What is the prediction accuracy in these scenarios?
  
 **Training set**: CTU-IoT-Malware-Capture-1-1 (Hide and Seek)
 
-- Source: [https://mcfp.felk.cvut.cz/.../CTU-IoT-Malware-Capture-1-1][1]
-- Preprocessed: [CTU-IoT-Malware-Capture-1-1.csv][2]
+- Original: [https://mcfp.felk.cvut.cz/.../CTU-IoT-Malware-Capture-1-1][1]
+- Preprocessed: [CTU-IoT-Malware-Capture-1-1.csv][2a]
+- Sampled, 25% with replacement: [CTU-IoT-Malware-Capture-1-1-sampled.csv][2b]
 
 | Label     |  Flows | Ratio  |
 |:----------|-------:|:------:|
@@ -38,10 +39,12 @@ label
 | Method              |  Training | Honeypot-7<br/>(All Benign) | Malware-44<br/>(Mostly Benign) | Malware-34<br/>(Mostly Malicious) |
 |:--------------------|----------:|----------------------------:|-------------------------------:|----------------------------------:|
 | [Adaboost][AB]      |  95.665 % |                   92.7419 % |                      98.7124 % |                         61.4754 % |
-| [ANN][AN]           |           |                             |                                |                                   |
+| [ANN][AN]           | 95.2777 % |                   89.5161 % |                      98.7124 % |                         61.4754 % |
 | [Decision tree][DT] | 95.6873 % |                   92.7419 % |                      99.5708 % |                         63.1148 % |
 | [Naive Bayes][NB]   | 63.7226 % |                   23.3871 % |                      90.5579 % |                         69.6721 % |
-| [SVM][SV]           |           |                             |                                |                                   |  
+| [SVM][SV]           | 95.6782 % |                   92.7419 % |                      98.7124 % |                         61.4754 % |  
+
+ANN and SVM were trained on sampled data 
 
 **Decision tree**
 
@@ -49,7 +52,8 @@ label
 
 
 [1]: https://mcfp.felk.cvut.cz/publicDatasets/IoT-23-Dataset/IndividualScenarios/CTU-IoT-Malware-Capture-1-1
-[2]: https://github.com/iotcad/sensor-data/blob/0412e9b52bed951f7a1283e2b08ea52f78cc90ba/iot-23/12-attr/CTU-IoT-Malware-Capture-1-1.csv
+[2a]: https://github.com/iotcad/sensor-data/blob/0412e9b52bed951f7a1283e2b08ea52f78cc90ba/iot-23/12-attr/CTU-IoT-Malware-Capture-1-1.csv
+[2b]: https://github.com/iotcad/sensor-data/blob/de0d85ec49f0e3560e2715abe5d7fcb48194be24/iot-23/12-attr/CTU-IoT-Malware-Capture-1-1-sampled.csv
 [3]: https://github.com/iotcad/sensor-data/blob/0412e9b52bed951f7a1283e2b08ea52f78cc90ba/iot-23/12-attr/CTU-Malware-Capture-44-1-labeled.csv
 [4]: https://github.com/iotcad/sensor-data/blob/0412e9b52bed951f7a1283e2b08ea52f78cc90ba/iot-23/12-attr/CTU-Honeypot-Capture-7-1-labeled.csv
 [5]: https://github.com/iotcad/sensor-data/blob/0412e9b52bed951f7a1283e2b08ea52f78cc90ba/iot-23/12-attr/CTU-Malware-Capture-34-1-labeled.csv
