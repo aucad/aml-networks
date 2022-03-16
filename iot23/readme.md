@@ -78,12 +78,12 @@ Goal: train on 50/50 split data; test on both highly benign and malicious data.
 
 **Datasets**
 
-| Dataset name                     |       | Benign | Malicious |     Ratio | 
-|:---------------------------------|-------|:------:|:---------:|----------:|
-| [CTU-IoT-Malware-Capture-1-1][6] | Train | 469275 |  539473   | 46.5/53.5 |
-| [CTU-Honeypot-Capture-7-1][4]    | Test  |  130   |     0     |   100 / 0 |
-| [CTU-Malware-Capture-44-1][2]    | Test  |  211   |    26     |   90 / 10 |
-| [CTU-Malware-Capture-34-1][3]    | Test  |  1923  |   21222   |    8 / 92 |
+| Dataset name                     |       | Benign | Malicious |       Ratio | 
+|:---------------------------------|-------|:------:|:---------:|------------:|
+| [CTU-IoT-Malware-Capture-1-1][6] | Train | 469275 |  539473   | 46.5 / 53.5 |
+| [CTU-Honeypot-Capture-7-1][4]    | Test  |  130   |     0     |     100 / 0 |
+| [CTU-Malware-Capture-44-1][2]    | Test  |  211   |    26     |     90 / 10 |
+| [CTU-Malware-Capture-34-1][3]    | Test  |  1923  |   21222   |      8 / 92 |
 
 ## Accuracy
 
