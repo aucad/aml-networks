@@ -28,8 +28,8 @@ label
 
 **Tests**
 
-| Test                          | Benign | Malicious |   Ratio | 
-|-------------------------------|:------:|:---------:|--------:|
+| Dataset name                  | Benign | Malicious |   Ratio | 
+|:------------------------------|:------:|:---------:|--------:|
 | [Honeypot-7][4]               |  130   |     0     | 100 / 0 |
 | [CTU-Malware-Capture-44-1][3] |  211   |    26     | 90 / 10 |
 | [CTU-Malware-Capture-34-1][5] |  1923  |   21222   |  8 / 92 |
