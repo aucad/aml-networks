@@ -13,7 +13,7 @@ This script takes as input (in order):
 Example:
 
 ```
-python transform conn.log.labelled my_data.csv 
+python transform.py conn.log.labelled my_data.csv 
 ```
 
 NOTE: Light manual editing is required prior to calling this script.
