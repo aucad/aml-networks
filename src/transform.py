@@ -3,12 +3,16 @@ from sys import argv
 from utility import read_csv, save_csv
 
 """
-Small utility script for formatting raw IoT-23 dataset files. 
+Small utility script for formatting raw IoT-23 dataset files. It 
+performs following preprocessing steps:
+
+1. feature selection (only specified attributes are kept)
+2. replaces missing values (`-`) with actual null values  
 
 This script takes as input (in order):
 
-- a path to a IoT-23 file
-- output filename, where to write the CSV result. 
+[1]: a path to a IoT-23 file
+[2]: output filename, where to write the CSV result. 
 
 Example:
 
