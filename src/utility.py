@@ -2,7 +2,7 @@ from csv import reader, writer
 from typing import Tuple, List
 
 
-def read_csv(path: str, delimiter=None) -> Tuple[list, list]:
+def read_csv(path: str, delimiter=',') -> Tuple[list, list]:
     """read some CSV file and split into headers and rows
 
     Arguments:
