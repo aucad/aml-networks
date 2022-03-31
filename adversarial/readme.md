@@ -11,7 +11,7 @@ So far:
 - [ ] Try apply [Adversarial Robustness Toolbox][2] to this tree, some unknowns:
     
   - what adversarial methods/tools apply to trees in this toolbox?
-  - I believe we want: extraction, or this trained tree model
+  - I believe we want: extraction, on this trained tree model
   
   
 Here is a tree visualization:
