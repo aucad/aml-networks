@@ -8,18 +8,31 @@ ADAM coordinate descent to perform numerical estimation of gradients.
 
 Adapted from:
 
-https://github.com/Trusted-AI/adversarial-robustness-toolbox/blob/4a65fd5e9cdc1f9a84fbb2c1a3ba42997fcfa3c6/notebooks/classifier_scikitlearn_DecisionTreeClassifier.ipynb
+https://github.com/Trusted-AI/adversarial-robustness-toolbox/blob/
+4a65fd5e9cdc1f9a84fbb2c1a3ba42997fcfa3c6/notebooks/
+classifier_scikitlearn_DecisionTreeClassifier.ipynb
+
+Usage:
+
+```
+python src/adv_iris.py
+```
+
+Optionally pass as first positional argument the number of classes,
+which is an integer [2,3], e.g.:
+
+```
+python src/adv_iris.py 3
+```
 """
 
-from sys import argv
-import warnings
-
-warnings.filterwarnings('ignore')
-
 import numpy as np
+from sys import argv
+
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.datasets import load_iris
 from matplotlib import pyplot as plt
+
 from art.estimators.classification import SklearnClassifier
 from art.attacks.evasion import ZooAttack
 

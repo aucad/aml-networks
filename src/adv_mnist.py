@@ -6,16 +6,22 @@ The black-box zeroth-order optimization attack from Pin-Yu Chen et
 al. (2018). This attack is a variant of the C&W attack which uses
 ADAM coordinate descent to perform numerical estimation of gradients.
 
-See:
+Adapted from:
 
-https://github.com/Trusted-AI/adversarial-robustness-toolbox/blob/4a65fd5e9cdc1f9a84fbb2c1a3ba42997fcfa3c6/notebooks/classifier_scikitlearn_DecisionTreeClassifier.ipynb
+https://github.com/Trusted-AI/adversarial-robustness-toolbox/blob/
+4a65fd5e9cdc1f9a84fbb2c1a3ba42997fcfa3c6/notebooks/
+classifier_scikitlearn_DecisionTreeClassifier.ipynb
+
+Usage:
+
+```
+python src/adv_mnist.py
+```
 """
 
-import warnings
-
-warnings.filterwarnings('ignore')
-
 import numpy as np
+
+from sys import path
 from sklearn.tree import DecisionTreeClassifier
 from matplotlib import pyplot as plt
 from art.estimators.classification import SklearnClassifier
@@ -23,7 +29,7 @@ from art.attacks.evasion import ZooAttack
 from art.utils import load_mnist
 
 
-def mnist_attack():
+def mnist_attack(out_dir='adversarial', save_images=False):
     (x_train, y_train), (x_test, y_test), min_, max_ = load_mnist()
 
     n_samples_train = x_train.shape[0]
@@ -75,7 +81,8 @@ def mnist_attack():
     print("Benign Training Score: %.4f" % score)
     plt.matshow(x_train[0, :].reshape((28, 28)))
     plt.clim(0, 1)
-    # plt.savefig('adversarial/benign_train.png')
+    if save_images:
+        plt.savefig(path.join(out_dir, 'benign_train.png'))
 
     prediction = model.predict(x_train[0:1, :])[0]
     print("Benign Training Predicted Label: %i" % prediction)
@@ -85,7 +92,8 @@ def mnist_attack():
 
     plt.matshow(x_train_adv[0, :].reshape((28, 28)))
     plt.clim(0, 1)
-    # plt.savefig('adversarial/adv_train.png')
+    if save_images:
+        plt.savefig(path.join(out_dir, '/adv_train.png'))
 
     prediction = model.predict(x_train_adv[0:1, :])[0]
     print("Adversarial Training Predicted Label: %i" % prediction)
@@ -95,7 +103,8 @@ def mnist_attack():
 
     plt.matshow(x_test[0, :].reshape((28, 28)))
     plt.clim(0, 1)
-    # plt.savefig('adversarial/benign_test.png')
+    if save_images:
+        plt.savefig(path.join(out_dir, 'benign_test.png'))
 
     prediction = model.predict(x_test[0:1, :])[0]
     print("Benign Test Predicted Label: %i" % prediction)
@@ -105,7 +114,8 @@ def mnist_attack():
 
     plt.matshow(x_test_adv[0, :].reshape((28, 28)))
     plt.clim(0, 1)
-    # plt.savefig('adversarial/adv_test.png')
+    if save_images:
+        plt.savefig(path.join(out_dir, 'adv_test.png'))
 
     prediction = model.predict(x_test_adv[0:1, :])[0]
     print("Adversarial Test Predicted Label: %i" % prediction)
