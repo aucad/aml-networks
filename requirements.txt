@@ -1,3 +1,6 @@
 scikit-learn
 matplotlib
 colorama
+adversarial-robustness-toolbox
+tensorflow
+numpy
