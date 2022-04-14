@@ -1,26 +1,27 @@
 """
-Simple adversarial example using ART with scikit-learn.
+Simple adversarial example using ART with scikit-learn and applying
+Zeroth-Order Optimization (ZOO) Attack.
 
-See:
+The black-box zeroth-order optimization attack from Pin-Yu Chen et
+al. (2018). This attack is a variant of the C&W attack which uses
+ADAM coordinate descent to perform numerical estimation of gradients.
 
-https://github.com/Trusted-AI/adversarial-robustness-toolbox/blob/main/notebooks/classifier_scikitlearn_DecisionTreeClassifier.ipynb
+Adapted from:
+
+https://github.com/Trusted-AI/adversarial-robustness-toolbox/blob/4a65fd5e9cdc1f9a84fbb2c1a3ba42997fcfa3c6/notebooks/classifier_scikitlearn_DecisionTreeClassifier.ipynb
 """
 
+from sys import argv
 import warnings
 
 warnings.filterwarnings('ignore')
 
-from tree import train_tree
-
+import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.datasets import load_iris
-
-import numpy as np
 from matplotlib import pyplot as plt
-
 from art.estimators.classification import SklearnClassifier
 from art.attacks.evasion import ZooAttack
-from art.utils import load_mnist
 
 
 def get_adversarial_examples(x_train, y_train):
@@ -39,7 +40,8 @@ def get_adversarial_examples(x_train, y_train):
                     use_importance=False, nb_parallel=1, batch_size=1,
                     variable_h=0.2)
 
-    # Generate adversarial samples with ART Zeroth Order Optimization attack
+    # Generate adversarial samples with ART Zeroth Order
+    # Optimization attack
     x_train_adv = zoo.generate(x_train)
 
     return x_train_adv, model
@@ -122,13 +124,16 @@ def plot_results(model, x_train, y_train, x_train_adv, num_classes):
         axs[i_class].set_ylabel('feature 2')
 
 
-def iris(num_classes):
+def iris(num_classes, fname):
     num_classes = min(3, max(2, num_classes))
     x_train, y_train = get_data(num_classes=num_classes)
     x_train_adv, model = get_adversarial_examples(x_train, y_train)
     plot_results(model, x_train, y_train, x_train_adv, num_classes)
+    plt.savefig(fname)
     plt.show()
 
 
 if __name__ == '__main__':
-    iris(2)
+    class_count = int(argv[1]) if len(argv) > 1 else 2
+    image_name = f'adversarial/iris_{class_count}.png'
+    iris(class_count, image_name)

@@ -2,11 +2,10 @@ from sys import argv
 from pathlib import Path
 from os import path
 
-from utility import read_csv
+from utility import read_csv, color_text as c
 
 from sklearn import tree  # decision trees
-from matplotlib import pyplot as plt  # save plots
-from colorama import Fore, Style  # terminal colors
+from matplotlib import pyplot as plt  # create plots
 
 """
 This script builds a decision tree for provided dataset.
@@ -22,18 +21,13 @@ NAME = path.join(OUTPUT_DIR, Path(DATASET_PATH).stem)
 ATTRS, ROWS = read_csv(DATASET_PATH)
 
 
-def c(text):
-    """color text"""
-    return Fore.GREEN + str(text) + Style.RESET_ALL
-
-
 def value_format(cell):
     """Numeric missing values have '?', replace with 0"""
     return 0 if cell == '?' else cell
 
 
 def separate_labels(rows_, at_index=-1):
-    """separate data from label.
+    """Separates data from class label.
 
     Arguments:
         rows_: list of data rows with labels
@@ -50,7 +44,7 @@ def separate_labels(rows_, at_index=-1):
     return new_rows, labels_, list(set(labels_))
 
 
-def save_image(clf_, filename, feat_names, class_names, show):
+def save_image(clf_, filename, feat_names, class_names):
     """Plot the tree and save to file."""
     plt.figure(dpi=200)
     tree.plot_tree(
@@ -59,8 +53,7 @@ def save_image(clf_, filename, feat_names, class_names, show):
         class_names=class_names
     )
     plt.savefig(f'{filename}.png')
-    if show:
-        plt.show()
+    plt.show()
 
 
 def train_tree(show_tree=False):
@@ -72,7 +65,8 @@ def train_tree(show_tree=False):
     X, y, classes = separate_labels(ROWS)
     clf = tree.DecisionTreeClassifier()
     clf.fit(X, y)
-    save_image(clf, NAME, ATTRS, classes, show_tree)
+    if show_tree:
+        save_image(clf, NAME, ATTRS, classes)
 
     return clf, X, y
 

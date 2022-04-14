@@ -1,6 +1,13 @@
 from csv import reader, writer
 from typing import Tuple, List
 
+from colorama import Fore, Style  # terminal colors
+
+
+def color_text(text):
+    """Display terminal text in color."""
+    return Fore.GREEN + str(text) + Style.RESET_ALL
+
 
 def read_csv(path: str, delimiter=',') -> Tuple[list, list]:
     """read some CSV file and split into headers and rows
