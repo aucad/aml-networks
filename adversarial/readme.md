@@ -2,13 +2,13 @@
 
 Progress so far:
 
-1. [x] basic decision tree classifier implementation in `src/tree.py` -- [scikit learn decision tree][1] trained using IoT23 dataset
+1. ✔ basic decision tree classifier implementation in `src/tree.py` -- [scikit learn decision tree][1] trained using IoT23 dataset
 
     ```text
     python src/tree.py 
     ```
 
-2. [x] Implement adversarial examples: these are example evasion attacks to demonstrate use of this toolbox,
+2. ✔ Implement adversarial examples: these are example evasion attacks to demonstrate use of this toolbox,
    applying Zeroth-Order Optimization (ZOO) attack. Evasion attacks attempt to evade detection by obfuscating the content.
 
     ```text
@@ -44,26 +44,16 @@ Progress so far:
 | Benign train               | Adversarial train       |
 |----------------------------|-------------------------|
 | ![image](benign_train.png) | ![image](adv_train.png) | 
+| Score: 1.0000              | Score: 0.1200           |
+| Predicted Label: 5         | Predicted Label: 2      |
 
-```
-Benign Training Score: 1.0000
-Benign Training Predicted Label: 5
-
-Adversarial Training Score: 0.1200
-Adversarial Training Predicted Label: 2
-```
 
 | Benign test               | Adversarial test       |
 |---------------------------|------------------------|
 | ![image](benign_test.png) | ![image](adv_test.png) |
+| Score: 0.4100             | Score: 0.1700          | 
+| Predicted Label: 7        | Predicted Label: 5     | 
 
-```
-Benign Test Score: 0.4100
-Benign Test Predicted Label: 7
-
-Adversarial Test Score: 0.1700
-Adversarial Test Predicted Label: 5
-```  
   
 <!-- references -->
   
