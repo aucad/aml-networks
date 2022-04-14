@@ -8,7 +8,7 @@ Progress so far:
     python src/tree.py 
     ```
 
-2. ✔ Implement adversarial examples: these are example evasion attacks to demonstrate use of this toolbox,
+2. ✔ Implement adversarial examples: these are example evasion attacks to demonstrate use of [Adversarial Robustness Toolbox][2],
    applying Zeroth-Order Optimization (ZOO) attack. Evasion attacks attempt to evade detection by obfuscating the content.
 
     ```text
@@ -16,7 +16,7 @@ Progress so far:
     python src/adv_mnist.py
     ```
     
-3. [ ] Apply [Adversarial Robustness Toolbox][2] to the tree:
+3. [ ] Apply attack (from step 2) to the tree (from step 1) 
 
 
 * * *   
