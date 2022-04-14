@@ -1,20 +1,18 @@
 # Adversarial 
 
-So far:
+Progress so far:
 
-- [x] decision tree classifier implementation in `src/tree.py` (implemented using [scikit learn decision trees][1])
+1. [x] basic decision tree classifier implementation in `src/tree.py` (implemented using [scikit learn decision trees][1])
 
     ```text
-    python src/tree.py
+    python src/tree.py 
     ```
-  
-- [ ] Try apply [Adversarial Robustness Toolbox][2] to this tree, some unknowns:
     
-  - what adversarial methods/tools apply to trees in this toolbox?
-  - I believe we want: extraction, on this trained tree model
+2. [ ] Apply [Adversarial Robustness Toolbox][2] to the tree:
+    
   
   
-Here is a tree visualization:
+Tree visualization:
   
 ![image](CTU-44-1.png)   
   
