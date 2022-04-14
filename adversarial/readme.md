@@ -24,7 +24,6 @@ Progress so far:
 ### Tree visualization
   
 ![image](CTU-44-1.png)   
-  
 
 ### Evasion attack results
 
@@ -36,16 +35,14 @@ Progress so far:
 - green circles: class 3
 - red crosses: adversarial samples for class i
 
-
 ![image](iris_2.png)
-
 
 ![image](iris_3.png)
 
 **Adversarial evasion on MNIST**
 
-| Benign train | Adversarial train  
-|---|---|
+| Benign train               | Adversarial train       |
+|----------------------------|-------------------------|
 | ![image](benign_train.png) | ![image](adv_train.png) | 
 
 ```
@@ -56,10 +53,9 @@ Adversarial Training Score: 0.1200
 Adversarial Training Predicted Label: 2
 ```
 
-| Benign test   | Adversarial test  |
-|---|---|
+| Benign test               | Adversarial test       |
+|---------------------------|------------------------|
 | ![image](benign_test.png) | ![image](adv_test.png) |
-
 
 ```
 Benign Test Score: 0.4100
@@ -69,7 +65,7 @@ Adversarial Test Score: 0.1700
 Adversarial Test Predicted Label: 5
 ```  
   
+<!-- references -->
   
 [1]: https://scikit-learn.org/stable/modules/tree.html  
 [2]: https://adversarial-robustness-toolbox.readthedocs.io/en/latest/
-
