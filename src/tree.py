@@ -49,6 +49,7 @@ def separate_labels(rows_, at_index=-1):
     for row in rows_:
         labels_.append(row.pop(at_index))
         new_rows.append([value_format(value) for value in row])
+    labels_ = [1 if l.lower() == 'benign' else 0 for l in labels_]
     return new_rows, labels_, list(set(labels_))
 
 
