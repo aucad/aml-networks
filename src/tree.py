@@ -1,18 +1,25 @@
-from sys import argv
-from pathlib import Path
-from os import path
-
-from utility import read_csv, color_text as c
-
-from sklearn import tree  # decision trees
-from matplotlib import pyplot as plt  # create plots
-
 """
 This script builds a decision tree for provided dataset.
 Provide as input a path to a dataset, or script uses default
-dataset if none provided. The dataset must be numeric 
+dataset if none provided. The dataset must be numeric
 at all attributes.
+
+
+Usage:
+
+```
+python src/tree.py
+```
 """
+
+from os import path
+from pathlib import Path
+from sys import argv
+
+from matplotlib import pyplot as plt
+from sklearn import tree
+
+from utility import read_csv, color_text as c
 
 DEFAULT_DS = 'data/CTU-44-1.csv'
 OUTPUT_DIR = 'adversarial'
@@ -23,7 +30,8 @@ ATTRS, ROWS = read_csv(DATASET_PATH)
 
 def value_format(cell):
     """Numeric missing values have '?', replace with 0"""
-    return 0 if cell == '?' else cell
+    return 0 if cell == '?' else (
+        float(cell) if "." in cell else int(cell))
 
 
 def separate_labels(rows_, at_index=-1):
