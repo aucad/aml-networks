@@ -25,6 +25,7 @@ from tree import train_tree, text_label
 def adversarial_iot():
 
     colors = ['blue', 'green']
+    levels = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
     model, x_train, y_train, attrs = train_tree(False)
     class_labels = list(set(y_train))
     n_classes = len(class_labels)
@@ -41,14 +42,14 @@ def adversarial_iot():
         # Confidence of adversarial examples: a higher value produces
         # examples that are farther away, from the original input,
         # but classified with higher confidence as the target class.
-        confidence=0.75,
+        confidence=0.25,
         # Should the attack target one specific class
         targeted=False,
         # The initial learning rate for the attack algorithm. Smaller
         # values produce better results but are slower to converge.
         learning_rate=1e-1,
         # The maximum number of iterations.
-        max_iter=20,
+        max_iter=50,
         # Number of times to adjust constant with binary search
         # (positive value).
         binary_search_steps=10,
@@ -84,7 +85,6 @@ def adversarial_iot():
 
     x_train_adv = zoo.generate(x_train)
     fig, axs = plt.subplots(1, n_classes, figsize=(n_classes * 3, 3))
-    levels = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 
     for i, class_label in enumerate(class_labels):
 
@@ -108,20 +108,20 @@ def adversarial_iot():
 
         # Show predicted probability as contour plot
         h = .01
-        x_min, x_max = 0, 1
-        y_min, y_max = 0, 1
+        x_min, x_max = -1, 2
+        y_min, y_max = -1, 2
 
         xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
                              np.arange(y_min, y_max, h))
 
-        Z_proba = model.predict_proba(np.c_[xx.ravel(), yy.ravel()])
-        Z_proba = Z_proba[:, i].reshape(xx.shape)
-        im = axs[i].contourf(
-            xx, yy, Z_proba, levels=levels[:], vmin=0, vmax=1
-        )
-        if i == n_classes - 1:
-            cax = fig.add_axes([0.95, 0.2, 0.025, 0.6])
-            plt.colorbar(im, ax=axs[i], cax=cax)
+        # Z_proba = model.predict_proba(np.c_[xx.ravel(), yy.ravel()])
+        # Z_proba = Z_proba[:, i].reshape(xx.shape)
+        # im = axs[i].contourf(
+        #     xx, yy, Z_proba, levels=levels[:], vmin=0, vmax=1
+        # )
+        # if i == n_classes - 1:
+        #     cax = fig.add_axes([0.95, 0.2, 0.025, 0.6])
+        #     plt.colorbar(im, ax=axs[i], cax=cax)
 
         # Plot adversarial samples
         for j in range(y_train[y_train == i].shape[0]):

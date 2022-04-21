@@ -57,7 +57,7 @@ def separate_labels(rows_, at_index=-1):
     for row in rows_:
         labels_.append(row.pop(at_index))
         new_rows.append(
-            [value_format(value) for value in row[0:2]])
+            [value_format(value) for value in row])
     labels_ = [int_label(l) for l in labels_]
     return new_rows, labels_, list(set(labels_))
 
