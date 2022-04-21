@@ -28,6 +28,14 @@ NAME = path.join(OUTPUT_DIR, Path(DATASET_PATH).stem)
 ATTRS, ROWS = read_csv(DATASET_PATH)
 
 
+def text_label(i):
+    return 'benign' if i == 1 else 'malicious'
+
+
+def int_label(text):
+    return 1 if text.lower() == 'benign' else 0
+
+
 def value_format(cell):
     """Numeric missing values have '?', replace with 0"""
     return 0 if cell == '?' else (
@@ -48,8 +56,9 @@ def separate_labels(rows_, at_index=-1):
     new_rows, labels_ = [], []
     for row in rows_:
         labels_.append(row.pop(at_index))
-        new_rows.append([value_format(value) for value in row])
-    labels_ = [1 if l.lower() == 'benign' else 0 for l in labels_]
+        new_rows.append(
+            [value_format(value) for value in row[0:2]])
+    labels_ = [int_label(l) for l in labels_]
     return new_rows, labels_, list(set(labels_))
 
 
@@ -59,7 +68,7 @@ def save_image(clf_, filename, feat_names, class_names):
     tree.plot_tree(
         clf_, filled=True,
         feature_names=feat_names,
-        class_names=class_names
+        class_names=[str(cn) for cn in class_names]
     )
     plt.savefig(f'{filename}.png')
     plt.show()
@@ -71,13 +80,13 @@ def train_tree(show_tree=False):
     print(f'Attributes: {c(len(ATTRS))}')
     print(f'Number of rows: {c(len(ROWS))}')
 
-    X, y, classes = separate_labels(ROWS)
+    x, y, classes = separate_labels(ROWS)
     clf = tree.DecisionTreeClassifier()
-    clf.fit(X, y)
+    clf.fit(x, y)
     if show_tree:
         save_image(clf, NAME, ATTRS, classes)
 
-    return clf, X, y
+    return clf, x, y, ATTRS
 
 
 if __name__ == '__main__':

@@ -19,14 +19,15 @@ from art.attacks.evasion import ZooAttack
 from art.estimators.classification import SklearnClassifier
 from matplotlib import pyplot as plt
 
-from tree import train_tree
+from tree import train_tree, text_label
 
 
 def adversarial_iot():
-    colors = ['blue', 'green']
 
-    model, x_train, y_train = train_tree(False)
-    n_classes = 2
+    colors = ['blue', 'green']
+    model, x_train, y_train, attrs = train_tree(False)
+    class_labels = list(set(y_train))
+    n_classes = len(class_labels)
 
     # use numpy arrays
     x_train = np.array([np.array(xi) for xi in x_train])
@@ -35,16 +36,57 @@ def adversarial_iot():
     # Create ART Zeroth Order Optimization attack
     # using scikit-learn DecisionTreeClassifier
     zoo = ZooAttack(
+        # A trained classifier
         classifier=SklearnClassifier(model=model),
-        confidence=0.0, targeted=False, learning_rate=1e-1,
-        max_iter=20, binary_search_steps=10, initial_const=1e-3,
-        abort_early=True, use_resize=False, use_importance=False,
-        nb_parallel=1, batch_size=1, variable_h=0.2)
+        # Confidence of adversarial examples: a higher value produces
+        # examples that are farther away, from the original input,
+        # but classified with higher confidence as the target class.
+        confidence=0.75,
+        # Should the attack target one specific class
+        targeted=False,
+        # The initial learning rate for the attack algorithm. Smaller
+        # values produce better results but are slower to converge.
+        learning_rate=1e-1,
+        # The maximum number of iterations.
+        max_iter=20,
+        # Number of times to adjust constant with binary search
+        # (positive value).
+        binary_search_steps=10,
+        # The initial trade-off constant c to use to tune the
+        # relative importance of distance and confidence. If
+        # binary_search_steps is large, the initial constant is not
+        # important, as discussed in Carlini and Wagner (2016).
+        initial_const=1e-3,
+        # True if gradient descent should be abandoned when it gets
+        # stuck.
+        abort_early=True,
+        # True if to use the resizing strategy from the paper: first,
+        # compute attack on inputs resized to 32x32, then increase
+        # size if needed to 64x64, followed by 128x128.
+        use_resize=False,
+        # True if to use importance sampling when choosing coordinates
+        # to update.
+        use_importance=False,
+        # Number of coordinate updates to run in parallel. A higher
+        # value for nb_parallel should be preferred over a large
+        # batch size.
+        nb_parallel=1,
+        # Internal size of batches on which adversarial samples are
+        # generated. Small batch sizes are encouraged for ZOO,
+        # as the algorithm already runs nb_parallel coordinate
+        # updates in parallel for each sample. The batch size is a
+        # multiplier of nb_parallel in terms of memory consumption.
+        batch_size=1,
+        # Step size for numerical estimation of derivatives.
+        variable_h=0.2,
+        # Show progress bars.
+        verbose=True)
 
     x_train_adv = zoo.generate(x_train)
-    fig, axs = plt.subplots(1, n_classes, figsize=(n_classes * 5, 5))
+    fig, axs = plt.subplots(1, n_classes, figsize=(n_classes * 3, 3))
+    levels = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 
-    for i, class_label in enumerate(y_train[0:2]):
+    for i, class_label in enumerate(class_labels):
 
         # Plot difference vectors
         for j in range(y_train[y_train == i].shape[0]):
@@ -64,8 +106,22 @@ def adversarial_iot():
                 s=20, zorder=2, c=colors[i_class_2])
         axs[i].set_aspect('equal', adjustable='box')
 
+        # Show predicted probability as contour plot
+        h = .01
         x_min, x_max = 0, 1
         y_min, y_max = 0, 1
+
+        xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
+                             np.arange(y_min, y_max, h))
+
+        Z_proba = model.predict_proba(np.c_[xx.ravel(), yy.ravel()])
+        Z_proba = Z_proba[:, i].reshape(xx.shape)
+        im = axs[i].contourf(
+            xx, yy, Z_proba, levels=levels[:], vmin=0, vmax=1
+        )
+        if i == n_classes - 1:
+            cax = fig.add_axes([0.95, 0.2, 0.025, 0.6])
+            plt.colorbar(im, ax=axs[i], cax=cax)
 
         # Plot adversarial samples
         for j in range(y_train[y_train == i].shape[0]):
@@ -74,14 +130,16 @@ def adversarial_iot():
             x_2_0 = x_train_adv[y_train == i][j, 0]
             x_2_1 = x_train_adv[y_train == i][j, 1]
             if x_1_0 != x_2_0 or x_1_1 != x_2_1:
-                axs[i].scatter(x_2_0, x_2_1, zorder=2,
-                               c='red', marker='X')
+                print('adv sample!')
+                axs[i].scatter(
+                    x_2_0, x_2_1, zorder=2, c='red', marker='X'
+                )
 
         axs[i].set_xlim((x_min, x_max))
         axs[i].set_ylim((y_min, y_max))
-        axs[i].set_title('class ' + str(i))
-        axs[i].set_xlabel('feature 1')
-        axs[i].set_ylabel('feature 2')
+        axs[i].set_title(text_label(i))
+        axs[i].set_xlabel(attrs[0])
+        axs[i].set_ylabel(attrs[1])
 
     plt.show()
 
