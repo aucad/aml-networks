@@ -16,6 +16,7 @@ from os import path
 from pathlib import Path
 from sys import argv
 
+import numpy as np
 from matplotlib import pyplot as plt
 from sklearn import tree
 
@@ -62,6 +63,18 @@ def separate_labels(rows_, at_index=-1):
     return new_rows, labels_, list(set(labels_))
 
 
+def format_data(num_classes, x_train, y_train):
+
+    # use numpy arrays
+    x_train = np.array([np.array(xi) for xi in x_train])
+    y_train = np.array(y_train)
+
+    x_train = x_train[y_train < num_classes][:, [0, 1]]
+    y_train = y_train[y_train < num_classes]
+
+    return x_train, y_train
+
+
 def save_image(clf_, filename, feat_names, class_names):
     """Plot the tree and save to file."""
     plt.figure(dpi=200)
@@ -80,13 +93,14 @@ def train_tree(show_tree=False):
     print(f'Attributes: {c(len(ATTRS))}')
     print(f'Number of rows: {c(len(ROWS))}')
 
-    x, y, classes = separate_labels(ROWS)
+    x_, y_, classes = separate_labels(ROWS)
+    x, y = format_data(len(classes), x_, y_)
     clf = tree.DecisionTreeClassifier()
     clf.fit(x, y)
     if show_tree:
         save_image(clf, NAME, ATTRS, classes)
 
-    return clf, x, y, ATTRS
+    return clf, x, y
 
 
 if __name__ == '__main__':

@@ -13,6 +13,7 @@ python src/adv_iot.py
 ```
 
 """
+from os import path
 
 import numpy as np
 from art.attacks.evasion import ZooAttack
@@ -21,18 +22,20 @@ from matplotlib import pyplot as plt
 
 from tree import train_tree, text_label
 
+IMAGE_NAME = path.join('adversarial', 'iot-23.png')
+
 
 def adversarial_iot():
-
     colors = ['blue', 'green']
     levels = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-    model, x_train, y_train, attrs = train_tree(False)
+
+    # get the tree model and its training data
+    model, x_train, y_train = train_tree(False)
     class_labels = list(set(y_train))
     n_classes = len(class_labels)
 
-    # use numpy arrays
-    x_train = np.array([np.array(xi) for xi in x_train])
-    y_train = np.array(y_train)
+    print(x_train)
+    print(y_train)
 
     # Create ART Zeroth Order Optimization attack
     # using scikit-learn DecisionTreeClassifier
@@ -83,7 +86,10 @@ def adversarial_iot():
         # Show progress bars.
         verbose=True)
 
+    # train adversarial examples
     x_train_adv = zoo.generate(x_train)
+
+    # generate plot
     fig, axs = plt.subplots(1, n_classes, figsize=(n_classes * 3, 3))
 
     for i, class_label in enumerate(class_labels):
@@ -108,20 +114,20 @@ def adversarial_iot():
 
         # Show predicted probability as contour plot
         h = .01
-        x_min, x_max = -1, 2
-        y_min, y_max = -1, 2
+        x_min, x_max = -10, 10
+        y_min, y_max = x_min, x_max
 
         xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
                              np.arange(y_min, y_max, h))
 
-        # Z_proba = model.predict_proba(np.c_[xx.ravel(), yy.ravel()])
-        # Z_proba = Z_proba[:, i].reshape(xx.shape)
-        # im = axs[i].contourf(
-        #     xx, yy, Z_proba, levels=levels[:], vmin=0, vmax=1
-        # )
-        # if i == n_classes - 1:
-        #     cax = fig.add_axes([0.95, 0.2, 0.025, 0.6])
-        #     plt.colorbar(im, ax=axs[i], cax=cax)
+        Z_proba = model.predict_proba(np.c_[xx.ravel(), yy.ravel()])
+        Z_proba = Z_proba[:, i].reshape(xx.shape)
+        im = axs[i].contourf(
+            xx, yy, Z_proba, levels=levels[:], vmin=0, vmax=1
+        )
+        if i == n_classes - 1:
+            cax = fig.add_axes([0.92, 0.2, 0.01, 0.6])
+            plt.colorbar(im, ax=axs[i], cax=cax)
 
         # Plot adversarial samples
         for j in range(y_train[y_train == i].shape[0]):
@@ -130,7 +136,7 @@ def adversarial_iot():
             x_2_0 = x_train_adv[y_train == i][j, 0]
             x_2_1 = x_train_adv[y_train == i][j, 1]
             if x_1_0 != x_2_0 or x_1_1 != x_2_1:
-                print('adv sample!')
+                print('adversarial success!')
                 axs[i].scatter(
                     x_2_0, x_2_1, zorder=2, c='red', marker='X'
                 )
@@ -138,9 +144,10 @@ def adversarial_iot():
         axs[i].set_xlim((x_min, x_max))
         axs[i].set_ylim((y_min, y_max))
         axs[i].set_title(text_label(i))
-        axs[i].set_xlabel(attrs[0])
-        axs[i].set_ylabel(attrs[1])
+        axs[i].set_xlabel('x-axis')
+        axs[i].set_ylabel('y-axis')
 
+    plt.savefig(IMAGE_NAME)
     plt.show()
 
 

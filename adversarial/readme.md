@@ -16,8 +16,10 @@ Progress so far:
     python src/adv_mnist.py
     ```
     
-3. [ ] Apply attack (from step 2) to the tree (from step 1) 
+3. [~] Apply attack (from step 2) to the tree (from step 1) 
 
+
+![img](iot-23.png)
 
 * * *   
   
