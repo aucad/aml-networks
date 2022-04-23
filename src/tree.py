@@ -64,13 +64,15 @@ def separate_labels(rows_, at_index=-1):
 
 
 def format_data(num_classes, x_train, y_train):
-
     # use numpy arrays
     x_train = np.array([np.array(xi) for xi in x_train])
     y_train = np.array(y_train)
 
-    x_train = x_train[y_train < num_classes][:, [0, 1]]
+    x_train = x_train[y_train < num_classes][:, [2, 3]]
     y_train = y_train[y_train < num_classes]
+
+    x_train[:, 0] = (x_train[:, 0]) / 1744830458
+    x_train[:, 1] = (x_train[:, 1]) / 171878
 
     return x_train, y_train
 

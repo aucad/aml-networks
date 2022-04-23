@@ -114,7 +114,7 @@ def adversarial_iot():
 
         # Show predicted probability as contour plot
         h = .01
-        x_min, x_max = -10, 10
+        x_min, x_max = -0.2, 1.2
         y_min, y_max = x_min, x_max
 
         xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
@@ -130,17 +130,18 @@ def adversarial_iot():
             plt.colorbar(im, ax=axs[i], cax=cax)
 
         # Plot adversarial samples
+        success_count = 0
         for j in range(y_train[y_train == i].shape[0]):
             x_1_0 = x_train[y_train == i][j, 0]
             x_1_1 = x_train[y_train == i][j, 1]
             x_2_0 = x_train_adv[y_train == i][j, 0]
             x_2_1 = x_train_adv[y_train == i][j, 1]
             if x_1_0 != x_2_0 or x_1_1 != x_2_1:
-                print('adversarial success!')
-                axs[i].scatter(
-                    x_2_0, x_2_1, zorder=2, c='red', marker='X'
-                )
+                axs[i].scatter(x_2_0, x_2_1,
+                               zorder=2, c='red', marker='X')
+                success_count += 1
 
+        print(f'{text_label(i)} adversarial success', success_count)
         axs[i].set_xlim((x_min, x_max))
         axs[i].set_ylim((y_min, y_max))
         axs[i].set_title(text_label(i))
