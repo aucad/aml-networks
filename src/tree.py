@@ -68,11 +68,12 @@ def format_data(num_classes, x_train, y_train):
     x_train = np.array([np.array(xi) for xi in x_train])
     y_train = np.array(y_train)
 
-    x_train = x_train[y_train < num_classes][:, [2, 3]]
+    x_train = x_train[y_train < num_classes][:, :]
     y_train = y_train[y_train < num_classes]
 
-    x_train[:, 0] = (x_train[:, 0]) / 1744830458
-    x_train[:, 1] = (x_train[:, 1]) / 171878
+    # normalize all attributes to range 0.0 - 1.0
+    for i in range(len(x_train[0])):
+        x_train[:, i] = (x_train[:, i]) / max(x_train[:, i])
 
     return x_train, y_train
 
@@ -93,7 +94,7 @@ def train_tree(show_tree=False):
     """Train a decision tree"""
     print(f'Read dataset {c(NAME)}')
     print(f'Attributes: {c(len(ATTRS))}')
-    print(f'Number of rows: {c(len(ROWS))}')
+    print(f'Instances: {c(len(ROWS))}')
 
     x_, y_, classes = separate_labels(ROWS)
     x, y = format_data(len(classes), x_, y_)
