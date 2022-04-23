@@ -16,10 +16,26 @@ Progress so far:
     python src/adv_mnist.py
     ```
     
-3. [~] Apply attack (from step 2) to the tree (from step 1) 
+3. ✔ Apply attack (from step 2) to the tree (from step 1) 
+
+    ```text
+    python src/adv_iot.py
+    ```
 
 
-![img](iot-23.png)
+- blue circles: malicious training 
+- green circles: benign training 
+- red crosses: adversarial modified instance
+- black line: difference between original and adversarial
+
+ 
+![img](iot-23_1.png) 
+ 
+![img](iot-23_2.png) 
+  
+![img](iot-23_3.png) 
+ 
+![img](iot-23_4.png) 
 
 * * *   
   

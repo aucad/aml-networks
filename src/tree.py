@@ -92,9 +92,9 @@ def save_image(clf_, filename, feat_names, class_names):
 
 def train_tree(show_tree=False):
     """Train a decision tree"""
-    print(f'Read dataset {c(NAME)}')
-    print(f'Attributes: {c(len(ATTRS))}')
-    print(f'Instances: {c(len(ROWS))}')
+    print(f'Read dataset: {c(NAME)}')
+    print(f'Attributes:   {c(len(ATTRS))}')
+    print(f'Instances:    {c(len(ROWS))}')
 
     x_, y_, classes = separate_labels(ROWS)
     x, y = format_data(len(classes), x_, y_)
@@ -103,7 +103,7 @@ def train_tree(show_tree=False):
     if show_tree:
         save_image(clf, NAME, ATTRS, classes)
 
-    return clf, x, y
+    return clf, x, y, ATTRS
 
 
 if __name__ == '__main__':
