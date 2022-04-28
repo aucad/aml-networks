@@ -4,3 +4,4 @@ colorama
 adversarial-robustness-toolbox
 tensorflow
 numpy
+pandas
