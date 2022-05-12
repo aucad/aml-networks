@@ -29,15 +29,21 @@ from art.attacks.inference.attribute_inference \
     import AttributeInferenceBlackBox
 from art.estimators.classification.scikitlearn \
     import ScikitlearnDecisionTreeClassifier
+from art.attacks.inference.attribute_inference \
+    import AttributeInferenceWhiteBoxLifestyleDecisionTree
+# from art.attacks.inference.attribute_inference \
+#     import AttributeInferenceWhiteBoxDecisionTree
 
 from tree import train_tree
 from utility import color_text as c
 
 
-def black_box_one(classifier, x_train, attr_index=0, label=None):
+def black_box(classifier, x_train, attr_index, label=None):
     """Trains an additional classifier (called the attack model) to
     predict the attacked feature's value from the remaining n-1 features
     as well as the original (attacked) model's predictions."""
+
+    values = [0, 1]
 
     # Train attack model
     attack_train_ratio = 0.5
@@ -67,8 +73,6 @@ def black_box_one(classifier, x_train, attr_index=0, label=None):
     # Infer sensitive feature and check accuracy
     # get inferred values
 
-    values = [0, 1]
-
     # infer the attribute values
     inferred_train_bb = bb_attack.infer(
         attack_x_test,
@@ -85,6 +89,42 @@ def black_box_one(classifier, x_train, attr_index=0, label=None):
           c(f'{acc * 100:.2f} %'))
 
 
+def white_box_one(classifier, x_train, attr_index, label=None):
+    """These two attacks do not train any
+    additional model, they simply use additional information coded
+    within the attacked decision tree model to compute the
+    probability of each value of the attacked feature and outputs
+    the value with the highest probability."""
+    wb_attack = AttributeInferenceWhiteBoxLifestyleDecisionTree(
+        classifier, attack_feature=attr_index)
+
+    values = [0, 1]
+    priors = [3465 / 5183, 1718 / 5183]
+    attack_train_ratio = 0.5
+    attack_train_size = int(len(x_train) * attack_train_ratio)
+    attack_x_test = x_train[attack_train_size:]
+
+    attack_x_test_predictions = np.array(
+        [np.argmax(arr) for arr in
+         classifier.predict(attack_x_test)]).reshape(-1, 1)
+
+    # only attacked feature
+    attack_x_test_feature = \
+        attack_x_test[:, attr_index].copy().reshape(-1, 1)
+
+    # get inferred values
+    inferred_train_wb1 = wb_attack.infer(
+        attack_x_test, attack_x_test_predictions,
+        values=values, priors=priors)
+
+    # check accuracy
+    acc = np.sum(inferred_train_wb1 == np.around(
+        attack_x_test_feature, decimals=8).reshape(1, -1)) / len(
+        inferred_train_wb1)
+    print('White-box I accuracy' + f'({label}):' if label else ':',
+          c(f'{acc * 100:.2f} %'))
+
+
 def attr_inference():
     """Perform various attribute inference attacks."""
 
@@ -96,8 +136,11 @@ def attr_inference():
     acc = model.score(x_test, y_test)
     print('Base model accuracy: ', c(f'{acc * 100:.2f} %'))
 
-    black_box_one(art_classifier, x_train, 0, 'proto=udp')
-    black_box_one(art_classifier, x_train, 4, 'conn_state=SF')
+    black_box(art_classifier, x_train, 0, 'proto=udp')
+    black_box(art_classifier, x_train, 4, 'conn_state=SF')
+
+    # white_box_one(art_classifier, x_train, 0, 'proto=udp')
+    # white_box_one(art_classifier, x_train, 4, 'conn_state=SF')
 
 
 if __name__ == '__main__':
