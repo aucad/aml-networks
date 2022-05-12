@@ -91,7 +91,7 @@ def save_image(clf_, filename, feat_names, class_names):
     plt.show()
 
 
-def sample_test(x, y, test_set=0.1):
+def sample_test(x, y, test_set):
     sample_size = int(len(x) * test_set)
     idx = sample(list(range(len(x))), sample_size)
 
@@ -102,7 +102,7 @@ def sample_test(x, y, test_set=0.1):
     return (train_x, train_y), (test_x, test_y)
 
 
-def train_tree(show_tree=False, test_set=0.1):
+def train_tree(show_tree=False, test_set=0):
     """Train a decision tree"""
     print(f'Read dataset: {c(NAME)}')
     print(f'Attributes:   {c(len(ATTRS))}')

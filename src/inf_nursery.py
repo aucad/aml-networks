@@ -11,7 +11,7 @@ attack_attribute_inference.ipynb
 Usage:
 
 ```
-python src/inf_nursery.py
+python src/adv_iot.py
 ```
 """
 
@@ -28,10 +28,10 @@ from art.attacks.inference.attribute_inference \
     import AttributeInferenceWhiteBoxDecisionTree
 from art.attacks.inference.attribute_inference \
     import AttributeInferenceBaseline
-from art.attacks.inference.membership_inference \
-    import MembershipInferenceBlackBox
-from art.attacks.inference.attribute_inference \
-    import AttributeInferenceMembership
+# from art.attacks.inference.membership_inference \
+#     import MembershipInferenceBlackBox
+# from art.attacks.inference.attribute_inference \
+#     import AttributeInferenceMembership
 from art.estimators.classification.scikitlearn \
     import ScikitlearnDecisionTreeClassifier
 from art.utils import load_nursery
