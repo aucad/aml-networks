@@ -1,6 +1,6 @@
 """
 Simple adversarial example using ART with scikit-learn and applying
-attribute inference attacks.
+attribute inference attack.
 
 Inspired by this example:
 
@@ -32,9 +32,9 @@ from art.attacks.inference.membership_inference \
     import MembershipInferenceBlackBox
 from art.attacks.inference.attribute_inference \
     import AttributeInferenceMembership
-from art.utils import load_nursery
 from art.estimators.classification.scikitlearn \
     import ScikitlearnDecisionTreeClassifier
+from art.utils import load_nursery
 from sklearn.tree import DecisionTreeClassifier
 
 
