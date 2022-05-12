@@ -31,8 +31,8 @@ from art.estimators.classification.scikitlearn \
     import ScikitlearnDecisionTreeClassifier
 from art.attacks.inference.attribute_inference \
     import AttributeInferenceWhiteBoxLifestyleDecisionTree
-# from art.attacks.inference.attribute_inference \
-#     import AttributeInferenceWhiteBoxDecisionTree
+from art.attacks.inference.attribute_inference \
+    import AttributeInferenceWhiteBoxDecisionTree
 
 from tree import train_tree
 from utility import color_text as c
@@ -90,11 +90,10 @@ def black_box(classifier, x_train, attr_index, label=None):
 
 
 def white_box_one(classifier, x_train, attr_index, label=None):
-    """These two attacks do not train any
-    additional model, they simply use additional information coded
-    within the attacked decision tree model to compute the
-    probability of each value of the attacked feature and outputs
-    the value with the highest probability."""
+    """These two attacks do not train any additional model, they simply
+    use additional information coded within the attacked decision tree
+    model to compute the probability of each value of the attacked
+    feature and outputs the value with the highest probability."""
     wb_attack = AttributeInferenceWhiteBoxLifestyleDecisionTree(
         classifier, attack_feature=attr_index)
 
@@ -122,6 +121,41 @@ def white_box_one(classifier, x_train, attr_index, label=None):
         attack_x_test_feature, decimals=8).reshape(1, -1)) / len(
         inferred_train_wb1)
     print('White-box I accuracy' + f'({label}):' if label else ':',
+          c(f'{acc * 100:.2f} %'))
+
+
+def white_box_two(classifier, x_train, attr_index, label=None):
+    """These two attacks do not train any additional model, they simply
+    use additional information coded within the attacked decision tree
+    model to compute the probability of each value of the attacked
+    feature and outputs the value with the highest probability."""
+    wb2_attack = AttributeInferenceWhiteBoxDecisionTree(
+        classifier, attack_feature=attr_index)
+
+    values = [0, 1]
+    priors = [3465 / 5183, 1718 / 5183]
+    attack_train_ratio = 0.5
+    attack_train_size = int(len(x_train) * attack_train_ratio)
+    attack_x_test = x_train[attack_train_size:]
+
+    attack_x_test_predictions = np.array(
+        [np.argmax(arr) for arr in
+         classifier.predict(attack_x_test)]).reshape(-1, 1)
+
+    # only attacked feature
+    attack_x_test_feature = \
+        attack_x_test[:, attr_index].copy().reshape(-1, 1)
+
+    # get inferred values
+    inferred_train_wb2 = wb2_attack.infer(
+        attack_x_test, attack_x_test_predictions,
+        values=values, priors=priors)
+
+    # check accuracy
+    acc = np.sum(inferred_train_wb2 == np.around(
+        attack_x_test_feature, decimals=8).reshape(1, -1)) / len(
+        inferred_train_wb2)
+    print('White-box II accuracy' + f'({label}):' if label else ':',
           c(f'{acc * 100:.2f} %'))
 
 
