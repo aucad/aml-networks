@@ -37,7 +37,7 @@ plt.rc('ytick', labelsize=6)
 def adversarial_iot():
     """Generate the adversarial examples."""
     # get the tree model and its training data
-    model, x_train, y_train, ATTR = train_tree(False)
+    model, x_train, y_train, ATTR, _, _ = train_tree(False)
 
     # Create ART Zeroth Order Optimization attack
     # using scikit-learn DecisionTreeClassifier

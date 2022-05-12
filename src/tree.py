@@ -15,6 +15,7 @@ python src/tree.py
 from os import path
 from pathlib import Path
 from sys import argv
+from random import sample
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -90,7 +91,18 @@ def save_image(clf_, filename, feat_names, class_names):
     plt.show()
 
 
-def train_tree(show_tree=False):
+def sample_test(x, y, test_set=0.1):
+    sample_size = int(len(x) * test_set)
+    idx = sample(list(range(len(x))), sample_size)
+
+    train_x = np.array([x_ for i, x_ in enumerate(x) if i not in idx])
+    train_y = np.array([y_ for i, y_ in enumerate(y) if i not in idx])
+    test_x = np.array([x_ for i, x_ in enumerate(x) if i in idx])
+    test_y = np.array([y_ for i, y_ in enumerate(y) if i in idx])
+    return (train_x, train_y), (test_x, test_y)
+
+
+def train_tree(show_tree=False, test_set=0.1):
     """Train a decision tree"""
     print(f'Read dataset: {c(NAME)}')
     print(f'Attributes:   {c(len(ATTRS))}')
@@ -98,12 +110,13 @@ def train_tree(show_tree=False):
 
     x_, y_, classes = separate_labels(ROWS)
     x, y = format_data(len(classes), x_, y_)
+    (train_x, train_y), (test_x, test_y) = sample_test(x, y, test_set)
     clf = tree.DecisionTreeClassifier()
-    clf.fit(x, y)
+    clf.fit(train_x, train_y)
     if show_tree:
         save_image(clf, NAME, ATTRS, classes)
 
-    return clf, x, y, ATTRS
+    return clf, train_x, train_y, ATTRS, test_x, test_y
 
 
 if __name__ == '__main__':
