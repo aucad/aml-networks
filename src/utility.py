@@ -45,3 +45,14 @@ def save_csv(filename: str, rows: List[List], headers: List = None):
 
         for row in rows:
             w.writerow(row)
+
+
+def save_file(filename: str, lines: List[str]):
+    """Write a text file.
+
+    Arguments:
+        filename: where to save file (with path and extension)
+        lines: lines fo text
+    """
+    with open(filename, 'w') as fp:
+        fp.write('\n'.join(lines))

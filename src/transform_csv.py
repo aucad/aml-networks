@@ -17,7 +17,7 @@ This script takes as input (in order):
 Example:
 
 ```
-python transform.py conn.log.labelled my_data.csv 
+python src/transform_csv.py conn.log.labelled my_data.csv 
 ```
 
 NOTE: Light manual editing is required prior to calling this script.
