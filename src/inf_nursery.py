@@ -11,7 +11,7 @@ attack_attribute_inference.ipynb
 Usage:
 
 ```
-python src/adv_iot.py
+python src/inf_nursery.py
 ```
 """
 
