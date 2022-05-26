@@ -44,12 +44,9 @@ remain (on line 1), followed by the data rows. After this modification
 this transformation script can be applied, to convert to CSV.
 """
 
-
-FILE_IN, FILE_OUT = argv[1], argv[2]
 SEP, COMMENT = '   ', '#'
 
-head, rows = read_csv(FILE_IN, delimiter='\t')
-attrs = "proto,duration,orig_bytes,resp_bytes,conn_state," \
+ATTRS = "proto,duration,orig_bytes,resp_bytes,conn_state," \
         "missed_bytes,history,orig_pkts,orig_ip_bytes,resp_pkts," \
         "resp_ip_bytes,label".split(",")
 
@@ -71,14 +68,19 @@ def keep(row, index_list):
     return [row[x] for x in index_list]
 
 
-all_headers = split_spaces(head)
-indices = [all_headers.index(attr) for attr in attrs]
+def convert(file_in, file_out):
+    """Convert labelled IoT-23 to CSV file."""
+    head, rows = read_csv(file_in, delimiter='\t')
+    all_headers = split_spaces(head)
+    indices = [all_headers.index(attr) for attr in ATTRS]
+    csv_headers = keep(all_headers, indices)
+    csv_rows = [keep(replace_missing(split_spaces(row)), indices)
+                for row in rows[:-1]]
 
-csv_headers = keep(all_headers, indices)
-csv_rows = [keep(replace_missing(split_spaces(row)), indices)
-            for row in rows[:-1]]
+    save_csv(file_out, csv_rows, csv_headers)
+    print(f'read {len(rows)} rows')
+    print(f'wrote {len(csv_headers)} headers and {len(csv_rows)} rows')
 
-save_csv(FILE_OUT, csv_rows, csv_headers)
 
-print(f'read {len(rows)} rows')
-print(f'wrote {len(csv_headers)} headers and {len(csv_rows)} rows')
+if __name__ == '__main__':
+    convert(argv[1], argv[2])

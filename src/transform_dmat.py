@@ -1,7 +1,7 @@
 from os import path
-from sys import argv
+from sys import argv, exit
 
-from utility import read_csv, save_file
+from utility import read_csv, save_file, color_text as c
 from tree import int_label
 
 """
@@ -20,14 +20,9 @@ python src/transform_dmat.py ./data/CTU-44-1.csv
 ```
 """
 
-FILE_IN = argv[1]
-FPATH = path.dirname(FILE_IN)
-FNAME = path.basename(path.splitext(FILE_IN)[0])
-FILE_OUT = path.join(FPATH, f'{FNAME}.dmat')
-_, rows = read_csv(FILE_IN)
 
-
-def transform_rows(row):
+def transform_row(row):
+    """Format 1 row of CSV data as DMatrix data"""
     label, data, result = row[-1], row[0:-2], []
     if not str(label).isdigit():
         label = int_label(label)
@@ -40,11 +35,26 @@ def transform_rows(row):
     return " ".join([str(s) for s in result])
 
 
-lines = [transform_rows(r) for r in rows]
-save_file(FILE_OUT, lines)
+def out_filename(file_in):
+    """Generate output filename from the input file name."""
+    dir_path = path.dirname(file_in)
+    filename = path.basename(path.splitext(file_in)[0])
+    return path.join(dir_path, f'{filename}.dmat')
 
-print(f'{len(rows)} csv rows transformed to {len(lines)} DMatrix rows')
-print(f'saved result to {FILE_OUT}')
 
-for row in rows:
-    transform_rows(row)
+def convert(file_in):
+    """Convert CSV file to DMatrix file."""
+    file_out = out_filename(file_in)
+    rows = read_csv(file_in)[1]
+    lines = [transform_row(r) for r in rows]
+    save_file(file_out, lines)
+    print(f'Converted CSV -> DMatrix ({len(rows)}/{len(lines)} rows)')
+    print(f'Saved result to {c(file_out)}')
+
+
+if __name__ == '__main__':
+    if len(argv) >= 2:
+        convert(argv[1])
+    else:
+        print('Input file path is a required argument')
+        exit(1)
