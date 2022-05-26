@@ -28,10 +28,10 @@ from art.attacks.inference.attribute_inference \
     import AttributeInferenceWhiteBoxDecisionTree
 from art.attacks.inference.attribute_inference \
     import AttributeInferenceBaseline
-# from art.attacks.inference.membership_inference \
-#     import MembershipInferenceBlackBox
-# from art.attacks.inference.attribute_inference \
-#     import AttributeInferenceMembership
+from art.attacks.inference.membership_inference \
+    import MembershipInferenceBlackBox
+from art.attacks.inference.attribute_inference \
+    import AttributeInferenceMembership
 from art.estimators.classification.scikitlearn \
     import ScikitlearnDecisionTreeClassifier
 from art.utils import load_nursery
@@ -218,9 +218,6 @@ def nursery_demo():
 
     # (III) Membership based attack
     # -----------------------------
-    #
-    # <<<<<< THIS NEEDS PYTORCH >>>>>>>
-    #
     # In this attack the idea is to find the target feature value that
     # maximizes the membership attack confidence, indicating that
     # this is the most probable value for member samples. It can be
@@ -228,24 +225,24 @@ def nursery_demo():
     # as long as it supports the given model.
 
     # train membership attack
-    # mem_attack = MembershipInferenceBlackBox(art_classifier)
-    # mem_attack.fit(x_train[:attack_train_size],
-    #                y_train[:attack_train_size], x_test, y_test)
-    #
-    # # Apply attribute attack
-    # attack = AttributeInferenceMembership(
-    #     art_classifier, mem_attack, attack_feature=attack_feature)
-    #
-    # # infer values
-    # inferred_train = attack.infer(
-    #     attack_x_test, attack_y_test, values=values)
-    #
-    # # check accuracy
-    # train_acc = np.sum(inferred_train == np.around(
-    #     attack_x_test_feature, decimals=8).reshape(1, -1)) / len(
-    #     inferred_train)
-    #
-    # print('membership (blackbox) accuracy', train_acc)
+    mem_attack = MembershipInferenceBlackBox(art_classifier)
+    mem_attack.fit(x_train[:attack_train_size],
+                   y_train[:attack_train_size], x_test, y_test)
+
+    # Apply attribute attack
+    attack = AttributeInferenceMembership(
+        art_classifier, mem_attack, attack_feature=attack_feature)
+
+    # infer values
+    inferred_train = attack.infer(
+        attack_x_test, attack_y_test, values=values)
+
+    # check accuracy
+    train_acc = np.sum(inferred_train == np.around(
+        attack_x_test_feature, decimals=8).reshape(1, -1)) / len(
+        inferred_train)
+
+    print('membership (blackbox) accuracy', train_acc)
 
     # Should see that this attack does slightly better than the
     # regular black-box attack, even though it still assumes only

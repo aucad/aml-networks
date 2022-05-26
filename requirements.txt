@@ -6,3 +6,4 @@ tensorflow
 numpy
 pandas
 xgboost
+torch
