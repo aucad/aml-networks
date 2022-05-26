@@ -36,6 +36,33 @@ from tree import train_tree
 from utility import color_text as c
 
 
+def calc_precision_recall(predicted, actual, positive_value=1):
+    score = 0  # both predicted and actual are positive
+    num_positive_predicted = 0  # predicted positive
+    num_positive_actual = 0  # actual positive
+    for i in range(len(predicted)):
+        if predicted[i] == positive_value:
+            num_positive_predicted += 1
+        if actual[i] == positive_value:
+            num_positive_actual += 1
+        if predicted[i] == actual[i]:
+            if predicted[i] == positive_value:
+                score += 1
+
+    if num_positive_predicted == 0:
+        precision = 1
+    else:
+        # the fraction of predicted “Yes” responses that are correct
+        precision = score / num_positive_predicted
+    if num_positive_actual == 0:
+        recall = 1
+    else:
+        # the fraction of “Yes” responses that are predicted correctly
+        recall = score / num_positive_actual
+
+    return f'{100 * precision:.2f} %  {100 * recall:.2f} %'
+
+
 def black_box(classifier, x_train, attack_feature, label):
     """Trains an additional classifier (called the attack model) to
     predict the attacked feature's value from the remaining n-1 features
@@ -43,7 +70,7 @@ def black_box(classifier, x_train, attack_feature, label):
 
     values = [0, 1]
 
-    # Train attack model
+    # training and test split
     attack_train_ratio = 0.5
     attack_train_size = int(len(x_train) * attack_train_ratio)
     attack_x_train = x_train[:attack_train_size]
@@ -73,7 +100,11 @@ def black_box(classifier, x_train, attack_feature, label):
     # check accuracy
     actual = np.around(attack_x_test_feat, decimals=8).reshape(1, -1)
     acc = np.sum(inferred_train_bb == actual) / len(inferred_train_bb)
-    print(f'Blackbox accuracy ({label}):', c(f'{acc * 100:.2f} %'))
+
+    print(f'Black-box   ({label})', end=' ')
+    print(f'Accuracy precision and recall:', c(f'{acc * 100:.2f} % '),
+          c(calc_precision_recall(inferred_train_bb, np.around(
+              attack_x_test_feat, decimals=8), positive_value=0)))
 
 
 def white_box(classifier, x_train, attack_feature, label):
@@ -83,6 +114,8 @@ def white_box(classifier, x_train, attack_feature, label):
     feature and outputs the value with the highest probability."""
 
     values = [0, 1]
+
+    # training and test split
     attack_train_ratio = 0.80
     attack_train_size = int(len(x_train) * attack_train_ratio)
     attack_x_test = x_train[attack_train_size:]
@@ -122,8 +155,16 @@ def white_box(classifier, x_train, attack_feature, label):
     actual = np.around(attack_x_test_feat, decimals=8).reshape(1, -1)
     ac1 = np.sum(inferred_train_wb1 == actual) / len(inferred_train_wb1)
     ac2 = np.sum(inferred_train_wb2 == actual) / len(inferred_train_wb2)
-    print(f'White-box 1 accuracy ({label}):', c(f'{ac1 * 100:.2f} %'))
-    print(f'White-box 2 accuracy ({label}):', c(f'{ac2 * 100:.2f} %'))
+
+    print(f'White-box 1 ({label})', end=' ')
+    print(f'Accuracy precision and recall:', c(f'{ac1 * 100:.2f} % '),
+          c(calc_precision_recall(inferred_train_wb1, np.around(
+              attack_x_test_feat, decimals=8), positive_value=0)))
+
+    print(f'White-box 2 ({label})', end=' ')
+    print(f'Accuracy precision and recall:', c(f'{ac2 * 100:.2f} % '),
+          c(calc_precision_recall(inferred_train_wb2, np.around(
+              attack_x_test_feat, decimals=8), positive_value=0)))
 
 
 def attr_inference():
@@ -138,9 +179,9 @@ def attr_inference():
     print('Base model accuracy: ', c(f'{acc * 100:.2f} %'))
 
     black_box(art_classifier, x_train[:], 0, 'proto=udp')
-    black_box(art_classifier, x_train[:], 4, 'conn_state=SF')
-
     white_box(art_classifier, x_train[:], 0, 'proto=udp')
+
+    black_box(art_classifier, x_train[:], 4, 'conn_state=SF')
     white_box(art_classifier, x_train[:], 4, 'conn_state=SF')
 
 
