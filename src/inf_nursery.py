@@ -20,18 +20,14 @@ import warnings
 warnings.filterwarnings("ignore")  # ignore import warnings
 
 import numpy as np
-from art.attacks.inference.attribute_inference \
-    import AttributeInferenceBlackBox
-from art.attacks.inference.attribute_inference \
-    import AttributeInferenceWhiteBoxLifestyleDecisionTree
-from art.attacks.inference.attribute_inference \
-    import AttributeInferenceWhiteBoxDecisionTree
-from art.attacks.inference.attribute_inference \
-    import AttributeInferenceBaseline
+from art.attacks.inference.attribute_inference import \
+    AttributeInferenceBaseline, \
+    AttributeInferenceBlackBox, \
+    AttributeInferenceMembership, \
+    AttributeInferenceWhiteBoxDecisionTree, \
+    AttributeInferenceWhiteBoxLifestyleDecisionTree
 from art.attacks.inference.membership_inference \
     import MembershipInferenceBlackBox
-from art.attacks.inference.attribute_inference \
-    import AttributeInferenceMembership
 from art.estimators.classification.scikitlearn \
     import ScikitlearnDecisionTreeClassifier
 from art.utils import load_nursery
@@ -89,7 +85,6 @@ def nursery_demo():
     attack_train_ratio = 0.5
     attack_train_size = int(len(x_train) * attack_train_ratio)
     attack_x_train = x_train[:attack_train_size]
-    attack_y_train = y_train[:attack_train_size]
     attack_x_test = x_train[attack_train_size:]
     attack_y_test = y_train[attack_train_size:]
 
