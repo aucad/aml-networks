@@ -2,8 +2,8 @@ from os import path
 from random import sample
 from sys import argv, exit
 
-from utility import read_csv, save_file, color_text as c
 from tree import int_label
+from utility import read_csv, save_file, color_text as c
 
 """
 Converts a CSV file to DMatrix format for XGBoost, see: 

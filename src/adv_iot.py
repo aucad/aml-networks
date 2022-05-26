@@ -14,8 +14,8 @@ python src/adv_iot.py
 """
 
 import warnings
-from os import path
 from itertools import combinations
+from os import path
 
 warnings.filterwarnings("ignore")  # ignore import warnings
 
@@ -120,6 +120,7 @@ def plot(model, class_labels, evasions, attr, *data):
     # range for contour plot
     levels, h = [x / 10. for x in range(0, 11)], .1
     colors = ['deepskyblue', 'lawngreen']
+    markers = ['o', 's']
 
     avg_sample = np.mean(x_train, axis=0)
 
@@ -164,14 +165,15 @@ def plot(model, class_labels, evasions, attr, *data):
                     x_train[y_train == cl][:, f1],
                     x_train[y_train == cl][:, f2],
                     edgecolor='black', linewidth=.5,
-                    s=20, zorder=2, c=colors[cl])
+                    s=20, zorder=2, c=colors[cl],
+                    marker=markers[cl])
 
             for j in evasions:
                 # Plot adversarial examples
                 axs[p].scatter(
                     x_train_adv[j:j + 1, f1],
                     x_train_adv[j:j + 1, f2],
-                    zorder=2, c='red', marker='x', s=20)
+                    zorder=2, c='red', marker='x', s=15)
 
             # Show predicted probability as contour plot
             xx, yy = np.meshgrid(
@@ -185,16 +187,11 @@ def plot(model, class_labels, evasions, attr, *data):
             # plot class probabilities as contour plot
             for i, class_label in enumerate(class_labels):
                 z_prob = model.predict_proba(pred_array)[:, i]
-                im = axs[p].contourf(
+                axs[p].contourf(
                     xx, yy, z_prob.reshape(xx.shape),
                     levels=levels[:], vmin=0, vmax=1)
-                # if i == len(class_labels) - 1:
-                # cax = fig.add_axes([0.1, 0.04, 0.33, 0.01])
-                # plt.colorbar(im, ax=axs[i], cax=cax, ticks=[0, 1],
-                #              orientation='horizontal')
 
         fig.tight_layout(pad=.25)
-        # fig.subplots_adjust(bottom=.08, right=.97, hspace=.05)
         plt.savefig(f'{IMAGE_NAME}_{f + 1}.png', pad_inces=.5)
 
 

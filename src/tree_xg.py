@@ -24,7 +24,6 @@ import xgboost as xgb
 
 from utility import color_text as c
 
-OUTPUT_DIR = 'boosted'
 DEFAULT_TRAIN = 'data/CTU-44-1.train.dmat'
 DEFAULT_TEST = 'data/CTU-44-1.test.dmat'
 TRAIN_PATH = argv[1] if len(argv) > 1 else DEFAULT_TRAIN
@@ -32,7 +31,7 @@ TEST_PATH = argv[2] if len(argv) > 2 else DEFAULT_TEST
 
 
 def score(test_labels, predictions):
-    """0 is malicious --> positive"""
+    """Here 0 is malicious --> 0 is positive."""
     accuracy, precision, recall, f_score = 0, 0, 0, 0
     tp, tn, fn, fp, tot = 0, 0, 0, 0, len(test_labels)
     for actual, pred in zip(test_labels, predictions):

@@ -4,8 +4,14 @@ Provide as input a path to a dataset, or script uses default
 dataset if none provided. The dataset must be numeric
 at all attributes.
 
+Default usage:
 
-Usage:
+```
+python src/tree.py
+```
+
+
+Usage with custom dataset:
 
 ```
 python src/tree.py ./path/to/input_data.csv
@@ -14,8 +20,8 @@ python src/tree.py ./path/to/input_data.csv
 
 from os import path
 from pathlib import Path
-from sys import argv
 from random import sample
+from sys import argv
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -102,7 +108,7 @@ def sample_test(x, y, test_set):
     return (train_x, train_y), (test_x, test_y)
 
 
-def train_tree(show_tree=False, test_set=0):
+def train_tree(show_tree=False, test_set=0.):
     """Train a decision tree"""
     print(f'Read dataset: {c(NAME)}')
     print(f'Attributes:   {c(len(ATTRS))}')
@@ -116,8 +122,12 @@ def train_tree(show_tree=False, test_set=0):
     if show_tree:
         save_image(clf, NAME, ATTRS, classes)
 
+    if test_set > 0:
+        acc = clf.score(test_x, test_y)
+        print(f'Score:       ', c(f'{acc * 100:.2f} %'))
+
     return clf, train_x, train_y, ATTRS, test_x, test_y
 
 
 if __name__ == '__main__':
-    train_tree(True)
+    train_tree(False, 0.1)

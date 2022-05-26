@@ -23,8 +23,8 @@ python src/adv_mnist.py --help
 ```
 """
 
-from os import path
 from argparse import ArgumentParser
+from os import path
 
 import numpy as np
 from art.attacks.evasion import ZooAttack
