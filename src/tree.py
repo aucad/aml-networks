@@ -8,7 +8,7 @@ at all attributes.
 Usage:
 
 ```
-python src/tree.py
+python src/tree.py ./path/to/input_data.csv
 ```
 """
 

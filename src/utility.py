@@ -29,6 +29,12 @@ def read_csv(path: str, delimiter=',') -> Tuple[list, list]:
     return header, rows
 
 
+def read_lines(path: str) -> List[str]:
+    """Read text file line by line"""
+    with open(path, 'r') as fp:
+        return fp.readlines()
+
+
 def save_csv(filename: str, rows: List[List], headers: List = None):
     """saves CSV file
 
