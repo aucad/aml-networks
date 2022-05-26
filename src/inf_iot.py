@@ -26,7 +26,8 @@ warnings.filterwarnings("ignore")  # ignore import warnings
 
 import numpy as np
 from art.attacks.inference.attribute_inference \
-    import AttributeInferenceBlackBox, \
+    import AttributeInferenceBaseline, \
+    AttributeInferenceBlackBox, \
     AttributeInferenceWhiteBoxLifestyleDecisionTree, \
     AttributeInferenceWhiteBoxDecisionTree
 from art.estimators.classification.scikitlearn \
@@ -167,6 +168,49 @@ def white_box(classifier, x_train, attack_feature, label):
               attack_x_test_feat, decimals=8), positive_value=0)))
 
 
+def baseline(x_train, attack_feature, label):
+    """See if black-box and white-box attacks perform better than
+    a baseline attack."""
+
+    values = [0, 1]
+
+    # training and test split
+    attack_train_ratio = 0.80
+    attack_train_size = int(len(x_train) * attack_train_ratio)
+    attack_x_train = x_train[:attack_train_size]
+    attack_x_test = x_train[attack_train_size:]
+
+    # only attacked feature
+    attack_x_test_feat = attack_x_test[:, attack_feature] \
+        .copy().reshape(-1, 1)
+
+    # training data without attacked feature
+    attack_x_test = np.delete(attack_x_test, attack_feature, 1)
+
+    baseline_attack = AttributeInferenceBaseline(
+        attack_feature=attack_feature)
+
+    # train attack model
+    baseline_attack.fit(attack_x_train)
+
+    # infer values
+    inferred_train_baseline = baseline_attack.infer(
+        attack_x_test, values=values)
+
+    # check accuracy
+    actual = np.around(attack_x_test_feat, decimals=8).reshape(1, -1)
+    acc = np.sum(inferred_train_baseline == actual) / \
+          len(inferred_train_baseline)
+    print(f'Baseline attack ({label})', end=' ')
+    print('Accuracy: ', c(f'{acc * 100:.2f} % '))
+
+
+def inference_attack(cls, x_train, attack_feature, label):
+    baseline(x_train[:], attack_feature, label)
+    black_box(cls, x_train[:], attack_feature, label)
+    white_box(cls, x_train[:], attack_feature, label)
+
+
 def attr_inference():
     """Perform various attribute inference attacks."""
 
@@ -178,11 +222,8 @@ def attr_inference():
     acc = model.score(x_test, y_test)
     print('Base model accuracy: ', c(f'{acc * 100:.2f} %'))
 
-    black_box(art_classifier, x_train[:], 0, 'proto=udp')
-    white_box(art_classifier, x_train[:], 0, 'proto=udp')
-
-    black_box(art_classifier, x_train[:], 4, 'conn_state=SF')
-    white_box(art_classifier, x_train[:], 4, 'conn_state=SF')
+    inference_attack(art_classifier, x_train[:], 0, 'proto=udp')
+    inference_attack(art_classifier, x_train[:], 4, 'conn_state=SF')
 
 
 if __name__ == '__main__':
