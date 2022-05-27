@@ -185,7 +185,7 @@ def inference_attack(cls, feat, name, xtrain, ytrain, xtest, ytest):
     print(f'* Inference of attribute {name}:')
     evaluate("Baseline", attack_feat, bl)
     evaluate("Black box", attack_feat, bb)
-    evaluate("White box I", attack_feat, w1)
+    evaluate("White box 1", attack_feat, w1)
     evaluate("White box 2", attack_feat, w2)
     evaluate("Membership", attack_feat, ms)
 

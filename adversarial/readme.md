@@ -49,16 +49,56 @@ Base model accuracy:  0.9661016949152542
 * Inference of attribute proto=udp:
 Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
 Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-White box I attack ----------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+White box 1 attack ----------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
 White box 2 attack ----------- Accuracy: 98.88 % Precision: 100.00 % Recall: 0.00 %
 Membership attack ------------ Accuracy: 1.12 % Precision: 1.12 % Recall: 100.00 %
 * Inference of attribute conn_state=SF:
 Baseline attack -------------- Accuracy: 98.88 % Precision: 100.00 % Recall: 97.56 %
 Black box attack ------------- Accuracy: 98.88 % Precision: 100.00 % Recall: 97.56 %
-White box I attack ----------- Accuracy: 53.93 % Precision: 100.00 % Recall: 0.00 %
+White box 1 attack ----------- Accuracy: 53.93 % Precision: 100.00 % Recall: 0.00 %
 White box 2 attack ----------- Accuracy: 53.93 % Precision: 100.00 % Recall: 0.00 %
 Membership attack ------------ Accuracy: 46.07 % Precision: 46.07 % Recall: 100.00 %
 ```
+
+**Inference attack methods**
+
+- **Baseline attack**: Implementation of a baseline attribute inference, not using a
+    model. The idea is to train a simple neural network to learn the
+    attacked feature from the rest of the features. Should be used to
+    compare with other attribute inference results. 
+    [`AttributeInferenceBaseline`](https://adversarial-robustness-toolbox.readthedocs.io/en/latest/modules/attacks/inference/attribute_inference.html#attribute-inference-baseline)  
+
+- **Black box attack**: Implementation of a simple black-box attribute inference
+    attack. The idea is to train a simple neural network to learn the
+    attacked feature from the rest of the features and the model’s
+    predictions. Assumes the availability of the attacked model’s
+    predictions for the samples under attack, in addition to the rest
+    of the feature values. If this is not available, the true class
+    label of the samples may be used as a proxy. 
+    [`AttributeInferenceBlackBox`](https://adversarial-robustness-toolbox.readthedocs.io/en/latest/modules/attacks/inference/attribute_inference.html#attribute-inference-black-box)
+
+- **White-box 1 attack**: A variation of the method proposed by of Fredrikson et al.
+    Assumes the availability of the attacked model’s predictions for
+    the samples under attack, in addition to access to the model itself
+    and the rest of the feature values. If this is not available, the
+    true class label of the samples may be used as a proxy. Also assumes
+    that the attacked feature is discrete or categorical, with limited
+    number of possible values. For example: a boolean feature.
+    Paper link: <https://dl.acm.org/doi/10.1145/2810103.2813677>
+    [`AttributeInferenceWhiteBoxDecisionTree`](https://adversarial-robustness-toolbox.readthedocs.io/en/latest/modules/attacks/inference/attribute_inference.html#attribute-inference-white-box-decision-tree)
+
+- **White-box 2 attack**: Implementation of Fredrikson et al. white box inference attack
+    for decision trees. Assumes that the attacked feature is discrete
+    or categorical, with limited number of possible values. For
+    example: a boolean feature. Paper link: <https://dl.acm.org/doi/10.1145/2810103.2813677>
+    [`AttributeInferenceWhiteBoxLifestyleDecisionTree`](https://adversarial-robustness-toolbox.readthedocs.io/en/latest/modules/attacks/inference/attribute_inference.html#attribute-inference-white-box-lifestyle-decision-tree)
+     
+- **Membership attack**: Implementation of a an attribute inference attack that
+    utilizes a membership inference attack. The idea is to find the
+    target feature value that causes the membership inference attack
+    to classify the sample as a member with the highest confidence.
+    [`AttributeInferenceMembership`](https://adversarial-robustness-toolbox.readthedocs.io/en/latest/modules/attacks/inference/attribute_inference.html#attribute-inference-membership)
+
   
 ### ZOO Evasion attack
 
