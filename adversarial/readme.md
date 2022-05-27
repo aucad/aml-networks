@@ -1,8 +1,14 @@
-# Adversarial attacks on decision tree Classifier
+# Adversarial attacks on decision tree classifier
 
-Steps
+We apply adversarial attacks on a (single) non-robust decision tree, trained using IoT-23 dataset:
+CTU-Malware-Capture-44-1, with 237 rows (benign 211, malicious 26), 90 / 10 split; trained using basic
+[scikit learn decision tree][1]. We then apply various adversarial attacks from the [Adversarial Robustness Toolbox][2]
+to attack this classifier. The results are presented here.
 
-1. Basic decision tree classifier implementation in `src/tree.py` -- [scikit learn decision tree][1] trained using IoT23 dataset
+
+## Implementation steps
+
+1. Basic decision tree classifier implementation in `src/tree.py`
 
     ```text
     python src/tree.py 
@@ -19,6 +25,8 @@ Steps
 3. Apply various attacks (from step 2) to the tree (from step 1)  
 
 * * *   
+
+## Results
 
 ### Attribute inference attack
 
@@ -52,7 +60,7 @@ White box 2 attack ----------- Accuracy: 53.93 % Precision: 100.00 % Recall: 0.0
 Membership attack ------------ Accuracy: 46.07 % Precision: 46.07 % Recall: 100.00 %
 ```
   
-### Evasion attack results
+### ZOO Evasion attack
 
 Applying Zeroth-Order Optimization (ZOO) Attack:
 
@@ -74,7 +82,7 @@ python src/attack_dt_zoo.py
  
 ![img](iot-23_4.png) 
 
-### Tree visualization
+### Decision tree visualization
   
 ![image](CTU-44-1.png)   
 
