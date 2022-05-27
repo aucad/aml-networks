@@ -129,7 +129,7 @@ def white_box_2(cls, feat, x_test, x_pred, values, priors):
 
 
 def membership(cls, feat, values, x_test, y_test, fit_data):
-    """Implementation of a an attribute inference attack that
+    """Implementation of an attribute inference attack that
     utilizes a membership inference attack. The idea is to find the
     target feature value that causes the membership inference attack
     to classify the sample as a member with the highest confidence."""
