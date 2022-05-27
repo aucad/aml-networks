@@ -28,8 +28,11 @@ import numpy as np
 from art.attacks.inference.attribute_inference \
     import AttributeInferenceBaseline, \
     AttributeInferenceBlackBox, \
+    AttributeInferenceMembership, \
     AttributeInferenceWhiteBoxLifestyleDecisionTree, \
     AttributeInferenceWhiteBoxDecisionTree
+from art.attacks.inference.membership_inference \
+    import MembershipInferenceBlackBox
 from art.estimators.classification.scikitlearn \
     import ScikitlearnDecisionTreeClassifier
 
@@ -37,193 +40,171 @@ from tree import train_tree
 from utility import color_text as c
 
 
-def calc_precision_recall(predicted, actual, positive_value=1):
-    score = 0  # both predicted and actual are positive
-    num_positive_predicted = 0  # predicted positive
-    num_positive_actual = 0  # actual positive
+def evaluate(attack_name, x_test_feat, inferred_train):
+    """Display inference performance metrics."""
+    actual = np.around(x_test_feat, decimals=8)
+    a, p, r = calc_precision_recall(inferred_train, actual, pos_val=0)
+
+    print(f'{attack_name} attack '.ljust(30, '-'), end=' ')
+    print(f'Accuracy:', c(f'{a * 100:.2f} %'), end=' ')
+    print(f'Precision:', c(f'{p * 100:.2f} %'), end=' ')
+    print(f'Recall:', c(f'{r * 100:.2f} %'))
+
+
+def calc_precision_recall(predicted, actual, pos_val=1):
+    """Calculate performance metrics."""
+    acc = np.sum(predicted == actual.reshape(1, -1)) / len(predicted)
+    score, num_pos_predicted, num_pos_actual = 0, 0, 0
+
     for i in range(len(predicted)):
-        if predicted[i] == positive_value:
-            num_positive_predicted += 1
-        if actual[i] == positive_value:
-            num_positive_actual += 1
-        if predicted[i] == actual[i]:
-            if predicted[i] == positive_value:
-                score += 1
+        if predicted[i] == pos_val:
+            num_pos_predicted += 1
+        if actual[i] == pos_val:
+            num_pos_actual += 1
+        if predicted[i] == actual[i] and predicted[i] == pos_val:
+            score += 1
 
-    if num_positive_predicted == 0:
-        precision = 1
-    else:
-        # the fraction of predicted “Yes” responses that are correct
-        precision = score / num_positive_predicted
-    if num_positive_actual == 0:
-        recall = 1
-    else:
-        # the fraction of “Yes” responses that are predicted correctly
-        recall = score / num_positive_actual
+    precision = 1 if num_pos_predicted == 0 else \
+        score / num_pos_predicted
 
-    return f'{100 * precision:.2f} %  {100 * recall:.2f} %'
+    recall = 1 if num_pos_actual == 0 else \
+        score / num_pos_actual
+
+    return acc, precision, recall
 
 
-def black_box(classifier, x_train, attack_feature, label):
-    """Trains an additional classifier (called the attack model) to
-    predict the attacked feature's value from the remaining n-1 features
-    as well as the original (attacked) model's predictions."""
+def baseline(feat, x_train, x_test, values):
+    """Implementation of a baseline attribute inference, not using a
+    model. The idea is to train a simple neural network to learn the
+    attacked feature from the rest of the features. Should be used to
+    compare with other attribute inference results."""
+    baseline_attack = AttributeInferenceBaseline(attack_feature=feat)
+    baseline_attack.fit(x_train)
 
-    values = [0, 1]
+    return baseline_attack.infer(x_test, values=values)
+
+
+def black_box(cls, feat, x_train, x_test, predictions, values):
+    """Implementation of a simple black-box attribute inference
+    attack. The idea is to train a simple neural network to learn the
+    attacked feature from the rest of the features and the model’s
+    predictions. Assumes the availability of the attacked model’s
+    predictions for the samples under attack, in addition to the rest
+    of the feature values. If this is not available, the true class
+    label of the samples may be used as a proxy."""
+    bb_attack = AttributeInferenceBlackBox(cls, attack_feature=feat)
+    bb_attack.fit(x_train)
+
+    # infer the attribute values for sensitive feature
+    return bb_attack.infer(x_test, pred=predictions, values=values)
+
+
+def white_box_1(cls, feat, x_test, x_pred, values, priors):
+    """A variation of the method proposed by of Fredrikson et al.
+    Assumes the availability of the attacked model’s predictions for
+    the samples under attack, in addition to access to the model itself
+    and the rest of the feature values. If this is not available, the
+    true class label of the samples may be used as a proxy. Also assumes
+    that the attacked feature is discrete or categorical, with limited
+    number of possible values. For example: a boolean feature.
+    Paper link: https://dl.acm.org/doi/10.1145/2810103.2813677
+    """
+    wb_attack = AttributeInferenceWhiteBoxDecisionTree(
+        cls, attack_feature=feat)
+
+    return wb_attack.infer(x_test, x_pred, values=values, priors=priors)
+
+
+def white_box_2(cls, feat, x_test, x_pred, values, priors):
+    """Implementation of Fredrikson et al. white box inference attack
+    for decision trees. Assumes that the attacked feature is discrete
+    or categorical, with limited number of possible values. For
+    example: a boolean feature. Paper link:
+    https://dl.acm.org/doi/10.1145/2810103.2813677
+    """
+    wb_attack = AttributeInferenceWhiteBoxLifestyleDecisionTree(
+        cls, attack_feature=feat)
+
+    return wb_attack.infer(x_test, x_pred, values=values, priors=priors)
+
+
+def membership(cls, feat, values, x_test, y_test, fit_data):
+    """Implementation of a an attribute inference attack that
+    utilizes a membership inference attack. The idea is to find the
+    target feature value that causes the membership inference attack
+    to classify the sample as a member with the highest confidence."""
+
+    # Membership inference Implementation of a learned black-box
+    # membership inference attack. This implementation can use as
+    # input to the learning process probabilities/logits or losses,
+    # depending on the type of model and provided configuration.
+    mem_attack = MembershipInferenceBlackBox(cls)
+    mem_attack.fit(*fit_data)
+
+    # Apply attribute attack
+    attack = AttributeInferenceMembership(
+        cls, mem_attack, attack_feature=feat)
+
+    # infer values
+    return attack.infer(x_test, y_test, values=values)
+
+
+def inference_attack(cls, feat, name, xtrain, ytrain, xtest, ytest):
+    """Carry out inference attacks"""
 
     # training and test split
     attack_train_ratio = 0.5
-    attack_train_size = int(len(x_train) * attack_train_ratio)
-    attack_x_train = x_train[:attack_train_size]
-    attack_x_test = x_train[attack_train_size:]
+    attack_train_size = int(len(xtrain) * attack_train_ratio)
+    x_train = xtrain[:attack_train_size]
+    x_test = xtrain[attack_train_size:]
+    y_test = ytrain[attack_train_size:]
+    ms_fit_data = (xtrain[:attack_train_size],
+                   ytrain[:attack_train_size], xtest, ytest)
 
-    attack_x_test_predictions = np.array(
-        [np.argmax(arr) for arr in
-         classifier.predict(attack_x_test)]).reshape(-1, 1)
+    predictions = np.array(
+        [np.argmax(arr) for arr in cls.predict(x_test)]).reshape(-1, 1)
 
     # only attacked feature
-    attack_x_test_feat = \
-        attack_x_test[:, attack_feature].copy().reshape(-1, 1)
+    attack_feat = x_test[:, feat].copy().reshape(-1, 1)
 
     # training data without attacked feature
-    attack_x_test = np.delete(attack_x_test, attack_feature, 1)
+    x_test = np.delete(x_test, feat, 1)
 
-    bb_attack = AttributeInferenceBlackBox(
-        classifier, attack_feature=attack_feature)
-
-    # train attack model
-    bb_attack.fit(attack_x_train)
-
-    # infer the attribute values for sensitive feature
-    inferred_train_bb = bb_attack.infer(
-        attack_x_test, pred=attack_x_test_predictions, values=values)
-
-    # check accuracy
-    actual = np.around(attack_x_test_feat, decimals=8).reshape(1, -1)
-    acc = np.sum(inferred_train_bb == actual) / len(inferred_train_bb)
-
-    print(f'Black-box   ({label})', end=' ')
-    print(f'Accuracy precision and recall:', c(f'{acc * 100:.2f} % '),
-          c(calc_precision_recall(inferred_train_bb, np.around(
-              attack_x_test_feat, decimals=8), positive_value=0)))
-
-
-def white_box(classifier, x_train, attack_feature, label):
-    """These two attacks do not train any additional model, they simply
-    use additional information coded within the attacked decision tree
-    model to compute the probability of each value of the attacked
-    feature and outputs the value with the highest probability."""
-
+    # possible attribute values and prior data distributions
     values = [0, 1]
+    priors = [(attack_feat == v).sum() / len(x_test) for v in values]
 
-    # training and test split
-    attack_train_ratio = 0.80
-    attack_train_size = int(len(x_train) * attack_train_ratio)
-    attack_x_test = x_train[attack_train_size:]
+    # carry out various inference attacks
+    bl = baseline(feat, x_train, x_test, values)
+    bb = black_box(cls, feat, x_train, x_test, predictions, values)
+    w1 = white_box_1(cls, feat, x_test, predictions, values, priors)
+    w2 = white_box_2(cls, feat, x_test, predictions, values, priors)
+    ms = membership(cls, feat, values, x_test, y_test, ms_fit_data)
 
-    attack_x_test_predictions = np.array(
-        [np.argmax(arr) for arr in
-         classifier.predict(attack_x_test)]).reshape(-1, 1)
-
-    # only attacked feature
-    attack_x_test_feat = attack_x_test[:, attack_feature] \
-        .copy().reshape(-1, 1)
-
-    # training data without attacked feature
-    attack_x_test = np.delete(attack_x_test, attack_feature, 1)
-
-    # Prior distributions of attacked feature values
-    priors = [(attack_x_test_feat == v).sum() / len(attack_x_test)
-              for v in values]
-
-    # white box inference attacks
-    wb_attack_1 = AttributeInferenceWhiteBoxLifestyleDecisionTree(
-        classifier, attack_feature=attack_feature)
-
-    wb_attack_2 = AttributeInferenceWhiteBoxDecisionTree(
-        classifier, attack_feature=attack_feature)
-
-    # get inferred values
-    inferred_train_wb1 = wb_attack_1.infer(
-        attack_x_test, attack_x_test_predictions,
-        values=values, priors=priors)
-
-    inferred_train_wb2 = wb_attack_2.infer(
-        attack_x_test, attack_x_test_predictions,
-        values=values, priors=priors)
-
-    # check accuracy
-    actual = np.around(attack_x_test_feat, decimals=8).reshape(1, -1)
-    ac1 = np.sum(inferred_train_wb1 == actual) / len(inferred_train_wb1)
-    ac2 = np.sum(inferred_train_wb2 == actual) / len(inferred_train_wb2)
-
-    print(f'White-box 1 ({label})', end=' ')
-    print(f'Accuracy precision and recall:', c(f'{ac1 * 100:.2f} % '),
-          c(calc_precision_recall(inferred_train_wb1, np.around(
-              attack_x_test_feat, decimals=8), positive_value=0)))
-
-    print(f'White-box 2 ({label})', end=' ')
-    print(f'Accuracy precision and recall:', c(f'{ac2 * 100:.2f} % '),
-          c(calc_precision_recall(inferred_train_wb2, np.around(
-              attack_x_test_feat, decimals=8), positive_value=0)))
-
-
-def baseline(x_train, attack_feature, label):
-    """See if black-box and white-box attacks perform better than
-    a baseline attack."""
-
-    values = [0, 1]
-
-    # training and test split
-    attack_train_ratio = 0.80
-    attack_train_size = int(len(x_train) * attack_train_ratio)
-    attack_x_train = x_train[:attack_train_size]
-    attack_x_test = x_train[attack_train_size:]
-
-    # only attacked feature
-    attack_x_test_feat = attack_x_test[:, attack_feature] \
-        .copy().reshape(-1, 1)
-
-    # training data without attacked feature
-    attack_x_test = np.delete(attack_x_test, attack_feature, 1)
-
-    baseline_attack = AttributeInferenceBaseline(
-        attack_feature=attack_feature)
-
-    # train attack model
-    baseline_attack.fit(attack_x_train)
-
-    # infer values
-    inferred_train_baseline = baseline_attack.infer(
-        attack_x_test, values=values)
-
-    # check accuracy
-    actual = np.around(attack_x_test_feat, decimals=8).reshape(1, -1)
-    acc = np.sum(inferred_train_baseline == actual) / \
-          len(inferred_train_baseline)
-    print(f'Baseline attack ({label})', end=' ')
-    print('Accuracy: ', c(f'{acc * 100:.2f} % '))
-
-
-def inference_attack(cls, x_train, attack_feature, label):
-    baseline(x_train[:], attack_feature, label)
-    black_box(cls, x_train[:], attack_feature, label)
-    white_box(cls, x_train[:], attack_feature, label)
+    # display results
+    print(f'* Inference of attribute {name}:')
+    evaluate("Baseline", attack_feat, bl)
+    evaluate("Black box", attack_feat, bb)
+    evaluate("White box I", attack_feat, w1)
+    evaluate("White box 2", attack_feat, w2)
+    evaluate("Membership", attack_feat, ms)
 
 
 def attr_inference():
     """Perform various attribute inference attacks."""
 
     # load decision tree model and data
-    model, x_train, y_train, _, x_test, y_test = \
+    model, x_train, y_train, attr_names, x_test, y_test = \
         train_tree(False, test_set=0.25)
 
-    art_classifier = ScikitlearnDecisionTreeClassifier(model)
-    acc = model.score(x_test, y_test)
-    print('Base model accuracy: ', c(f'{acc * 100:.2f} %'))
+    attack_attributes = [0, 4]
 
-    inference_attack(art_classifier, x_train[:], 0, 'proto=udp')
-    inference_attack(art_classifier, x_train[:], 4, 'conn_state=SF')
+    classifier = ScikitlearnDecisionTreeClassifier(model)
+    print('Base model accuracy: ', model.score(x_test, y_test))
+
+    for idx in attack_attributes:
+        inference_attack(classifier, idx, attr_names[idx],
+                         x_train, y_train, x_test, y_test)
 
 
 if __name__ == '__main__':
