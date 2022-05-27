@@ -106,97 +106,68 @@ def adv_examples(model, x_train, y_train, x_train_adv):
         if ori_pred != adv_pred:
             adv_success.append(i)
 
-    print('Train scores:', c("%.4f" % ori_score))
-    print('Adv scores:  ', c("%.4f" % adv_score))
-    print('# Evasions:  ', c(len(adv_success)))
+    print('Train scores '.ljust(20, '-'), c("%.4f" % ori_score))
+    print('Adv scores '.ljust(20, '-'), c("%.4f" % adv_score))
+    print('# Evasions '.ljust(20, '-'), c(len(adv_success)))
     return np.array(adv_success)
 
 
-def plot(model, class_labels, evasions, attr, *data):
+def plot(evasions, attr, *data):
     """Visualize the adversarial attack results"""
 
     (x_train, y_train, x_train_adv) = data
+    class_labels = list(set(y_train))
 
-    # range for contour plot
-    levels, h = [x / 10. for x in range(0, 11)], .1
     colors = ['deepskyblue', 'lawngreen']
     markers = ['o', 's']
-
-    avg_sample = np.mean(x_train, axis=0)
-
-    non_bin_attrs = []
-    for feat in range(len(x_train[0])):
-        if len(list(set(x_train[:, feat]))) > 2:
-            non_bin_attrs.append(feat)
-    attr_pairs = list(combinations(non_bin_attrs, 2))
-
     rows, cols = 2, 3
-    fig_count = len(attr_pairs) // (rows * cols)
+    num_sub_plots = rows * cols
+    diff_props = {'c': 'black', 'zorder': 2, 'lw': 1}
+    class_props = {'edgecolor': 'black', 'lw': .5, 's': 20, 'zorder': 2}
+    adv_props = {'zorder': 2, 'c': 'red', 'marker': 'x', 's': 15}
+    x_min, y_min, x_max, y_max = -0.1, -0.1, 1.1, 1.1
+
+    non_binary_attrs = [feat for feat in range(len(x_train[0])) if
+                        len(list(set(x_train[:, feat]))) > 2]
+    attr_pairs = list(combinations(non_binary_attrs, 2))
+    fig_count = len(attr_pairs) // num_sub_plots
 
     # generate plots
     for f in range(fig_count):
-        fig, axs = plt.subplots(
-            figsize=[7., 5],
-            nrows=rows, ncols=cols, dpi=250,
-            constrained_layout=True)
+        fig, axs = plt.subplots(nrows=rows, ncols=cols, dpi=250)
         axs = axs.flatten()
 
-        for p in range(rows * cols):
-            f1, f2 = attr_pairs[(f * rows * cols) + p]
-            x_min, x_max = -0.1, 1.1
-            y_min, y_max = x_min, x_max
+        for subplot_index in range(num_sub_plots):
 
-            axs[p].set_xlim((x_min, x_max))
-            axs[p].set_ylim((y_min, y_max))
-            axs[p].set_xlabel(attr[f1])
-            axs[p].set_ylabel(attr[f2])
-            axs[p].set_aspect('equal', adjustable='box')
-
-            for j in evasions:
-                # Plot difference vectors
-                axs[p].plot(
-                    [x_train[j:j + 1, f1], x_train_adv[j:j + 1, f1]],
-                    [x_train[j:j + 1, f2], x_train_adv[j:j + 1, f2]],
-                    c='black', zorder=2, lw=1)
+            ax = axs[subplot_index]
+            f1, f2 = attr_pairs[(f * num_sub_plots) + subplot_index]
+            ax.set_xlim((x_min, x_max))
+            ax.set_ylim((y_min, y_max))
+            ax.set_xlabel(attr[f1])
+            ax.set_ylabel(attr[f2])
+            ax.set_aspect('equal', adjustable='box')
 
             # Plot original samples
             for cl in range(len(class_labels)):
-                axs[p].scatter(
-                    x_train[y_train == cl][:, f1],
-                    x_train[y_train == cl][:, f2],
-                    edgecolor='black', linewidth=.5,
-                    s=20, zorder=2, c=colors[cl],
-                    marker=markers[cl])
+                x_f1 = x_train[y_train == cl][:, f1]
+                x_f2 = x_train[y_train == cl][:, f2]
+                style = {'c': colors[cl], 'marker': markers[cl]}
+                ax.scatter(x_f1, x_f2, **class_props, **style)
 
+            # Plot adversarial examples and difference vectors
             for j in evasions:
-                # Plot adversarial examples
-                axs[p].scatter(
-                    x_train_adv[j:j + 1, f1],
-                    x_train_adv[j:j + 1, f2],
-                    zorder=2, c='red', marker='x', s=15)
+                xt_f1 = x_train[j:j + 1, f1]
+                xt_f2 = x_train[j:j + 1, f2]
+                ad_f1 = x_train_adv[j:j + 1, f1]
+                ad_f2 = x_train_adv[j:j + 1, f2]
+                ax.plot([xt_f1, ad_f1], [xt_f2, ad_f2], **diff_props)
+                ax.scatter(ad_f1, ad_f2, **adv_props)
 
-            # Show predicted probability as contour plot
-            xx, yy = np.meshgrid(
-                np.arange(x_min, x_max, h),
-                np.arange(y_min, y_max, h))
-
-            pred_array = np.tile(avg_sample, (len(xx.ravel()), 1))
-            pred_array[:, f1] = xx.ravel()
-            pred_array[:, f2] = yy.ravel()
-
-            # plot class probabilities as contour plot
-            for i, class_label in enumerate(class_labels):
-                z_prob = model.predict_proba(pred_array)[:, i]
-                axs[p].contourf(
-                    xx, yy, z_prob.reshape(xx.shape),
-                    levels=levels[:], vmin=0, vmax=1)
-
-        fig.tight_layout(pad=.25)
-        plt.savefig(f'{IMAGE_NAME}_{f + 1}.png', pad_inces=.5)
+        fig.tight_layout()
+        plt.savefig(f'{IMAGE_NAME}_{f + 1}.png')
 
 
 if __name__ == '__main__':
     cls, data, attr = adversarial_iot()
     evasions = adv_examples(cls, *data)
-    labels = list(set(data[1]))
-    plot(cls, labels, evasions, attr, *data)
+    plot(evasions, attr, *data)
