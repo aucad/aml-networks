@@ -30,22 +30,25 @@ TRAIN_PATH = argv[1] if len(argv) > 1 else DEFAULT_TRAIN
 TEST_PATH = argv[2] if len(argv) > 2 else DEFAULT_TEST
 
 
-def score(test_labels, predictions):
-    """Here 0 is malicious --> 0 is positive."""
-    accuracy, precision, recall, f_score = 0, 0, 0, 0
-    tp, tn, fn, fp, tot = 0, 0, 0, 0, len(test_labels)
+def score(test_labels, predictions, positive=0):
+    """Calculate performance metrics."""
+    score, tp_tn, num_pos_pred, num_pos_actual = 0, 0, 0, 0
     for actual, pred in zip(test_labels, predictions):
         int_pred = int(round(pred, 0))
-        tp += 1 if actual == int_pred and int_pred == 0 else 0
-        tn += 1 if actual == int_pred and int_pred == 1 else 0
-        fp += 1 if actual != int_pred and int_pred == 0 else 0
-        fn += 1 if actual != int_pred and int_pred == 1 else 0
-    if tot > 0:
-        accuracy = (tp + tn) / tot
-    if tp > 0:
-        precision = tp / (tp + fp)
-        recall = tp / (tp + fn)
-        f_score = tp / (tp + 0.5 * (fp + fn))
+        if int_pred == positive:
+            num_pos_pred += 1
+        if actual == positive:
+            num_pos_actual += 1
+        if int_pred == actual:
+            tp_tn += 1
+        if int_pred == actual and int_pred == positive:
+            score += 1
+
+    accuracy = tp_tn / len(predictions)
+    precision = 1 if num_pos_pred == 0 else score / num_pos_pred
+    recall = 1 if num_pos_actual == 0 else score / num_pos_actual
+    f_score = (2 * precision * recall) / (precision + recall)
+
     return accuracy, precision, recall, f_score
 
 
@@ -75,10 +78,10 @@ def train_boosted_tree():
     clf = xgb.train(param, dtrain, num_rounds)
 
     # make prediction
-    preds = clf.predict(dtest)
+    predictions = clf.predict(dtest)
 
     # score
-    acc, pre, rec, fs = score(dtest_y, preds)
+    acc, pre, rec, fs = score(dtest_y, predictions)
 
     print('Accuracy ----- ', c(f'{acc * 100:.2f} %'))
     print('Precision ---- ', c(f'{pre * 100:.2f} %'))

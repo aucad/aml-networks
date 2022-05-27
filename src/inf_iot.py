@@ -43,7 +43,7 @@ from utility import color_text as c
 def evaluate(attack_name, x_test_feat, inferred_train):
     """Display inference performance metrics."""
     actual = np.around(x_test_feat, decimals=8)
-    a, p, r = calc_precision_recall(inferred_train, actual, pos_val=0)
+    a, p, r = calc_performance(inferred_train, actual, pos_val=0)
 
     print(f'{attack_name} attack '.ljust(30, '-'), end=' ')
     print(f'Accuracy:', c(f'{a * 100:.2f} %'), end=' ')
@@ -51,7 +51,7 @@ def evaluate(attack_name, x_test_feat, inferred_train):
     print(f'Recall:', c(f'{r * 100:.2f} %'))
 
 
-def calc_precision_recall(predicted, actual, pos_val=1):
+def calc_performance(predicted, actual, pos_val=1):
     """Calculate performance metrics."""
     acc = np.sum(predicted == actual.reshape(1, -1)) / len(predicted)
     score, num_pos_predicted, num_pos_actual = 0, 0, 0
