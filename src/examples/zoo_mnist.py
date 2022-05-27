@@ -19,7 +19,7 @@ classifier_scikitlearn_DecisionTreeClassifier.ipynb
 Usage:
 
 ```
-python src/adv_mnist.py --help
+python src/examples/zoo_mnist.py --help
 ```
 """
 

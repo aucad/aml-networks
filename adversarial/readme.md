@@ -1,6 +1,6 @@
-# Adversarial attacks
+# Adversarial attacks on decision tree Classifier
 
-Progress so far:
+Steps
 
 1. Basic decision tree classifier implementation in `src/tree.py` -- [scikit learn decision tree][1] trained using IoT23 dataset
 
@@ -11,9 +11,9 @@ Progress so far:
 2. Implement adversarial examples: these are example evasion attacks to demonstrate use of [Adversarial Robustness Toolbox][2]
 
     ```text
-    python src/adv_iris.py         # Z00 evasion attack
-    python src/adv_mnist.py        # Z00 evasion attack
-    python src/inf_nursery.py      # attribute inference attack 
+    python src/examples/zoo_iris.py         # Z00 evasion attack on iris data
+    python src/examples/zoo_mnist.py        # Z00 evasion attack on MNIST data
+    python src/examples/inf_nursery.py      # attribute inference attack on nursery dataset
     ```
     
 3. Apply various attacks (from step 2) to the tree (from step 1)  
@@ -23,7 +23,7 @@ Progress so far:
 ### Attribute inference attack
 
 ```
-python src/inf_iot.py
+python src/attack_dt_inf.py
 ```
 
 The attacked feature must be categorical, and with a relatively small
@@ -36,20 +36,20 @@ Output of black-box inference on attributes `proto=udp` and `conn_state=SF`
 Read dataset: adversarial/CTU-44-1
 Attributes:   22
 Instances:    237
-Base model accuracy:  98.31 %
-
-Inferred black box data: 
- [1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
- 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
- 1 1 1 1 1 1 1 1 1 1 1 1 0 1 1]
-Blackbox accuracy (proto=udp): 100.00 %
-
-Inferred black box data: 
- [1 0 0 1 1 1 1 1 1 1 1 0 1 1 1 1 1 0 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1 1 1 1 1
- 1 0 0 0 1 1 1 0 0 0 0 1 0 0 1 0 1 0 0 0 0 0 0 1 0 0 0 0 0 1 1 0 1 1 1 0 1
- 1 0 0 0 0 1 1 0 0 0 0 0 0 0 0]
-
-Blackbox accuracy (conn_state=SF): 100.00 %
+Score:        96.61 %
+Base model accuracy:  0.9661016949152542
+* Inference of attribute proto=udp:
+Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+White box I attack ----------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+White box 2 attack ----------- Accuracy: 98.88 % Precision: 100.00 % Recall: 0.00 %
+Membership attack ------------ Accuracy: 1.12 % Precision: 1.12 % Recall: 100.00 %
+* Inference of attribute conn_state=SF:
+Baseline attack -------------- Accuracy: 98.88 % Precision: 100.00 % Recall: 97.56 %
+Black box attack ------------- Accuracy: 98.88 % Precision: 100.00 % Recall: 97.56 %
+White box I attack ----------- Accuracy: 53.93 % Precision: 100.00 % Recall: 0.00 %
+White box 2 attack ----------- Accuracy: 53.93 % Precision: 100.00 % Recall: 0.00 %
+Membership attack ------------ Accuracy: 46.07 % Precision: 46.07 % Recall: 100.00 %
 ```
   
 ### Evasion attack results
@@ -57,7 +57,7 @@ Blackbox accuracy (conn_state=SF): 100.00 %
 Applying Zeroth-Order Optimization (ZOO) Attack:
 
 ```text
-python src/adv_iot.py
+python src/attack_dt_zoo.py
 ```
 
 - blue circles: malicious training 

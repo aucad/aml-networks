@@ -1,6 +1,6 @@
 """
 Simple adversarial example using ART with scikit-learn and applying
-attribute inference attack.
+attribute inference attack using decision tree classifier.
 
 In order to mount a successful attribute inference attack,
 the attacked feature must be categorical, and with a relatively small
@@ -16,7 +16,7 @@ attack_attribute_inference.ipynb
 Usage:
 
 ```
-python src/inf_iot.py
+python src/attack_dt_inf.py
 ```
 """
 

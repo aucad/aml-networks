@@ -11,7 +11,7 @@ attack_attribute_inference.ipynb
 Usage:
 
 ```
-python src/inf_nursery.py
+python src/examples/inf_nursery.py
 ```
 """
 

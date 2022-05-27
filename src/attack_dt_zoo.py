@@ -1,6 +1,6 @@
 """
 Simple adversarial example using ART with scikit-learn and applying
-Zeroth-Order Optimization (ZOO) Attack.
+Zeroth-Order Optimization (ZOO) Evasion Attack using decision tree.
 
 The black-box zeroth-order optimization attack from Pin-Yu Chen et
 al. (2018). This attack is a variant of the C&W attack which uses
@@ -9,7 +9,7 @@ ADAM coordinate descent to perform numerical estimation of gradients.
 Usage:
 
 ```
-python src/adv_iot.py
+python src/attack_dt_zoo.py
 ```
 """
 

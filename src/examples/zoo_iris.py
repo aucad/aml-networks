@@ -15,14 +15,14 @@ classifier_scikitlearn_DecisionTreeClassifier.ipynb
 Usage:
 
 ```
-python src/adv_iris.py
+python src/examples/zoo_iris.py
 ```
 
 Optionally pass as first positional argument the number of classes,
 which is an integer [2,3], e.g.:
 
 ```
-python src/adv_iris.py 3
+python src/examples/zoo_iris.py 3
 ```
 """
 
