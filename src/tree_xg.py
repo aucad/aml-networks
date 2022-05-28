@@ -2,8 +2,7 @@
 Build a XGBoost model using IoT-23 data for provided dataset.
 
 Provide as input a path to a dataset, or script uses default
-dataset when none provided. Input data must use DMatrix format, see:
-https://xgboost.readthedocs.io/en/stable/tutorials/input_format.html
+dataset if none provided. The dataset must be numeric at all attributes.
 
 Default usage:
 
@@ -14,39 +13,38 @@ python src/tree_xg.py
 Specify input data to use:
 
 ```
-python src/tree_xg.py ./path/to/train_data ./path/to/test_data
+python src/tree_xg.py ./path/to/input_data.csv
 ```
 """
-import sys
 from sys import argv
 
+import numpy as np
 import xgboost as xgb
 
 import tree_utils as tu
+from tree_utils import DEFAULT_DS
 
-DEFAULT_DS = 'data/CTU-44-1.csv'
+from art.estimators.classification import XGBoostClassifier
+
+
+def binarize(values):
+    return np.array([int(round(val, 0)) for val in values]) \
+        .astype(int).flatten()
 
 
 def train_boosted_tree(dataset=DEFAULT_DS, test_size=.1):
     """Train a classifier using XGBoost."""
 
-    if test_size == 0:
-        print('set test size > 0')
-        sys.exit(1)
-
     attrs, classes, train_x, train_y, test_x, test_y = \
         tu.load_csv_data(dataset, test_size)
 
-    dtrain = xgb.DMatrix(train_x, train_y)
-    dtest = xgb.DMatrix(test_x, test_y)
+    dtrain, evals = xgb.DMatrix(train_x, train_y), None
 
-    tu.show('Read dataset', dataset)
-    tu.show('Attributes', len(attrs))
-    tu.show('Classes', ", ".join([str(l) for l in classes]))
-    tu.show('Training instances', dtrain.num_row())
-    tu.show('Test instances', dtest.num_row())
+    if len(test_x) > 0:
+        dtest = xgb.DMatrix(test_x, test_y)
+        evals = [(dtest, "test"), (dtrain, "train")]
 
-    cls = xgb.train(
+    model = xgb.train(
         # Booster params
         # https://xgboost.readthedocs.io/en/stable/parameter.html
         params={
@@ -73,22 +71,36 @@ def train_boosted_tree(dataset=DEFAULT_DS, test_size=.1):
             # the learning task and the corresponding learning
             # - objective binary:logistic -> logistic regression for
             #   binary classification, output probability
-            'objective': 'binary:logistic'
+            'objective': 'binary:logistic',
         },
-        # data to be trained
         dtrain=dtrain,
-        # num_boost_round
+        evals=evals,
         num_boost_round=2)
 
-    # make prediction
-    predictions = cls.predict(dtest)
+    tu.show('Read dataset', dataset)
+    tu.show('Attributes', len(attrs))
+    tu.show('Classes', ", ".join([tu.text_label(l) for l in classes]))
+    tu.show('Training instances', dtrain.num_row())
+    tu.show('Test instances', len(test_x))
 
-    # score
-    tu.score(test_y, predictions, display=True)
+    split = np.count_nonzero(test_y == 1)
+    tu.show('Split (benign)', f'{100 * split / len(train_y):.2f} %')
 
-    return cls, attrs, dtrain, train_y, dtest, test_y
+    # evaluate performance
+    if len(test_x) > 0:
+        predictions = binarize(model.predict(dtest))
+        tu.score(test_y, predictions, display=True)
+    else:
+        predictions = binarize(model.predict(dtrain))
+        tu.score(train_y, predictions, display=True)
+
+    cls = XGBoostClassifier(
+        model=model, clip_values=(0.0, 0.1),
+        nb_features=dtrain.num_col(), nb_classes=len(classes))
+
+    return cls, model, attrs, train_x, train_y, test_x, test_y
 
 
 if __name__ == '__main__':
     ds = argv[1] if len(argv) > 1 else DEFAULT_DS
-    train_boosted_tree(ds, 0.1)
+    train_boosted_tree(ds, 0)

@@ -17,18 +17,22 @@ Usage with custom dataset:
 python src/tree.py ./path/to/input_data.csv
 ```
 """
+import warnings
+
+warnings.filterwarnings("ignore")  # ignore import warnings
 
 from os import path
 from pathlib import Path
 from sys import argv
 
 import numpy as np
+from art.estimators.classification.scikitlearn import \
+    ScikitlearnDecisionTreeClassifier
 from matplotlib import pyplot as plt
 from sklearn import tree
 
 import tree_utils as tu
-
-DEFAULT_DS = 'data/CTU-44-1.csv'
+from tree_utils import DEFAULT_DS
 
 
 def plot_tree(clf_, feat_names, class_names, filename="tree"):
@@ -49,8 +53,8 @@ def train_tree(dataset=DEFAULT_DS, test_size=.1, plot=False, fn=None):
     attrs, classes, train_x, train_y, test_x, test_y = \
         tu.load_csv_data(dataset, test_size)
 
-    clf = tree.DecisionTreeClassifier()
-    clf.fit(train_x, train_y)
+    model = tree.DecisionTreeClassifier()
+    model.fit(train_x, train_y)
 
     tu.show('Read dataset', dataset)
     tu.show('Attributes', len(attrs))
@@ -59,15 +63,17 @@ def train_tree(dataset=DEFAULT_DS, test_size=.1, plot=False, fn=None):
     tu.show('Test instances', len(test_x))
 
     if len(test_x) > 0:
-        predictions = clf.predict(test_x)
+        predictions = model.predict(test_x)
         split = [str(np.count_nonzero(test_y == v)) for v in classes]
         tu.show('Test split', "/".join(split))
         tu.score(test_y, predictions, 0, display=True)
 
     if plot:
-        plot_tree(clf, attrs, classes, fn)
+        plot_tree(model, attrs, classes, fn)
 
-    return clf, attrs, train_x, train_y, test_x, test_y
+    classifier = ScikitlearnDecisionTreeClassifier(model)
+
+    return classifier, model, attrs, train_x, train_y, test_x, test_y
 
 
 if __name__ == '__main__':

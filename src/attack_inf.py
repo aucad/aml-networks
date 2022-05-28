@@ -30,17 +30,19 @@ from art.attacks.inference.attribute_inference \
     AttributeInferenceMembership, \
     AttributeInferenceWhiteBoxLifestyleDecisionTree, \
     AttributeInferenceWhiteBoxDecisionTree
+from art.estimators.classification.scikitlearn import \
+    ScikitlearnDecisionTreeClassifier
 from art.attacks.inference.membership_inference \
     import MembershipInferenceBlackBox
-from art.estimators.classification.scikitlearn \
-    import ScikitlearnDecisionTreeClassifier
 
-from tree import train_tree
 from utility import color_text as c, binary_attributes
 
 
 def evaluate(attack_name, x_test_feat, inferred_train):
     """Display inference performance metrics."""
+    if inferred_train is None:
+        return
+
     actual = np.around(x_test_feat, decimals=8)
     a, p, r = calc_performance(inferred_train, actual, 0)
 
@@ -108,6 +110,9 @@ def white_box_1(cls, feat, x_test, x_pred, values, priors):
     number of possible values. For example: a boolean feature.
     Paper link: https://dl.acm.org/doi/10.1145/2810103.2813677
     """
+    if not isinstance(cls, ScikitlearnDecisionTreeClassifier):
+        return None
+
     wb_attack = AttributeInferenceWhiteBoxDecisionTree(
         cls, attack_feature=feat)
 
@@ -121,6 +126,9 @@ def white_box_2(cls, feat, x_test, x_pred, values, priors):
     example: a boolean feature. Paper link:
     https://dl.acm.org/doi/10.1145/2810103.2813677
     """
+    if not isinstance(cls, ScikitlearnDecisionTreeClassifier):
+        return None
+
     wb_attack = AttributeInferenceWhiteBoxLifestyleDecisionTree(
         cls, attack_feature=feat)
 
@@ -148,7 +156,7 @@ def membership(cls, feat, values, x_test, y_test, fit_data):
     return attack.infer(x_test, y_test, values=values)
 
 
-def inference_attack(cls, feat, name, xtrain, ytrain, xtest, ytest):
+def infer(cls, feat, name, xtrain, ytrain, xtest, ytest):
     """Carry out inference attacks"""
 
     # training and test split
@@ -189,26 +197,26 @@ def inference_attack(cls, feat, name, xtrain, ytrain, xtest, ytest):
     evaluate("Membership", attack_feat, ms)
 
 
-def attr_inference():
+def inference_attack(load_classifier, **cls_kwargs):
     """Perform various attribute inference attacks."""
 
     # load decision tree model and data
-    model, attr_names, x_train, y_train, x_test, y_test = \
-        train_tree(test_size=0.25)
+    classifier, model, attr_names, x_train, y_train, x_test, y_test = \
+        load_classifier(**cls_kwargs)
 
-    attack_attributes = list(set.intersection(
-        set(binary_attributes(x_train)),
-        set(binary_attributes(x_test))))
-
-    classifier = ScikitlearnDecisionTreeClassifier(model)
-    print(f'Base model accuracy'.ljust(30, '-'), end=' ')
-    print(c(f'{100 * model.score(x_test, y_test):.2f} %'))
+    try:
+        attack_attributes = list(set.intersection(
+            set(binary_attributes(x_train)),
+            set(binary_attributes(x_test))))
+    except TypeError:
+        attack_attributes = [0]
 
     for idx in attack_attributes:
-        inference_attack(
-            classifier, idx, attr_names[idx],
-            x_train, y_train, x_test, y_test)
+        infer(classifier, idx, attr_names[idx],
+              x_train, y_train, x_test, y_test)
 
 
 if __name__ == '__main__':
-    attr_inference()
+    from tree import train_tree
+
+    inference_attack(train_tree, test_size=.25)

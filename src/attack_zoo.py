@@ -13,22 +13,14 @@ python src/attack_zoo.py
 ```
 """
 
-import warnings
 from itertools import combinations
-from os import path
-
-warnings.filterwarnings("ignore")  # ignore import warnings
 
 import numpy as np
 from art.attacks.evasion import ZooAttack
-from art.estimators.classification import SklearnClassifier
 from matplotlib import pyplot as plt
 
-from tree import train_tree
-from tree_utils import  text_label
-from utility import color_text as c, non_bin_attributes
-
-IMAGE_NAME = path.join('adversarial', 'iot-23')
+import tree_utils as tu
+from utility import non_bin_attributes
 
 colors = ['deepskyblue', 'lawngreen']
 diff_props = {'c': 'black', 'zorder': 2, 'lw': 1}
@@ -40,27 +32,25 @@ plt.rc('xtick', labelsize=6)
 plt.rc('ytick', labelsize=6)
 
 
-def adversarial_iot():
+def adversarial_iot(classifier, x_train):
     """Generate the adversarial examples."""
-    # get the tree model and its training data
-    model, attrs, x_train, y_train, _, _ = train_tree(test_size=0)
 
     # Create ART Zeroth Order Optimization attack
     # using scikit-learn DecisionTreeClassifier
     zoo = ZooAttack(
         # A trained classifier
-        classifier=SklearnClassifier(model=model),
+        classifier=classifier,
         # Confidence of adversarial examples: a higher value produces
         # examples that are farther away, from the original input,
         # but classified with higher confidence as the target class.
-        confidence=0.75,
+        confidence=.75,
         # Should the attack target one specific class
         targeted=False,
         # The initial learning rate for the attack algorithm. Smaller
         # values produce better results but are slower to converge.
         learning_rate=1e-1,
         # The maximum number of iterations.
-        max_iter=80,
+        max_iter=100,
         # Number of times to adjust constant with binary search
         # (positive value).
         binary_search_steps=10,
@@ -95,33 +85,33 @@ def adversarial_iot():
         verbose=True)
 
     # train adversarial examples
-    x_train_adv = zoo.generate(x_train)
-
-    return model, attrs, (x_train, y_train, x_train_adv)
+    return zoo.generate(x_train)
 
 
-def adv_examples(model, x_train, y_train, x_train_adv):
-    ori_score = model.score(x_train, y_train),
-    adv_score = model.score(x_train, y_train)
+def adv_examples(model, dt_formatter, x_train, _, x_train_adv):
     adv_success = []
 
     for i in range(len(x_train_adv)):
-        o, a = x_train[i:i + 1, :], x_train_adv[i:i + 1, :]
-        ori_pred = text_label(model.predict(o)[0])
-        adv_pred = text_label(model.predict(a)[0])
-        if ori_pred != adv_pred:
+        ori, instance = x_train[i:i + 1, :], x_train_adv[i:i + 1, :]
+        if dt_formatter:
+            ori = dt_formatter(ori)
+            instance = dt_formatter(instance)
+        op = int(round(model.predict(ori)[0], 0))
+        ad = int(round(model.predict(instance)[0], 0))
+
+        if op != ad:
             adv_success.append(i)
 
-    print('Train scores '.ljust(20, '-'), c("%.4f" % ori_score))
-    print('Adv scores '.ljust(20, '-'), c("%.4f" % adv_score))
-    print('# Evasions '.ljust(20, '-'), c(len(adv_success)))
+    acc = 100 * len(adv_success) / len(x_train_adv)
+    tu.show('Adversarial accuracy', f'{acc:.2f}')
+    tu.show('# Evasions', len(adv_success))
     return np.array(adv_success)
 
 
-def plot(evasions, attr, *data):
+def plot(img_name, evasions, attr, *data):
     """Visualize the adversarial attack results"""
 
-    (x_train, y_train, x_train_adv) = data
+    (x_train, y_train, adv_ex) = data
     class_labels = list([int(i) for i in np.unique(y_train)])
 
     rows, cols = 2, 3
@@ -159,16 +149,31 @@ def plot(evasions, attr, *data):
             for j in evasions:
                 xt_f1 = x_train[j:j + 1, f1]
                 xt_f2 = x_train[j:j + 1, f2]
-                ad_f1 = x_train_adv[j:j + 1, f1]
-                ad_f2 = x_train_adv[j:j + 1, f2]
+                ad_f1 = adv_ex[j:j + 1, f1]
+                ad_f2 = adv_ex[j:j + 1, f2]
                 ax.plot([xt_f1, ad_f1], [xt_f2, ad_f2], **diff_props)
                 ax.scatter(ad_f1, ad_f2, **adv_props)
 
         fig.tight_layout()
-        plt.savefig(f'{IMAGE_NAME}_{f + 1}.png')
+        plt.savefig(f'{img_name}_{f + 1}.png')
+
+
+def zoo_attack(cls_loader, img_path, dt_formatter, **cls_kwargs):
+    """Carry out ZOO attack on specified classifier.
+
+    Arguments:
+         cls_loader - function to load classifier and its data
+         img_path - dir path and file name for storing plots
+    """
+    cls, model, attrs, x, y, _, _ = cls_loader(**cls_kwargs)
+    data = (x, y, adversarial_iot(cls, x))
+    evasions = adv_examples(model, dt_formatter, *data)
+    plot(img_path, evasions, attrs, *data)
 
 
 if __name__ == '__main__':
-    cls, attr, data = adversarial_iot()
-    evasions = adv_examples(cls, *data)
-    plot(evasions, attr, *data)
+    from tree import train_tree
+    from os import path
+
+    plot_path = path.join('adversarial', 'iot-23')
+    zoo_attack(train_tree, plot_path, None, test_size=0)

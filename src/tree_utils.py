@@ -8,6 +8,8 @@ from sklearn.model_selection import train_test_split
 
 from utility import color_text as c
 
+DEFAULT_DS = 'data/CTU-44-1.csv'
+
 
 def text_label(i):
     return 'benign' if i == 1 else 'malicious'
