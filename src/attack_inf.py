@@ -16,7 +16,7 @@ attack_attribute_inference.ipynb
 Usage:
 
 ```
-python src/attack_dt_inf.py
+python src/attack_inf.py
 ```
 """
 
@@ -194,17 +194,19 @@ def attr_inference():
     """Perform various attribute inference attacks."""
 
     # load decision tree model and data
-    model, x_train, y_train, attr_names, x_test, y_test = \
-        train_tree(False, test_set=0.25)
+    model, attr_names, x_train, y_train, x_test, y_test = \
+        train_tree(plot=False, test_size=0.25)
 
     attack_attributes = [0, 4]
 
     classifier = ScikitlearnDecisionTreeClassifier(model)
-    print('Base model accuracy: ', model.score(x_test, y_test))
+    print(f'Base model accuracy'.ljust(30, '-'), end=' ')
+    print(c(f'{100 * model.score(x_test, y_test):.2f} %'))
 
     for idx in attack_attributes:
-        inference_attack(classifier, idx, attr_names[idx],
-                         x_train, y_train, x_test, y_test)
+        inference_attack(
+            classifier, idx, attr_names[idx],
+            x_train, y_train, x_test, y_test)
 
 
 if __name__ == '__main__':

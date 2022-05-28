@@ -130,16 +130,14 @@ def plot_results(model, x_train, y_train, x_train_adv, n_classes):
         axs[i_class].set_ylabel('feature 2')
 
 
-def iris(num_classes, fname):
+def iris(num_classes):
     num_classes = min(3, max(2, num_classes))
     x_train, y_train = get_data(num_classes=num_classes)
     x_train_adv, model = get_adversarial_examples(x_train, y_train)
     plot_results(model, x_train, y_train, x_train_adv, num_classes)
-    plt.savefig(fname)
     plt.show()
 
 
 if __name__ == '__main__':
     class_count = int(argv[1]) if len(argv) > 1 else 2
-    image_name = f'adversarial/iris_{class_count}.png'
-    iris(class_count, image_name)
+    iris(class_count)
