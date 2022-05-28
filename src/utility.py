@@ -9,6 +9,18 @@ def color_text(text):
     return Fore.GREEN + str(text) + Style.RESET_ALL
 
 
+def binary_attributes(np_array):
+    """Get column indices of binary attributes"""
+    return [feat for feat in range(len(np_array[0]))
+            if len(list(set(np_array[:, feat]))) == 2]
+
+
+def non_bin_attributes(np_array):
+    """Get column indices of non-binary attributes"""
+    return [feat for feat in range(len(np_array[0]))
+            if len(list(set(np_array[:, feat]))) > 2]
+
+
 def read_csv(path: str, delimiter=',') -> Tuple[list, list]:
     """read some CSV file and split into headers and rows
 

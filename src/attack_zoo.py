@@ -24,8 +24,9 @@ from art.attacks.evasion import ZooAttack
 from art.estimators.classification import SklearnClassifier
 from matplotlib import pyplot as plt
 
-from tree import train_tree, text_label
-from utility import color_text as c
+from tree import train_tree
+from tree_utils import  text_label
+from utility import color_text as c, non_bin_attributes
 
 IMAGE_NAME = path.join('adversarial', 'iot-23')
 
@@ -42,8 +43,7 @@ plt.rc('ytick', labelsize=6)
 def adversarial_iot():
     """Generate the adversarial examples."""
     # get the tree model and its training data
-    model, attrs, x_train, y_train, _, _ = train_tree(
-        plot=False, test_size=0)
+    model, attrs, x_train, y_train, _, _ = train_tree(test_size=0)
 
     # Create ART Zeroth Order Optimization attack
     # using scikit-learn DecisionTreeClassifier
@@ -129,8 +129,7 @@ def plot(evasions, attr, *data):
     markers = ['o', 's']
     x_min, y_min, x_max, y_max = -0.1, -0.1, 1.1, 1.1
 
-    non_binary_attrs = [feat for feat in range(len(x_train[0])) if
-                        len(list(set(x_train[:, feat]))) > 2]
+    non_binary_attrs = non_bin_attributes(x_train)
     attr_pairs = list(combinations(non_binary_attrs, 2))
     fig_count = len(attr_pairs) // subplots
 

@@ -17,79 +17,78 @@ Specify input data to use:
 python src/tree_xg.py ./path/to/train_data ./path/to/test_data
 ```
 """
-
+import sys
 from sys import argv
 
 import xgboost as xgb
 
-from utility import color_text as c
+import tree_utils as tu
 
-DEFAULT_TRAIN = 'data/CTU-44-1.train.dmat'
-DEFAULT_TEST = 'data/CTU-44-1.test.dmat'
-TRAIN_PATH = argv[1] if len(argv) > 1 else DEFAULT_TRAIN
-TEST_PATH = argv[2] if len(argv) > 2 else DEFAULT_TEST
+DEFAULT_DS = 'data/CTU-44-1.csv'
 
 
-def score(test_labels, predictions, positive=0):
-    """Calculate performance metrics."""
-    score, tp_tn, num_pos_pred, num_pos_actual = 0, 0, 0, 0
-    for actual, pred in zip(test_labels, predictions):
-        int_pred = int(round(pred, 0))
-        if int_pred == positive:
-            num_pos_pred += 1
-        if actual == positive:
-            num_pos_actual += 1
-        if int_pred == actual:
-            tp_tn += 1
-        if int_pred == actual and int_pred == positive:
-            score += 1
-
-    accuracy = tp_tn / len(predictions)
-    precision = 1 if num_pos_pred == 0 else score / num_pos_pred
-    recall = 1 if num_pos_actual == 0 else score / num_pos_actual
-    f_score = (2 * precision * recall) / (precision + recall)
-
-    return accuracy, precision, recall, f_score
-
-
-def load_data(train_path, test_path):
-    print(f'Reading: {c(train_path)} and {c(test_path)}')
-
-    # read in data
-    dtrain = xgb.DMatrix(train_path)
-    dtest = xgb.DMatrix(test_path)
-
-    # display numbers
-    print(f"Training data size: {c(dtrain.num_row())}")
-    print(f"Test data size: {c(dtest.num_row())}")
-    return dtrain, dtest
-
-
-def train_boosted_tree():
+def train_boosted_tree(dataset=DEFAULT_DS, test_size=.1):
     """Train a classifier using XGBoost."""
 
-    num_rounds = 2
-    dtrain, dtest = load_data(TRAIN_PATH, TEST_PATH)
-    dtrain_y, dtest_y = dtrain.get_label(), dtest.get_label()
+    if test_size == 0:
+        print('set test size > 0')
+        sys.exit(1)
 
-    # specify parameters via map
-    param = {'max_depth': 2, 'eval_metric': 'auc',
-             'eta': 1, 'objective': 'binary:logistic'}
-    clf = xgb.train(param, dtrain, num_rounds)
+    attrs, classes, train_x, train_y, test_x, test_y = \
+        tu.load_csv_data(dataset, test_size)
+
+    dtrain = xgb.DMatrix(train_x, train_y)
+    dtest = xgb.DMatrix(test_x, test_y)
+
+    tu.show('Read dataset', dataset)
+    tu.show('Attributes', len(attrs))
+    tu.show('Classes', ", ".join([str(l) for l in classes]))
+    tu.show('Training instances', dtrain.num_row())
+    tu.show('Test instances', dtest.num_row())
+
+    cls = xgb.train(
+        # Booster params
+        # https://xgboost.readthedocs.io/en/stable/parameter.html
+        params={
+            # Maximum depth of a tree. Increasing this value will
+            # make the model more complex and more likely to overfit.
+            # 0 indicates no limit on depth. Beware that XGBoost
+            # aggressively consumes memory when training a deep tree.
+            # exact tree method requires non-zero value.
+            'max_depth': 2,
+            # Evaluation metrics for validation data, a default
+            # metric will be assigned according to objective (rmse
+            # for regression, and logloss for classification,
+            # mean average precision for ranking) User can add
+            # multiple evaluation metrics. Remember to pass the
+            # metrics in as list of parameters pairs instead of map,
+            # so that latter eval_metric won’t override previous one
+            'eval_metric': 'error',
+            # Step size shrinkage used in update to prevents
+            # overfitting. After each boosting step, we can directly
+            # get the weights of new features, and eta shrinks the
+            # feature weights to make the boosting process more
+            # conservative. (range: [0,1])
+            'eta': 1,
+            # the learning task and the corresponding learning
+            # - objective binary:logistic -> logistic regression for
+            #   binary classification, output probability
+            'objective': 'binary:logistic'
+        },
+        # data to be trained
+        dtrain=dtrain,
+        # num_boost_round
+        num_boost_round=2)
 
     # make prediction
-    predictions = clf.predict(dtest)
+    predictions = cls.predict(dtest)
 
     # score
-    acc, pre, rec, fs = score(dtest_y, predictions)
+    tu.score(test_y, predictions, display=True)
 
-    print('Accuracy ----- ', c(f'{acc * 100:.2f} %'))
-    print('Precision ---- ', c(f'{pre * 100:.2f} %'))
-    print('Recall ------- ', c(f'{rec * 100:.2f} %'))
-    print('F-score ------ ', c(f'{fs * 100:.2f} %'))
-
-    return clf, dtrain, dtrain_y, None, dtest, dtest_y
+    return cls, attrs, dtrain, train_y, dtest, test_y
 
 
 if __name__ == '__main__':
-    train_boosted_tree()
+    ds = argv[1] if len(argv) > 1 else DEFAULT_DS
+    train_boosted_tree(ds, 0.1)
