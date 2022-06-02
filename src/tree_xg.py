@@ -86,17 +86,12 @@ def train_tree(dataset=DEFAULT_DS, test_size=.1):
     tu.show('Split (benign)', f'{100 * split / len(train_y):.2f} %')
 
     # evaluate performance
-    if len(test_x) > 0:
-        dtest = formatter(test_x, test_y)
-        predictions = binarize(model.predict(dtest))
-        tu.score(test_y, predictions, display=True)
-    else:
-        predictions = binarize(model.predict(dtrain))
-        tu.score(train_y, predictions, display=True)
+    samples = formatter(test_x, test_y) if len(test_x) > 0 else dtrain
+    predictions = binarize(model.predict(samples))
+    tu.score(test_y, predictions, display=True)
 
     cls = XGBoostClassifier(
         model=model,
-        # clip_values=(0.0, 1.0),
         nb_features=len(train_x[0]),
         nb_classes=len(classes))
 
