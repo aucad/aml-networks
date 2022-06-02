@@ -43,7 +43,7 @@ def adversarial_iot(classifier, x_train):
         # Confidence of adversarial examples: a higher value produces
         # examples that are farther away, from the original input,
         # but classified with higher confidence as the target class.
-        confidence=.75,
+        confidence=0.0,
         # Should the attack target one specific class
         targeted=False,
         # The initial learning rate for the attack algorithm. Smaller
@@ -80,7 +80,7 @@ def adversarial_iot(classifier, x_train):
         # multiplier of nb_parallel in terms of memory consumption.
         batch_size=1,
         # Step size for numerical estimation of derivatives.
-        variable_h=0.2,
+        variable_h=0.01,
         # Show progress bars.
         verbose=True)
 
@@ -101,6 +101,7 @@ def adv_examples(model, dt_formatter, x_train, _, x_train_adv):
 
         if op != ad:
             adv_success.append(i)
+            print(x_train_adv[i:i + 1, :])
 
     acc = 100 * len(adv_success) / len(x_train_adv)
     tu.show('Adversarial accuracy', f'{acc:.2f}')
@@ -172,8 +173,14 @@ def zoo_attack(cls_loader, img_path, dt_formatter, **cls_kwargs):
 
 
 if __name__ == '__main__':
-    from tree import train_tree
     from os import path
+    import xgboost as xgb
+    from tree_xg import train_tree
 
-    plot_path = path.join('adversarial', 'iot-23')
-    zoo_attack(train_tree, plot_path, None, test_size=0)
+    # from tree import train_tree
+    # plot_path = path.join('boosted', 'tree')
+    # zoo_attack(train_tree, plot_path, None, test_size=0)
+
+    plot_path = path.join('boosted', 'non_robust')
+    zoo_attack(train_tree, plot_path,
+               lambda x: xgb.DMatrix(x), test_size=0.)

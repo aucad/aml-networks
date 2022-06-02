@@ -32,17 +32,16 @@ def binarize(values):
         .astype(int).flatten()
 
 
-def train_boosted_tree(dataset=DEFAULT_DS, test_size=.1):
+def train_tree(dataset=DEFAULT_DS, test_size=.1):
     """Train a classifier using XGBoost."""
 
     attrs, classes, train_x, train_y, test_x, test_y = \
         tu.load_csv_data(dataset, test_size)
 
-    dtrain, evals = xgb.DMatrix(train_x, train_y), None
+    dtrain = xgb.DMatrix(train_x, train_y)
 
     if len(test_x) > 0:
         dtest = xgb.DMatrix(test_x, test_y)
-        evals = [(dtest, "test"), (dtrain, "train")]
 
     model = xgb.train(
         # Booster params
@@ -74,7 +73,6 @@ def train_boosted_tree(dataset=DEFAULT_DS, test_size=.1):
             'objective': 'binary:logistic',
         },
         dtrain=dtrain,
-        evals=evals,
         num_boost_round=2)
 
     tu.show('Read dataset', dataset)
@@ -103,4 +101,4 @@ def train_boosted_tree(dataset=DEFAULT_DS, test_size=.1):
 
 if __name__ == '__main__':
     ds = argv[1] if len(argv) > 1 else DEFAULT_DS
-    train_boosted_tree(ds, 0)
+    train_tree(ds, 0)
