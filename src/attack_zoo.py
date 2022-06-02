@@ -41,7 +41,7 @@ def adversarial_iot(classifier, x_train):
         # Confidence of adversarial examples: a higher value produces
         # examples that are farther away, from the original input,
         # but classified with higher confidence as the target class.
-        confidence=0.75,
+        confidence=0.5,
         # Should the attack target one specific class
         targeted=False,
         # The initial learning rate for the attack algorithm. Smaller
@@ -63,7 +63,7 @@ def adversarial_iot(classifier, x_train):
         # True if to use the resizing strategy from the paper: first,
         # compute attack on inputs resized to 32x32, then increase
         # size if needed to 64x64, followed by 128x128.
-        use_resize=False,
+        use_resize=True,
         # True if to use importance sampling when choosing coordinates
         # to update.
         use_importance=False,
@@ -73,30 +73,25 @@ def adversarial_iot(classifier, x_train):
         # generated. Only size 1 is supported.
         batch_size=1,
         # Step size for numerical estimation of derivatives.
-        variable_h=0.2,
+        variable_h=0.1,
         # Show progress bars.
         verbose=True) \
         .generate(x=x_train)
 
 
 def adv_examples(model, fmt, x_train, y, x_adv):
-    adv_success = []
+    ori = fmt(x_train, y) if fmt else x_train
+    instance = fmt(x_adv, y) if fmt else x_adv
 
-    for i in range(len(x_adv)):
-        ori, instance = x_train[i:i + 1, :], x_adv[i:i + 1, :]
-        if fmt:
-            ori = fmt(ori, y)
-            instance = fmt(instance, y)
-        op = model.predict(ori)[0]
-        ad = model.predict(instance)[0]
-        # print(op, ad)
+    op = [int(round(x, 0)) for x in
+          model.predict(ori).flatten().tolist()]
+    ad = [int(round(x, 0)) for x in
+          model.predict(instance).flatten().tolist()]
 
-        if op != ad:
-            adv_success.append(i)
+    adv_success = [i for i, (x, y) in enumerate(zip(op, ad)) if x != y]
 
     acc = 100 * len(adv_success) / len(x_adv)
-    tu.show('Adversarial accuracy', f'{acc:.2f}')
-    tu.show('# Evasions', len(adv_success))
+    tu.show('Evasions', f'{len(adv_success)} ({acc:.2f} %)')
     return np.array(adv_success)
 
 
@@ -170,7 +165,4 @@ if __name__ == '__main__':
 
     plot_path = path.join('boosted', 'non_robust')
 
-    # from tree import train_tree
-    # formatter = None
-
-    zoo_attack(train_tree, plot_path, formatter, test_size=0.9)
+    zoo_attack(train_tree, plot_path, formatter, test_size=0)

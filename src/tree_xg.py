@@ -32,8 +32,8 @@ def formatter(x, y):
 
 
 def binarize(values):
-    return np.array([int(round(val, 0)) for val in values]) \
-        .astype(int).flatten()
+    vals = [int(round(val, 0)) for val in values.flatten().tolist()]
+    return np.array(vals).astype(int).flatten()
 
 
 def train_tree(dataset=DEFAULT_DS, test_size=.1):
@@ -71,27 +71,29 @@ def train_tree(dataset=DEFAULT_DS, test_size=.1):
             # the learning task and the corresponding learning
             # - objective binary:logistic -> logistic regression for
             #   binary classification, output probability
-            'objective': 'binary:logistic',
+            'objective': 'binary:logistic'
         },
         dtrain=dtrain,
         num_boost_round=10)
-
-    split = np.count_nonzero(test_y == 1)
 
     tu.show('Read dataset', dataset)
     tu.show('Attributes', len(attrs))
     tu.show('Classes', ", ".join([tu.text_label(l) for l in classes]))
     tu.show('Training instances', dtrain.num_row())
     tu.show('Test instances', len(test_x))
-    tu.show('Split (benign)', f'{100 * split / len(train_y):.2f} %')
 
     # evaluate performance
-    samples = formatter(test_x, test_y) if len(test_x) > 0 else dtrain
-    predictions = binarize(model.predict(samples))
-    tu.score(test_y, predictions, display=True)
+    if len(test_x) > 0:
+        dtest = xgb.DMatrix(test_x, test_y)
+        predictions = binarize(model.predict(dtest))
+        tu.score(test_y, predictions, display=True)
+    else:
+        predictions = binarize(model.predict(dtrain))
+        tu.score(train_y, predictions, display=True)
 
     cls = XGBoostClassifier(
         model=model,
+        clip_values=(0, 1),
         nb_features=len(train_x[0]),
         nb_classes=len(classes))
 
