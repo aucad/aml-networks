@@ -35,22 +35,20 @@ plt.rc('ytick', labelsize=6)
 def adversarial_iot(classifier, x_train):
     """Generate the adversarial examples."""
 
-    # Create ART Zeroth Order Optimization attack
-    # using scikit-learn DecisionTreeClassifier
-    zoo = ZooAttack(
+    return ZooAttack(
         # A trained classifier
         classifier=classifier,
         # Confidence of adversarial examples: a higher value produces
         # examples that are farther away, from the original input,
         # but classified with higher confidence as the target class.
-        confidence=0.0,
+        confidence=0.75,
         # Should the attack target one specific class
         targeted=False,
         # The initial learning rate for the attack algorithm. Smaller
         # values produce better results but are slower to converge.
         learning_rate=1e-1,
         # The maximum number of iterations.
-        max_iter=100,
+        max_iter=200,
         # Number of times to adjust constant with binary search
         # (positive value).
         binary_search_steps=10,
@@ -69,41 +67,34 @@ def adversarial_iot(classifier, x_train):
         # True if to use importance sampling when choosing coordinates
         # to update.
         use_importance=False,
-        # Number of coordinate updates to run in parallel. A higher
-        # value for nb_parallel should be preferred over a large
-        # batch size.
-        nb_parallel=2,
+        # Number of coordinate updates to run in parallel.
+        nb_parallel=5,
         # Internal size of batches on which adversarial samples are
-        # generated. Small batch sizes are encouraged for ZOO,
-        # as the algorithm already runs nb_parallel coordinate
-        # updates in parallel for each sample. The batch size is a
-        # multiplier of nb_parallel in terms of memory consumption.
+        # generated. Only size 1 is supported.
         batch_size=1,
         # Step size for numerical estimation of derivatives.
-        variable_h=0.01,
+        variable_h=0.2,
         # Show progress bars.
-        verbose=True)
-
-    # train adversarial examples
-    return zoo.generate(x_train)
+        verbose=True) \
+        .generate(x=x_train)
 
 
-def adv_examples(model, dt_formatter, x_train, _, x_train_adv):
+def adv_examples(model, fmt, x_train, y, x_adv):
     adv_success = []
 
-    for i in range(len(x_train_adv)):
-        ori, instance = x_train[i:i + 1, :], x_train_adv[i:i + 1, :]
-        if dt_formatter:
-            ori = dt_formatter(ori)
-            instance = dt_formatter(instance)
-        op = int(round(model.predict(ori)[0], 0))
-        ad = int(round(model.predict(instance)[0], 0))
+    for i in range(len(x_adv)):
+        ori, instance = x_train[i:i + 1, :], x_adv[i:i + 1, :]
+        if fmt:
+            ori = fmt(ori, y)
+            instance = fmt(instance, y)
+        op = model.predict(ori)[0]
+        ad = model.predict(instance)[0]
+        # print(op, ad)
 
         if op != ad:
             adv_success.append(i)
-            print(x_train_adv[i:i + 1, :])
 
-    acc = 100 * len(adv_success) / len(x_train_adv)
+    acc = 100 * len(adv_success) / len(x_adv)
     tu.show('Adversarial accuracy', f'{acc:.2f}')
     tu.show('# Evasions', len(adv_success))
     return np.array(adv_success)
@@ -159,7 +150,7 @@ def plot(img_name, evasions, attr, *data):
         plt.savefig(f'{img_name}_{f + 1}.png')
 
 
-def zoo_attack(cls_loader, img_path, dt_formatter, **cls_kwargs):
+def zoo_attack(cls_loader, img_path, fmt, **cls_kwargs):
     """Carry out ZOO attack on specified classifier.
 
     Arguments:
@@ -168,19 +159,18 @@ def zoo_attack(cls_loader, img_path, dt_formatter, **cls_kwargs):
     """
     cls, model, attrs, x, y, _, _ = cls_loader(**cls_kwargs)
     data = (x, y, adversarial_iot(cls, x))
-    evasions = adv_examples(model, dt_formatter, *data)
-    plot(img_path, evasions, attrs, *data)
+    evasions = adv_examples(model, fmt, *data)
+    if len(evasions) > 0:
+        plot(img_path, evasions, attrs, *data)
 
 
 if __name__ == '__main__':
     from os import path
-    import xgboost as xgb
-    from tree_xg import train_tree
-
-    # from tree import train_tree
-    # plot_path = path.join('boosted', 'tree')
-    # zoo_attack(train_tree, plot_path, None, test_size=0)
+    from tree_xg import train_tree, formatter
 
     plot_path = path.join('boosted', 'non_robust')
-    zoo_attack(train_tree, plot_path,
-               lambda x: xgb.DMatrix(x), test_size=0.)
+
+    # from tree import train_tree
+    # formatter = None
+
+    zoo_attack(train_tree, plot_path, formatter, test_size=0.9)

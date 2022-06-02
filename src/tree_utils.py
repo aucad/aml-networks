@@ -55,10 +55,10 @@ def load_csv_data(dataset_path, test_size=0.1):
     return attrs, classes, train_x, train_y, test_x, test_y
 
 
-def score(test_labels, predictions, positive=0, display=False):
+def score(true_labels, predictions, positive=0, display=False):
     """Calculate performance metrics."""
     sc, tp_tn, num_pos_pred, num_pos_actual = 0, 0, 0, 0
-    for actual, pred in zip(test_labels, predictions):
+    for actual, pred in zip(true_labels, predictions):
         int_pred = int(round(pred, 0))
         if int_pred == positive:
             num_pos_pred += 1

@@ -27,6 +27,10 @@ from tree_utils import DEFAULT_DS
 from art.estimators.classification import XGBoostClassifier
 
 
+def formatter(x, y):
+    return xgb.DMatrix(x, y)
+
+
 def binarize(values):
     return np.array([int(round(val, 0)) for val in values]) \
         .astype(int).flatten()
@@ -38,10 +42,7 @@ def train_tree(dataset=DEFAULT_DS, test_size=.1):
     attrs, classes, train_x, train_y, test_x, test_y = \
         tu.load_csv_data(dataset, test_size)
 
-    dtrain = xgb.DMatrix(train_x, train_y)
-
-    if len(test_x) > 0:
-        dtest = xgb.DMatrix(test_x, test_y)
+    dtrain = formatter(train_x, train_y)
 
     model = xgb.train(
         # Booster params
@@ -73,19 +74,20 @@ def train_tree(dataset=DEFAULT_DS, test_size=.1):
             'objective': 'binary:logistic',
         },
         dtrain=dtrain,
-        num_boost_round=2)
+        num_boost_round=10)
+
+    split = np.count_nonzero(test_y == 1)
 
     tu.show('Read dataset', dataset)
     tu.show('Attributes', len(attrs))
     tu.show('Classes', ", ".join([tu.text_label(l) for l in classes]))
     tu.show('Training instances', dtrain.num_row())
     tu.show('Test instances', len(test_x))
-
-    split = np.count_nonzero(test_y == 1)
     tu.show('Split (benign)', f'{100 * split / len(train_y):.2f} %')
 
     # evaluate performance
     if len(test_x) > 0:
+        dtest = formatter(test_x, test_y)
         predictions = binarize(model.predict(dtest))
         tu.score(test_y, predictions, display=True)
     else:
@@ -93,8 +95,10 @@ def train_tree(dataset=DEFAULT_DS, test_size=.1):
         tu.score(train_y, predictions, display=True)
 
     cls = XGBoostClassifier(
-        model=model, clip_values=(0.0, 0.1),
-        nb_features=dtrain.num_col(), nb_classes=len(classes))
+        model=model,
+        # clip_values=(0.0, 1.0),
+        nb_features=len(train_x[0]),
+        nb_classes=len(classes))
 
     return cls, model, attrs, train_x, train_y, test_x, test_y
 
