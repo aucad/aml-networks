@@ -13,7 +13,6 @@ Attributes ------------------- 22
 Classes ---------------------- malicious, benign
 Training instances ----------- 177
 Test instances --------------- 60
-Split (benign) --------------- 30.51 %
 Accuracy --------------------- 98.33 %
 Precision -------------------- 85.71 %
 Recall ----------------------- 100.00 %
