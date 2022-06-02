@@ -2,6 +2,8 @@
 
 Adversarial attacks applied to XGBoost classifier.
 
+## Non-robust XGBoost
+
 #### Non-robust XGBoost Attribute Inference
 
 ```text
@@ -78,3 +80,9 @@ Applying Zeroth-Order Optimization (ZOO) Attack:
 ![img](non_robust_3.png) 
 
 ![img](non_robust_4.png) 
+
+
+
+[BL]: https://adversarial-robustness-toolbox.readthedocs.io/en/latest/modules/attacks/inference/attribute_inference.html#attribute-inference-baseline
+[BB]: https://adversarial-robustness-toolbox.readthedocs.io/en/latest/modules/attacks/inference/attribute_inference.html#attribute-inference-black-box
+[MS]: https://adversarial-robustness-toolbox.readthedocs.io/en/latest/modules/attacks/inference/attribute_inference.html#attribute-inference-membership
