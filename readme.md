@@ -6,7 +6,7 @@ Link to notes:
 
 <https://docs.google.com/document/d/1xqCDqrakSaXkOxijwse3zQ23Rm7-38m-rMJp7iLjS6A/edit?usp=sharing>
 
-## Usage
+## Setup
 
 Install requirements:
 
@@ -14,8 +14,12 @@ Install requirements:
 python -m pip install -q -r requirements.txt
 ```
 
-See 
+## Directory organization
 
-- `src/` for scripts
-- `iot23/` for previous experiments (in Weka)
-- `adversarial/` for current experiment
+| Directory | Description |
+|:----------|:------------|
+| `adversarial` | Results of adversarial attacks on decision trees |
+| `boosted`     | Results of adversarial attacks on XGBoost classifier |
+| `data`        | Preprocessed data sets for running various attacks |
+| `iot23`       | Comparison of classifiers, obtained using Weka |
+| `src/`        | Source code files |
