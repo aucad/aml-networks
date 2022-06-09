@@ -6,6 +6,8 @@ Adversarial attacks applied to XGBoost classifier.
 
 #### Non-robust XGBoost Attribute Inference
 
+Dataset: [CTU-Malware-Capture-44-1](../data/CTU-44-1.csv) (90 / 10 split)
+
 ```text
 python src/attack_inf.py
 Read dataset ----------------- data/CTU-44-1.csv
@@ -47,6 +49,44 @@ Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 10
 Membership attack ------------ Accuracy: 70.79 % Precision: 70.79 % Recall: 100.00 %
 ```
 
+Dataset [CTU-Malware-Capture-20-1](../data/CTU-20-1.csv) (99.5 / 0.5 split)
+
+```text
+Read dataset ----------------- ./data/CTU-20-1.csv
+Attributes ------------------- 23
+Classes ---------------------- malicious, benign
+Training instances ----------- 2567
+Test instances --------------- 642
+Accuracy --------------------- 100.00 %
+Precision -------------------- 100.00 %
+Recall ----------------------- 100.00 %
+F-score ---------------------- 100.00 %
+* Inference of attribute proto=tcp:
+Baseline attack -------------- Accuracy: 99.84 % Precision: 99.84 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 99.92 % Precision: 99.92 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 0.62 % Precision: 100.00 % Recall: 0.00 %
+* Inference of attribute conn_state=S0:
+Baseline attack -------------- Accuracy: 99.92 % Precision: 100.00 % Recall: 99.88 %
+Black box attack ------------- Accuracy: 99.92 % Precision: 100.00 % Recall: 99.88 %
+Membership attack ------------ Accuracy: 66.74 % Precision: 66.69 % Recall: 99.77 %
+* Inference of attribute conn_state=SF:
+Baseline attack -------------- Accuracy: 99.92 % Precision: 99.77 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 99.92 % Precision: 99.77 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 33.64 % Precision: 33.64 % Recall: 100.00 %
+* Inference of attribute history=D:
+Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 66.90 % Precision: 66.90 % Recall: 100.00 %
+* Inference of attribute history=Dd:
+Baseline attack -------------- Accuracy: 99.92 % Precision: 100.00 % Recall: 99.77 %
+Black box attack ------------- Accuracy: 99.84 % Precision: 100.00 % Recall: 99.54 %
+Membership attack ------------ Accuracy: 33.80 % Precision: 33.80 % Recall: 100.00 %
+* Inference of attribute history=S:
+Baseline attack -------------- Accuracy: 99.92 % Precision: 100.00 % Recall: 99.92 %
+Black box attack ------------- Accuracy: 99.92 % Precision: 100.00 % Recall: 99.92 %
+Membership attack ------------ Accuracy: 99.53 % Precision: 99.53 % Recall: 100.00 %
+```
+
 **Inference attack methods**
 
 - [**Baseline attack**][BL]: Implementation of a baseline attribute inference, not using a model. The idea is to 
@@ -62,6 +102,9 @@ Membership attack ------------ Accuracy: 70.79 % Precision: 70.79 % Recall: 100.
     attack. The idea is to find the target feature value that causes the membership inference attack to classify the 
     sample as a member with the highest confidence.
 
+[BL]: https://adversarial-robustness-toolbox.readthedocs.io/en/latest/modules/attacks/inference/attribute_inference.html#attribute-inference-baseline
+[BB]: https://adversarial-robustness-toolbox.readthedocs.io/en/latest/modules/attacks/inference/attribute_inference.html#attribute-inference-black-box
+[MS]: https://adversarial-robustness-toolbox.readthedocs.io/en/latest/modules/attacks/inference/attribute_inference.html#attribute-inference-membership
 
 #### Non-robust XGBoost ZOO Evasion attack
 
@@ -72,6 +115,9 @@ Applying Zeroth-Order Optimization (ZOO) Attack:
 - red crosses: adversarial modified instance
 - black line: difference between original and adversarial
 
+
+Dataset: [CTU-Malware-Capture-44-1](../data/CTU-44-1.csv) (90 / 10 split)
+
 ![img](non_robust_1.png) 
 
 ![img](non_robust_2.png) 
@@ -80,8 +126,18 @@ Applying Zeroth-Order Optimization (ZOO) Attack:
 
 ![img](non_robust_4.png) 
 
+---
 
+<!-- 
 
-[BL]: https://adversarial-robustness-toolbox.readthedocs.io/en/latest/modules/attacks/inference/attribute_inference.html#attribute-inference-baseline
-[BB]: https://adversarial-robustness-toolbox.readthedocs.io/en/latest/modules/attacks/inference/attribute_inference.html#attribute-inference-black-box
-[MS]: https://adversarial-robustness-toolbox.readthedocs.io/en/latest/modules/attacks/inference/attribute_inference.html#attribute-inference-membership
+Dataset [CTU-Malware-Capture-20-1](../data/CTU-20-1.csv) (99.5 / 0.5 split)
+
+![img](non_robust_1.png) 
+
+![img](non_robust_2.png) 
+
+![img](non_robust_3.png) 
+
+![img](non_robust_4.png) 
+
+-->

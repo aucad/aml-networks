@@ -11,6 +11,13 @@ Adapted from:
 https://github.com/Trusted-AI/adversarial-robustness-toolbox/blob/
 main/examples/get_started_xgboost.py
 
+Also see: "Adversarial-Robustness-Toolbox for XGBoost" example:
+
+https://github.com/Trusted-AI/adversarial-robustness-toolbox/blob/
+192c4beda1f66776f6ede94a11808eb7b4651f01/notebooks/
+classifier_xgboost.ipynb
+
+
 Usage:
 
 ```
