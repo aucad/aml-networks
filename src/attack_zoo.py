@@ -41,14 +41,14 @@ def adversarial_iot(classifier, x_train):
         # Confidence of adversarial examples: a higher value produces
         # examples that are farther away, from the original input,
         # but classified with higher confidence as the target class.
-        confidence=0.5,
+        confidence=0.1,
         # Should the attack target one specific class
         targeted=False,
         # The initial learning rate for the attack algorithm. Smaller
         # values produce better results but are slower to converge.
-        learning_rate=1e-1,
+        learning_rate=1e-2,
         # The maximum number of iterations.
-        max_iter=200,
+        max_iter=1000,
         # Number of times to adjust constant with binary search
         # (positive value).
         binary_search_steps=10,
@@ -79,15 +79,16 @@ def adversarial_iot(classifier, x_train):
         .generate(x=x_train)
 
 
-def adv_examples(model, fmt, x_train, y, x_adv):
-    ori = fmt(x_train, y) if fmt else x_train
-    instance = fmt(x_adv, y) if fmt else x_adv
+def adv_examples(model, fmt, prd, x_train, y, x_adv):
+    # predictions for training instances
+    a = fmt(x_train, y) if fmt else x_train
+    op = prd(model, a).flatten().tolist()
 
-    op = [int(round(x, 0)) for x in
-          model.predict(ori).flatten().tolist()]
-    ad = [int(round(x, 0)) for x in
-          model.predict(instance).flatten().tolist()]
+    # adversarial predictions for same data
+    b = fmt(x_adv, y) if fmt else x_adv
+    ad = prd(model, b).flatten().tolist()
 
+    # adv succeeds when predictions differ
     adv_success = [i for i, (x, y) in enumerate(zip(op, ad)) if x != y]
 
     acc = 100 * len(adv_success) / len(x_adv)
@@ -145,7 +146,7 @@ def plot(img_name, evasions, attr, *data):
         plt.savefig(f'{img_name}_{f + 1}.png')
 
 
-def zoo_attack(cls_loader, img_path, fmt, **cls_kwargs):
+def zoo_attack(cls_loader, fmt, prd, img_path, **cls_kwargs):
     """Carry out ZOO attack on specified classifier.
 
     Arguments:
@@ -154,15 +155,15 @@ def zoo_attack(cls_loader, img_path, fmt, **cls_kwargs):
     """
     cls, model, attrs, x, y, _, _ = cls_loader(**cls_kwargs)
     data = (x, y, adversarial_iot(cls, x))
-    evasions = adv_examples(model, fmt, *data)
+    evasions = adv_examples(model, fmt, prd, *data)
     if len(evasions) > 0:
         plot(img_path, evasions, attrs, *data)
 
 
 if __name__ == '__main__':
     from os import path
-    from tree_xg import train_tree, formatter
+    from tree_xg import train_tree, predict, formatter
 
     plot_path = path.join('boosted', 'non_robust')
 
-    zoo_attack(train_tree, plot_path, formatter, test_size=0)
+    zoo_attack(train_tree, formatter, predict, plot_path, test_size=0)

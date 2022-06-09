@@ -17,18 +17,19 @@ from os import path
 from sys import argv
 
 from tree_utils import DEFAULT_DS
-from tree_xg import train_tree, formatter
-from attack_inf import inference_attack
-from attack_zoo import zoo_attack
+from tree_xg import train_tree, formatter, predict
+from attack_inf import inference_attack as inf
+from attack_zoo import zoo_attack as zoo
 
 
 def run_attacks(dataset):
     out_path = path.join('boosted', 'non_robust')
 
-    inference_attack(train_tree, dataset=dataset, test_size=0.2)
+    inf(train_tree,
+        dataset=dataset, test_size=0.2)
 
-    zoo_attack(train_tree, out_path, formatter,
-               dataset=dataset, test_size=0)
+    zoo(train_tree, formatter, predict, out_path,
+        dataset=dataset, test_size=0)
 
 
 if __name__ == '__main__':

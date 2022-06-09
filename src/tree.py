@@ -35,6 +35,10 @@ import tree_utils as tu
 from tree_utils import DEFAULT_DS
 
 
+def predict(model, data):
+    return model.predict(data)
+
+
 def plot_tree(clf_, feat_names, class_names, filename="tree"):
     """Plot the tree and save to file."""
     plt.figure(dpi=200)

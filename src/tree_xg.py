@@ -18,7 +18,6 @@ python src/tree_xg.py ./path/to/input_data.csv
 """
 from sys import argv
 
-import numpy as np
 import xgboost as xgb
 
 import tree_utils as tu
@@ -31,9 +30,9 @@ def formatter(x, y):
     return xgb.DMatrix(x, y)
 
 
-def binarize(values):
-    vals = [int(round(val, 0)) for val in values.flatten().tolist()]
-    return np.array(vals).astype(int).flatten()
+def predict(model, data):
+    tmp = model.predict(data)
+    return tmp.argmax(axis=1)
 
 
 def train_tree(dataset=DEFAULT_DS, test_size=.1):
@@ -43,38 +42,19 @@ def train_tree(dataset=DEFAULT_DS, test_size=.1):
         tu.load_csv_data(dataset, test_size)
 
     dtrain = formatter(train_x, train_y)
+    evallist = [(dtrain, 'eval'), (dtrain, 'train')]
 
     model = xgb.train(
         # Booster params
         # https://xgboost.readthedocs.io/en/stable/parameter.html
         params={
-            # Maximum depth of a tree. Increasing this value will
-            # make the model more complex and more likely to overfit.
-            # 0 indicates no limit on depth. Beware that XGBoost
-            # aggressively consumes memory when training a deep tree.
-            # exact tree method requires non-zero value.
-            'max_depth': 2,
-            # Evaluation metrics for validation data, a default
-            # metric will be assigned according to objective (rmse
-            # for regression, and logloss for classification,
-            # mean average precision for ranking) User can add
-            # multiple evaluation metrics. Remember to pass the
-            # metrics in as list of parameters pairs instead of map,
-            # so that latter eval_metric won’t override previous one
-            'eval_metric': 'error',
-            # Step size shrinkage used in update to prevents
-            # overfitting. After each boosting step, we can directly
-            # get the weights of new features, and eta shrinks the
-            # feature weights to make the boosting process more
-            # conservative. (range: [0,1])
-            'eta': 1,
-            # the learning task and the corresponding learning
-            # - objective binary:logistic -> logistic regression for
-            #   binary classification, output probability
-            'objective': 'binary:logistic'
+            'objective': 'multi:softprob',
+            'metric': 'multi_logloss',
+            'num_class': len(classes)
         },
         dtrain=dtrain,
-        num_boost_round=10)
+        num_boost_round=10,
+        evals=evallist)
 
     tu.show('Read dataset', dataset)
     tu.show('Attributes', len(attrs))
@@ -85,10 +65,10 @@ def train_tree(dataset=DEFAULT_DS, test_size=.1):
     # evaluate performance
     if len(test_x) > 0:
         dtest = xgb.DMatrix(test_x, test_y)
-        predictions = binarize(model.predict(dtest))
+        predictions = predict(model, dtest)
         tu.score(test_y, predictions, display=True)
     else:
-        predictions = binarize(model.predict(dtrain))
+        predictions = predict(model, dtrain)
         tu.score(train_y, predictions, display=True)
 
     cls = XGBoostClassifier(
@@ -102,4 +82,4 @@ def train_tree(dataset=DEFAULT_DS, test_size=.1):
 
 if __name__ == '__main__':
     ds = argv[1] if len(argv) > 1 else DEFAULT_DS
-    train_tree(ds, 0)
+    train_tree(ds, 0.05)
