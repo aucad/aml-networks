@@ -41,7 +41,7 @@ def adversarial_iot(classifier, x_train):
         # Confidence of adversarial examples: a higher value produces
         # examples that are farther away, from the original input,
         # but classified with higher confidence as the target class.
-        confidence=0.1,
+        confidence=0.75,
         # Should the attack target one specific class
         targeted=False,
         # The initial learning rate for the attack algorithm. Smaller
@@ -80,16 +80,19 @@ def adversarial_iot(classifier, x_train):
 
 
 def adv_examples(model, fmt, prd, x_train, y, x_adv):
+    """Make a list of adversarial instance indices that succeed in
+    evasion. """
     # predictions for training instances
-    a = fmt(x_train, y) if fmt else x_train
-    op = prd(model, a).flatten().tolist()
+    ori_inputs = fmt(x_train, y) if fmt else x_train
+    original = prd(model, ori_inputs).flatten().tolist()
 
     # adversarial predictions for same data
-    b = fmt(x_adv, y) if fmt else x_adv
-    ad = prd(model, b).flatten().tolist()
+    adv_inputs = fmt(x_adv, y) if fmt else x_adv
+    adversarial = prd(model, adv_inputs).flatten().tolist()
 
     # adv succeeds when predictions differ
-    adv_success = [i for i, (x, y) in enumerate(zip(op, ad)) if x != y]
+    adv_success = [i for i, (x, y) in
+                   enumerate(zip(original, adversarial)) if x != y]
 
     acc = 100 * len(adv_success) / len(x_adv)
     tu.show('Evasions', f'{len(adv_success)} ({acc:.2f} %)')
