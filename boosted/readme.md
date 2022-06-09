@@ -125,20 +125,3 @@ Dataset: [CTU-Malware-Capture-44-1](../data/CTU-44-1.csv) (90 / 10 split)
 ![img](non_robust_3.png) 
 
 ![img](non_robust_4.png) 
-
-
-<!-- 
-
----
-
-Dataset [CTU-Malware-Capture-20-1](../data/CTU-20-1.csv) (99.5 / 0.5 split)
-
-![img](non_robust_1.png) 
-
-![img](non_robust_2.png) 
-
-![img](non_robust_3.png) 
-
-![img](non_robust_4.png) 
-
--->
