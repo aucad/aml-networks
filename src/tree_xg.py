@@ -48,7 +48,15 @@ def train_tree(dataset=DEFAULT_DS, test_size=.1):
         # Booster params
         # https://xgboost.readthedocs.io/en/stable/parameter.html
         params={
+            # set XGBoost to do multiclass classification using the
+            # softmax objective, you also need to set num_class(
+            # number of classes)
+            # multi:softprob: outputs a vector of ndata * nclass,
+            # which can be further reshaped to ndata * nclass matrix.
+            # The result contains predicted probability of each data
+            # point belonging to each class.
             'objective': 'multi:softprob',
+            # from example ??
             'metric': 'multi_logloss',
             'num_class': len(classes)
         },
