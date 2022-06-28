@@ -8,9 +8,11 @@ Link to notes:
 
 ## Setup
 
+Make sure you Python environment is >= 3.8
+
 Install requirements:
 
-```text
+```
 python -m pip install -q -r requirements.txt
 ```
 
