@@ -1,5 +1,5 @@
 """
-This script builds a decision tree for provided dataset.
+This script builds a decision tree classifier for provided dataset.
 Provide as input a path to a dataset, or script uses default
 dataset if none provided. The dataset must be numeric
 at all attributes.
@@ -7,14 +7,14 @@ at all attributes.
 Default usage:
 
 ```
-python src/tree.py
+python src/train_dt.py
 ```
 
 
 Usage with custom dataset:
 
 ```
-python src/tree.py ./path/to/input_data.csv
+python src/train_dt.py ./path/to/input_data.csv
 ```
 """
 import warnings
@@ -31,8 +31,7 @@ from art.estimators.classification.scikitlearn import \
 from matplotlib import pyplot as plt
 from sklearn import tree
 
-import tree_utils as tu
-from tree_utils import DEFAULT_DS
+import utility as tu
 
 
 def predict(model, data):
@@ -51,7 +50,7 @@ def plot_tree(clf_, feat_names, class_names, filename="tree"):
     plt.show()
 
 
-def train_tree(dataset=DEFAULT_DS, test_size=.1, plot=False, fn=None):
+def train(dataset=tu.DEFAULT_DS, test_size=.1, plot=False, fn=None):
     """Train a decision tree"""
 
     attrs, classes, train_x, train_y, test_x, test_y = \
@@ -81,6 +80,6 @@ def train_tree(dataset=DEFAULT_DS, test_size=.1, plot=False, fn=None):
 
 
 if __name__ == '__main__':
-    ds = argv[1] if len(argv) > 1 else DEFAULT_DS
+    ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
     name = path.join('adversarial_tree', Path(ds).stem)
-    train_tree(ds, 0.2, False, name)
+    train(ds, 0.2, False, name)

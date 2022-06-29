@@ -217,6 +217,6 @@ def inference_attack(load_classifier, **cls_kwargs):
 
 
 if __name__ == '__main__':
-    from tree_xg import train_tree
+    from train_xg import train
 
-    inference_attack(train_tree, test_size=.25)
+    inference_attack(train, test_size=.25)

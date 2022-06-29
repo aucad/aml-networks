@@ -7,13 +7,13 @@ dataset if none provided. The dataset must be numeric at all attributes.
 Default usage:
 
 ```
-python src/tree_xg.py
+python src/train_xg.py
 ```
 
 Specify input data to use:
 
 ```
-python src/tree_xg.py ./path/to/input_data.csv
+python src/train_xg.py ./path/to/input_data.csv
 ```
 """
 
@@ -22,8 +22,7 @@ from sys import argv
 import xgboost as xgb
 from art.estimators.classification import XGBoostClassifier
 
-import tree_utils as tu
-from tree_utils import DEFAULT_DS
+import utility as tu
 
 
 def formatter(x, y):
@@ -35,7 +34,7 @@ def predict(model, data):
     return tmp.argmax(axis=1)
 
 
-def train_tree(dataset=DEFAULT_DS, test_size=.1, robust=False):
+def train(dataset=tu.DEFAULT_DS, test_size=.1, robust=False):
     """Train a classifier using XGBoost."""
 
     attrs, classes, train_x, train_y, test_x, test_y = \
@@ -91,5 +90,5 @@ def train_tree(dataset=DEFAULT_DS, test_size=.1, robust=False):
 
 
 if __name__ == '__main__':
-    ds = argv[1] if len(argv) > 1 else DEFAULT_DS
-    train_tree(ds, 0.05)
+    ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
+    train(ds, 0.05)

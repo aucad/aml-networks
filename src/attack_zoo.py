@@ -19,8 +19,7 @@ import numpy as np
 from art.attacks.evasion import ZooAttack
 from matplotlib import pyplot as plt
 
-import tree_utils as tu
-from utility import non_bin_attributes
+import utility as tu
 
 colors = ['deepskyblue', 'lawngreen']
 diff_props = {'c': 'black', 'zorder': 2, 'lw': 1}
@@ -110,7 +109,7 @@ def plot(img_name, evasions, attr, *data):
     markers = ['o', 's']
     x_min, y_min, x_max, y_max = -0.1, -0.1, 1.1, 1.1
 
-    non_binary_attrs = non_bin_attributes(x_train)
+    non_binary_attrs = tu.non_bin_attributes(x_train)
     attr_pairs = list(combinations(non_binary_attrs, 2))
     fig_count = len(attr_pairs) // subplots
 
@@ -159,14 +158,14 @@ def zoo_attack(cls_loader, fmt, prd, img_path, **cls_kwargs):
     cls, model, attrs, x, y, _, _ = cls_loader(**cls_kwargs)
     data = (x, y, adversarial_iot(cls, x))
     evasions = adv_examples(model, fmt, prd, *data)
-    if len(evasions) > 0:
-        plot(img_path, evasions, attrs, *data)
+    # if len(evasions) > 0:
+    plot(img_path, evasions, attrs, *data)
 
 
 if __name__ == '__main__':
     from os import path
-    from tree_xg import train_tree, predict, formatter
+    from train_xg import train, predict, formatter
 
     plot_path = path.join('adversarial_xg', 'non_robust')
 
-    zoo_attack(train_tree, formatter, predict, plot_path, test_size=0)
+    zoo_attack(train, formatter, predict, plot_path, test_size=0)
