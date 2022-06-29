@@ -17,23 +17,33 @@ python src/run_attacks.py ./path/to/input_data.csv
 from os import path
 from sys import argv
 
-import xgboost as xgb
-
 from tree_utils import DEFAULT_DS
 from tree_xg import train_tree, formatter, predict
-from attack_inf import inference_attack as inf
-from attack_zoo import zoo_attack as zoo
+from attack_inf import inference_attack as inf_attack
+from attack_zoo import zoo_attack
+
+robust_options = [False, True]
+
+
+def plot_path(robust):
+    img_base_path = 'robust' if robust else 'non_robust'
+    return path.join('adversarial_xg', img_base_path)
 
 
 def run_attacks(dataset):
-    version = 'robust' if xgb.__version__ == '0.72' else 'non_robust'
-    out_path = path.join('adversarial_xg', version)
+    # run same attacks switching robustness option only
+    for opt in robust_options:
+        inf_attack(train_tree,
+                   dataset=dataset,
+                   test_size=0.2,
+                   robust=opt)
 
-    inf(train_tree,
-        dataset=dataset, test_size=0.2)
-
-    zoo(train_tree, formatter, predict, out_path,
-        dataset=dataset, test_size=0)
+    for opt in robust_options:
+        zoo_attack(train_tree, formatter, predict,
+               img_path=plot_path(opt),
+               dataset=dataset,
+               test_size=0,
+               robust=opt)
 
 
 if __name__ == '__main__':

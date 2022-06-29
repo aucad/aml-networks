@@ -35,7 +35,7 @@ def predict(model, data):
     return tmp.argmax(axis=1)
 
 
-def train_tree(dataset=DEFAULT_DS, test_size=.1):
+def train_tree(dataset=DEFAULT_DS, test_size=.1, robust=False):
     """Train a classifier using XGBoost."""
 
     attrs, classes, train_x, train_y, test_x, test_y = \
@@ -56,15 +56,16 @@ def train_tree(dataset=DEFAULT_DS, test_size=.1):
             # The result contains predicted probability of each data
             # point belonging to each class.
             'objective': 'multi:softprob',
-            # from example ??
+            'tree_method': 'robust_exact' if robust else 'exact',
             'metric': 'multi_logloss',
-            'num_class': len(classes)
+            'num_class': len(classes),
+            'verbosity': 0,
         },
         dtrain=dtrain,
         num_boost_round=10,
         evals=evallist)
 
-    tu.show('XGBoost version', xgb.__version__)
+    tu.show('XGBoost', f'v. {xgb.__version__} (robust: {robust})')
     tu.show('Read dataset', dataset)
     tu.show('Attributes', len(attrs))
     tu.show('Classes', ", ".join([tu.text_label(l) for l in classes]))

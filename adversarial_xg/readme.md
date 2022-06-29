@@ -2,22 +2,8 @@
 
 Adversarial attacks applied to XGBoost classifier.
 
-## Switching XGBoost version
-
-The non-robust version can be installed via pip:
-
-```
-pip install xgboost  
-```
-
-Uninstall this package to switch between robust/non-robust:
-
-```
-pip uninstall xgboost
-```
-
-Robust XGBoost uses [RobustTrees](https://github.com/chenhongge/RobustTrees) classifier implementation.
-It must be built locally,  [see instructions here](https://github.com/chenhongge/RobustTrees/tree/master/python-package#from-source).
+We use XGBoost [RobustTrees](https://github.com/chenhongge/RobustTrees) classifier implementation.
+It must be built locally,  [following instructions here](https://github.com/chenhongge/RobustTrees/tree/master/python-package#from-source).
 
 After locally building, set up Python env to use this classifier version:
 
@@ -25,12 +11,33 @@ After locally building, set up Python env to use this classifier version:
 python -m pip install -e "/absolute/local/path/to/RobustTrees/python-package"
 ```
 
-Then repeat the attacks as before using the robust classifier. 
+Then run the attacks using the robust classifier. Per Instructions:
 
-The attacks using XGBoost classifier will print out the classifier version; the robust will display `0.72`
-(the closest comparable non-robust from pip is `pip install xgboost==0.72.1` or current latest is `1.6.1`).
+> Configuration Parameters
+> We added two additional parameters to XGBoost:
+> 
+> (1) tree_method controls which training method to use. We add a new option robust_exact for 
+> this parameter. Setting tree_method = robust_exact will use our proposed robust training. 
+> For other training methods, please refer to XGBoost documentation.
+> 
+> (2) robust_eps is the L inifity perturbation norm (epsilon) used in training. Since the same 
+> epsilon value will be applied for all features, it is recommended to normalize your data 
+> (e.g., make sure all features are in range 0 - 1). Normalization will not change tree performance
+> 
+> Please refer to XGBoost Documentation for all other parameters used in XGBoost.
 
-===
+## Run attacks
+
+```
+python src/run_attacks.py
+```
+
+will run all attacks for robust and non-robust configurations on default dataset. Append path to dataset
+to use a different data source:
+
+```
+python src/run_attacks.py ./path/to/input_data.csv
+```
 
 ## Attribute Inference Attack
 
@@ -55,98 +62,92 @@ The attacks using XGBoost classifier will print out the classifier version; the 
 
 Dataset: [CTU-Malware-Capture-44-1](../data/CTU-44-1.csv) (90 / 10 split)
 
-**Non-Robust**
-
 ```text
-python src/attack_inf.py
-Read dataset ----------------- data/CTU-44-1.csv
-Attributes ------------------- 22
-Classes ---------------------- malicious, benign
-Training instances ----------- 177
-Test instances --------------- 60
-Accuracy --------------------- 98.33 %
-Precision -------------------- 85.71 %
-Recall ----------------------- 100.00 %
-F-score ---------------------- 92.31 %
-* Inference of attribute proto=udp:
-Baseline attack -------------- Accuracy: 98.88 % Precision: 100.00 % Recall: 90.00 %
-Black box attack ------------- Accuracy: 98.88 % Precision: 100.00 % Recall: 90.00 %
-Membership attack ------------ Accuracy: 11.24 % Precision: 11.24 % Recall: 100.00 %
-* Inference of attribute conn_state=SF:
-Baseline attack -------------- Accuracy: 98.88 % Precision: 100.00 % Recall: 96.77 %
-Black box attack ------------- Accuracy: 98.88 % Precision: 100.00 % Recall: 96.77 %
-Membership attack ------------ Accuracy: 34.83 % Precision: 34.83 % Recall: 100.00 %
-* Inference of attribute conn_state=S0:
-Baseline attack -------------- Accuracy: 98.88 % Precision: 100.00 % Recall: 98.31 %
-Black box attack ------------- Accuracy: 98.88 % Precision: 100.00 % Recall: 98.31 %
-Membership attack ------------ Accuracy: 66.29 % Precision: 66.29 % Recall: 100.00 %
-* Inference of attribute history=ShADadttfF:
-Baseline attack -------------- Accuracy: 98.88 % Precision: 100.00 % Recall: 98.82 %
-Black box attack ------------- Accuracy: 98.88 % Precision: 100.00 % Recall: 98.82 %
-Membership attack ------------ Accuracy: 95.51 % Precision: 95.51 % Recall: 100.00 %
-* Inference of attribute history=S:
-Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-Membership attack ------------ Accuracy: 95.51 % Precision: 95.51 % Recall: 100.00 %
-* Inference of attribute history=Dd:
-Baseline attack -------------- Accuracy: 98.88 % Precision: 100.00 % Recall: 97.22 %
-Black box attack ------------- Accuracy: 98.88 % Precision: 100.00 % Recall: 97.22 %
-Membership attack ------------ Accuracy: 40.45 % Precision: 40.45 % Recall: 100.00 %
-* Inference of attribute history=D:
-Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-Membership attack ------------ Accuracy: 70.79 % Precision: 70.79 % Recall: 100.00 %
-```
-
-**Robust**
-
-```
-XGBoost version -------------- 0.72
+XGBoost ---------------------- v. 0.72 (robust: False)
 Read dataset ----------------- data/CTU-44-1.csv
 Attributes ------------------- 22
 Classes ---------------------- malicious, benign
 Training instances ----------- 189
 Test instances --------------- 48
-Accuracy --------------------- 68.75 %
-Precision -------------------- 21.05 %
+Accuracy --------------------- 62.50 %
+Precision -------------------- 28.00 %
 Recall ----------------------- 100.00 %
-F-score ---------------------- 34.78 %
+F-score ---------------------- 43.75 %
 * Inference of attribute proto=udp:
-Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-Membership attack ------------ Accuracy: 89.47 % Precision: 75.00 % Recall: 25.00 %
+Baseline attack -------------- Accuracy: 98.95 % Precision: 100.00 % Recall: 90.00 %
+Black box attack ------------- Accuracy: 98.95 % Precision: 100.00 % Recall: 90.00 %
+Membership attack ------------ Accuracy: 94.74 % Precision: 85.71 % Recall: 60.00 %
 * Inference of attribute conn_state=SF:
-Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-Membership attack ------------ Accuracy: 33.68 % Precision: 33.68 % Recall: 100.00 %
+Baseline attack -------------- Accuracy: 98.95 % Precision: 100.00 % Recall: 97.06 %
+Black box attack ------------- Accuracy: 98.95 % Precision: 100.00 % Recall: 97.06 %
+Membership attack ------------ Accuracy: 35.79 % Precision: 35.79 % Recall: 100.00 %
 * Inference of attribute conn_state=S0:
-Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Baseline attack -------------- Accuracy: 98.95 % Precision: 100.00 % Recall: 98.39 %
 Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-Membership attack ------------ Accuracy: 66.32 % Precision: 66.32 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 65.26 % Precision: 65.26 % Recall: 100.00 %
 * Inference of attribute history=ShADadttfF:
-Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Baseline attack -------------- Accuracy: 97.89 % Precision: 100.00 % Recall: 97.83 %
+Black box attack ------------- Accuracy: 97.89 % Precision: 100.00 % Recall: 97.83 %
 Membership attack ------------ Accuracy: 96.84 % Precision: 96.84 % Recall: 100.00 %
 * Inference of attribute history=S:
-Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-Membership attack ------------ Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Baseline attack -------------- Accuracy: 98.95 % Precision: 100.00 % Recall: 98.90 %
+Black box attack ------------- Accuracy: 98.95 % Precision: 100.00 % Recall: 98.90 %
+Membership attack ------------ Accuracy: 95.79 % Precision: 95.79 % Recall: 100.00 %
 * Inference of attribute history=Dd:
-Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-Membership attack ------------ Accuracy: 36.84 % Precision: 36.84 % Recall: 100.00 %
+Baseline attack -------------- Accuracy: 98.95 % Precision: 100.00 % Recall: 97.44 %
+Black box attack ------------- Accuracy: 98.95 % Precision: 100.00 % Recall: 97.44 %
+Membership attack ------------ Accuracy: 41.05 % Precision: 41.05 % Recall: 100.00 %
 * Inference of attribute history=D:
 Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
 Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-Membership attack ------------ Accuracy: 75.79 % Precision: 75.79 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 69.47 % Precision: 69.47 % Recall: 100.00 %
+
+
+XGBoost ---------------------- v. 0.72 (robust: True)
+Read dataset ----------------- data/CTU-44-1.csv
+Attributes ------------------- 22
+Classes ---------------------- malicious, benign
+Training instances ----------- 189
+Test instances --------------- 48
+Accuracy --------------------- 97.92 %
+Precision -------------------- 85.71 %
+Recall ----------------------- 100.00 %
+F-score ---------------------- 92.31 %
+* Inference of attribute proto=udp:
+Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 92.63 % Precision: 100.00 % Recall: 0.00 %
+* Inference of attribute conn_state=SF:
+Baseline attack -------------- Accuracy: 98.95 % Precision: 100.00 % Recall: 97.06 %
+Black box attack ------------- Accuracy: 98.95 % Precision: 100.00 % Recall: 97.06 %
+Membership attack ------------ Accuracy: 67.37 % Precision: 71.43 % Recall: 14.71 %
+* Inference of attribute conn_state=S0:
+Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 63.16 % Precision: 64.52 % Recall: 96.77 %
+* Inference of attribute history=ShADadttfF:
+Baseline attack -------------- Accuracy: 98.95 % Precision: 100.00 % Recall: 98.92 %
+Black box attack ------------- Accuracy: 98.95 % Precision: 100.00 % Recall: 98.92 %
+Membership attack ------------ Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+* Inference of attribute history=S:
+Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 95.79 % Precision: 95.79 % Recall: 100.00 %
+* Inference of attribute history=Dd:
+Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 37.89 % Precision: 37.89 % Recall: 100.00 %
+* Inference of attribute history=D:
+Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 69.47 % Precision: 69.47 % Recall: 100.00 %
 ```
 
 Dataset [CTU-Malware-Capture-20-1](../data/CTU-20-1.csv) (99.5 / 0.5 split)
 
-**Non-robust**
-
-```text
-Read dataset ----------------- ./data/CTU-20-1.csv
+```
+XGBoost ---------------------- v. 0.72 (robust: False)
+Read dataset ----------------- data/CTU-20-1.csv
 Attributes ------------------- 23
 Classes ---------------------- malicious, benign
 Training instances ----------- 2567
@@ -156,71 +157,66 @@ Precision -------------------- 100.00 %
 Recall ----------------------- 100.00 %
 F-score ---------------------- 100.00 %
 * Inference of attribute proto=tcp:
-Baseline attack -------------- Accuracy: 99.84 % Precision: 99.84 % Recall: 100.00 %
-Black box attack ------------- Accuracy: 99.92 % Precision: 99.92 % Recall: 100.00 %
-Membership attack ------------ Accuracy: 0.62 % Precision: 100.00 % Recall: 0.00 %
+Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 99.69 % Precision: 99.69 % Recall: 100.00 %
 * Inference of attribute conn_state=S0:
-Baseline attack -------------- Accuracy: 99.92 % Precision: 100.00 % Recall: 99.88 %
-Black box attack ------------- Accuracy: 99.92 % Precision: 100.00 % Recall: 99.88 %
-Membership attack ------------ Accuracy: 66.74 % Precision: 66.69 % Recall: 99.77 %
+Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 66.20 % Precision: 66.20 % Recall: 100.00 %
 * Inference of attribute conn_state=SF:
-Baseline attack -------------- Accuracy: 99.92 % Precision: 99.77 % Recall: 100.00 %
-Black box attack ------------- Accuracy: 99.92 % Precision: 99.77 % Recall: 100.00 %
-Membership attack ------------ Accuracy: 33.64 % Precision: 33.64 % Recall: 100.00 %
+Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 33.80 % Precision: 33.80 % Recall: 100.00 %
 * Inference of attribute history=D:
 Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
 Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-Membership attack ------------ Accuracy: 66.90 % Precision: 66.90 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 66.51 % Precision: 66.51 % Recall: 100.00 %
 * Inference of attribute history=Dd:
 Baseline attack -------------- Accuracy: 99.92 % Precision: 100.00 % Recall: 99.77 %
-Black box attack ------------- Accuracy: 99.84 % Precision: 100.00 % Recall: 99.54 %
-Membership attack ------------ Accuracy: 33.80 % Precision: 33.80 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 99.92 % Precision: 100.00 % Recall: 99.77 %
+Membership attack ------------ Accuracy: 33.88 % Precision: 33.88 % Recall: 100.00 %
+* Inference of attribute history=S:
+Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 99.69 % Precision: 99.69 % Recall: 100.00 %
+
+
+XGBoost ---------------------- v. 0.72 (robust: True)
+Read dataset ----------------- data/CTU-20-1.csv
+Attributes ------------------- 23
+Classes ---------------------- malicious, benign
+Training instances ----------- 2567
+Test instances --------------- 642
+Accuracy --------------------- 100.00 %
+Precision -------------------- 100.00 %
+Recall ----------------------- 100.00 %
+F-score ---------------------- 100.00 %
+* Inference of attribute proto=tcp:
+Baseline attack -------------- Accuracy: 99.92 % Precision: 99.92 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 99.92 % Precision: 99.92 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 67.13 % Precision: 99.88 % Recall: 67.03 %
+* Inference of attribute conn_state=S0:
+Baseline attack -------------- Accuracy: 99.92 % Precision: 100.00 % Recall: 99.88 %
+Black box attack ------------- Accuracy: 99.92 % Precision: 100.00 % Recall: 99.88 %
+Membership attack ------------ Accuracy: 67.13 % Precision: 67.03 % Recall: 99.88 %
+* Inference of attribute conn_state=SF:
+Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 33.33 % Precision: 33.33 % Recall: 100.00 %
+* Inference of attribute history=D:
+Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 67.21 % Precision: 67.21 % Recall: 100.00 %
+* Inference of attribute history=Dd:
+Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 33.33 % Precision: 33.33 % Recall: 100.00 %
 * Inference of attribute history=S:
 Baseline attack -------------- Accuracy: 99.92 % Precision: 100.00 % Recall: 99.92 %
 Black box attack ------------- Accuracy: 99.92 % Precision: 100.00 % Recall: 99.92 %
 Membership attack ------------ Accuracy: 99.53 % Precision: 99.53 % Recall: 100.00 %
 ```
-
-**Robust**
-
-```
-XGBoost version -------------- 0.72
-Read dataset ----------------- /Volumes/Storage/cad/data/CTU-20-1.csv
-Attributes ------------------- 23
-Classes ---------------------- malicious, benign
-Training instances ----------- 2567
-Test instances --------------- 642
-Accuracy --------------------- 100.00 %
-Precision -------------------- 100.00 %
-Recall ----------------------- 100.00 %
-F-score ---------------------- 100.00 %
-* Inference of attribute proto=tcp:
-Baseline attack -------------- Accuracy: 99.69 % Precision: 99.69 % Recall: 100.00 %
-Black box attack ------------- Accuracy: 99.69 % Precision: 99.69 % Recall: 100.00 %
-Membership attack ------------ Accuracy: 0.78 % Precision: 100.00 % Recall: 0.00 %
-* Inference of attribute conn_state=S0:
-Baseline attack -------------- Accuracy: 99.84 % Precision: 100.00 % Recall: 99.77 %
-Black box attack ------------- Accuracy: 99.84 % Precision: 100.00 % Recall: 99.77 %
-Membership attack ------------ Accuracy: 66.67 % Precision: 66.72 % Recall: 99.53 %
-* Inference of attribute conn_state=SF:
-Baseline attack -------------- Accuracy: 99.92 % Precision: 100.00 % Recall: 99.77 %
-Black box attack ------------- Accuracy: 99.92 % Precision: 100.00 % Recall: 99.77 %
-Membership attack ------------ Accuracy: 33.72 % Precision: 33.72 % Recall: 100.00 %
-* Inference of attribute history=D:
-Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-Membership attack ------------ Accuracy: 66.98 % Precision: 66.98 % Recall: 100.00 %
-* Inference of attribute history=Dd:
-Baseline attack -------------- Accuracy: 99.69 % Precision: 100.00 % Recall: 99.08 %
-Black box attack ------------- Accuracy: 99.77 % Precision: 100.00 % Recall: 99.31 %
-Membership attack ------------ Accuracy: 33.88 % Precision: 33.88 % Recall: 100.00 %
-* Inference of attribute history=S:
-Baseline attack -------------- Accuracy: 99.84 % Precision: 100.00 % Recall: 99.84 %
-Black box attack ------------- Accuracy: 99.84 % Precision: 100.00 % Recall: 99.84 %
-Membership attack ------------ Accuracy: 99.53 % Precision: 99.53 % Recall: 100.00 %
-```
-
-==
 
 ## ZOO Evasion attack
 
