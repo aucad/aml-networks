@@ -16,14 +16,14 @@ Specify input data to use:
 python src/tree_xg.py ./path/to/input_data.csv
 ```
 """
+
 from sys import argv
 
 import xgboost as xgb
+from art.estimators.classification import XGBoostClassifier
 
 import tree_utils as tu
 from tree_utils import DEFAULT_DS
-
-from art.estimators.classification import XGBoostClassifier
 
 
 def formatter(x, y):
@@ -64,6 +64,7 @@ def train_tree(dataset=DEFAULT_DS, test_size=.1):
         num_boost_round=10,
         evals=evallist)
 
+    tu.show('XGBoost version', xgb.__version__)
     tu.show('Read dataset', dataset)
     tu.show('Attributes', len(attrs))
     tu.show('Classes', ", ".join([tu.text_label(l) for l in classes]))

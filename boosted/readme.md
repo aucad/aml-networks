@@ -2,7 +2,35 @@
 
 Adversarial attacks applied to XGBoost classifier.
 
-## Non-robust XGBoost
+## Switching XGBoost version
+
+The non-robust version can be installed via pip:
+
+```
+pip install xgboost  
+```
+
+Uninstall this package to switch between robust/non-robust:
+
+```
+pip uninstall xgboost
+```
+
+Robust XGBoost uses [RobustTrees](https://github.com/chenhongge/RobustTrees) classifier implementation.
+It must be built locally,  [see instructions here](https://github.com/chenhongge/RobustTrees/tree/master/python-package#from-source).
+
+After locally building, set up Python env to use this classifier version:
+
+```
+python -m pip install -e "/absolute/local/path/to/RobustTrees/python-package"
+```
+
+Then repeat the attacks as before using the robust classifier. 
+
+The attacks using XGBoost classifier will print out the classifier version; the robust will display `0.72`
+(the closest comparable non-robust from pip is `pip install xgboost==0.72.1`; or current latest is `1.6.1`).
+
+### Non-robust XGBoost
 
 #### Non-robust XGBoost Attribute Inference
 
@@ -114,7 +142,6 @@ Applying Zeroth-Order Optimization (ZOO) Attack:
 - green circles: benign training 
 - red crosses: adversarial modified instance
 - black line: difference between original and adversarial
-
 
 Dataset: [CTU-Malware-Capture-44-1](../data/CTU-44-1.csv) (90 / 10 split)
 
