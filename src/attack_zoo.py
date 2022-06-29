@@ -13,6 +13,7 @@ python src/attack_zoo.py
 ```
 """
 
+from sys import argv
 from itertools import combinations
 
 import numpy as np
@@ -166,6 +167,8 @@ if __name__ == '__main__':
     from os import path
     from train_xg import train, predict, formatter
 
-    plot_path = path.join('adversarial_xg', 'non_robust')
+    ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
+    plot_path = path.join('', 'zoo_result')
 
-    zoo_attack(train, formatter, predict, plot_path, test_size=0)
+    zoo_attack(train, formatter, predict, plot_path,
+               dataset=ds, test_size=0, max=300, robust=False)

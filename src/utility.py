@@ -34,7 +34,7 @@ def normalize(data):
     return data
 
 
-def load_csv_data(dataset_path, test_size=0.1):
+def load_csv_data(dataset_path, test_size=0.1, max=-1):
     """Read dataset and split to train/test using random sampling."""
 
     df = pd.read_csv(dataset_path)
@@ -52,6 +52,9 @@ def load_csv_data(dataset_path, test_size=0.1):
 
     train_x = normalize(np.array(train)[:, :-1])
     train_y = np.array(train)[:, -1].astype(int).flatten()
+    if max > 0:
+        train_x, train_y = train_x[: max, :], train_y[: max]
+
     classes = np.unique(train_y)
 
     return attrs, classes, train_x, train_y, test_x, test_y

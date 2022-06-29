@@ -34,11 +34,18 @@ def predict(model, data):
     return tmp.argmax(axis=1)
 
 
-def train(dataset=tu.DEFAULT_DS, test_size=.1, robust=False):
-    """Train a classifier using XGBoost."""
+def train(dataset=tu.DEFAULT_DS, test_size=.1, robust=False, max=-1):
+    """Train a classifier using XGBoost.
+
+    Arguments:
+        dataset - path to dataset
+        test_size - 0.0 < 1.0 percentage split for test set
+        robust - set to True to use robust training
+        max - max cap for number of training instances
+    """
 
     attrs, classes, train_x, train_y, test_x, test_y = \
-        tu.load_csv_data(dataset, test_size)
+        tu.load_csv_data(dataset, test_size, max=max)
 
     dtrain = formatter(train_x, train_y)
     evallist = [(dtrain, 'eval'), (dtrain, 'train')]
