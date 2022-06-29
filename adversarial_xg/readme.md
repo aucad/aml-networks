@@ -3,9 +3,9 @@
 Adversarial attacks applied to XGBoost classifier.
 
 We use XGBoost [RobustTrees](https://github.com/chenhongge/RobustTrees) classifier implementation.
-It must be built locally,  [following instructions here](https://github.com/chenhongge/RobustTrees/tree/master/python-package#from-source).
+It must be built locally  [following instructions here](https://github.com/chenhongge/RobustTrees/tree/master/python-package#from-source).
 
-After locally building, set up Python env to use this classifier version:
+After local build, set up Python environment to use this classifier version:
 
 ```
 python -m pip install -e "/absolute/local/path/to/RobustTrees/python-package"
@@ -13,14 +13,15 @@ python -m pip install -e "/absolute/local/path/to/RobustTrees/python-package"
 
 Then run the attacks using the robust classifier. Per Instructions:
 
-> Configuration Parameters
+> **Configuration Parameters**
+> 
 > We added two additional parameters to XGBoost:
 > 
-> (1) tree_method controls which training method to use. We add a new option robust_exact for 
-> this parameter. Setting tree_method = robust_exact will use our proposed robust training. 
+> (1) tree_method controls which training method to use. We add a new option `robust_exact` for 
+> this parameter. Setting `tree_method = robust_exact` will use our proposed robust training. 
 > For other training methods, please refer to XGBoost documentation.
 > 
-> (2) robust_eps is the L inifity perturbation norm (epsilon) used in training. Since the same 
+> (2) `robust_eps` is the L inifity perturbation norm (epsilon) used in training. Since the same 
 > epsilon value will be applied for all features, it is recommended to normalize your data 
 > (e.g., make sure all features are in range 0 - 1). Normalization will not change tree performance
 > 
@@ -33,7 +34,7 @@ python src/run_attacks.py
 ```
 
 will run all attacks for robust and non-robust configurations on default dataset. Append path to dataset
-to use a different data source:
+to use a different data set:
 
 ```
 python src/run_attacks.py ./path/to/input_data.csv
