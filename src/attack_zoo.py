@@ -167,6 +167,6 @@ if __name__ == '__main__':
     from os import path
     from tree_xg import train_tree, predict, formatter
 
-    plot_path = path.join('boosted', 'non_robust')
+    plot_path = path.join('adversarial_xg', 'non_robust')
 
     zoo_attack(train_tree, formatter, predict, plot_path, test_size=0)

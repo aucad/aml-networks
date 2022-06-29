@@ -24,10 +24,10 @@ python3 -m pip install tensorflow-macos
 
 ## Directory organization
 
-| Directory     | Description                                          |
-|:--------------|:-----------------------------------------------------|
-| `adversarial` | Results of adversarial attacks on decision trees     |
-| `boosted`     | Results of adversarial attacks on XGBoost classifier |
-| `data`        | Preprocessed data sets for running various attacks   |
-| `iot23`       | Comparison of classifiers, obtained using Weka       |
-| `src/`        | Source code files                                    |
+| Directory          | Description                                                 |
+|:-------------------|:------------------------------------------------------------|
+| `adversarial_tree` | Results of adversarial attacks on decision trees            |
+| `adversarial_xg`   | Results of adversarial attacks on XGBoost classifier        |
+| `cls_comparisons`  | Comparison of classifiers, on IoT data, obtained using Weka |
+| `data`             | Preprocessed data sets for running various attacks          |
+| `src/`             | Source code files                                           |

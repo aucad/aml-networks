@@ -30,11 +30,11 @@ Then repeat the attacks as before using the robust classifier.
 The attacks using XGBoost classifier will print out the classifier version; the robust will display `0.72`
 (the closest comparable non-robust from pip is `pip install xgboost==0.72.1`; or current latest is `1.6.1`).
 
-### Non-robust XGBoost
-
-#### Non-robust XGBoost Attribute Inference
+## Attribute Inference Attack
 
 Dataset: [CTU-Malware-Capture-44-1](../data/CTU-44-1.csv) (90 / 10 split)
+
+#### Non-Robust
 
 ```text
 python src/attack_inf.py
@@ -134,7 +134,7 @@ Membership attack ------------ Accuracy: 99.53 % Precision: 99.53 % Recall: 100.
 [BB]: https://adversarial-robustness-toolbox.readthedocs.io/en/latest/modules/attacks/inference/attribute_inference.html#attribute-inference-black-box
 [MS]: https://adversarial-robustness-toolbox.readthedocs.io/en/latest/modules/attacks/inference/attribute_inference.html#attribute-inference-membership
 
-#### Non-robust XGBoost ZOO Evasion attack
+## ZOO Evasion attack
 
 Applying Zeroth-Order Optimization (ZOO) Attack:
 
@@ -145,10 +145,17 @@ Applying Zeroth-Order Optimization (ZOO) Attack:
 
 Dataset: [CTU-Malware-Capture-44-1](../data/CTU-44-1.csv) (90 / 10 split)
 
-![img](non_robust_1.png) 
+| Non-Robust XGBoost       | Robust XGBoost       |
+|--------------------------|----------------------|
+| ![img](non_robust_1.png) | ![img](robust_1.png) |
+| ![img](non_robust_2.png) | ![img](robust_2.png) |
+| ![img](non_robust_3.png) | ![img](robust_3.png) |
+| ![img](non_robust_4.png) | ![img](robust_4.png) |
 
-![img](non_robust_2.png) 
 
-![img](non_robust_3.png) 
 
-![img](non_robust_4.png) 
+
+
+
+
+ 

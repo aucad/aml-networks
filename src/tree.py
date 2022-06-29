@@ -82,5 +82,5 @@ def train_tree(dataset=DEFAULT_DS, test_size=.1, plot=False, fn=None):
 
 if __name__ == '__main__':
     ds = argv[1] if len(argv) > 1 else DEFAULT_DS
-    name = path.join('adversarial', Path(ds).stem)
+    name = path.join('adversarial_tree', Path(ds).stem)
     train_tree(ds, 0.2, False, name)
