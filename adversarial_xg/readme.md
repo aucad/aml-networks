@@ -28,13 +28,34 @@ python -m pip install -e "/absolute/local/path/to/RobustTrees/python-package"
 Then repeat the attacks as before using the robust classifier. 
 
 The attacks using XGBoost classifier will print out the classifier version; the robust will display `0.72`
-(the closest comparable non-robust from pip is `pip install xgboost==0.72.1`; or current latest is `1.6.1`).
+(the closest comparable non-robust from pip is `pip install xgboost==0.72.1` or current latest is `1.6.1`).
+
+===
 
 ## Attribute Inference Attack
 
+**Inference attack methods**
+
+- [**Baseline attack**][BL]: Implementation of a baseline attribute inference, not using a model. The idea is to 
+    train a simple neural network to learn the attacked feature from the rest of the features. Should be used to 
+    compare with other attribute inference results. 
+
+- [**Black box attack**][BB]: Implementation of a simple black-box attribute inference attack. The idea is to train 
+    a simple neural network to learn the attacked feature from the rest of the features and the model’s predictions. 
+    Assumes the availability of the attacked model’s predictions for the samples under attack, in addition to the rest 
+    of the feature values. If this is not available, the true class label of the samples may be used as a proxy. 
+
+- [**Membership attack**][MS]: Implementation of an attribute inference attack that utilizes a membership inference 
+    attack. The idea is to find the target feature value that causes the membership inference attack to classify the 
+    sample as a member with the highest confidence.
+
+[BL]: https://adversarial-robustness-toolbox.readthedocs.io/en/latest/modules/attacks/inference/attribute_inference.html#attribute-inference-baseline
+[BB]: https://adversarial-robustness-toolbox.readthedocs.io/en/latest/modules/attacks/inference/attribute_inference.html#attribute-inference-black-box
+[MS]: https://adversarial-robustness-toolbox.readthedocs.io/en/latest/modules/attacks/inference/attribute_inference.html#attribute-inference-membership
+
 Dataset: [CTU-Malware-Capture-44-1](../data/CTU-44-1.csv) (90 / 10 split)
 
-#### Non-Robust
+**Non-Robust**
 
 ```text
 python src/attack_inf.py
@@ -77,7 +98,52 @@ Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 10
 Membership attack ------------ Accuracy: 70.79 % Precision: 70.79 % Recall: 100.00 %
 ```
 
+**Robust**
+
+```
+XGBoost version -------------- 0.72
+Read dataset ----------------- data/CTU-44-1.csv
+Attributes ------------------- 22
+Classes ---------------------- malicious, benign
+Training instances ----------- 189
+Test instances --------------- 48
+Accuracy --------------------- 68.75 %
+Precision -------------------- 21.05 %
+Recall ----------------------- 100.00 %
+F-score ---------------------- 34.78 %
+* Inference of attribute proto=udp:
+Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 89.47 % Precision: 75.00 % Recall: 25.00 %
+* Inference of attribute conn_state=SF:
+Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 33.68 % Precision: 33.68 % Recall: 100.00 %
+* Inference of attribute conn_state=S0:
+Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 66.32 % Precision: 66.32 % Recall: 100.00 %
+* Inference of attribute history=ShADadttfF:
+Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 96.84 % Precision: 96.84 % Recall: 100.00 %
+* Inference of attribute history=S:
+Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+* Inference of attribute history=Dd:
+Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 36.84 % Precision: 36.84 % Recall: 100.00 %
+* Inference of attribute history=D:
+Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 75.79 % Precision: 75.79 % Recall: 100.00 %
+```
+
 Dataset [CTU-Malware-Capture-20-1](../data/CTU-20-1.csv) (99.5 / 0.5 split)
+
+**Non-robust**
 
 ```text
 Read dataset ----------------- ./data/CTU-20-1.csv
@@ -115,24 +181,46 @@ Black box attack ------------- Accuracy: 99.92 % Precision: 100.00 % Recall: 99.
 Membership attack ------------ Accuracy: 99.53 % Precision: 99.53 % Recall: 100.00 %
 ```
 
-**Inference attack methods**
+**Robust**
 
-- [**Baseline attack**][BL]: Implementation of a baseline attribute inference, not using a model. The idea is to 
-    train a simple neural network to learn the attacked feature from the rest of the features. Should be used to 
-    compare with other attribute inference results. 
+```
+XGBoost version -------------- 0.72
+Read dataset ----------------- /Volumes/Storage/cad/data/CTU-20-1.csv
+Attributes ------------------- 23
+Classes ---------------------- malicious, benign
+Training instances ----------- 2567
+Test instances --------------- 642
+Accuracy --------------------- 100.00 %
+Precision -------------------- 100.00 %
+Recall ----------------------- 100.00 %
+F-score ---------------------- 100.00 %
+* Inference of attribute proto=tcp:
+Baseline attack -------------- Accuracy: 99.69 % Precision: 99.69 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 99.69 % Precision: 99.69 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 0.78 % Precision: 100.00 % Recall: 0.00 %
+* Inference of attribute conn_state=S0:
+Baseline attack -------------- Accuracy: 99.84 % Precision: 100.00 % Recall: 99.77 %
+Black box attack ------------- Accuracy: 99.84 % Precision: 100.00 % Recall: 99.77 %
+Membership attack ------------ Accuracy: 66.67 % Precision: 66.72 % Recall: 99.53 %
+* Inference of attribute conn_state=SF:
+Baseline attack -------------- Accuracy: 99.92 % Precision: 100.00 % Recall: 99.77 %
+Black box attack ------------- Accuracy: 99.92 % Precision: 100.00 % Recall: 99.77 %
+Membership attack ------------ Accuracy: 33.72 % Precision: 33.72 % Recall: 100.00 %
+* Inference of attribute history=D:
+Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 66.98 % Precision: 66.98 % Recall: 100.00 %
+* Inference of attribute history=Dd:
+Baseline attack -------------- Accuracy: 99.69 % Precision: 100.00 % Recall: 99.08 %
+Black box attack ------------- Accuracy: 99.77 % Precision: 100.00 % Recall: 99.31 %
+Membership attack ------------ Accuracy: 33.88 % Precision: 33.88 % Recall: 100.00 %
+* Inference of attribute history=S:
+Baseline attack -------------- Accuracy: 99.84 % Precision: 100.00 % Recall: 99.84 %
+Black box attack ------------- Accuracy: 99.84 % Precision: 100.00 % Recall: 99.84 %
+Membership attack ------------ Accuracy: 99.53 % Precision: 99.53 % Recall: 100.00 %
+```
 
-- [**Black box attack**][BB]: Implementation of a simple black-box attribute inference attack. The idea is to train 
-    a simple neural network to learn the attacked feature from the rest of the features and the model’s predictions. 
-    Assumes the availability of the attacked model’s predictions for the samples under attack, in addition to the rest 
-    of the feature values. If this is not available, the true class label of the samples may be used as a proxy. 
-
-- [**Membership attack**][MS]: Implementation of an attribute inference attack that utilizes a membership inference 
-    attack. The idea is to find the target feature value that causes the membership inference attack to classify the 
-    sample as a member with the highest confidence.
-
-[BL]: https://adversarial-robustness-toolbox.readthedocs.io/en/latest/modules/attacks/inference/attribute_inference.html#attribute-inference-baseline
-[BB]: https://adversarial-robustness-toolbox.readthedocs.io/en/latest/modules/attacks/inference/attribute_inference.html#attribute-inference-black-box
-[MS]: https://adversarial-robustness-toolbox.readthedocs.io/en/latest/modules/attacks/inference/attribute_inference.html#attribute-inference-membership
+==
 
 ## ZOO Evasion attack
 
