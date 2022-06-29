@@ -61,7 +61,7 @@ def train(dataset=tu.DEFAULT_DS, test_size=.1, plot=False, fn=None):
 
     tu.show('Read dataset', dataset)
     tu.show('Attributes', len(attrs))
-    tu.show('Classes', ", ".join([str(l) for l in classes]))
+    tu.show('Classes', ", ".join([tu.text_label(l) for l in classes]))
     tu.show('Training instances', len(train_x))
     tu.show('Test instances', len(test_x))
 

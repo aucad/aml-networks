@@ -43,50 +43,50 @@ Output of black-box inference on attributes `proto=udp` and `conn_state=SF`
 ```text
 Read dataset ----------------- data/CTU-44-1.csv
 Attributes ------------------- 22
-Classes ---------------------- 0, 1
+Classes ---------------------- malicious, benign
 Training instances ----------- 189
 Test instances --------------- 48
 Test split ------------------- 3/45
-Accuracy --------------------- 81.25 %
-Precision -------------------- 25.00 %
+Accuracy --------------------- 100.00 %
+Precision -------------------- 100.00 %
 Recall ----------------------- 100.00 %
-F-score ---------------------- 40.00 %
+F-score ---------------------- 100.00 %
 * Inference of attribute proto=udp:
+Baseline attack -------------- Accuracy: 98.95 % Precision: 100.00 % Recall: 90.91 %
+Black box attack ------------- Accuracy: 98.95 % Precision: 100.00 % Recall: 90.91 %
+White box 1 attack ----------- Accuracy: 97.89 % Precision: 90.91 % Recall: 90.91 %
+White box 2 attack ----------- Accuracy: 87.37 % Precision: 0.00 % Recall: 0.00 %
+Membership attack ------------ Accuracy: 11.58 % Precision: 11.58 % Recall: 100.00 %
+* Inference of attribute conn_state=SF:
 Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
 Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-White box 1 attack ----------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-White box 2 attack ----------- Accuracy: 93.68 % Precision: 100.00 % Recall: 0.00 %
-Membership attack ------------ Accuracy: 93.68 % Precision: 50.00 % Recall: 16.67 %
-* Inference of attribute conn_state=SF:
-Baseline attack -------------- Accuracy: 98.95 % Precision: 100.00 % Recall: 96.77 %
-Black box attack ------------- Accuracy: 98.95 % Precision: 100.00 % Recall: 96.77 %
-White box 1 attack ----------- Accuracy: 67.37 % Precision: 100.00 % Recall: 0.00 %
-White box 2 attack ----------- Accuracy: 67.37 % Precision: 100.00 % Recall: 0.00 %
-Membership attack ------------ Accuracy: 32.63 % Precision: 32.63 % Recall: 100.00 %
+White box 1 attack ----------- Accuracy: 61.05 % Precision: 100.00 % Recall: 0.00 %
+White box 2 attack ----------- Accuracy: 61.05 % Precision: 100.00 % Recall: 0.00 %
+Membership attack ------------ Accuracy: 38.95 % Precision: 38.95 % Recall: 100.00 %
 * Inference of attribute conn_state=S0:
+Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+White box 1 attack ----------- Accuracy: 61.05 % Precision: 61.05 % Recall: 100.00 %
+White box 2 attack ----------- Accuracy: 61.05 % Precision: 61.05 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 61.05 % Precision: 61.05 % Recall: 100.00 %
+* Inference of attribute history=S:
+Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
+White box 1 attack ----------- Accuracy: 92.63 % Precision: 92.63 % Recall: 100.00 %
+White box 2 attack ----------- Accuracy: 92.63 % Precision: 92.63 % Recall: 100.00 %
+Membership attack ------------ Accuracy: 92.63 % Precision: 92.63 % Recall: 100.00 %
+* Inference of attribute history=Dd:
+Baseline attack -------------- Accuracy: 98.95 % Precision: 100.00 % Recall: 97.56 %
+Black box attack ------------- Accuracy: 98.95 % Precision: 100.00 % Recall: 97.56 %
+White box 1 attack ----------- Accuracy: 56.84 % Precision: 100.00 % Recall: 0.00 %
+White box 2 attack ----------- Accuracy: 56.84 % Precision: 100.00 % Recall: 0.00 %
+Membership attack ------------ Accuracy: 43.16 % Precision: 43.16 % Recall: 100.00 %
+* Inference of attribute history=D:
 Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
 Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
 White box 1 attack ----------- Accuracy: 68.42 % Precision: 68.42 % Recall: 100.00 %
 White box 2 attack ----------- Accuracy: 68.42 % Precision: 68.42 % Recall: 100.00 %
 Membership attack ------------ Accuracy: 68.42 % Precision: 68.42 % Recall: 100.00 %
-* Inference of attribute history=S:
-Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-White box 1 attack ----------- Accuracy: 96.84 % Precision: 96.84 % Recall: 100.00 %
-White box 2 attack ----------- Accuracy: 96.84 % Precision: 96.84 % Recall: 100.00 %
-Membership attack ------------ Accuracy: 96.84 % Precision: 96.84 % Recall: 100.00 %
-* Inference of attribute history=Dd:
-Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-White box 1 attack ----------- Accuracy: 65.26 % Precision: 100.00 % Recall: 0.00 %
-White box 2 attack ----------- Accuracy: 65.26 % Precision: 100.00 % Recall: 0.00 %
-Membership attack ------------ Accuracy: 34.74 % Precision: 34.74 % Recall: 100.00 %
-* Inference of attribute history=D:
-Baseline attack -------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-Black box attack ------------- Accuracy: 100.00 % Precision: 100.00 % Recall: 100.00 %
-White box 1 attack ----------- Accuracy: 71.58 % Precision: 71.58 % Recall: 100.00 %
-White box 2 attack ----------- Accuracy: 71.58 % Precision: 71.58 % Recall: 100.00 %
-Membership attack ------------ Accuracy: 71.58 % Precision: 71.58 % Recall: 100.00 %
 ```
 
 **Inference attack methods**
@@ -104,16 +104,18 @@ Membership attack ------------ Accuracy: 71.58 % Precision: 71.58 % Recall: 100.
     the attacked model’s predictions for the samples under attack, in addition to access to the model itself and the 
     rest of the feature values. If this is not available, the true class label of the samples may be used as a proxy. 
     Also assumes that the attacked feature is discrete or categorical, with limited number of possible values, for 
-    example: a boolean feature. Paper link: <https://dl.acm.org/doi/10.1145/2810103.2813677>
+    example: a boolean feature. Paper link: <https://dl.acm.org/doi/10.1145/2810103.2813677> [^1]
 
 - [**White-box 2 attack**][W2]: Implementation of Fredrikson et al. white box inference attack for decision trees. 
     Assumes that the attacked feature is discrete or categorical, with limited number of possible values, for 
-    example: a boolean feature. Paper link: <https://dl.acm.org/doi/10.1145/2810103.2813677>
+    example: a boolean feature. Paper link: <https://dl.acm.org/doi/10.1145/2810103.2813677> [^1]
      
 - [**Membership attack**][MS]: Implementation of an attribute inference attack that utilizes a membership inference 
     attack. The idea is to find the target feature value that causes the membership inference attack to classify the 
     sample as a member with the highest confidence.
 
+[^1]: The white-box attacks require base classifier of type `ScikitlearnDecisionTreeClassifier` and therefore are not
+applicable to XGBoost classifier.
   
 ### ZOO Evasion attack
 
