@@ -33,6 +33,8 @@ from sklearn import tree
 
 import utility as tu
 
+formatter = None
+
 
 def predict(model, data):
     return model.predict(data)
@@ -61,6 +63,7 @@ def train(dataset=tu.DEFAULT_DS, test_size=.1, plot=False, fn=None):
 
     tu.show('Read dataset', dataset)
     tu.show('Attributes', len(attrs))
+    tu.show('Classifier', 'decision tree')
     tu.show('Classes', ", ".join([tu.text_label(l) for l in classes]))
     tu.show('Training instances', len(train_x))
     tu.show('Test instances', len(test_x))
@@ -81,5 +84,5 @@ def train(dataset=tu.DEFAULT_DS, test_size=.1, plot=False, fn=None):
 
 if __name__ == '__main__':
     ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
-    name = path.join('adversarial_tree', Path(ds).stem)
+    name = path.join('adversarial_dt', Path(ds).stem)
     train(ds, 0.2, False, name)

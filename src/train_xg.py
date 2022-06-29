@@ -64,9 +64,9 @@ def train(dataset=tu.DEFAULT_DS, test_size=.1, robust=False):
         num_boost_round=10,
         evals=evallist)
 
-    tu.show('XGBoost', f'v. {xgb.__version__} (robust: {robust})')
     tu.show('Read dataset', dataset)
     tu.show('Attributes', len(attrs))
+    tu.show('Classifier', f'XGBoost, robust: {robust}')
     tu.show('Classes', ", ".join([tu.text_label(l) for l in classes]))
     tu.show('Training instances', dtrain.num_row())
     tu.show('Test instances', len(test_x))
