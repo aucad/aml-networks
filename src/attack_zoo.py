@@ -45,9 +45,9 @@ def adversarial_iot(classifier, x_train):
         targeted=False,
         # The initial learning rate for the attack algorithm. Smaller
         # values produce better results but are slower to converge.
-        learning_rate=1e-2,
+        learning_rate=1e-1,
         # The maximum number of iterations.
-        max_iter=1000,
+        max_iter=80,
         # Number of times to adjust constant with binary search
         # (positive value).
         binary_search_steps=10,
@@ -62,7 +62,7 @@ def adversarial_iot(classifier, x_train):
         # True if to use the resizing strategy from the paper: first,
         # compute attack on inputs resized to 32x32, then increase
         # size if needed to 64x64, followed by 128x128.
-        use_resize=True,
+        use_resize=False,
         # True if to use importance sampling when choosing coordinates
         # to update.
         use_importance=False,
@@ -72,7 +72,7 @@ def adversarial_iot(classifier, x_train):
         # generated. Only size 1 is supported.
         batch_size=1,
         # Step size for numerical estimation of derivatives.
-        variable_h=0.1,
+        variable_h=0.3,
         # Show progress bars.
         verbose=True) \
         .generate(x=x_train)

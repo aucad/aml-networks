@@ -5,14 +5,15 @@ CTU-Malware-Capture-44-1, with 237 rows (benign 211, malicious 26), 90 / 10 spli
 [scikit learn decision tree][1]. We then apply various adversarial attacks from the [Adversarial Robustness Toolbox][2]
 to attack this classifier.
 
-
-## Implementation steps
+**Steps***
 
 1. Basic decision tree classifier implementation in `src/tree.py`
 
     ```text
     python src/tree.py 
     ```
+
+   ![image](CTU-44-1.png)   
 
 2. Implement adversarial examples
 
@@ -131,17 +132,13 @@ python src/attack_zoo.py
 - black line: difference between original and adversarial
 
  
-![img](iot-23_1.png) 
+![img](non_robust_1.png) 
  
-![img](iot-23_2.png) 
+![img](non_robust_2.png) 
   
-![img](iot-23_3.png) 
+![img](non_robust_3.png) 
  
-![img](iot-23_4.png) 
-
-### Decision tree visualization
-  
-![image](CTU-44-1.png)   
+![img](non_robust_4.png)
 
   
 <!-- references -->

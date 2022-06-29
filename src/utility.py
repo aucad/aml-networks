@@ -7,17 +7,21 @@ from colorama import Fore, Style  # terminal colors
 from sklearn.model_selection import train_test_split
 
 DEFAULT_DS = 'data/CTU-44-1.csv'
+"""When no dataset is defined, use this one by default."""
 
 
 def text_label(i):
+    """convert text label to numeric"""
     return 'benign' if i == 1 else 'malicious'
 
 
 def int_label(text):
+    """convert numeric label to text label"""
     return 1 if text.lower() == 'benign' else 0
 
 
 def show(msg, value, end='\n'):
+    """Pretty print output with colors and alignment"""
     print(f'{msg} '.ljust(30, '-'), color_text(value), end=end)
 
 
