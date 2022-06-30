@@ -159,7 +159,6 @@ def zoo_attack(cls_loader, fmt, prd, img_path, **cls_kwargs):
     cls, model, attrs, x, y, _, _ = cls_loader(**cls_kwargs)
     data = (x, y, adversarial_iot(cls, x))
     evasions = adv_examples(model, fmt, prd, *data)
-    # if len(evasions) > 0:
     plot(img_path, evasions, attrs, *data)
 
 

@@ -237,6 +237,19 @@ Dataset: [CTU-Malware-Capture-44-1](../data/CTU-44-1.csv) (90 / 10 split)
 | ![img](non_robust_3.png) | ![img](robust_3.png) |
 | ![img](non_robust_4.png) | ![img](robust_4.png) |
 
+## XGBoosted trees visualizations
+
+#### CTU 44-1 
+
+![image](CTU-44-1.png)
+
+#### CTU-1-1
+
+![image](CTU-1-1.png)
+
+#### CTU 20-1
+
+![image](CTU-20-1.png)
 
 
 

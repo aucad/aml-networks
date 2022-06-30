@@ -17,10 +17,14 @@ python src/train_xg.py ./path/to/input_data.csv
 ```
 """
 
+from os import path
+from pathlib import Path
 from sys import argv
 
 import xgboost as xgb
 from art.estimators.classification import XGBoostClassifier
+from matplotlib import pyplot as plt
+from xgboost import plot_tree
 
 import utility as tu
 
@@ -34,7 +38,18 @@ def predict(model, data):
     return tmp.argmax(axis=1)
 
 
-def train(dataset=tu.DEFAULT_DS, test_size=.1, robust=False, max=-1):
+def plot_tree_(clf_, filename="tree"):
+    """Plot the tree and save to file."""
+    plot_tree(clf_, num_trees=20, rankdir='LR')
+    plt.tight_layout()
+    plt.savefig(f'{filename}.png', dpi=200)
+    plt.show()
+
+
+def train(
+        dataset=tu.DEFAULT_DS, test_size=.1, robust=False, max=-1,
+        plot=False, fn=None
+):
     """Train a classifier using XGBoost.
 
     Arguments:
@@ -49,6 +64,7 @@ def train(dataset=tu.DEFAULT_DS, test_size=.1, robust=False, max=-1):
 
     dtrain = formatter(train_x, train_y)
     evallist = [(dtrain, 'eval'), (dtrain, 'train')]
+    pos = 100 * sum([1 for y in train_y if y == 1]) / len(train_y)
 
     model = xgb.train(
         # Booster params
@@ -61,20 +77,21 @@ def train(dataset=tu.DEFAULT_DS, test_size=.1, robust=False, max=-1):
             # which can be further reshaped to ndata * nclass matrix.
             # The result contains predicted probability of each data
             # point belonging to each class.
-            'objective': 'multi:softprob',
             'tree_method': 'robust_exact' if robust else 'exact',
+            'objective': 'multi:softprob',
             'metric': 'multi_logloss',
             'num_class': len(classes),
             'verbosity': 0,
         },
+        num_boost_round=100,
         dtrain=dtrain,
-        num_boost_round=10,
         evals=evallist)
 
     tu.show('Read dataset', dataset)
     tu.show('Attributes', len(attrs))
     tu.show('Classifier', f'XGBoost, robust: {robust}')
     tu.show('Classes', ", ".join([tu.text_label(l) for l in classes]))
+    tu.show('Training split', f'{pos:.1f}/{(100 - pos):.1f}')
     tu.show('Training instances', dtrain.num_row())
     tu.show('Test instances', len(test_x))
 
@@ -87,6 +104,9 @@ def train(dataset=tu.DEFAULT_DS, test_size=.1, robust=False, max=-1):
         predictions = predict(model, dtrain)
         tu.score(train_y, predictions, display=True)
 
+    if plot:
+        plot_tree_(model, fn)
+
     cls = XGBoostClassifier(
         model=model,
         clip_values=(0, 1),
@@ -98,4 +118,5 @@ def train(dataset=tu.DEFAULT_DS, test_size=.1, robust=False, max=-1):
 
 if __name__ == '__main__':
     ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
-    train(ds, 0.05)
+    name = path.join('adversarial_xg', Path(ds).stem)
+    train(ds, 0.05, plot=False, fn=name)

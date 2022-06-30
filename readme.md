@@ -22,6 +22,8 @@ For Apple M1 chip install `tensorflow` separately:
 python3 -m pip install tensorflow-macos
 ```
 
+To visualize xgboost, install [graphviz](https://graphviz.org/) and make sure it is in path.
+
 ## Directory organization
 
 | Directory        | Description                                                 |
