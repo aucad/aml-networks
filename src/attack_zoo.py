@@ -170,4 +170,4 @@ if __name__ == '__main__':
     plot_path = path.join('', 'zoo_result')
 
     zoo_attack(train, formatter, predict, plot_path,
-               dataset=ds, test_size=0, max=300, robust=False)
+               dataset=ds, test_size=0, max=-1, robust=False)

@@ -83,7 +83,7 @@ def train(
             'num_class': len(classes),
             'verbosity': 0,
         },
-        num_boost_round=100,
+        num_boost_round=20,
         dtrain=dtrain,
         evals=evallist)
 
