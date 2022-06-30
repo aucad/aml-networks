@@ -95,7 +95,7 @@ def adv_examples(model, fmt, prd, x_train, y, x_adv):
                    enumerate(zip(original, adversarial)) if x != y]
 
     acc = 100 * len(adv_success) / len(x_adv)
-    tu.show('Evasions', f'{len(adv_success)} ({acc:.2f} %)')
+    tu.show('Evasion success', f'{len(adv_success)} ({acc:.2f} %)')
     return np.array(adv_success)
 
 
