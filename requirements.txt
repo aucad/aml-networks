@@ -1,8 +1,8 @@
-scikit-learn
+scikit-learn==1.1.1
 matplotlib
 colorama
-adversarial-robustness-toolbox
+adversarial-robustness-toolbox==1.11.0
 tensorflow
-numpy
+numpy==1.23.1
 pandas
 torch

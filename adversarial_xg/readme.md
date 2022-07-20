@@ -33,8 +33,8 @@ Then run the attacks using the robust classifier. Per Instructions:
 python src/run_attacks.py
 ```
 
-will run all attacks for robust and non-robust configurations on default dataset. Append path to dataset
-to use a different data set:
+will run all attacks for robust and non-robust configurations on default dataset. Append path to dataset to use a
+different data set:
 
 ```
 python src/run_attacks.py ./path/to/input_data.csv
@@ -44,18 +44,18 @@ python src/run_attacks.py ./path/to/input_data.csv
 
 **Inference attack methods**
 
-- [**Baseline attack**][BL]: Implementation of a baseline attribute inference, not using a model. The idea is to 
-    train a simple neural network to learn the attacked feature from the rest of the features. Should be used to 
-    compare with other attribute inference results. 
+- [**Baseline attack**][BL]: Implementation of a baseline attribute inference, not using a model. The idea is to train a
+  simple neural network to learn the attacked feature from the rest of the features. Should be used to compare with
+  other attribute inference results.
 
-- [**Black box attack**][BB]: Implementation of a simple black-box attribute inference attack. The idea is to train 
-    a simple neural network to learn the attacked feature from the rest of the features and the model’s predictions. 
-    Assumes the availability of the attacked model’s predictions for the samples under attack, in addition to the rest 
-    of the feature values. If this is not available, the true class label of the samples may be used as a proxy. 
+- [**Black box attack**][BB]: Implementation of a simple black-box attribute inference attack. The idea is to train a
+  simple neural network to learn the attacked feature from the rest of the features and the model’s predictions. Assumes
+  the availability of the attacked model’s predictions for the samples under attack, in addition to the rest of the
+  feature values. If this is not available, the true class label of the samples may be used as a proxy.
 
-- [**Membership attack**][MS]: Implementation of an attribute inference attack that utilizes a membership inference 
-    attack. The idea is to find the target feature value that causes the membership inference attack to classify the 
-    sample as a member with the highest confidence.
+- [**Membership attack**][MS]: Implementation of an attribute inference attack that utilizes a membership inference
+  attack. The idea is to find the target feature value that causes the membership inference attack to classify the
+  sample as a member with the highest confidence.
 
 [BL]: https://adversarial-robustness-toolbox.readthedocs.io/en/latest/modules/attacks/inference/attribute_inference.html#attribute-inference-baseline
 [BB]: https://adversarial-robustness-toolbox.readthedocs.io/en/latest/modules/attacks/inference/attribute_inference.html#attribute-inference-black-box

@@ -8,21 +8,21 @@ Link to notes:
 
 ## Setup
 
-Make sure you Python environment is >= 3.8
+Required Python environment: >= 3.8
 
-Install requirements:
+Install required dependencies:
 
 ```
 python -m pip install -q -r requirements.txt
 ```
 
-For Apple M1 chip install `tensorflow` separately:
+For Apple M1/M2 chips, install compatible `tensorflow` separately:
 
 ```
-python3 -m pip install tensorflow-macos
+python3 -m pip install -q tensorflow-macos
 ```
 
-To visualize xgboost, install [graphviz](https://graphviz.org/) and make sure it is in path.
+To visualize XGBoost models, install [graphviz](https://graphviz.org/) and make sure it is in path.
 
 ## Directory organization
 
