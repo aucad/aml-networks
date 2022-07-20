@@ -6,18 +6,19 @@ import pandas as pd
 from colorama import Fore, Style  # terminal colors
 from sklearn.model_selection import train_test_split
 
-DEFAULT_DS = 'data/CTU-44-1.csv'
+DEFAULT_DS = 'data/CTU-1-1.csv'
 """When no dataset is defined, use this one by default."""
+"""We use here a dataset with 50/50 split"""
 
 
 def text_label(i):
     """convert text label to numeric"""
-    return 'benign' if i == 1 else 'malicious'
+    return 'malicious' if i == 1 else 'benign'
 
 
 def int_label(text):
     """convert numeric label to text label"""
-    return 1 if text.lower() == 'benign' else 0
+    return 0 if text.lower() == 'benign' else 1
 
 
 def show(msg, value, end='\n'):
