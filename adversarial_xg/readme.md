@@ -1,7 +1,5 @@
 # Adversarial attacks on XGBoost classifier
 
-Adversarial attacks applied to XGBoost classifier.
-
 We use XGBoost [RobustTrees](https://github.com/chenhongge/RobustTrees) classifier implementation.
 It must be built locally  [following instructions here](https://github.com/chenhongge/RobustTrees/tree/master/python-package#from-source).
 
@@ -25,7 +23,8 @@ Then run the attacks using the robust classifier. Per Instructions:
 > epsilon value will be applied for all features, it is recommended to normalize your data 
 > (e.g., make sure all features are in range 0 - 1). Normalization will not change tree performance
 > 
-> Please refer to XGBoost Documentation for all other parameters used in XGBoost.
+
+Please refer to [XGBoost Documentation](https://xgboost.readthedocs.io/) for all other parameters used in XGBoost.
 
 ## Run attacks
 
@@ -51,22 +50,29 @@ Applying Zeroth-Order Optimization (ZOO) Attack:
 
 Dataset: [CTU-Malware-Capture-1-1](../data/CTU-1-1.csv) (53 / 47 split)
 
-| Results                  |
-|--------------------------|
-| **Non-Robust XGBoost**   |
+**Results**
+
+These plots include only real-valued attributes, because 
+visualizing binary attributes is not very interesting.
+
+| **Non-Robust XGBoost**                 |
+|:-------------------------|
 | ![img](non_robust_1.png) |
-| **Robust XGBoost **      |
+| **Robust XGBoost**       |
 | ![img](robust_1.png)     |
 
 ## XGBoosted trees visualizations
 
-#### CTU 44-1 
-
-![image](CTU-44-1.png)
+These are relevant as different models offer varying opportunities
+for successful attacks.
 
 #### CTU-1-1
 
 ![image](CTU-1-1.png)
+
+#### CTU 44-1 
+
+![image](CTU-44-1.png)
 
 #### CTU 20-1
 
@@ -74,8 +80,8 @@ Dataset: [CTU-Malware-Capture-1-1](../data/CTU-1-1.csv) (53 / 47 split)
 
 ## Notes
 
-- These results previously included [inference attack](../src/attack_inf.py) which is no longer relevant, after
-  narrowing the focus to evasion attacks only.
+These results previously included [inference attack](../src/attack_inf.py) which is no longer relevant after
+  narrowing focus to evasion attacks.
 
 
 
