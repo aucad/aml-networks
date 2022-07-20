@@ -3,6 +3,6 @@ matplotlib
 colorama
 adversarial-robustness-toolbox==1.11.0
 tensorflow
-numpy==1.23.1
+numpy==1.22
 pandas
 torch

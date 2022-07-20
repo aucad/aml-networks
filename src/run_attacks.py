@@ -31,13 +31,6 @@ def plot_path(robust):
 
 
 def run_attacks(dataset):
-    # run same attacks switching robustness option only
-    for opt in robust_options:
-        inf_attack(train,
-                   dataset=dataset,
-                   test_size=0.2,
-                   robust=opt)
-
     for opt in robust_options:
         zoo_attack(train, formatter, predict,
                    img_path=plot_path(opt),
