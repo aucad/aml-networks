@@ -10,7 +10,7 @@ Link to notes:
 
 Required Python environment: 3.8-3.9 [^1]
 
-[^1] : this is a hard requirement. numpy requires >= 3.8; 
+[^1]: this is a hard requirement. numpy requires >= 3.8; 
 robust XGBoost relies on Python features removed since 3.10.
 
 Install required dependencies:
