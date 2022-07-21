@@ -1,6 +1,5 @@
 """
-Simple adversarial example using ART with scikit-learn and applying
-Zeroth-Order Optimization (ZOO) Evasion Attack using decision tree.
+Zeroth-Order Optimization (ZOO) evasion attack using tree-base classifier.
 
 The black-box zeroth-order optimization attack from Pin-Yu Chen et
 al. (2018). This attack is a variant of the C&W attack which uses
@@ -154,6 +153,8 @@ def zoo_attack(cls_loader, fmt, prd, img_path, **cls_kwargs):
 
     Arguments:
          cls_loader - function to load classifier and its data
+         fmt - pre-prediction formatter function for single data instance
+         prd - prediction function that returns class labels for given data
          img_path - dir path and file name for storing plots
     """
     cls, model, attrs, x, y, _, _ = cls_loader(**cls_kwargs)
