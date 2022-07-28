@@ -17,7 +17,6 @@ python src/run_attacks.py ./path/to/input_data.csv
 from os import path
 from sys import argv
 
-from attack_inf import inference_attack as inf_attack
 from attack_zoo import zoo_attack
 from train_xg import train, formatter, predict
 from utility import DEFAULT_DS
@@ -32,11 +31,12 @@ def plot_path(robust):
 
 def run_attacks(dataset):
     for opt in robust_options:
-        zoo_attack(train, formatter, predict,
-                   img_path=plot_path(opt),
-                   dataset=dataset,
-                   test_size=0,
-                   robust=opt)
+        zoo_attack(
+            train, formatter, predict,
+            img_path=plot_path(opt),
+            dataset=dataset,
+            test_size=0,
+            robust=opt)
 
 
 if __name__ == '__main__':

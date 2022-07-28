@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 Apply HopSkipJumpAttack on tree-based classifier.
 
@@ -36,7 +38,10 @@ def run_attack(cls_loader, **cls_kwargs):
 
     attack = HopSkipJump(
         classifier=classifier,
-        targeted=False, max_iter=0, max_eval=1000, init_eval=10)
+        targeted=False,
+        max_iter=0,
+        max_eval=1000,
+        init_eval=10)
 
     max_iter = 10
     target_instance = x[0]
@@ -46,10 +51,10 @@ def run_attack(cls_loader, **cls_kwargs):
     for i in range(max_iter):
         x_adv = attack.generate(
             x=np.array([target_instance]), x_adv_init=x_adv)
-        print("Adversarial image at step %d." % (i * iter_step),
+        print("Step %d." % (i * iter_step),
               "L2 error", np.linalg.norm(np.reshape(
                 x_adv[0] - target_instance, [-1])),
-              "and class label %d." % np.argmax(classifier.predict(x_adv)[0]))
+              "Label %d." % np.argmax(classifier.predict(x_adv)[0]))
         attack.max_iter = iter_step
 
 
