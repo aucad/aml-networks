@@ -29,6 +29,9 @@ import utility as tu
 def attack_instance(classifier, attack, target, initial_label):
     """Apply attack to specified instance."""
 
+    # TODO: adjust this to attack a vector instead of single
+    #   instance
+
     max_iter, iter_step = 10, 10
     x_adv, success, l2_error, label = None, False, 100, initial_label
 
@@ -104,6 +107,7 @@ def run_attack(cls_loader, fmt, prd, **cls_kwargs):
     tu.show(f'mutations:', f'{len(list(mutations))} attributes')
     print(" :: ".join(list(mutations)))
 
+    # TODO: plot these results similar to zoo attack
 
 if __name__ == '__main__':
     from os import path
@@ -113,4 +117,4 @@ if __name__ == '__main__':
     plot_path = path.join('', 'square_result')
 
     run_attack(train, formatter, predict,
-               dataset=ds, test_size=0, max=-1, robust=False)
+               dataset=ds, test_size=0, max=-1, robust=True)
