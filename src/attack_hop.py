@@ -55,6 +55,8 @@ def run_attack(cls_loader, fmt, prd, **cls_kwargs):
 
     Arguments:
          cls_loader - function to load classifier and its data
+         fmt - pre-prediction formatter function for single data instance
+         prd - prediction function that returns class labels for given data
     """
     classifier, model, attrs, x, y, _, _ = cls_loader(**cls_kwargs)
 
@@ -108,6 +110,7 @@ def run_attack(cls_loader, fmt, prd, **cls_kwargs):
     print(" :: ".join(list(mutations)))
 
     # TODO: plot these results similar to zoo attack
+
 
 if __name__ == '__main__':
     from os import path
