@@ -4,6 +4,7 @@ Zeroth-Order Optimization (ZOO) evasion attack using tree-base classifier.
 The black-box zeroth-order optimization attack from Pin-Yu Chen et
 al. (2018). This attack is a variant of the C&W attack which uses
 ADAM coordinate descent to perform numerical estimation of gradients.
+Paper: https://arxiv.org/abs/1708.03999
 
 Usage:
 
@@ -73,7 +74,7 @@ def adversarial_iot(classifier, x_train):
         batch_size=1,
         # Step size for numerical estimation of derivatives.
         variable_h=0.3,
-        # Show progress bars.
+        # Show progress bar.
         verbose=True) \
         .generate(x=x_train)
 
@@ -165,7 +166,7 @@ def zoo_attack(cls_loader, fmt, prd, img_path, **cls_kwargs):
 
 if __name__ == '__main__':
     from os import path
-    from train_xg import train, predict, formatter
+    from train_xg import train, formatter, predict
 
     ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
     plot_path = path.join('', 'zoo_result')
