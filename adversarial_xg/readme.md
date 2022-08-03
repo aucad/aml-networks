@@ -50,7 +50,7 @@ Applying Zeroth-Order Optimization (ZOO) Attack:
 
 **Results**
 
-Dataset: [CTU-Malware-Capture-1-1](../data/CTU-1-1.csv) (53 / 47 split)
+Dataset: [CTU-Malware-Capture-1-1](../data/CTU-1-1.csv)
 
 ```
 Read dataset ----------------- data/CTU-1-1.csv
