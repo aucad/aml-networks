@@ -52,14 +52,80 @@ Dataset: [CTU-Malware-Capture-1-1](../data/CTU-1-1.csv) (53 / 47 split)
 
 **Results**
 
-These plots include only real-valued attributes, because 
-visualizing binary attributes is not very interesting.
+Dataset: [CTU-1-1.csv](../data/CTU-1-1.csv)
 
-| **Non-Robust XGBoost**                 |
-|:-------------------------|
-| ![img](non_robust_1.png) |
-| **Robust XGBoost**       |
-| ![img](robust_1.png)     |
+```
+Read dataset ----------------- data/CTU-1-1.csv
+Attributes ------------------- 19
+Classifier ------------------- XGBoost, robust: False
+Classes ---------------------- benign, malicious
+Training split --------------- 53.2/46.8
+Training instances ----------- 12609
+Test instances --------------- 0
+Accuracy --------------------- 95.86 %
+Precision -------------------- 100.00 %
+Recall ----------------------- 91.15 %
+F-score ---------------------- 95.37 %
+Evasion success -------------- 4 (0.03 %)
+
+
+Read dataset ----------------- data/CTU-1-1.csv
+Attributes ------------------- 19
+Classifier ------------------- XGBoost, robust: True
+Classes ---------------------- benign, malicious
+Training split --------------- 53.2/46.8
+Training instances ----------- 12609
+Test instances --------------- 0
+Accuracy --------------------- 95.86 %
+Precision -------------------- 100.00 %
+Recall ----------------------- 91.15 %
+F-score ---------------------- 95.37 %
+Evasion success -------------- 0 (0.00 %)
+```
+
+| **Non-Robust XGBoost**     |
+|:---------------------------|
+| ![img](ctu_non_robust.png) |
+| **Robust XGBoost**         |
+| ![img](ctu_robust.png)     |
+
+Dataset: [nb15_1_1.csv](../data/nb15_1_1.csv)
+
+```
+Read dataset ----------------- data/nb15_1_1.csv
+Attributes ------------------- 41
+Classifier ------------------- XGBoost, robust: False
+Classes ---------------------- benign, malicious
+Training split --------------- 2.9/97.1
+Training instances ----------- 7000
+Test instances --------------- 0
+Accuracy --------------------- 100.00 %
+Precision -------------------- 100.00 %
+Recall ----------------------- 100.00 %
+F-score ---------------------- 100.00 %
+Evasion success -------------- 438 (6.26 %)
+
+
+Read dataset ----------------- data/nb15_1_1.csv
+Attributes ------------------- 41
+Classifier ------------------- XGBoost, robust: True
+Classes ---------------------- benign, malicious
+Training split --------------- 2.9/97.1
+Training instances ----------- 7000
+Test instances --------------- 0
+Accuracy --------------------- 97.23 %
+Precision -------------------- 98.27 %
+Recall ----------------------- 98.88 %
+F-score ---------------------- 98.58 %
+Evasion success -------------- 29 (0.41 %)
+```
+
+| **Non-Robust XGBoost**    |
+|:--------------------------|
+| ![img](nb_non_robust.png) |
+| **Robust XGBoost**        |
+| ![img](nb_robust.png)     |
+
 
 ## HopSkipJump Attack
 

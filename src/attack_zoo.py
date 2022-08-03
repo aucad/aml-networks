@@ -171,5 +171,6 @@ if __name__ == '__main__':
     ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
     plot_path = path.join('', 'zoo_result')
 
+    # TODO: add argv for robustness
     zoo_attack(train, formatter, predict, plot_path,
                dataset=ds, test_size=0, max=-1, robust=False)
