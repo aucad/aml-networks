@@ -48,11 +48,9 @@ Applying Zeroth-Order Optimization (ZOO) Attack:
 - red crosses: adversarial modified instance
 - black line: difference between original and adversarial
 
-Dataset: [CTU-Malware-Capture-1-1](../data/CTU-1-1.csv) (53 / 47 split)
-
 **Results**
 
-Dataset: [CTU-1-1.csv](../data/CTU-1-1.csv)
+Dataset: [CTU-Malware-Capture-1-1](../data/CTU-1-1.csv) (53 / 47 split)
 
 ```
 Read dataset ----------------- data/CTU-1-1.csv
@@ -89,7 +87,7 @@ Evasion success -------------- 0 (0.00 %)
 | **Robust XGBoost**         |
 | ![img](ctu_robust.png)     |
 
-Dataset: [nb15_1_1.csv](../data/nb15_1_1.csv)
+Dataset: [UNSW-NB15 1 (sampled)](../data/nb15_1_1.csv)
 
 ```
 Read dataset ----------------- data/nb15_1_1.csv
@@ -178,24 +176,11 @@ conn_state=RSTR :: conn_state=RSTOS0 :: orig_bytes :: conn_state=REJ :: resp_byt
 These are relevant as different models offer varying opportunities
 for successful attacks.
 
-#### CTU-1-1
-
-![image](CTU-1-1.png)
-
-#### CTU 44-1 
-
-![image](CTU-44-1.png)
-
-#### CTU 20-1
-
-![image](CTU-20-1.png)
-
-## Notes
-
-These results previously included [inference attack](../src/attack_inf.py) which is no longer relevant after
-  narrowing focus to evasion attacks.
-
-
-
+| Dataset  | Model                                                                        |
+|:---------|:-----------------------------------------------------------------------------|
+| CTU-1-1  | <a href='CTU-1-1.png' target="blank"><img src="CTU-1-1.png" width="250" />   |
+| CTU-44-1 | <a href='CTU-44-1.png' target="blank"><img src="CTU-44-1.png" width="250" /> |
+| CTU-20-1 | <a href='CTU-20-1.png' target="blank"><img src="CTU-20-1.png" width="250" /> |
+| NB-15-1  | <a href='nb15_1_1.png' target="blank"><img src="nb15_1_1.png" width="250" /> |
 
  
