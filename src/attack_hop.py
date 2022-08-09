@@ -1,11 +1,11 @@
 """
 Applying HopSkipJumpAttack on tree-based classifier.
 
-HopSkipJumpAttack - a family of algorithms based on a novel estimate of the
-gradient direction using binary information at the decision boundary. The
-proposed family includes both untargeted and targeted attacks optimized for
-L2 and L∞ similarity metrics respectively. (Chen et al., 2019)
-Paper: https://arxiv.org/abs/1904.02144
+HopSkipJumpAttack - a family of algorithms based on a novel estimate
+of the gradient direction using binary information at the decision
+boundary. The proposed family includes both untargeted and targeted
+attacks optimized for L2 and L∞ similarity metrics respectively. (
+Chen et al., 2019) Paper: https://arxiv.org/abs/1904.02144
 
 Implementation lLoosely based on this example:
 <https://github.com/Trusted-AI/adversarial-robustness-toolbox/blob/main/notebooks/classifier_blackbox.ipynb>
@@ -117,7 +117,6 @@ if __name__ == '__main__':
     from train_xg import train, formatter, predict
 
     ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
-    plot_path = path.join('', 'square_result')
 
     run_attack(train, formatter, predict,
                dataset=ds, test_size=0, max=-1, robust=True)
