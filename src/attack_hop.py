@@ -4,8 +4,8 @@ Applying HopSkipJumpAttack on tree-based classifier.
 HopSkipJumpAttack - a family of algorithms based on a novel estimate
 of the gradient direction using binary information at the decision
 boundary. The proposed family includes both untargeted and targeted
-attacks optimized for L2 and L∞ similarity metrics respectively. (
-Chen et al., 2019) Paper: https://arxiv.org/abs/1904.02144
+attacks optimized for L2 and L∞ similarity metrics respectively.
+(Chen et al., 2019) Paper: https://arxiv.org/abs/1904.02144
 
 Implementation lLoosely based on this example:
 <https://github.com/Trusted-AI/adversarial-robustness-toolbox/blob/main/notebooks/classifier_blackbox.ipynb>
@@ -36,6 +36,7 @@ def attack_instance(classifier, attack, target, initial_label):
     x_adv, success, l2_error, label = None, False, 100, initial_label
 
     for i in range(max_iter):
+        # TODO: mask selected attributes
         x_adv = attack.generate(x=np.array([target]), x_adv_init=x_adv)
         error_before = l2_error
         l2_error = np.linalg.norm(np.reshape(x_adv[0] - target, [-1]))
@@ -109,14 +110,13 @@ def run_attack(cls_loader, fmt, prd, **cls_kwargs):
     tu.show(f'mutations:', f'{len(list(mutations))} attributes')
     print(" :: ".join(list(mutations)))
 
-    # TODO: plot these results similar to zoo attack
+    # TODO: plot these results (similar to zoo attack)
 
 
 if __name__ == '__main__':
-    from os import path
     from train_xg import train, formatter, predict
 
     ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
-
-    run_attack(train, formatter, predict,
-               dataset=ds, test_size=0, max=-1, robust=True)
+    run_attack(
+        train, formatter, predict,
+        dataset=ds, test_size=0, max=-1, robust=True)
