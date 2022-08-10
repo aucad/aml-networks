@@ -87,7 +87,7 @@ Evasion success -------------- 0 (0.00 %)
 | **Robust XGBoost**         |
 | ![img](ctu_robust.png)     |
 
-Dataset: [UNSW-NB15 1 (sampled)](../../data/nb15_1_1.csv)
+Dataset: [UNSW-NB15 1 (sampled)](../../data/nb15-1-1.csv)
 
 ```
 Read dataset ----------------- data/nb15_1_1.csv
