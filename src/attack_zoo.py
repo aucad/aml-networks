@@ -41,14 +41,14 @@ def adversarial_iot(classifier, x_train):
         # Confidence of adversarial examples: a higher value produces
         # examples that are farther away, from the original input,
         # but classified with higher confidence as the target class.
-        confidence=0.75,
+        confidence=0.5,
         # Should the attack target one specific class
         targeted=False,
         # The initial learning rate for the attack algorithm. Smaller
         # values produce better results but are slower to converge.
         learning_rate=1e-1,
         # The maximum number of iterations.
-        max_iter=80,
+        max_iter=200,
         # Number of times to adjust constant with binary search
         # (positive value).
         binary_search_steps=10,
@@ -73,7 +73,7 @@ def adversarial_iot(classifier, x_train):
         # generated. Only size 1 is supported.
         batch_size=1,
         # Step size for numerical estimation of derivatives.
-        variable_h=0.3,
+        variable_h=0.8,
         # Show progress bar.
         verbose=True) \
         .generate(x=x_train)
@@ -173,4 +173,4 @@ if __name__ == '__main__':
 
     # TODO: add argv for robustness
     zoo_attack(train, formatter, predict, plot_path,
-               dataset=ds, test_size=0, max=-1, robust=False)
+               dataset=ds, test_size=0, max=-1, robust=True)

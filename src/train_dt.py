@@ -69,7 +69,7 @@ def train(dataset=tu.DEFAULT_DS, test_size=.1, plot=False, fn=None):
     tu.show('Test instances', len(test_x))
 
     if len(test_x) > 0:
-        predictions = model.predict(test_x)
+        predictions = predict(model, test_x)
         split = [str(np.count_nonzero(test_y == v)) for v in classes]
         tu.show('Test split', "/".join(split))
         tu.score(test_y, predictions, 0, display=True)
@@ -84,5 +84,5 @@ def train(dataset=tu.DEFAULT_DS, test_size=.1, plot=False, fn=None):
 
 if __name__ == '__main__':
     ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
-    name = path.join('adversarial_dt', Path(ds).stem)
+    name = path.join('results/decision_tree', Path(ds).stem)
     train(ds, 0.2, False, name)
