@@ -73,7 +73,7 @@ def adversarial_iot(classifier, x_train):
         # generated. Only size 1 is supported.
         batch_size=1,
         # Step size for numerical estimation of derivatives.
-        variable_h=0.8,
+        variable_h=0.3,
         # Show progress bar.
         verbose=True) \
         .generate(x=x_train)
@@ -173,4 +173,4 @@ if __name__ == '__main__':
 
     # TODO: add argv for robustness
     zoo_attack(train, formatter, predict, plot_path,
-               dataset=ds, test_size=0, max=-1, robust=True)
+               dataset=ds, test_size=0, max=-1, robust=False)

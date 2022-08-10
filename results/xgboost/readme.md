@@ -37,7 +37,7 @@ Applying Zeroth-Order Optimization (ZOO) Attack:
 - red crosses: adversarial modified instance
 - black line: difference between original and adversarial
 
-**Results**
+#### Results: IoT-23
 
 Dataset: [CTU-Malware-Capture-1-1](../../data/CTU-1-1.csv)
 
@@ -76,35 +76,38 @@ Evasion success -------------- 4525 (45.25 %)
 | **Robust XGBoost**         |
 | ![img](ctu_robust.png)     |
 
+
+#### Results: UNSW-NB15
+
 Dataset: [UNSW-NB15 1 (sampled)](../../data/nb15-1-1.csv)
 
 ```
-Read dataset ----------------- data/nb15_1_1.csv
-Attributes ------------------- 41
+Read dataset ----------------- data/nb15-10K.csv
+Attributes ------------------- 33
 Classifier ------------------- XGBoost, robust: False
 Classes ---------------------- benign, malicious
-Training split --------------- 2.9/97.1
-Training instances ----------- 7000
+Training split --------------- 50.0/50.0
+Training instances ----------- 10000
 Test instances --------------- 0
-Accuracy --------------------- 100.00 %
-Precision -------------------- 100.00 %
-Recall ----------------------- 100.00 %
-F-score ---------------------- 100.00 %
-Evasion success -------------- 438 (6.26 %)
+Accuracy --------------------- 96.02 %
+Precision -------------------- 95.49 %
+Recall ----------------------- 96.60 %
+F-score ---------------------- 96.04 %
+Evasion success -------------- 9920 (99.20 %)
 
 
-Read dataset ----------------- data/nb15_1_1.csv
-Attributes ------------------- 41
+Read dataset ----------------- data/nb15-10K.csv
+Attributes ------------------- 33
 Classifier ------------------- XGBoost, robust: True
 Classes ---------------------- benign, malicious
-Training split --------------- 2.9/97.1
-Training instances ----------- 7000
+Training split --------------- 50.0/50.0
+Training instances ----------- 10000
 Test instances --------------- 0
-Accuracy --------------------- 97.23 %
-Precision -------------------- 98.27 %
-Recall ----------------------- 98.88 %
-F-score ---------------------- 98.58 %
-Evasion success -------------- 29 (0.41 %)
+Accuracy --------------------- 82.46 %
+Precision -------------------- 80.48 %
+Recall ----------------------- 85.70 %
+F-score ---------------------- 83.01 %
+Evasion success -------------- 4556 (45.56 %)
 ```
 
 | **Non-Robust XGBoost**    |
@@ -160,16 +163,30 @@ mutations: ------------------- 18 attributes
 conn_state=RSTR :: conn_state=RSTOS0 :: orig_bytes :: conn_state=REJ :: resp_bytes :: orig_pkts :: resp_ip_bytes :: conn_state=S0 :: conn_state=SF :: proto=udp :: orig_ip_bytes :: resp_pkts :: proto=icmp :: conn_state=RSTRH :: conn_state=OTH :: conn_state=SH :: duration :: proto=tcp
 ```
 
-## XGBoosted trees visualizations
+## Classifier visualizations
 
-These are relevant as different models offer varying opportunities
-for successful attacks.
+These are relevant as different models offer varying opportunities for successful attacks.
 
-| Dataset  | Model                                                                        |
-|:---------|:-----------------------------------------------------------------------------|
-| CTU-1-1  | <a href='CTU-1-1.png' target="blank"><img src="CTU-1-1.png" width="250" />   |
-| CTU-44-1 | <a href='CTU-44-1.png' target="blank"><img src="CTU-44-1.png" width="250" /> |
-| CTU-20-1 | <a href='CTU-20-1.png' target="blank"><img src="CTU-20-1.png" width="250" /> |
-| NB-15-1  | <a href='nb15_1_1.png' target="blank"><img src="nb15_1_1.png" width="250" /> |
-
+<table>
+ <tr>
+   <td>
+      <strong>CTU-1-1</strong><br/>
+      <a href='CTU-1-1.png' target="blank"><img src="CTU-1-1.png" width="250" /></a>
+   </td>
+   <td>
+        <strong>CTU-44-1</strong><br/>
+        <a href='CTU-44-1.png' target="blank"><img src="CTU-44-1.png" width="250" /></a>
+   </td>
+ </tr>
+ <tr>  
+   <td>
+        <strong>CTU-20-1</strong><br/>
+        <a href='CTU-20-1.png' target="blank"><img src="CTU-20-1.png" width="250" /></a>
+   </td>
+   <td>
+        <strong>NB-15-1</strong><br/>
+        <a href='nb15_1_1.png' target="blank"><img src="nb15_1_1.png" width="250" /></a>
+   </td>
+ </tr>
+</table>
  
