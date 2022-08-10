@@ -5,39 +5,13 @@ CTU-Malware-Capture-44-1, with 237 rows (benign 211, malicious 26), 90 / 10 spli
 [scikit learn decision tree][1]. We then apply various adversarial attacks from the [Adversarial Robustness Toolbox][2]
 to attack this classifier.
 
-**Steps***
-
-1. Basic decision tree classifier implementation in `src/tree.py`
-
-    ```text
-    python src/tree.py 
-    ```
-
-   ![image](CTU-44-1.png)   
-
-2. Implement adversarial examples
-
-    ```text
-    python src/examples/zoo_iris.py         # Z00 evasion attack on iris data
-    python src/examples/zoo_mnist.py        # Z00 evasion attack on MNIST data
-    python src/examples/inf_nursery.py      # attribute inference attack on nursery dataset
-    ```
-    
-3. Apply various attacks (from step 2) to the tree (from step 1)  
-
-* * *   
-
 ## Results
 
 ### Attribute inference attack
 
-```
-python src/attack_inf.py
-```
-
-The attacked feature must be categorical, and with a relatively small
-number of possible values (preferably binary, but should at least be
-less then the number of label classes).
+The attacked feature must be categorical, and with a relatively small number of possible values (preferably binary, but
+should at least be less then the number of label classes). 
+[[implementation]](https://github.com/iotcad/module-2/blob/bc906db0fda265ea4928f9d0899b3e00bb17a928/src/attack_inf.py)
 
 Output of black-box inference on attributes `proto=udp` and `conn_state=SF`
 
@@ -115,16 +89,10 @@ Membership attack ------------ Accuracy: 68.42 % Precision: 68.42 % Recall: 100.
     attack. The idea is to find the target feature value that causes the membership inference attack to classify the 
     sample as a member with the highest confidence.
 
-[^1]: The white-box attacks require base classifier of type `ScikitlearnDecisionTreeClassifier` and therefore are not
-applicable to XGBoost classifier.
-  
+
 ### ZOO Evasion attack
 
-Applying Zeroth-Order Optimization (ZOO) Attack:
-
-```text
-python src/attack_zoo.py
-```
+Applying Zeroth-Order Optimization (ZOO) Attack to decision tree classifier:
 
 - blue circles: malicious training 
 - green circles: benign training 

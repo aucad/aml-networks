@@ -21,7 +21,7 @@ from attack_zoo import zoo_attack
 from train_xg import train, formatter, predict
 from utility import DEFAULT_DS
 
-robust_options = [False, True]
+NON_ROBUST, ROBUST = False, True
 
 
 def plot_path(robust):
@@ -30,7 +30,7 @@ def plot_path(robust):
 
 
 def run_attacks(dataset):
-    for opt in robust_options:
+    for opt in (NON_ROBUST, ROBUST):
         zoo_attack(
             train, formatter, predict,
             img_path=plot_path(opt),
