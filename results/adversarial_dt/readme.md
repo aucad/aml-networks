@@ -92,7 +92,7 @@ Membership attack ------------ Accuracy: 68.42 % Precision: 68.42 % Recall: 100.
 
 ### ZOO Evasion attack
 
-Applying Zeroth-Order Optimization (ZOO) Attack to decision tree classifier:
+Applying Zeroth-Order Optimization (ZOO) Attack, on CTU-44-1 dataset, applied to decision tree classifier:
 
 - blue circles: malicious training 
 - green circles: benign training 
