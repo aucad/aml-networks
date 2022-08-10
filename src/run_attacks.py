@@ -26,7 +26,7 @@ NON_ROBUST, ROBUST = False, True
 
 def plot_path(robust):
     img_base_path = 'robust' if robust else 'non_robust'
-    return path.join('results/adversarial_xg', img_base_path)
+    return path.join('results/xgboost', img_base_path)
 
 
 def run_attacks(dataset):

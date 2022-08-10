@@ -118,5 +118,5 @@ def train(
 
 if __name__ == '__main__':
     ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
-    name = path.join('results/adversarial_xg', Path(ds).stem)
+    name = path.join('results/xgboost', Path(ds).stem)
     train(ds, 0.05, plot=False, fn=name)
