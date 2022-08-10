@@ -26,20 +26,9 @@ Then run the attacks using the robust classifier. Per Instructions:
 
 Please refer to [XGBoost Documentation](https://xgboost.readthedocs.io/) for all other parameters used in XGBoost.
 
-## Run attacks
+## Attacks
 
-```
-python src/run_attacks.py
-```
-
-will run all attacks for robust and non-robust configurations on default dataset. Append path to dataset to use a
-different data set:
-
-```
-python src/run_attacks.py ./path/to/input_data.csv
-```
-
-## ZOO Evasion attack
+### ZOO Evasion attack
 
 Applying Zeroth-Order Optimization (ZOO) Attack:
 
@@ -54,31 +43,31 @@ Dataset: [CTU-Malware-Capture-1-1](../../data/CTU-1-1.csv)
 
 ```
 Read dataset ----------------- data/CTU-1-1.csv
-Attributes ------------------- 19
+Attributes ------------------- 16
 Classifier ------------------- XGBoost, robust: False
 Classes ---------------------- benign, malicious
-Training split --------------- 53.2/46.8
-Training instances ----------- 12609
+Training split --------------- 50.0/50.0
+Training instances ----------- 10000
 Test instances --------------- 0
-Accuracy --------------------- 95.86 %
+Accuracy --------------------- 95.25 %
 Precision -------------------- 100.00 %
-Recall ----------------------- 91.15 %
-F-score ---------------------- 95.37 %
-Evasion success -------------- 4 (0.03 %)
+Recall ----------------------- 90.50 %
+F-score ---------------------- 95.01 %
+Evasion success -------------- 4526 (45.26 %)
 
 
 Read dataset ----------------- data/CTU-1-1.csv
-Attributes ------------------- 19
+Attributes ------------------- 16
 Classifier ------------------- XGBoost, robust: True
 Classes ---------------------- benign, malicious
-Training split --------------- 53.2/46.8
-Training instances ----------- 12609
+Training split --------------- 50.0/50.0
+Training instances ----------- 10000
 Test instances --------------- 0
-Accuracy --------------------- 95.86 %
+Accuracy --------------------- 95.25 %
 Precision -------------------- 100.00 %
-Recall ----------------------- 91.15 %
-F-score ---------------------- 95.37 %
-Evasion success -------------- 0 (0.00 %)
+Recall ----------------------- 90.50 %
+F-score ---------------------- 95.01 %
+Evasion success -------------- 4525 (45.25 %)
 ```
 
 | **Non-Robust XGBoost**     |
@@ -125,7 +114,7 @@ Evasion success -------------- 29 (0.41 %)
 | ![img](nb_robust.png)     |
 
 
-## HopSkipJump Attack
+### HopSkipJump Attack
 
 
 **Results**

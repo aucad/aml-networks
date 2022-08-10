@@ -41,11 +41,11 @@ python -m pip install -e "/absolute/local/path/to/RobustTrees/python-package"
 
 ## Directory organization
 
-| Directory            | Description                                                 |
-|:---------------------|:------------------------------------------------------------|
-| `results`            | Results of various experiments                              |
-| 　`└─ adversarial_dt` | Adversarial attacks on decision trees                       |
-| 　`└─ adversarial_xg` | Adversarial attacks on XGBoost classifier                   |
-| 　`└─ comparisons`    | Comparison of classifiers, on IoT data, obtained using Weka |
-| `data`               | Preprocessed data sets, ready for running various attacks   |
-| `src`                | Source code                                                 |
+| Directory           | Description                                                 |
+|:--------------------|:------------------------------------------------------------|
+| `results`           | Results of various experiments                              |
+| 　`└─ comparisons`   | Comparison of classifiers, on IoT data, obtained using Weka |
+| 　`└─ decision_tree` | Adversarial attacks on decision trees                       |
+| 　`└─ xgboost`       | Adversarial attacks on XGBoost classifier                   |
+| `data`              | Preprocessed data sets, ready for running various attacks   |
+| `src`               | Source code                                                 |
