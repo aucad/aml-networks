@@ -26,6 +26,27 @@ from art.attacks.evasion import HopSkipJump
 import utility as tu
 
 
+def get_mask(target_arr):
+    """Mask selected attributes"""
+
+    # :param mask: An array with a mask broadcastable to input `x`
+    # defining where to apply adversarial perturbations. Shape
+    # needs to be broadcastable to the shape of x and can also be
+    # of the same shape as `x`. Any features for which the mask
+    # is zero will not be adversarially perturbed.
+    #
+    # :type mask: `np.ndarray`
+
+    # array with the same properties as target filled it with 1s
+    mask = np.full_like(target_arr, 1)
+
+    # TODO: set mask to 0 to prevent perturbations
+    #    but this depends on the dataset
+    mask[0][0] = 0
+
+    return mask
+
+
 def attack_instance(classifier, attack, target, initial_label):
     """Apply attack to specified instance."""
 
@@ -34,10 +55,13 @@ def attack_instance(classifier, attack, target, initial_label):
 
     max_iter, iter_step = 10, 10
     x_adv, success, l2_error, label = None, False, 100, initial_label
+    target_arr = np.array([target])
+    mask = get_mask(target_arr)
 
     for i in range(max_iter):
-        # TODO: mask selected attributes
-        x_adv = attack.generate(x=np.array([target]), x_adv_init=x_adv)
+
+        x_adv = attack.generate(
+            x=target_arr, x_adv_init=x_adv, mask=mask)
         error_before = l2_error
         l2_error = np.linalg.norm(np.reshape(x_adv[0] - target, [-1]))
         error_change = error_before - l2_error
