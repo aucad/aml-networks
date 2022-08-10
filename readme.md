@@ -39,26 +39,13 @@ After local build, set up Python environment to use this classifier version:
 python -m pip install -e "/absolute/local/path/to/RobustTrees/python-package"
 ```
 
-## Run attacks
-
-With default options
-
-```
-python src/run_attacks.py
-```
-
-Use specific dataset:
-
-```
-python src/run_attacks.py ./path/to/input_data.csv
-```
-
 ## Directory organization
 
-| Directory        | Description                                                 |
-|:-----------------|:------------------------------------------------------------|
-| `adversarial_dt` | Results of adversarial attacks on decision trees            |
-| `adversarial_xg` | Results of adversarial attacks on XGBoost classifier        |
-| `comparisons`    | Comparison of classifiers, on IoT data, obtained using Weka |
-| `data`           | Preprocessed data sets for running various attacks          |
-| `src`            | Source code files                                           |
+| Directory            | Description                                                 |
+|:---------------------|:------------------------------------------------------------|
+| `results`            | Results of various experiments                              |
+| 　`└─ adversarial_dt` | Adversarial attacks on decision trees                       |
+| 　`└─ adversarial_xg` | Adversarial attacks on XGBoost classifier                   |
+| 　`└─ comparisons`    | Comparison of classifiers, on IoT data, obtained using Weka |
+| `data`               | Preprocessed data sets, ready for running various attacks   |
+| `src`                | Source code                                                 |

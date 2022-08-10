@@ -50,7 +50,7 @@ Applying Zeroth-Order Optimization (ZOO) Attack:
 
 **Results**
 
-Dataset: [CTU-Malware-Capture-1-1](../data/CTU-1-1.csv)
+Dataset: [CTU-Malware-Capture-1-1](../../data/CTU-1-1.csv)
 
 ```
 Read dataset ----------------- data/CTU-1-1.csv
@@ -87,7 +87,7 @@ Evasion success -------------- 0 (0.00 %)
 | **Robust XGBoost**         |
 | ![img](ctu_robust.png)     |
 
-Dataset: [UNSW-NB15 1 (sampled)](../data/nb15_1_1.csv)
+Dataset: [UNSW-NB15 1 (sampled)](../../data/nb15_1_1.csv)
 
 ```
 Read dataset ----------------- data/nb15_1_1.csv

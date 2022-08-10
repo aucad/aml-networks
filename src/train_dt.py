@@ -84,5 +84,5 @@ def train(dataset=tu.DEFAULT_DS, test_size=.1, plot=False, fn=None):
 
 if __name__ == '__main__':
     ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
-    name = path.join('adversarial_dt', Path(ds).stem)
+    name = path.join('results/adversarial_dt', Path(ds).stem)
     train(ds, 0.2, False, name)
