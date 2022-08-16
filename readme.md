@@ -49,3 +49,20 @@ python -m pip install -e "/absolute/local/path/to/RobustTrees/python-package"
 | 　`└─ xgboost`       | Adversarial attacks on XGBoost classifier                   |
 | `data`              | Preprocessed data sets, ready for running various attacks   |
 | `src`               | Source code                                                 |
+
+## Notes on ART toolkit attacks
+
+| Attack                                       | Can implement | Details                                                                                        |
+|:---------------------------------------------|:-------------:|------------------------------------------------------------------------------------------------|
+| `AutoAttack`                                 |               | Loss type `cross_entropy` is not supported for the provided estimator                          |
+| `BoundaryAttack`                             |               | This attack has not yet been tested for binary classification with a single output classifier. |
+| `GeoDA`                                      |               | `XGBoostClassifier` object has no attribute `'channels_first'` (same error for decision trees) |
+| `HopSkipJump`                                |       ✅       |                                                                                                |
+| `PixelAttack`                                |               | EstimatorError: requires neural network classifier                                             |
+| `QueryEfficientGradientEstimationClassifier` |               | Not an attack implementation - not sure why it was listed as one?                              |
+| `SignOPTAttack`                              |               | This has not yet been tested for binary classification with a single output classifier         |
+| `SimBA`                                      |               | EstimatorError: requires neural network classifier                                             |
+| `SpatialTransformation`                      |               | EstimatorError: requires neural network classifier                                             |
+| `SquareAttack`                               |               | EstimatorError: requires neural network classifier                                             |
+| `ThresholdAttack`                            |               | EstimatorError: requires neural network classifier                                             |
+| `Zeroth Order Optimisation (ZOO)`            |       ✅       |                                                                                                |

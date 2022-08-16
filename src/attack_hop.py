@@ -59,7 +59,6 @@ def attack_instance(classifier, attack, target, initial_label):
     mask = get_mask(target_arr)
 
     for i in range(max_iter):
-
         x_adv = attack.generate(
             x=target_arr, x_adv_init=x_adv, mask=mask)
         error_before = l2_error
