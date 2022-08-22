@@ -4,12 +4,15 @@ Link to notes:
 
 <https://docs.google.com/document/d/1xqCDqrakSaXkOxijwse3zQ23Rm7-38m-rMJp7iLjS6A/edit?usp=sharing>
 
+Descriptions of datasets:
+
+<https://augustauniversity.box.com/s/ioj5v4ddiwcs9fs451rppzf5vhzohfpo>
+
 ## Setup
 
 Required Python environment: 3.8-3.9 [^1]
 
-[^1]: this is a hard requirement. numpy requires >= 3.8; 
-robust XGBoost relies on Python features removed since 3.10.
+[^1]: this is a hard requirement. numpy requires >= 3.8; robust XGBoost relies on Python features removed since 3.10.
 
 Install required dependencies:
 
