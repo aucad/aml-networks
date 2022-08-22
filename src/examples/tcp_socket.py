@@ -1,5 +1,5 @@
 """
-Simple networking example using sockets.
+Simple networking example sending messages over TCP using sockets.
 
 Client/server portions of this code are based on this example:
 <https://www.geeksforgeeks.org/python-program-that-sends-and-recieves-message-from-client/>
@@ -7,7 +7,7 @@ Client/server portions of this code are based on this example:
 Usage:
 
 ```
-python src/examples/sockets.py
+python src/examples/tcp_socket.py
 ```
 """
 
@@ -53,7 +53,7 @@ def server(ip, port):
 
 def client(server_ip, server_port, buf_size):
     """
-    TCP/IP server program that receive message from server.
+    TCP/IP client program that receives messages from server.
     """
     # create a socket at client side using TCP / IP protocol
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
