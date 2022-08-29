@@ -43,6 +43,7 @@ def adversarial_iot(classifier, x_train, y_train):
         # but classified with higher confidence as the target class.
         confidence=0.5,
         # Should the attack target one specific class
+        # this doesn't matter in a binary problem!
         targeted=False,
         # The initial learning rate for the attack algorithm. Smaller
         # values produce better results but are slower to converge.
@@ -76,7 +77,7 @@ def adversarial_iot(classifier, x_train, y_train):
         variable_h=0.8,
         # Show progress bar.
         verbose=True) \
-        .generate(x=x_train, y=y_train)
+        .generate(x=x_train)
 
 
 def adv_examples(model, fmt, prd, x_train, y, x_adv):
