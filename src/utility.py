@@ -101,3 +101,32 @@ def non_bin_attributes(np_array):
     """Get column indices of non-binary attributes"""
     return [feat for feat in range(len(np_array[0]))
             if len(list(set(np_array[:, feat]))) > 2]
+
+
+def dump_result(evasions, train_x, train_y, adv_x, adv_y, attr):
+    """Write to csv file original and adversarial examples.
+
+    arguments:
+        evasions - list of indices where attack succeeded
+        train_x - original training data, np.array (2d)
+        train_y - original labels, np.array (1d)
+        adv_x - adversarial examples, np.array (2d)
+        adv_y - adversarial labels, np.array (1d)
+        attr - data attributes
+    """
+
+    import csv
+
+    def fmt(x, y):
+        # append row and label, for each row
+        labels = y[evasions].reshape(-1, 1)
+        return (np.append(x[evasions, :], labels, 1)).tolist()
+
+    inputs = [[fmt(train_x, train_y), 'ori.csv'],
+              [fmt(adv_x, adv_y), 'adv.csv']]
+
+    for (rows, name) in inputs:
+        with open(name, 'w', newline='') as csvfile:
+            w = csv.writer(csvfile, delimiter=',')
+            w.writerow(attr)
+            w.writerows(rows)

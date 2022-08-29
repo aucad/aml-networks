@@ -43,12 +43,12 @@ def adversarial_iot(classifier, x_train, y_train):
         # but classified with higher confidence as the target class.
         confidence=0.5,
         # Should the attack target one specific class
-        targeted=True,
+        targeted=False,
         # The initial learning rate for the attack algorithm. Smaller
         # values produce better results but are slower to converge.
         learning_rate=1e-1,
         # The maximum number of iterations.
-        max_iter=200,
+        max_iter=80,
         # Number of times to adjust constant with binary search
         # (positive value).
         binary_search_steps=10,
@@ -73,7 +73,7 @@ def adversarial_iot(classifier, x_train, y_train):
         # generated. Only size 1 is supported.
         batch_size=1,
         # Step size for numerical estimation of derivatives.
-        variable_h=0.3,
+        variable_h=0.8,
         # Show progress bar.
         verbose=True) \
         .generate(x=x_train, y=y_train)
@@ -96,7 +96,7 @@ def adv_examples(model, fmt, prd, x_train, y, x_adv):
 
     acc = 100 * len(adv_success) / len(x_adv)
     tu.show('Evasion success', f'{len(adv_success)} ({acc:.2f} %)')
-    return np.array(adv_success)
+    return np.array(adv_success), np.array(adversarial)
 
 
 def plot(img_name, evasions, attr, *data):
@@ -154,14 +154,20 @@ def zoo_attack(cls_loader, fmt, prd, img_path, **cls_kwargs):
 
     Arguments:
          cls_loader - function to load classifier and its data
-         fmt - pre-prediction formatter function for single data instance
-         prd - prediction function that returns class labels for given data
+         fmt - pre-prediction formatter function for a data instance
+         prd - prediction function that returns class labels for data
          img_path - dir path and file name for storing plots
     """
     cls, model, attrs, x, y, _, _ = cls_loader(**cls_kwargs)
     data = (x, y, adversarial_iot(cls, x, y))
-    evasions = adv_examples(model, fmt, prd, *data)
-    plot(img_path, evasions, attrs, *data)
+    x_train, labels, adv = x[:], y[:], data[-1].copy()
+    evasions, adv_y = adv_examples(model, fmt, prd, *data)
+
+    if len(evasions) > 0:
+        plot(img_path, evasions, attrs, *data)
+        tu.dump_result(evasions, x_train, labels, adv, adv_y, attrs)
+
+    return evasions
 
 
 if __name__ == '__main__':
@@ -171,6 +177,6 @@ if __name__ == '__main__':
     ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
     plot_path = path.join('', 'zoo_result')
 
-    # TODO: add argv for robustness
-    zoo_attack(train, formatter, predict, plot_path,
-               dataset=ds, test_size=0, max=-1, robust=False)
+    zoo_attack(
+        train, formatter, predict, plot_path,
+        dataset=ds, test_size=0, max=-1, robust=False)
