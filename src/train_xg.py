@@ -36,7 +36,8 @@ def formatter(x, y):
 
 def predict(model, data):
     tmp = model.predict(data)
-    return tmp.argmax(axis=1)
+    ax = 1 if len(tmp.shape) == 2 else 0
+    return tmp.argmax(axis=ax)
 
 
 def plot_tree_(clf_, filename="tree"):
@@ -48,7 +49,7 @@ def plot_tree_(clf_, filename="tree"):
 
 
 def train(
-        dataset=tu.DEFAULT_DS, test_size=.1, robust=False, max=-1,
+        dataset=tu.DEFAULT_DS, test_size=.1, robust=False, max_size=-1,
         plot=False, fn=None
 ):
     """Train a classifier using XGBoost.
@@ -61,7 +62,7 @@ def train(
     """
 
     attrs, classes, train_x, train_y, test_x, test_y = \
-        tu.load_csv_data(dataset, test_size, max=max)
+        tu.load_csv_data(dataset, test_size, max_size=max_size)
 
     dtrain = formatter(train_x, train_y)
     evallist = [(dtrain, 'eval'), (dtrain, 'train')]

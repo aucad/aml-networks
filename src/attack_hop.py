@@ -142,4 +142,4 @@ if __name__ == '__main__':
     ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
     run_attack(
         train, formatter, predict,
-        dataset=ds, test_size=0, max=-1, robust=True)
+        dataset=ds, test_size=0, max_size=-1, robust=True)

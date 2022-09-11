@@ -32,7 +32,7 @@ plt.rc('xtick', labelsize=6)
 plt.rc('ytick', labelsize=6)
 
 
-def adversarial_iot(classifier, x_train, y_train):
+def adversarial_iot(classifier, x_train):
     """Generate the adversarial examples."""
 
     return ZooAttack(
@@ -160,7 +160,7 @@ def zoo_attack(cls_loader, fmt, prd, img_path, **cls_kwargs):
          img_path - dir path and file name for storing plots
     """
     cls, model, attrs, x, y, _, _ = cls_loader(**cls_kwargs)
-    data = (x, y, adversarial_iot(cls, x, y))
+    data = (x, y, adversarial_iot(cls, x))
     x_train, labels, adv = x[:], y[:], data[-1].copy()
     evasions, adv_y = adv_examples(model, fmt, prd, *data)
 
@@ -180,4 +180,4 @@ if __name__ == '__main__':
 
     zoo_attack(
         train, formatter, predict, plot_path,
-        dataset=ds, test_size=0, max=-1, robust=False)
+        dataset=ds, test_size=0, max_size=200, robust=False)
