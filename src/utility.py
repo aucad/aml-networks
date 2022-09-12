@@ -32,6 +32,15 @@ def normalize(data):
     return data
 
 
+def freeze_types(num_mat):
+    """Finds integer valued attributes in a 2d matrix"""
+    freeze = []
+    for col_i in range(len(num_mat[0])):
+        if np.all(np.mod(num_mat[:, col_i], 1) == 0):
+            freeze.append(col_i)
+    return freeze
+
+
 def load_csv_data(dataset_path, test_size=0.1, max_size=-1):
     """Read dataset and split to train/test using random sampling."""
 

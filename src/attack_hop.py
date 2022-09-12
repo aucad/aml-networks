@@ -26,7 +26,7 @@ from art.attacks.evasion import HopSkipJump
 import utility as tu
 
 
-def get_mask(target_arr):
+def get_mask(target, freeze_indices):
     """Mask selected attributes"""
 
     # :param mask: An array with a mask broadcastable to input `x`
@@ -37,30 +37,30 @@ def get_mask(target_arr):
     #
     # :type mask: `np.ndarray`
 
-    # array with the same properties as target filled it with 1s
-    mask = np.full_like(target_arr, 1)
+    # array with the same properties as target filled with 1s
+    mask = np.full_like(target, 1)
 
-    # TODO: set mask to 0 to prevent perturbations
-    #    but this depends on the dataset
-    mask[0][0] = 0
+    # set mask to 0 to prevent perturbations
+    for i in range(len(target[0])):
+        if i in freeze_indices:
+            mask[:, i] = 0
 
     return mask
 
 
-def attack_instance(classifier, attack, target, initial_label):
+def attack_instance(
+        classifier, attack, target, initial_label, mask=None
+):
     """Apply attack to specified instance."""
-
-    # TODO: adjust this to attack a vector instead of single
-    #   instance
 
     max_iter, iter_step = 10, 10
     x_adv, success, l2_error, label = None, False, 100, initial_label
     target_arr = np.array([target])
-    mask = get_mask(target_arr)
+    mask_arr = np.array([mask])
 
     for i in range(max_iter):
         x_adv = attack.generate(
-            x=target_arr, x_adv_init=x_adv, mask=mask)
+            x=target_arr, x_adv_init=x_adv, mask=mask_arr)
         error_before = l2_error
         l2_error = np.linalg.norm(np.reshape(x_adv[0] - target, [-1]))
         error_change = error_before - l2_error
@@ -112,11 +112,13 @@ def run_attack(cls_loader, fmt, prd, **cls_kwargs):
     ori_inputs = fmt(x, y) if fmt else x
     predictions = prd(model, ori_inputs).flatten().tolist()
     mutations = set()
+    int_attrs = tu.freeze_types(x)
+    mask = get_mask(x, int_attrs)
 
     for index, instance in enumerate(x):
         init_label = predictions[index]
         xa, success, l2, new_label = attack_instance(
-            classifier, attack, instance, init_label)
+            classifier, attack, instance, init_label, mask[index])
         ax.append(xa[:])
         ay.append(new_label)
         if success:
@@ -147,4 +149,4 @@ if __name__ == '__main__':
     ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
     run_attack(
         train, formatter, predict,
-        dataset=ds, test_size=0, max_size=200, robust=False)
+        dataset=ds, test_size=0, max_size=-1, robust=False)
