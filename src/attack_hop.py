@@ -107,7 +107,8 @@ def run_attack(cls_loader, fmt, prd, **cls_kwargs):
         verbose=False
     )
 
-    x_adv, errors = [], []
+    ax, ay = [], []
+    x_adv, errors, evasions = [], [], []
     ori_inputs = fmt(x, y) if fmt else x
     predictions = prd(model, ori_inputs).flatten().tolist()
     mutations = set()
@@ -116,8 +117,11 @@ def run_attack(cls_loader, fmt, prd, **cls_kwargs):
         init_label = predictions[index]
         xa, success, l2, new_label = attack_instance(
             classifier, attack, instance, init_label)
+        ax.append(xa[:])
+        ay.append(new_label)
         if success:
             x_adv.append([(xa, new_label), (instance, init_label)])
+            evasions.append(index)
             errors.append(l2)
             for i, attr_o in enumerate(instance):
                 attr_a = xa[0, i]
@@ -125,15 +129,16 @@ def run_attack(cls_loader, fmt, prd, **cls_kwargs):
                 if diff > 0.01:
                     mutations.add(attrs[i])
 
-    print('-' * 50)
-    print('HOPSKIPJUMP ATTACK')
-    print('-' * 50)
-    tu.show('Success rate', f'{(len(x_adv) / len(x)) * 100:.2f}')
-    tu.show(f'Error min/max', f'{min(errors):.6f} - {max(errors):.6f}')
+    tu.show('Evasion success', f'{(len(x_adv) / len(x)) * 100:.2f}')
+    if len(errors) > 0:
+        tu.show(f'Error', f'{min(errors):.6f} - {max(errors):.6f}')
     tu.show(f'mutations:', f'{len(list(mutations))} attributes')
     print(" :: ".join(list(mutations)))
 
-    # TODO: plot these results (similar to zoo attack)
+    if len(x_adv) > 0:
+        ax = np.array(ax).reshape(x.shape)
+        ay, evasions = np.array(ay), np.array(evasions)
+        tu.dump_result(evasions, x, y, ax, ay, attrs)
 
 
 if __name__ == '__main__':
@@ -142,4 +147,4 @@ if __name__ == '__main__':
     ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
     run_attack(
         train, formatter, predict,
-        dataset=ds, test_size=0, max_size=-1, robust=True)
+        dataset=ds, test_size=0, max_size=200, robust=False)
