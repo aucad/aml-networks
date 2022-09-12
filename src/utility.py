@@ -32,13 +32,17 @@ def normalize(data):
     return data
 
 
-def freeze_types(num_mat):
+def int_cols(num_mat):
     """Finds integer valued attributes in a 2d matrix"""
-    freeze = []
+    indices = []
     for col_i in range(len(num_mat[0])):
         if np.all(np.mod(num_mat[:, col_i], 1) == 0):
-            freeze.append(col_i)
-    return freeze
+            indices.append(col_i)
+    return indices
+
+
+def freeze_types(num_mat):
+    return int_cols(num_mat)
 
 
 def load_csv_data(dataset_path, test_size=0.1, max_size=-1):
@@ -133,9 +137,18 @@ def dump_result(evasions, train_x, train_y, adv_x, adv_y, attr):
 
     inputs = [[fmt(train_x, train_y), 'ori.csv'],
               [fmt(adv_x, adv_y), 'adv.csv']]
+    # include label column
+    int_values = int_cols(train_x)
 
     for (rows, name) in inputs:
         with open(name, 'w', newline='') as csvfile:
             w = csv.writer(csvfile, delimiter=',')
             w.writerow(attr)
-            w.writerows(rows)
+            for row in rows:
+                fmt_row = []
+                for i, val in enumerate(row):
+                    if i in int_values or i == len(row) - 1:
+                        fmt_row.append(int(val))
+                    else:
+                        fmt_row.append(val)
+                w.writerow(fmt_row)

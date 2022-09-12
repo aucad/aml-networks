@@ -122,25 +122,23 @@ def run_attack(cls_loader, fmt, prd, **cls_kwargs):
         ax.append(xa[:])
         ay.append(new_label)
         if success:
-            x_adv.append([(xa, new_label), (instance, init_label)])
             evasions.append(index)
             errors.append(l2)
             for i, attr_o in enumerate(instance):
-                attr_a = xa[0, i]
-                diff = fabs(attr_o - attr_a)
-                if diff > 0.01:
+                if fabs(attr_o - xa[0, i]) > 0.0001:
                     mutations.add(attrs[i])
-
-    tu.show('Evasion success', f'{(len(x_adv) / len(x)) * 100:.2f}')
-    if len(errors) > 0:
-        tu.show(f'Error', f'{min(errors):.6f} - {max(errors):.6f}')
-    tu.show(f'mutations:', f'{len(list(mutations))} attributes')
-    print(" :: ".join(list(mutations)))
-
-    if len(x_adv) > 0:
+    evs, mut = len(evasions), list(mutations)
+    if evs > 0:
         ax = np.array(ax).reshape(x.shape)
         ay, evasions = np.array(ay), np.array(evasions)
         tu.dump_result(evasions, x, y, ax, ay, attrs)
+
+    tu.show('Evasion success', f'{evs} / {(evs / len(x)) * 100:.2f} %')
+    if evs > 0:
+        tu.show('Error', f'{min(errors):.6f} - {max(errors):.6f}')
+    if len(mut) > 0:
+        tu.show('Mutations:', f'{len(mut)} attributes')
+        tu.show('Mutated attrs', ",".join(mut))
 
 
 if __name__ == '__main__':
