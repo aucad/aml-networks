@@ -17,6 +17,7 @@ python src/train_xg.py ./path/to/input_data.csv
 ```
 """
 
+from collections import Counter
 from os import path
 from pathlib import Path
 from sys import argv
@@ -35,7 +36,8 @@ def formatter(x, y):
 
 def predict(model, data):
     tmp = model.predict(data)
-    return tmp.argmax(axis=1)
+    ax = 1 if len(tmp.shape) == 2 else 0
+    return tmp.argmax(axis=ax)
 
 
 def plot_tree_(clf_, filename="tree"):
@@ -47,7 +49,7 @@ def plot_tree_(clf_, filename="tree"):
 
 
 def train(
-        dataset=tu.DEFAULT_DS, test_size=.1, robust=False, max=-1,
+        dataset=tu.DEFAULT_DS, test_size=.1, robust=False, max_size=-1,
         plot=False, fn=None
 ):
     """Train a classifier using XGBoost.
@@ -60,11 +62,15 @@ def train(
     """
 
     attrs, classes, train_x, train_y, test_x, test_y = \
-        tu.load_csv_data(dataset, test_size, max=max)
+        tu.load_csv_data(dataset, test_size, max_size=max_size)
 
     dtrain = formatter(train_x, train_y)
     evallist = [(dtrain, 'eval'), (dtrain, 'train')]
-    pos = 100 * sum([1 for y in train_y if y == 1]) / len(train_y)
+    cl_n, cl_srtd = len(classes), sorted(classes)
+    cl_frq = Counter(train_y)
+    cl_names = [tu.text_label(cl) for cl in cl_srtd]
+    cl_ratio = [f'{(100 * cl_frq[k] / len(train_y)):.1f}'
+                for k in cl_srtd]
 
     model = xgb.train(
         # Booster params
@@ -80,7 +86,7 @@ def train(
             'tree_method': 'robust_exact' if robust else 'exact',
             'objective': 'multi:softprob',
             'metric': 'multi_logloss',
-            'num_class': len(classes),
+            'num_class': cl_n,
             'verbosity': 0,
         },
         num_boost_round=20,
@@ -90,8 +96,8 @@ def train(
     tu.show('Read dataset', dataset)
     tu.show('Attributes', len(attrs))
     tu.show('Classifier', f'XGBoost, robust: {robust}')
-    tu.show('Classes', ", ".join([tu.text_label(l) for l in classes]))
-    tu.show('Training split', f'{pos:.1f}/{(100 - pos):.1f}')
+    tu.show('Classes', ", ".join(cl_names))
+    tu.show('Class split', "/".join(cl_ratio))
     tu.show('Training instances', dtrain.num_row())
     tu.show('Test instances', len(test_x))
 

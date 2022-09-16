@@ -32,7 +32,20 @@ def normalize(data):
     return data
 
 
-def load_csv_data(dataset_path, test_size=0.1, max=-1):
+def int_cols(num_mat):
+    """Finds integer valued attributes in a 2d matrix"""
+    indices = []
+    for col_i in range(len(num_mat[0])):
+        if np.all(np.mod(num_mat[:, col_i], 1) == 0):
+            indices.append(col_i)
+    return indices
+
+
+def freeze_types(num_mat):
+    return int_cols(num_mat)
+
+
+def load_csv_data(dataset_path, test_size=0.1, max_size=-1):
     """Read dataset and split to train/test using random sampling."""
 
     df = pd.read_csv(dataset_path)
@@ -50,11 +63,11 @@ def load_csv_data(dataset_path, test_size=0.1, max=-1):
 
     train_x = normalize(np.array(train)[:, :-1])
     train_y = np.array(train)[:, -1].astype(int).flatten()
-    if max > 0:
-        train_x, train_y = train_x[: max, :], train_y[: max]
+
+    if max_size > 0:
+        train_x, train_y = train_x[: max_size, :], train_y[: max_size]
 
     classes = np.unique(train_y)
-
     return attrs, classes, train_x, train_y, test_x, test_y
 
 
@@ -101,3 +114,41 @@ def non_bin_attributes(np_array):
     """Get column indices of non-binary attributes"""
     return [feat for feat in range(len(np_array[0]))
             if len(list(set(np_array[:, feat]))) > 2]
+
+
+def dump_result(evasions, train_x, train_y, adv_x, adv_y, attr):
+    """Write to csv file original and adversarial examples.
+
+    arguments:
+        evasions - list of indices where attack succeeded
+        train_x - original training data, np.array (2d)
+        train_y - original labels, np.array (1d)
+        adv_x - adversarial examples, np.array (2d)
+        adv_y - adversarial labels, np.array (1d)
+        attr - data attributes
+    """
+
+    import csv
+
+    def fmt(x, y):
+        # append row and label, for each row
+        labels = y[evasions].reshape(-1, 1)
+        return (np.append(x[evasions, :], labels, 1)).tolist()
+
+    inputs = [[fmt(train_x, train_y), 'ori.csv'],
+              [fmt(adv_x, adv_y), 'adv.csv']]
+    # include label column
+    int_values = int_cols(train_x)
+
+    for (rows, name) in inputs:
+        with open(name, 'w', newline='') as csvfile:
+            w = csv.writer(csvfile, delimiter=',')
+            w.writerow(attr)
+            for row in rows:
+                fmt_row = []
+                for i, val in enumerate(row):
+                    if i in int_values or i == len(row) - 1:
+                        fmt_row.append(int(val))
+                    else:
+                        fmt_row.append(val)
+                w.writerow(fmt_row)
