@@ -76,7 +76,7 @@ See [ART Evasion attacks Wiki](https://github.com/Trusted-AI/adversarial-robustn
 | HopSkipJump                | ▪️  |  ✔️  |     ✔️     |                                                                                                |
 | Pixel Attack               | ▪️  |  ➖   |     ➖      | Requires neural network classifier                                                             |
 | Projected Gradient Descent | ▫️  |  ✔️  |     ➖      | Requires classifier derived from `LossGradientsMixin`                                          |
-| Query-Efficient...         | ▪️  |  ➖   |     ➖      | from Wiki, but `QueryEfficientGradientEstimationClassifier` is not an attack implementation    |
+| Query-efficient Black-box  | ▪️  |  ➖   |     ➖      | `QueryEfficientGradientEstimationClassifier` is not an attack implementation                   |
 | ShapeShifter Attack        | ▫️  |  ✔️  |     ➖      | Requires TensorFlowFasterRCNN classifier                                                       |
 | SignOPT Attack             | ▪️  |  ➖   |     ➖      | This attack has not yet been tested for binary classification with a single output classifier  |
 | SimBA                      | ▪️  |  ➖   |     ➖      | Requires neural network classifier                                                             |
