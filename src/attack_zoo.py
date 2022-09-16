@@ -12,7 +12,7 @@ Usage:
 python src/attack_zoo.py
 ```
 """
-
+from os import path
 from sys import argv
 from itertools import combinations
 
@@ -96,6 +96,7 @@ def adv_examples(model, fmt, prd, x_train, y, x_adv):
                    enumerate(zip(original, adversarial)) if x != y]
 
     acc = 100 * len(adv_success) / len(x_adv)
+    print('Zoo attack')
     tu.show('Evasion success', f'{len(adv_success)} ({acc:.2f} %)')
     return np.array(adv_success), np.array(adversarial)
 
@@ -147,7 +148,8 @@ def plot(img_name, evasions, attr, *data):
                 ax.scatter(ad_f1, ad_f2, **adv_props)
 
         fig.tight_layout()
-        plt.savefig(f'{img_name}_{f + 1}.png')
+        tu.ensure_out_dir(tu.RESULT_DIR)
+        plt.savefig(path.join(tu.RESULT_DIR, f'{img_name}_{f + 1}.png'))
 
 
 def zoo_attack(cls_loader, fmt, prd, img_path, **cls_kwargs):
@@ -176,8 +178,7 @@ if __name__ == '__main__':
     from train_xg import train, formatter, predict
 
     ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
-    plot_path = path.join('', 'zoo_result')
 
     zoo_attack(
-        train, formatter, predict, plot_path,
+        train, formatter, predict, img_path='',
         dataset=ds, test_size=0, max_size=200, robust=False)

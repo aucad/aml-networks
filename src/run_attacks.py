@@ -18,6 +18,7 @@ from os import path
 from sys import argv
 
 from attack_zoo import zoo_attack
+from attack_hop import  run_attack as hop_attack
 from train_xg import train, formatter, predict
 from utility import DEFAULT_DS
 
@@ -26,7 +27,7 @@ NON_ROBUST, ROBUST = False, True
 
 def plot_path(robust):
     img_base_path = 'robust' if robust else 'non_robust'
-    return path.join('results/xgboost', img_base_path)
+    return path.join(img_base_path)
 
 
 def run_attacks(dataset):
@@ -34,6 +35,11 @@ def run_attacks(dataset):
         zoo_attack(
             train, formatter, predict,
             img_path=plot_path(opt),
+            dataset=dataset,
+            test_size=0,
+            robust=opt)
+        hop_attack(
+            train, formatter, predict,
             dataset=dataset,
             test_size=0,
             robust=opt)

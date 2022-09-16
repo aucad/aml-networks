@@ -17,13 +17,13 @@ Required Python environment: 3.8-3.9 [^1]
 Install required dependencies:
 
 ```
-python -m pip install -q -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 For Apple chips, install compatible `tensorflow` separately:
 
 ```
-python -m pip install -q tensorflow-macos
+python -m pip install tensorflow-macos
 ```
 
 To visualize XGBoost models, install [graphviz](https://graphviz.org/) and make sure it is in path.
@@ -44,16 +44,23 @@ python -m pip install -e "/absolute/local/path/to/RobustTrees/python-package"
 
 ## Directory organization
 
-| Directory           | Description                                                 |
-|:--------------------|:------------------------------------------------------------|
-| `results`           | Results of various experiments                              |
-| 　`└─ comparisons`   | Comparison of classifiers, on IoT data, obtained using Weka |
-| 　`└─ decision_tree` | Adversarial attacks on decision trees                       |
-| 　`└─ xgboost`       | Adversarial attacks on XGBoost classifier                   |
-| `data`              | Preprocessed data sets, ready for running various attacks   |
-| `src`               | Source code                                                 |
+| Directory            | Description                                                 |
+|:---------------------|:------------------------------------------------------------|
+| `results`            | Results of various experiments                              |
+| 　`└─ comparisons`    | Comparison of classifiers, on IoT data, obtained using Weka |
+| 　`└─ decision_tree`  | Adversarial attacks on decision trees                       |
+| 　`└─ xgboost`        | Adversarial attacks on XGBoost classifier                   |
+| `data`               | Preprocessed data sets, ready for running various attacks   |
+| `src`                | Source code                                                 |
+| 　`└─ examples/`      | ART examples                                                |
+| 　`└─ attack_hop.py`  | Perform HopSkipJump attack                                  |
+| 　`└─ attack_zoo.py`  | Perform ZOO attack                                          |
+| 　`└─ run_attacks.py` | Run all attacks (robust/non-robust) on some dataset         |
+| 　`└─ train_dt.py`    | Train decision tree classifier                              |
+| 　`└─ train_xg.py`    | Train XGBoost classifier                                    |
+| 　`└─ uitlity.py`     | Common helpers                                              |
 
-## Notes on ART toolkit attacks
+## Notes on ART Attacks
 
 | Attack                    | Status | Details                                                                                                                |
 |:--------------------------|:------:|------------------------------------------------------------------------------------------------------------------------|

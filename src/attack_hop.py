@@ -29,14 +29,6 @@ import utility as tu
 def get_mask(target, freeze_indices):
     """Mask selected attributes"""
 
-    # :param mask: An array with a mask broadcastable to input `x`
-    # defining where to apply adversarial perturbations. Shape
-    # needs to be broadcastable to the shape of x and can also be
-    # of the same shape as `x`. Any features for which the mask
-    # is zero will not be adversarially perturbed.
-    #
-    # :type mask: `np.ndarray`
-
     # array with the same properties as target filled with 1s
     mask = np.full_like(target, 1)
 
@@ -133,6 +125,7 @@ def run_attack(cls_loader, fmt, prd, **cls_kwargs):
         ay, evasions = np.array(ay), np.array(evasions)
         tu.dump_result(evasions, x, y, ax, ay, attrs)
 
+    print('HopSkipJump', '')
     tu.show('Evasion success', f'{evs} / {(evs / len(x)) * 100:.2f} %')
     if evs > 0:
         tu.show('Error', f'{min(errors):.6f} - {max(errors):.6f}')

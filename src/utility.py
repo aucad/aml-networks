@@ -1,3 +1,5 @@
+from os import path, makedirs
+
 import numpy as np
 import pandas as pd
 from colorama import Fore, Style  # terminal colors
@@ -6,6 +8,13 @@ from sklearn.model_selection import train_test_split
 DEFAULT_DS = 'data/CTU-1-1.csv'
 """When no dataset is defined, use this one by default."""
 """We use here a dataset with ~ 50/50 split"""
+
+RESULT_DIR = 'output'
+"""Directory for writing outputs"""
+
+
+def ensure_out_dir(dir_path):
+    return path.exists(dir_path) or makedirs(dir_path)
 
 
 def text_label(i):
@@ -135,8 +144,9 @@ def dump_result(evasions, train_x, train_y, adv_x, adv_y, attr):
         labels = y[evasions].reshape(-1, 1)
         return (np.append(x[evasions, :], labels, 1)).tolist()
 
-    inputs = [[fmt(train_x, train_y), 'ori.csv'],
-              [fmt(adv_x, adv_y), 'adv.csv']]
+    ensure_out_dir(RESULT_DIR)
+    inputs = [[fmt(train_x, train_y), path.join(RESULT_DIR, 'ori.csv')],
+              [fmt(adv_x, adv_y), path.join(RESULT_DIR, 'adv.csv')]]
     # include label column
     int_values = int_cols(train_x)
 
