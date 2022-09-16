@@ -62,17 +62,25 @@ python -m pip install -e "/absolute/local/path/to/RobustTrees/python-package"
 
 ## Notes on ART Attacks
 
-| Attack                    | Box | Compatible | Details                                                                                                                |
-|:--------------------------|:---:|:----------:|:-----------------------------------------------------------------------------------------------------------------------|
-| Auto Attack               | ▪️  |     ➖      | Loss type `cross_entropy` is not supported for the provided estimator                                                  |
-| Boundary Attack           | ▪️  |     ➖      | This attack has not yet been tested for binary classification with a single output classifier                          |
-| GeoDA                     | ▪️  |     ➖      | `XGBoostClassifier` object has no attribute `'channels_first'` (same error for decision trees)                         |
-| HopSkipJump               | ▪️  |     ✔️     |                                                                                                                        |
-| Pixel Attack              | ▪️  |     ➖      | EstimatorError: requires neural network classifier                                                                     |
-| Query-Efficient...        | ▪️  |     ➖      | `QueryEfficientGradientEstimationClassifier` this is not an attack implementation - not sure why it was listed as one? |
-| SignOPT Attack            | ▪️  |     ➖      | This attack has not yet been tested for binary classification with a single output classifier                          |
-| SimBA                     | ▪️  |     ➖      | EstimatorError: requires neural network classifier                                                                     |
-| Spatial Transformation    | ▪️  |     ➖      | EstimatorError: requires neural network classifier                                                                     |
-| Square Attack             | ▪️  |     ➖      | EstimatorError: requires neural network classifier                                                                     |
-| Threshold Attack          | ▪️  |     ➖      | EstimatorError: requires neural network classifier                                                                     |
-| Zeroth Order Optimisation | ▪️  |     ✔️     | No support for masking                                                                                                 |
+See [ART Evasion attacks Wiki](https://github.com/Trusted-AI/adversarial-robustness-toolbox/wiki/ART-Attacks#1-evasion-attacks)
+
+| Attack                     | Box | Mask | Compatible | Issue Explanation                                                                              |
+|:---------------------------|:---:|:----:|:----------:|:-----------------------------------------------------------------------------------------------|
+| Adversarial Patch          | ▫️  |  ✔️  |     ➖      | Requires neural network classifier                                                             |
+| Auto Attack                | ▪️  |  ➖   |     ➖      | Classifier must support loss type `cross_entropy`                                              |
+| Boundary Attack            | ▪️  |  ➖   |     ➖      | This attack has not yet been tested for binary classification with a single output classifier  |
+| Carlini and Wagner L0      | ▫️  |  ✔️  |     ➖      | Requires ClassGradientsMixin based classifier                                                  |
+| DPatch                     | ▫️  |  ✔️  |     ➖      | Requires classifier derived from `LossGradientsMixin`                                          |
+| Frame Saliency Attack      | ▫️  |  ✔️  |     ➖      | Requires neural network classifier                                                             | 
+| GeoDA                      | ▪️  |  ➖   |     ➖      | `XGBoostClassifier` object has no attribute `'channels_first'` (same error for decision trees) |
+| HopSkipJump                | ▪️  |  ✔️  |     ✔️     |                                                                                                |
+| Pixel Attack               | ▪️  |  ➖   |     ➖      | Requires neural network classifier                                                             |
+| Projected Gradient Descent | ▫️  |  ✔️  |     ➖      | Requires classifier derived from `LossGradientsMixin`                                          |
+| Query-Efficient...         | ▪️  |  ➖   |     ➖      | from Wiki, but `QueryEfficientGradientEstimationClassifier` is not an attack implementation    |
+| ShapeShifter Attack        | ▫️  |  ✔️  |     ➖      | Requires TensorFlowFasterRCNN classifier                                                       |
+| SignOPT Attack             | ▪️  |  ➖   |     ➖      | This attack has not yet been tested for binary classification with a single output classifier  |
+| SimBA                      | ▪️  |  ➖   |     ➖      | Requires neural network classifier                                                             |
+| Spatial Transformation     | ▪️  |  ➖   |     ➖      | Requires neural network classifier                                                             |
+| Square Attack              | ▪️  |  ➖   |     ➖      | Requires neural network classifier                                                             |
+| Threshold Attack           | ▪️  |  ➖   |     ➖      | Requires neural network classifier                                                             |
+| Zeroth Order Optimisation  | ▪️  |  ➖️  |     ✔️     |                                                                                                |

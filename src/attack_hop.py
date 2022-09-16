@@ -7,7 +7,7 @@ boundary. The proposed family includes both untargeted and targeted
 attacks optimized for L2 and L∞ similarity metrics respectively.
 (Chen et al., 2019) Paper: https://arxiv.org/abs/1904.02144
 
-Implementation lLoosely based on this example:
+Implementation loosely based on this example:
 <https://github.com/Trusted-AI/adversarial-robustness-toolbox/blob/main/notebooks/classifier_blackbox.ipynb>
 
 Usage:
