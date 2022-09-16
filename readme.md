@@ -20,10 +20,10 @@ Install required dependencies:
 python -m pip install -q -r requirements.txt
 ```
 
-For Apple M1/M2 chips, install compatible `tensorflow` separately:
+For Apple chips, install compatible `tensorflow` separately:
 
 ```
-python3 -m pip install -q tensorflow-macos
+python -m pip install -q tensorflow-macos
 ```
 
 To visualize XGBoost models, install [graphviz](https://graphviz.org/) and make sure it is in path.
@@ -57,15 +57,15 @@ python -m pip install -e "/absolute/local/path/to/RobustTrees/python-package"
 
 | Attack                    | Status | Details                                                                                                                |
 |:--------------------------|:------:|------------------------------------------------------------------------------------------------------------------------|
-| Auto Attack               |   ⛔    | Loss type `cross_entropy` is not supported for the provided estimator                                                  |
-| Boundary Attack           |   ⛔    | This attack has not yet been tested for binary classification with a single output classifier                          |
-| GeoDA                     |   ⛔    | `XGBoostClassifier` object has no attribute `'channels_first'` (same error for decision trees)                         |
+| Auto Attack               |   ➖    | Loss type `cross_entropy` is not supported for the provided estimator                                                  |
+| Boundary Attack           |   ➖    | This attack has not yet been tested for binary classification with a single output classifier                          |
+| GeoDA                     |   ➖    | `XGBoostClassifier` object has no attribute `'channels_first'` (same error for decision trees)                         |
 | HopSkipJump               |   ✅    |                                                                                                                        |
-| Pixel Attack              |   ⛔    | EstimatorError: requires neural network classifier                                                                     |
-| Query-Efficient...        |   ⛔    | `QueryEfficientGradientEstimationClassifier` this is not an attack implementation - not sure why it was listed as one? |
-| SignOPT Attack            |   ⛔    | This attack has not yet been tested for binary classification with a single output classifier                          |
-| SimBA                     |   ⛔    | EstimatorError: requires neural network classifier                                                                     |
-| Spatial Transformation    |   ⛔    | EstimatorError: requires neural network classifier                                                                     |
-| Square Attack             |   ⛔    | EstimatorError: requires neural network classifier                                                                     |
-| Threshold Attack          |   ⛔    | EstimatorError: requires neural network classifier                                                                     |
-| Zeroth Order Optimisation |   ✅    |                                                                                                                        |
+| Pixel Attack              |   ➖    | EstimatorError: requires neural network classifier                                                                     |
+| Query-Efficient...        |   ➖    | `QueryEfficientGradientEstimationClassifier` this is not an attack implementation - not sure why it was listed as one? |
+| SignOPT Attack            |   ➖    | This attack has not yet been tested for binary classification with a single output classifier                          |
+| SimBA                     |   ➖    | EstimatorError: requires neural network classifier                                                                     |
+| Spatial Transformation    |   ➖    | EstimatorError: requires neural network classifier                                                                     |
+| Square Attack             |   ➖    | EstimatorError: requires neural network classifier                                                                     |
+| Threshold Attack          |   ➖    | EstimatorError: requires neural network classifier                                                                     |
+| Zeroth Order Optimisation |   ✅    | No support for masking                                                                                                 |
