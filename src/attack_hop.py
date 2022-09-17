@@ -125,7 +125,7 @@ def run_attack(cls_loader, fmt, prd, **cls_kwargs):
         ay, evasions = np.array(ay), np.array(evasions)
         tu.dump_result(evasions, x, y, ax, ay, attrs)
 
-    print('HopSkipJump', '')
+    print('HopSkipJump')
     tu.show('Evasion success', f'{evs} / {(evs / len(x)) * 100:.2f} %')
     if evs > 0:
         tu.show('Error', f'{min(errors):.6f} - {max(errors):.6f}')

@@ -2,7 +2,7 @@ scikit-learn==1.1.2
 matplotlib==3.6.0
 colorama
 adversarial-robustness-toolbox==1.11.1
-numpy==1.23.3
+numpy==1.22
 pandas==1.4.4
 torch==1.12.1
 tensorflow

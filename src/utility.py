@@ -145,13 +145,15 @@ def dump_result(evasions, train_x, train_y, adv_x, adv_y, attr):
         return (np.append(x[evasions, :], labels, 1)).tolist()
 
     ensure_out_dir(RESULT_DIR)
-    inputs = [[fmt(train_x, train_y), path.join(RESULT_DIR, 'ori.csv')],
-              [fmt(adv_x, adv_y), path.join(RESULT_DIR, 'adv.csv')]]
+    inputs = [[fmt(train_x, train_y), 'ori.csv'],
+              [fmt(adv_x, adv_y), 'adv.csv']]
+
     # include label column
     int_values = int_cols(train_x)
 
     for (rows, name) in inputs:
-        with open(name, 'w', newline='') as csvfile:
+        with open(path.join(RESULT_DIR, name),
+                  'w', newline='') as csvfile:
             w = csv.writer(csvfile, delimiter=',')
             w.writerow(attr)
             for row in rows:
