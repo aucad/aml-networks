@@ -58,7 +58,7 @@ python -m pip install -e "/absolute/local/path/to/RobustTrees/python-package"
 | 　`└─ run_attacks.py` | Run all attacks (robust/non-robust) on some dataset         |
 | 　`└─ train_dt.py`    | Train decision tree classifier                              |
 | 　`└─ train_xg.py`    | Train XGBoost classifier                                    |
-| 　`└─ uitlity.py`     | Common helpers                                              |
+| 　`└─ utility.py`     | Common helpers                                              |
 
 ## Notes on ART Attacks
 
