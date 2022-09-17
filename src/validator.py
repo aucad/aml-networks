@@ -32,7 +32,8 @@ class NetworkProto:
 
     @property
     def values(self):
-        return list(self.record.values())
+        return list([v for k, v in self.record.items()
+                     if k in self.attributes])
 
     @property
     def is_valid(self):
