@@ -7,6 +7,8 @@ import joblib
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 
+from utility import show
+
 warnings.filterwarnings("ignore")  # ignore feature names warning
 
 VALID, INVALID = 0, 1
@@ -32,8 +34,8 @@ class NetworkProto:
 
     @property
     def values(self):
-        return list([v for k, v in self.record.items()
-                     if k in self.attributes])
+        return [self.record[a] if a in self.record else 0
+                for a in self.attributes]
 
     @property
     def is_valid(self):
@@ -263,8 +265,10 @@ class Validator:
             item_counter.append(inst.name)
             valid += 1 if validator.validate(inst) == VALID else 0
 
-        counts = [f'{k}: {v}' for k, v in Counter(item_counter).items()]
-        print(f'Generated: {n}, valid: {valid}, {" ".join(counts)}')
+        show('Generated', n)
+        show('Valid', valid)
+        for item in Counter(item_counter).items():
+            show(*item)
 
 
 if __name__ == '__main__':

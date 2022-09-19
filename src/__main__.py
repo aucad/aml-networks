@@ -1,16 +1,18 @@
 """
 Carry out the adversarial attacks using XGBoost classifier.
 
+TODO: add a module interface with args.
+
 Usage:
 
 ```
-python src/run_attacks.py
+python src/__main__.py
 ```
 
 Use specific dataset:
 
 ```
-python src/run_attacks.py ./path/to/input_data.csv
+python src/__main__.py ./path/to/input_data.csv
 ```
 
 """

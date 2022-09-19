@@ -53,9 +53,8 @@ python -m pip install -e "/absolute/local/path/to/RobustTrees/python-package"
 | `data`               | Preprocessed data sets, ready for running various attacks   |
 | `src`                | Source code                                                 |
 | 　`└─ examples/`      | ART examples                                                |
-| 　`└─ attack_hop.py`  | Perform HopSkipJump attack                                  |
-| 　`└─ attack_zoo.py`  | Perform ZOO attack                                          |
-| 　`└─ run_attacks.py` | Run all attacks (robust/non-robust) on some dataset         |
+| 　`└─ attack_hop.py`  | HopSkipJump attack implementation                           |
+| 　`└─ attack_zoo.py`  | ZOO attack implementation                                   |
 | 　`└─ train_dt.py`    | Train decision tree classifier                              |
 | 　`└─ train_xg.py`    | Train XGBoost classifier                                    |
 | 　`└─ utility.py`     | Common helpers                                              |

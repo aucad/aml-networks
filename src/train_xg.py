@@ -76,18 +76,25 @@ def train(
         # Booster params
         # https://xgboost.readthedocs.io/en/stable/parameter.html
         params={
+            # tree_method controls which training method to use.
+            # We add a new option robust_exact for this parameter.
+            # Setting tree_method = robust_exact will use our proposed
+            # robust training. For other training methods, please refer
+            # to XGBoost documentation.
+            'tree_method': 'robust_exact' if robust else 'exact',
             # set XGBoost to do multiclass classification using the
-            # softmax objective, you also need to set num_class(
-            # number of classes)
+            # softmax objective,
             # multi:softprob: outputs a vector of ndata * nclass,
             # which can be further reshaped to ndata * nclass matrix.
             # The result contains predicted probability of each data
             # point belonging to each class.
-            'tree_method': 'robust_exact' if robust else 'exact',
+            # A default metric will be assigned according to objective.
             'objective': 'multi:softprob',
-            'metric': 'multi_logloss',
+            # multi:softprob: requires setting num_class(number of classes).
             'num_class': cl_n,
-            'verbosity': 0,
+            # silence most console output
+            'verbose_eval': False,
+            'silent': True,
         },
         num_boost_round=20,
         dtrain=dtrain,
