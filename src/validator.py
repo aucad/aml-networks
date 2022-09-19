@@ -41,9 +41,6 @@ class NetworkProto:
     def is_valid(self):
         return INVALID
 
-    def generate(self):
-        return self
-
     def set_record(self, **kwargs):
         self.record = dict(
             [(key, 0 if key not in kwargs else kwargs[key])
@@ -121,6 +118,9 @@ class NBRecord(NetworkProto):
     @property
     def dbytes(self):
         return self.record['dbytes']
+
+    def generate(self):
+        return self
 
 
 class NbTCP(NBRecord):
