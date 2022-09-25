@@ -17,6 +17,7 @@ Usage with custom dataset:
 python src/train_dt.py ./path/to/input_data.csv
 ```
 """
+import logging
 import warnings
 
 warnings.filterwarnings("ignore")  # ignore import warnings
@@ -32,6 +33,8 @@ from matplotlib import pyplot as plt
 from sklearn import tree
 
 import utility as tu
+
+logger = logging.getLogger(__name__)
 
 formatter = None
 

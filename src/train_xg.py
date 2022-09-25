@@ -16,7 +16,7 @@ Specify input data to use:
 python src/train_xg.py ./path/to/input_data.csv
 ```
 """
-
+import logging
 from collections import Counter
 from os import path
 from pathlib import Path
@@ -29,6 +29,7 @@ from xgboost import plot_tree
 
 import utility as tu
 
+logger = logging.getLogger(__name__)
 
 def formatter(x, y):
     return xgb.DMatrix(x, y)

@@ -16,7 +16,7 @@ Usage:
 python src/attack_hop.py
 ```
 """
-
+import logging
 from sys import argv
 from math import fabs
 
@@ -25,6 +25,7 @@ from art.attacks.evasion import HopSkipJump
 
 import utility as tu
 
+logger = logging.getLogger(__name__)
 
 def get_mask(target, freeze_indices):
     """Mask selected attributes"""

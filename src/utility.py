@@ -1,9 +1,13 @@
+import logging
 from os import path, makedirs
 
 import numpy as np
 import pandas as pd
 from colorama import Fore, Style  # terminal colors
 from sklearn.model_selection import train_test_split
+
+logger = logging.getLogger(__name__)
+
 
 DEFAULT_DS = 'data/CTU-1-1.csv'
 """When no dataset is defined, use this one by default."""

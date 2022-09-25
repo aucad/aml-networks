@@ -12,6 +12,7 @@ Usage:
 python src/attack_zoo.py
 ```
 """
+import logging
 from os import path
 from sys import argv
 from itertools import combinations
@@ -21,6 +22,8 @@ from art.attacks.evasion import ZooAttack
 from matplotlib import pyplot as plt
 
 import utility as tu
+
+logger = logging.getLogger(__name__)
 
 colors = ['deepskyblue', 'lawngreen']
 diff_props = {'c': 'black', 'zorder': 2, 'lw': 1}

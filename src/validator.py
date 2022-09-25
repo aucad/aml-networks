@@ -1,4 +1,6 @@
 from __future__ import annotations
+
+import logging
 from random import uniform, randint
 from collections import Counter, namedtuple
 import warnings
@@ -8,6 +10,8 @@ import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 
 from utility import show
+
+logger = logging.getLogger(__name__)
 
 warnings.filterwarnings("ignore")  # ignore feature names warning
 
@@ -28,7 +32,8 @@ class NetworkProto:
     def __init__(self, name: str, kind: namedtuple, **kwargs):
         self.name = name
         self.attributes = kind._fields or []
-        defaults = dict([(a, 0) for a in self.attributes if a not in kwargs])
+        defaults = dict(
+            [(a, 0) for a in self.attributes if a not in kwargs])
         self.record = kind(**defaults, **kwargs)
 
     @property
@@ -92,7 +97,8 @@ class Validator:
         validator = Validator()
         item_counter, valid = [], 0
         for i in range(n):
-            kind = proto if proto else 'tcp' if randint(0, 1) == 0 else 'udp'
+            kind = proto if proto else 'tcp' if \
+                randint(0, 1) == 0 else 'udp'
             inst = Generator.generate(kind)
             item_counter.append(inst.name)
             valid += 1 if validator.validate(inst) == VALID else 0
@@ -133,7 +139,8 @@ class Generator:
                 Djit=0 if q else uniform(0, 781221.1183),
                 Sintpkt=uniform(0, 84371.496),
                 Dintpkt=uniform(0.0, 59485.32),
-                tcprtt=(synack + ackdat) if p else uniform(0.0, 10.037506),
+                tcprtt=(synack + ackdat)
+                if p else uniform(0.0, 10.037506),
                 synack=synack,
                 ackdat=ackdat,
                 is_sm_ips_ports=randint(0, 1),
