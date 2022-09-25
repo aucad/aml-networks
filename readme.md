@@ -10,9 +10,9 @@ Descriptions of datasets:
 
 ## Setup
 
-Required Python environment: 3.8-3.9 [^1]
+Required Python environment: 3.8 or 3.9 [^1]
 
-[^1]: this is a hard requirement. numpy requires >= 3.8; robust XGBoost relies on Python features removed since 3.10.
+[^1]: This is a hard requirement. Numpy requires >= 3.8; robust XGBoost relies on Python features removed after 3.9.
 
 Install required dependencies:
 
@@ -44,24 +44,25 @@ python -m pip install -e "/absolute/local/path/to/RobustTrees/python-package"
 
 ## Directory organization
 
-| Directory            | Description                                                 |
-|:---------------------|:------------------------------------------------------------|
-| `results`            | Results of various experiments                              |
-| 　`└─ comparisons`    | Comparison of classifiers, on IoT data, obtained using Weka |
-| 　`└─ decision_tree`  | Adversarial attacks on decision trees                       |
-| 　`└─ xgboost`        | Adversarial attacks on XGBoost classifier                   |
-| `data`               | Preprocessed data sets, ready for running various attacks   |
-| `src`                | Source code                                                 |
-| 　`└─ examples/`      | ART examples                                                |
-| 　`└─ attack_hop.py`  | HopSkipJump attack implementation                           |
-| 　`└─ attack_zoo.py`  | ZOO attack implementation                                   |
-| 　`└─ train_dt.py`    | Train decision tree classifier                              |
-| 　`└─ train_xg.py`    | Train XGBoost classifier                                    |
-| 　`└─ utility.py`     | Common helpers                                              |
+| Directory           | Description                                                 |
+|:--------------------|:------------------------------------------------------------|
+| `results`           | Results of various experiments                              |
+| 　`└─ comparisons`   | Comparison of classifiers, on IoT data, obtained using Weka |
+| 　`└─ decision_tree` | Adversarial attacks on decision trees                       |
+| 　`└─ xgboost`       | Adversarial attacks on XGBoost classifier                   |
+| `data`              | Preprocessed data sets, ready for running various attacks   |
+| `src`               | Source code                                                 |
+| 　`└─ examples/`     | ART attack examples, for reference                          |
+| 　`└─ attack_hop.py` | HopSkipJump attack implementation                           |
+| 　`└─ attack_zoo.py` | ZOO attack implementation                                   |
+| 　`└─ train_dt.py`   | Decision tree classifier training                           |
+| 　`└─ train_xg.py`   | XGBoost classifier training                                 |
+| 　`└─ utility.py`    | Common helpers                                              |
+| 　`└─ validator.py`  | Post-attack record validator                                |
 
 ## Notes on ART Attacks
 
-See [ART Evasion attacks Wiki](https://github.com/Trusted-AI/adversarial-robustness-toolbox/wiki/ART-Attacks#1-evasion-attacks)
+See [ART evasion attacks wiki ↗](https://github.com/Trusted-AI/adversarial-robustness-toolbox/wiki/ART-Attacks#1-evasion-attacks)
 
 | Attack                     | Box | Mask | Compatible | Issue Explanation                                                                              |
 |:---------------------------|:---:|:----:|:----------:|:-----------------------------------------------------------------------------------------------|

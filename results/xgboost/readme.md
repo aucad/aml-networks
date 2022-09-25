@@ -3,29 +3,6 @@
 We use XGBoost [RobustTrees](https://github.com/chenhongge/RobustTrees) classifier implementation.
 It must be built locally  [following instructions here](https://github.com/chenhongge/RobustTrees/tree/master/python-package#from-source).
 
-After local build, set up Python environment to use this classifier version:
-
-```
-python -m pip install -e "/absolute/local/path/to/RobustTrees/python-package"
-```
-
-Then run the attacks using the robust classifier. Per Instructions:
-
-> **Configuration Parameters**
-> 
-> We added two additional parameters to XGBoost:
-> 
-> (1) tree_method controls which training method to use. We add a new option `robust_exact` for 
-> this parameter. Setting `tree_method = robust_exact` will use our proposed robust training. 
-> For other training methods, please refer to XGBoost documentation.
-> 
-> (2) `robust_eps` is the L inifity perturbation norm (epsilon) used in training. Since the same 
-> epsilon value will be applied for all features, it is recommended to normalize your data 
-> (e.g., make sure all features are in range 0 - 1). Normalization will not change tree performance
-> 
-
-Please refer to [XGBoost Documentation](https://xgboost.readthedocs.io/) for all other parameters used in XGBoost.
-
 ## Attacks
 
 ### ZOO Evasion attack
@@ -170,22 +147,30 @@ These are relevant as different models offer varying opportunities for successfu
 <table>
  <tr>
    <td>
-      <strong>CTU-1-1</strong><br/>
-      <a href='CTU-1-1.png' target="blank"><img src="CTU-1-1.png" width="250" /></a>
+        <strong>CTU-1-1</strong><br/>
+        <a href='CTU-1-1.png' target="blank">
+        <img src="CTU-1-1.png" width="250"  alt=""/>
+        </a>
    </td>
    <td>
         <strong>CTU-44-1</strong><br/>
-        <a href='CTU-44-1.png' target="blank"><img src="CTU-44-1.png" width="250" /></a>
+        <a href='CTU-44-1.png' target="blank">
+        <img src="CTU-44-1.png" width="250"  alt=""/>
+        </a>
    </td>
  </tr>
  <tr>  
    <td>
         <strong>CTU-20-1</strong><br/>
-        <a href='CTU-20-1.png' target="blank"><img src="CTU-20-1.png" width="250" /></a>
+        <a href='CTU-20-1.png' target="blank">
+        <img src="CTU-20-1.png" width="250"  alt=""/>
+        </a>
    </td>
    <td>
         <strong>NB-15-1</strong><br/>
-        <a href='nb15_1_1.png' target="blank"><img src="nb15_1_1.png" width="250" /></a>
+        <a href='nb15_1_1.png' target="blank">
+        <img src="nb15_1_1.png" width="250"  alt=""/>
+        </a>
    </td>
  </tr>
 </table>

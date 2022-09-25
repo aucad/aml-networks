@@ -1,19 +1,19 @@
 # Adversarial attacks on decision tree classifier
 
 We apply adversarial attacks on a (single) non-robust decision tree, trained using IoT-23 dataset:
-CTU-Malware-Capture-44-1, with 237 rows (benign 211, malicious 26), 90 / 10 split; trained using basic
-[scikit learn decision tree][1]. We then apply various adversarial attacks from the [Adversarial Robustness Toolbox][2]
-to attack this classifier.
+CTU-Malware-Capture-44-1, with 237 rows (benign 211, malicious 26), 90 / 10 split; trained using basic [scikit learn
+decision tree][1]. We then apply various adversarial a ttacks from the [Adversarial Robustness Toolbox][2] to attack
+this classifier.
 
 ## Results
 
 ### Attribute inference attack
 
 The attacked feature must be categorical, and with a relatively small number of possible values (preferably binary, but
-should at least be less then the number of label classes). 
+should at least be less then the number of label classes).
 [[implementation]](https://github.com/iotcad/module-2/blob/bc906db0fda265ea4928f9d0899b3e00bb17a928/src/attack_inf.py)
 
-Output of black-box inference on attributes `proto=udp` and `conn_state=SF`
+Output of black-box inference on attributes `proto=udp` and `conn_state=SF`.
 
 ```text
 Read dataset ----------------- data/CTU-44-1.csv
@@ -66,28 +66,28 @@ Membership attack ------------ Accuracy: 68.42 % Precision: 68.42 % Recall: 100.
 
 **Inference attack methods**
 
-- [**Baseline attack**][BL]: Implementation of a baseline attribute inference, not using a model. The idea is to 
-    train a simple neural network to learn the attacked feature from the rest of the features. Should be used to 
-    compare with other attribute inference results. 
+- [**Baseline attack**][BL]: Implementation of a baseline attribute inference, not using a model. The idea is to train a
+  simple neural network to learn the attacked feature from the rest of the features. Should be used to compare with
+  other attribute inference results.
 
-- [**Black box attack**][BB]: Implementation of a simple black-box attribute inference attack. The idea is to train 
-    a simple neural network to learn the attacked feature from the rest of the features and the model’s predictions. 
-    Assumes the availability of the attacked model’s predictions for the samples under attack, in addition to the rest 
-    of the feature values. If this is not available, the true class label of the samples may be used as a proxy. 
+- [**Black box attack**][BB]: Implementation of a simple black-box attribute inference attack. The idea is to train a
+  simple neural network to learn the attacked feature from the rest of the features and the model’s predictions. Assumes
+  the availability of the attacked model’s predictions for the samples under attack, in addition to the rest of the
+  feature values. If this is not available, the true class label of the samples may be used as a proxy.
 
-- [**White-box 1 attack**][W1]: A variation of the method proposed by of Fredrikson et al. Assumes the availability of 
-    the attacked model’s predictions for the samples under attack, in addition to access to the model itself and the 
-    rest of the feature values. If this is not available, the true class label of the samples may be used as a proxy. 
-    Also assumes that the attacked feature is discrete or categorical, with limited number of possible values, for 
-    example: a boolean feature. Paper link: <https://dl.acm.org/doi/10.1145/2810103.2813677> [^1]
+- [**White-box 1 attack**][W1]: A variation of the method proposed by of Fredrikson et al. Assumes the availability of
+  the attacked model’s predictions for the samples under attack, in addition to access to the model itself and the rest
+  of the feature values. If this is not available, the true class label of the samples may be used as a proxy. Also
+  assumes that the attacked feature is discrete or categorical, with limited number of possible values, for example: a
+  boolean feature. Paper link: <https://dl.acm.org/doi/10.1145/2810103.2813677> [^1]
 
-- [**White-box 2 attack**][W2]: Implementation of Fredrikson et al. white box inference attack for decision trees. 
-    Assumes that the attacked feature is discrete or categorical, with limited number of possible values, for 
-    example: a boolean feature. Paper link: <https://dl.acm.org/doi/10.1145/2810103.2813677> [^1]
+- [**White-box 2 attack**][W2]: Implementation of Fredrikson et al. white box inference attack for decision trees.
+  Assumes that the attacked feature is discrete or categorical, with limited number of possible values, for example: a
+  boolean feature. Paper link: <https://dl.acm.org/doi/10.1145/2810103.2813677> [^1]
      
-- [**Membership attack**][MS]: Implementation of an attribute inference attack that utilizes a membership inference 
-    attack. The idea is to find the target feature value that causes the membership inference attack to classify the 
-    sample as a member with the highest confidence.
+- [**Membership attack**][MS]: Implementation of an attribute inference attack that utilizes a membership inference
+  attack. The idea is to find the target feature value that causes the membership inference attack to classify the
+  sample as a member with the highest confidence.
 
 
 ### ZOO Evasion attack

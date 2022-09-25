@@ -1,14 +1,17 @@
-# IoT-23 Training
+# Classifier Comparison on IoT-23 Data
 
-These are results of training on [Aposemat IoT-23 dataset][0], using different ratios of benign/malicious data during training, to compare results and impact on various learning algorithms.
+These are results of training on [Aposemat IoT-23 dataset][0], using different ratios of benign/malicious 
+data during training, to compare results and impact on various learning algorithms.
 
-- **Classifiers:** AdaBoost, ann, naive bayes, SVM, decision tree
+- **Classifiers:** AdaBoost, ANN, naive bayes, SVM, decision tree
 
-- **Attributes (12):** proto, duration, orig_bytes, resp_bytes, conn_state,
-missed_bytes, history, orig_pkts, orig_ip_bytes, resp_pkts, resp_ip_bytes,
-label
+- **Attributes (12):** proto, duration, orig_bytes, resp_bytes, conn_state, missed_bytes, history, orig_pkts,
+  orig_ip_bytes, resp_pkts, resp_ip_bytes, label
 
 - **Validation:** 10-folds cross-validation
+
+We trained each classifier on a dataset with different ratio of benign vs. malicious examples (mostly benign, mostly
+malicious, even split), then tested the trained classifier against the following test sets.
 
 | Test datasets                 | Benign | Malicious |   Ratio | 
 |:------------------------------|:------:|:---------:|--------:|
@@ -16,7 +19,18 @@ label
 | [CTU-Malware-Capture-44-1][2] |  211   |    26     | 90 / 10 | 
 | [CTU-Malware-Capture-8-1][5]  | 2181	  |   8222    | 20 / 80 | 
 
-## Malware Capture 20-1 (benign)
+The purpose of this analysis was to identify suitable classifier, and their behavior on different splits of
+training/testing data.
+
+**Results**
+
+[Benign Training](#malware-capture-20-1-mostly-benign) |
+[Malicious Training](#malware-capture-34-1-mostly-malicious) |
+[Even Split](#malware-capture-1-1-even-split)
+
+---
+
+## Malware Capture 20-1 (mostly benign)
 
 | Training dataset              | Benign | Malicious |      Ratio | 
 |:------------------------------|:------:|:---------:|-----------:|
@@ -59,7 +73,7 @@ FP rate, precision, recall are for the malicious class
 
 <br/><br/>
 
-## Malware Capture 34-1 (malicious)
+## Malware Capture 34-1 (mostly malicious)
 
 | Training dataset              | Benign | Malicious |  Ratio | 
 |-------------------------------|:------:|:---------:|-------:|
@@ -102,7 +116,7 @@ FP rate, precision, recall are for the malicious class
 
 <br/><br/>
 
-## Malware Capture 1-1: 50/50 split
+## Malware Capture 1-1 (even split)
 
 | Training dataset                 | Benign | Malicious |         Ratio | 
 |:---------------------------------|:------:|:---------:|--------------:|
