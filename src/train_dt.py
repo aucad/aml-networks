@@ -23,71 +23,79 @@ import warnings
 warnings.filterwarnings("ignore")  # ignore import warnings
 
 from os import path
-from pathlib import Path
 from sys import argv
 
-import numpy as np
 from art.estimators.classification.scikitlearn import \
     ScikitlearnDecisionTreeClassifier
 from matplotlib import pyplot as plt
 from sklearn import tree
 
+from train_cls import AbsClassifierInstance
 import utility as tu
 
 logger = logging.getLogger(__name__)
 
 
-def formatter(x, _):
-    return x
+class DecisionTree(AbsClassifierInstance):
+
+    def __init__(self):
+        super().__init__('decision_tree')
+
+    @staticmethod
+    def formatter(x, y):
+        return x
+
+    def predict(self, data):
+        return self.model.predict(data)
+
+    def plot(self):
+        """Plot the tree and save to file."""
+        plt.figure(dpi=200)
+        tree.plot_tree(
+            self.model,
+            feature_names=self.attrs,
+            class_names=self.class_names,
+            filled=True
+        )
+        plt.savefig(path.join(tu.RESULT_DIR, self.plot_filename))
+        plt.show()
+
+    def train(self, dataset, test_percent):
+        self.ds_path = dataset
+        self.test_percent = test_percent
+
+        attrs, classes, train_x, train_y, test_x, test_y = \
+            tu.load_csv_data(dataset, self.test_percent)
+
+        self.attrs = attrs
+        self.classes = classes
+        self.train_x = train_x
+        self.train_y = train_y
+        self.test_x = test_x
+        self.test_y = test_y
+
+        self.model = tree.DecisionTreeClassifier()
+        self.model.fit(train_x, train_y)
+        self.classifier = ScikitlearnDecisionTreeClassifier(self.model)
+        self.train_stats()
+
+        return self.classifier, self.model, attrs, train_x, \
+               train_y, test_x, test_y
+
+
+DT = DecisionTree()
+
+formatter = DT.formatter
 
 
 def predict(model, data):
-    return model.predict(data)
-
-
-def plot_tree(clf_, feat_names, class_names, filename="tree"):
-    """Plot the tree and save to file."""
-    plt.figure(dpi=200)
-    tree.plot_tree(
-        clf_, filled=True,
-        feature_names=feat_names,
-        class_names=[tu.text_label(cn) for cn in class_names]
-    )
-    plt.savefig(f'{filename}.png')
-    plt.show()
+    return DT.predict(data)
 
 
 def train(dataset=tu.DEFAULT_DS, test_size=.1, plot=False, fn=None):
-    """Train a decision tree"""
-
-    attrs, classes, train_x, train_y, test_x, test_y = \
-        tu.load_csv_data(dataset, test_size)
-
-    model = tree.DecisionTreeClassifier()
-    model.fit(train_x, train_y)
-
-    tu.show('Read dataset', dataset)
-    tu.show('Attributes', len(attrs))
-    tu.show('Classifier', 'decision tree')
-    tu.show('Classes', ", ".join([tu.text_label(l) for l in classes]))
-    tu.show('Training instances', len(train_x))
-    tu.show('Test instances', len(test_x))
-
-    if len(test_x) > 0:
-        predictions = predict(model, test_x)
-        split = [str(np.count_nonzero(test_y == v)) for v in classes]
-        tu.show('Test split', "/".join(split))
-        tu.score(test_y, predictions, 0, display=True)
-
-    if plot:
-        plot_tree(model, attrs, classes, fn)
-
-    classifier = ScikitlearnDecisionTreeClassifier(model)
-
-    return classifier, model, attrs, train_x, train_y, test_x, test_y
+    return DT.train(dataset, test_size)
 
 
 if __name__ == '__main__':
     ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
-    name = path.join('results/decision_tree', Path(ds).stem)
-    train(ds, 0.2, False, name)
+    DT.train(ds, 0.2)
