@@ -156,6 +156,16 @@ def plot(img_name, evasions, attr, *data):
         plt.savefig(path.join(tu.RESULT_DIR, f'{img_name}_{f + 1}.png'))
 
 
+def post_restore(mask_idx, x, adv):
+    """Restore attribute values along immutable columns."""
+    if x.shape != adv.shape:
+        raise Exception(f'Shapes do not match {x.shape} {adv.shape}')
+    for idx in mask_idx:
+        ori_values = x[:, idx]
+        adv[:, idx] = ori_values
+    return adv
+
+
 def zoo_attack(cls_loader, fmt, prd, img_path, **cls_kwargs):
     """Carry out ZOO attack on specified classifier.
 
@@ -173,13 +183,15 @@ def zoo_attack(cls_loader, fmt, prd, img_path, **cls_kwargs):
         [attrs[i] for i in range(len(attrs) - 1) if
          i not in int_attrs])))
 
-    data = (x, y, adversarial_iot(cls, x))
-    x_train, labels, adv = x[:], y[:], data[-1].copy()
+    x_train, labels = x[:], y[:]
+    adv = adversarial_iot(cls, x)
+    adv = post_restore(int_attrs, x_train, adv)
+    data = (x_train, labels, adv)
     evasions, adv_y = adv_examples(model, fmt, prd, *data)
 
     if len(evasions) > 0:
         plot(img_path, evasions, attrs, *data)
-        tu.dump_result(evasions, x_train, labels, adv, adv_y, attrs)
+        tu.dump_result(evasions, *data, adv_y, attrs)
 
     return evasions
 
