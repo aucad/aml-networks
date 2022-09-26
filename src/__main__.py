@@ -46,6 +46,10 @@ def main():
         __init_logger()
         run_attacks(dataset)
 
+    # TODO: train selected classifier
+    # TODO: run specific attack(s)
+    # TODO: run the validator
+
 
 def plot_path(robust):
     img_base_path = 'robust' if robust else 'non_robust'
