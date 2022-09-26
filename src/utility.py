@@ -8,7 +8,6 @@ from sklearn.model_selection import train_test_split
 
 logger = logging.getLogger(__name__)
 
-
 DEFAULT_DS = 'data/CTU-1-1.csv'
 """When no dataset is defined, use this one by default."""
 """We use here a dataset with ~ 50/50 split"""
@@ -33,7 +32,26 @@ def int_label(text):
 
 def show(msg, value, end='\n'):
     """Pretty print output with colors and alignment"""
-    print(f'{msg} '.ljust(30, '-'), color_text(value), end=end)
+    str_v = str(value)
+
+    # wrap values lines
+    wrap_size, label_w = 70, 30
+    chunks, chunk_size, lines = len(str_v), wrap_size, []
+    if chunks < chunk_size:
+        lines = [str_v]
+    else:
+        rest = str_v
+        while len(rest) > 0:
+            spc = rest[:chunk_size].rfind(" ")
+            i = chunk_size if (spc < chunk_size // 2) else spc
+            line, remaining = rest[:i].strip(), rest[i:].strip()
+            lines.append(line)
+            rest = remaining
+    fmt_lines = "\n".join(
+        [(' ' * (label_w + 1) if i > 0 else '') + color_text(s)
+         for i, s in enumerate(lines)])
+
+    print(f'{msg} '.ljust(label_w, '-'), fmt_lines, end=end)
 
 
 def normalize(data):
@@ -49,7 +67,8 @@ def int_cols(num_mat):
     """Finds integer valued attributes in a 2d matrix"""
     indices = []
     for col_i in range(len(num_mat[0])):
-        if np.all(np.mod(num_mat[:, col_i], 1) == 0):
+        # if np.all(np.mod(num_mat[:, col_i], 1) == 0):
+        if set(list(np.unique(num_mat[:, col_i]))).issubset({0, 1}):
             indices.append(col_i)
     return indices
 
@@ -61,7 +80,7 @@ def freeze_types(num_mat):
 def load_csv_data(dataset_path, test_size=0.1, max_size=-1):
     """Read dataset and split to train/test using random sampling."""
 
-    df = pd.read_csv(dataset_path)
+    df = pd.read_csv(dataset_path).fillna(0)
     attrs = [col for col in df.columns]
     split = 0 < test_size < len(df)
     test_x, test_y = np.array([]), np.array([])

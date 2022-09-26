@@ -13,7 +13,7 @@ python src/attack_zoo.py
 ```
 """
 import logging
-from os import path
+import warnings
 from sys import argv
 from itertools import combinations
 
@@ -24,6 +24,7 @@ from matplotlib import pyplot as plt
 import utility as tu
 
 logger = logging.getLogger(__name__)
+warnings.filterwarnings("ignore")  # ignore import warnings
 
 colors = ['deepskyblue', 'lawngreen']
 diff_props = {'c': 'black', 'zorder': 2, 'lw': 1}
@@ -165,6 +166,13 @@ def zoo_attack(cls_loader, fmt, prd, img_path, **cls_kwargs):
          img_path - dir path and file name for storing plots
     """
     cls, model, attrs, x, y, _, _ = cls_loader(**cls_kwargs)
+
+    int_attrs = tu.freeze_types(x)
+    tu.show('Immutable', ", ".join([attrs[i] for i in int_attrs]))
+    tu.show('Mutable', ", ".join(sorted(
+        [attrs[i] for i in range(len(attrs) - 1) if
+         i not in int_attrs])))
+
     data = (x, y, adversarial_iot(cls, x))
     x_train, labels, adv = x[:], y[:], data[-1].copy()
     evasions, adv_y = adv_examples(model, fmt, prd, *data)

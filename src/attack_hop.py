@@ -27,6 +27,7 @@ import utility as tu
 
 logger = logging.getLogger(__name__)
 
+
 def get_mask(target, freeze_indices):
     """Mask selected attributes"""
 
@@ -108,6 +109,12 @@ def run_attack(cls_loader, fmt, prd, **cls_kwargs):
     int_attrs = tu.freeze_types(x)
     mask = get_mask(x, int_attrs)
 
+    print('HopSkipJump')
+    tu.show('Immutable', ", ".join([attrs[i] for i in int_attrs]))
+    tu.show('Mutable', ", ".join(sorted(
+        [attrs[i] for i in range(len(attrs) - 1) if
+         i not in int_attrs])))
+
     for index, instance in enumerate(x):
         init_label = predictions[index]
         xa, success, l2, new_label = attack_instance(
@@ -126,13 +133,13 @@ def run_attack(cls_loader, fmt, prd, **cls_kwargs):
         ay, evasions = np.array(ay), np.array(evasions)
         tu.dump_result(evasions, x, y, ax, ay, attrs)
 
-    print('HopSkipJump')
     tu.show('Evasion success', f'{evs} / {(evs / len(x)) * 100:.2f} %')
     if evs > 0:
         tu.show('Error', f'{min(errors):.6f} - {max(errors):.6f}')
     if len(mut) > 0:
         tu.show('Mutations:', f'{len(mut)} attributes')
-        tu.show('Mutated attrs', ",".join(mut))
+        tu.show('Mutated attrs', ", ".join(sorted(mut)))
+    return evs
 
 
 if __name__ == '__main__':

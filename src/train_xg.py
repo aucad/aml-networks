@@ -31,6 +31,7 @@ import utility as tu
 
 logger = logging.getLogger(__name__)
 
+
 def formatter(x, y):
     return xgb.DMatrix(x, y)
 

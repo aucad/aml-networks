@@ -36,7 +36,9 @@ import utility as tu
 
 logger = logging.getLogger(__name__)
 
-formatter = None
+
+def formatter(x, _):
+    return x
 
 
 def predict(model, data):
