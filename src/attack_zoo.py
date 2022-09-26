@@ -97,7 +97,8 @@ def adv_examples(model, fmt, prd, x_train, y, x_adv):
 
     # adv succeeds when predictions differ
     adv_success = [i for i, (x, y) in
-                   enumerate(zip(original, adversarial)) if x != y]
+                   enumerate(zip(original, adversarial))
+                   if int(x) != int(y)]
 
     acc = 100 * len(adv_success) / len(x_adv)
     print('Zoo attack')
@@ -191,7 +192,7 @@ def zoo_attack(cls_loader, fmt, prd, img_path, **cls_kwargs):
 
     if len(evasions) > 0:
         plot(img_path, evasions, attrs, *data)
-        tu.dump_result(evasions, *data, adv_y, attrs)
+        tu.dump_result(evasions, x_train, labels, adv, adv_y, attrs)
 
     return evasions
 
