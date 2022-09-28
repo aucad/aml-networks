@@ -23,6 +23,7 @@ class AbsClassifierInstance:
         self.test_x = np.array([])
         self.test_y = np.array([])
         self.plot_cls = False
+        self.attr_ranges = {}
 
     @property
     def train_size(self):
@@ -66,13 +67,6 @@ class AbsClassifierInstance:
         tu.show('Classes', ", ".join(self.class_names))
         tu.show('Training instances', self.train_size)
         tu.show('Test instances', self.test_size)
-
-        if self.test_size > 0:
-            predictions = self.predict(self.test_x)
-            split = [str(np.count_nonzero(self.test_y == v))
-                     for v in self.classes]
-            tu.show('Test split', "/".join(split))
-            tu.score(self.test_y, predictions, 0, display=True)
 
         if self.plot_cls:
             self.plot()

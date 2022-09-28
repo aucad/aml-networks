@@ -20,6 +20,8 @@ python src/train_dt.py ./path/to/input_data.csv
 import logging
 import warnings
 
+import numpy as np
+
 warnings.filterwarnings("ignore")  # ignore import warnings
 
 from os import path
@@ -78,6 +80,13 @@ class DecisionTree(AbsClassifierInstance):
         self.model.fit(train_x, train_y)
         self.classifier = ScikitlearnDecisionTreeClassifier(self.model)
         self.train_stats()
+
+        if self.test_size > 0:
+            predictions = self.predict(self.test_x)
+            split = [str(np.count_nonzero(self.test_y == v))
+                     for v in self.classes]
+            tu.show('Test split', "/".join(split))
+            tu.score(self.test_y, predictions, 0, display=True)
 
         return self.classifier, self.model, attrs, train_x, \
                train_y, test_x, test_y
