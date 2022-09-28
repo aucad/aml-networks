@@ -40,8 +40,8 @@ logger = logging.getLogger(__name__)
 
 class DecisionTree(AbsClassifierInstance):
 
-    def __init__(self):
-        super().__init__('decision_tree')
+    def __init__(self, dataset_path):
+        super().__init__('decision_tree', dataset_path)
 
     @staticmethod
     def formatter(x, y):
@@ -62,12 +62,11 @@ class DecisionTree(AbsClassifierInstance):
         plt.savefig(path.join(tu.RESULT_DIR, self.plot_filename))
         plt.show()
 
-    def train(self, dataset, test_percent):
-        self.ds_path = dataset
+    def train(self, test_percent, robust=False):
         self.test_percent = test_percent
 
         attrs, classes, train_x, train_y, test_x, test_y = \
-            tu.load_csv_data(dataset, self.test_percent)
+            tu.load_csv_data(self.ds_path, self.test_percent)
 
         self.attrs = attrs
         self.classes = classes
@@ -92,19 +91,6 @@ class DecisionTree(AbsClassifierInstance):
                train_y, test_x, test_y
 
 
-DT = DecisionTree()
-
-formatter = DT.formatter
-
-
-def predict(model, data):
-    return DT.predict(data)
-
-
-def train(dataset=tu.DEFAULT_DS, test_size=.1, plot=False, fn=None):
-    return DT.train(dataset, test_size)
-
-
 if __name__ == '__main__':
     ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
-    DT.train(ds, 0.2)
+    DecisionTree(ds).train(0.2)

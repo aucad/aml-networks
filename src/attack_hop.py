@@ -68,7 +68,7 @@ def attack_instance(
     return x_adv, success, l2_error, label
 
 
-def run_attack(cls_loader, fmt, prd, **cls_kwargs):
+def run_attack(cls, **cls_kwargs):
     """Run HopSkipJumpAttack attack on provided classifier
 
     Arguments:
@@ -76,7 +76,9 @@ def run_attack(cls_loader, fmt, prd, **cls_kwargs):
          fmt - pre-prediction formatter function for single data instance
          prd - prediction function that returns class labels for given data
     """
-    classifier, model, attrs, x, y, _, _ = cls_loader(**cls_kwargs)
+    classifier, model, attrs, x, y, _, _ = cls.train(**cls_kwargs)
+    fmt = cls.formatter
+    prd = cls.predict
 
     # create attack instance
     attack = HopSkipJump(
@@ -104,7 +106,7 @@ def run_attack(cls_loader, fmt, prd, **cls_kwargs):
     ax, ay = [], []
     x_adv, errors, evasions = [], [], []
     ori_inputs = fmt(x, y) if fmt else x
-    predictions = prd(model, ori_inputs).flatten().tolist()
+    predictions = prd(ori_inputs).flatten().tolist()
     mutations = set()
     int_attrs = tu.freeze_types(x)
     mask = get_mask(x, int_attrs)
@@ -143,9 +145,10 @@ def run_attack(cls_loader, fmt, prd, **cls_kwargs):
 
 
 if __name__ == '__main__':
-    from train_xg import train, formatter, predict
+    from train_xg import XGBClassifier
+    from train_dt import DecisionTree
 
     ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
-    run_attack(
-        train, formatter, predict,
-        dataset=ds, test_size=0, max_size=-1, robust=False)
+    cls = DecisionTree(ds)
+
+    run_attack(cls, test_percent=0, robust=False)

@@ -10,9 +10,9 @@ logger = logging.getLogger(__name__)
 
 class AbsClassifierInstance:
 
-    def __init__(self, name):
+    def __init__(self, name, dataset_path):
         self.name = name
-        self.ds_path = None
+        self.ds_path = dataset_path
         self.test_percent = 0
         self.classifier = None
         self.model = None
@@ -57,7 +57,7 @@ class AbsClassifierInstance:
     def plot(self):
         pass
 
-    def train(self, dataset, test_size):
+    def train(self, test_percent, robust=False):
         pass
 
     def train_stats(self):

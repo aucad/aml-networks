@@ -33,8 +33,8 @@ logger = logging.getLogger(__name__)
 
 class XGBClassifier(AbsClassifierInstance):
 
-    def __init__(self):
-        super().__init__('gxboost')
+    def __init__(self, dataset_path):
+        super().__init__('gxboost', dataset_path)
 
     @staticmethod
     def formatter(x, y):
@@ -53,7 +53,7 @@ class XGBClassifier(AbsClassifierInstance):
         plt.savefig(fn, dpi=200)
         plt.show()
 
-    def train(self, dataset, test_percent, robust=False):
+    def train(self, test_percent, robust=False):
         """Train a classifier using XGBoost.
 
         Arguments:
@@ -62,11 +62,10 @@ class XGBClassifier(AbsClassifierInstance):
             robust - set to True to use robust training
             max - max cap for number of training instances
         """
-        self.ds_path = dataset
         self.test_percent = test_percent
 
         attrs, classes, train_x, train_y, test_x, test_y = \
-            tu.load_csv_data(dataset, test_percent)
+            tu.load_csv_data(self.ds_path, test_percent)
 
         self.attrs = attrs
         self.classes = classes
@@ -75,7 +74,7 @@ class XGBClassifier(AbsClassifierInstance):
         self.test_x = test_x
         self.test_y = test_y
 
-        dtrain = formatter(train_x, train_y)
+        dtrain = self.formatter(train_x, train_y)
         evallist = [(dtrain, 'eval'), (dtrain, 'train')]
         cl_n, cl_srtd = len(classes), sorted(classes)
 
@@ -128,22 +127,6 @@ class XGBClassifier(AbsClassifierInstance):
                train_y, test_x, test_y
 
 
-XG = XGBClassifier()
-
-formatter = XG.formatter
-
-
-def predict(model, data):
-    return XG.predict(data)
-
-
-def train(
-        dataset=tu.DEFAULT_DS, test_size=.1, robust=False,
-        max_size=-1, plot=False, fn=None
-):
-    return XG.train(dataset, test_size, robust)
-
-
 if __name__ == '__main__':
     ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
-    train(ds, 0.05)
+    XGBClassifier(ds).train(0.05)

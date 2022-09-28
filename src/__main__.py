@@ -22,7 +22,7 @@ from typing import Optional, List
 
 from attack_zoo import zoo_attack
 from attack_hop import run_attack as hop_attack
-from train_xg import train, formatter, predict
+from train_xg import XGBClassifier
 from utility import DEFAULT_DS
 
 NON_ROBUST, ROBUST = False, True
@@ -58,17 +58,9 @@ def plot_path(robust):
 
 def run_attacks(dataset):
     for opt in (NON_ROBUST, ROBUST):
-        zoo_attack(
-            train, formatter, predict,
-            img_path=plot_path(opt),
-            dataset=dataset,
-            test_size=0,
-            robust=opt)
-        hop_attack(
-            train, formatter, predict,
-            dataset=dataset,
-            test_size=0,
-            robust=opt)
+        xgb = XGBClassifier(dataset)
+        zoo_attack(xgb, test_percent=0, robust=opt)
+        hop_attack(xgb, test_percent=0, robust=opt)
 
 
 def __parse_args(parser: ArgumentParser, args: Optional[List] = None):

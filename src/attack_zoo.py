@@ -14,6 +14,7 @@ python src/attack_zoo.py
 """
 import logging
 import warnings
+from os import path
 from sys import argv
 from itertools import combinations
 
@@ -84,16 +85,16 @@ def adversarial_iot(classifier, x_train):
         .generate(x=x_train)
 
 
-def adv_examples(model, fmt, prd, x_train, y, x_adv):
+def adv_examples(fmt, prd, x_train, y, x_adv):
     """Make a list of adversarial instance indices that succeed in
     evasion. """
     # predictions for training instances
     ori_inputs = fmt(x_train, y) if fmt else x_train
-    original = prd(model, ori_inputs).flatten().tolist()
+    original = prd(ori_inputs).flatten().tolist()
 
     # adversarial predictions for same data
     adv_inputs = fmt(x_adv, y) if fmt else x_adv
-    adversarial = prd(model, adv_inputs).flatten().tolist()
+    adversarial = prd(adv_inputs).flatten().tolist()
 
     # adv succeeds when predictions differ
     adv_success = [i for i, (x, y) in
@@ -167,7 +168,7 @@ def post_restore(mask_idx, x, adv):
     return adv
 
 
-def zoo_attack(cls_loader, fmt, prd, img_path, **cls_kwargs):
+def zoo_attack(cls, **cls_kwargs):
     """Carry out ZOO attack on specified classifier.
 
     Arguments:
@@ -176,7 +177,9 @@ def zoo_attack(cls_loader, fmt, prd, img_path, **cls_kwargs):
          prd - prediction function that returns class labels for data
          img_path - dir path and file name for storing plots
     """
-    cls, model, attrs, x, y, _, _ = cls_loader(**cls_kwargs)
+    classifier, model, attrs, x, y, _, _ = cls.train(**cls_kwargs)
+    fmt = cls.formatter
+    prd = cls.predict
 
     int_attrs = tu.freeze_types(x)
     tu.show('Immutable', ", ".join([attrs[i] for i in int_attrs]))
@@ -185,24 +188,23 @@ def zoo_attack(cls_loader, fmt, prd, img_path, **cls_kwargs):
          i not in int_attrs])))
 
     x_train, labels = x[:], y[:]
-    adv = adversarial_iot(cls, x)
+    adv = adversarial_iot(classifier, x)
     adv = post_restore(int_attrs, x_train, adv)
     data = (x_train, labels, adv)
-    evasions, adv_y = adv_examples(model, fmt, prd, *data)
+    evasions, adv_y = adv_examples(fmt, prd, *data)
 
     if len(evasions) > 0:
-        plot(img_path, evasions, attrs, *data)
+        plot(tu.RESULT_DIR, evasions, attrs, *data)
         tu.dump_result(evasions, x_train, labels, adv, adv_y, attrs)
 
     return evasions
 
 
 if __name__ == '__main__':
-    from os import path
-    from train_xg import train, formatter, predict
+    from train_xg import XGBClassifier
+    from train_dt import DecisionTree
 
     ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
+    cls = DecisionTree(ds)
 
-    zoo_attack(
-        train, formatter, predict, img_path='',
-        dataset=ds, test_size=0, max_size=200, robust=False)
+    zoo_attack(cls, test_percent=0, robust=False)
