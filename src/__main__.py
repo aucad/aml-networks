@@ -35,17 +35,15 @@ def main():
     parser = ArgumentParser(prog=NAME, description=main.__doc__)
     args = __parse_args(parser)
     dataset = args.data
+    __init_logger()
 
     if not dataset:
         parser.print_help()
         exit(1)
-    else:
-        __init_logger()
-        run_attacks(dataset, ClsLoader.XGBOOST)
 
-    # TODO: train selected classifier
-    # TODO: run specific attack(s)
-    # TODO: run the validator
+    run_attacks(dataset, ClsLoader.XGBOOST)
+
+    # TODO: apply selected args
 
 
 def run_attacks(dataset, cls_kind=None):
@@ -58,13 +56,29 @@ def run_attacks(dataset, cls_kind=None):
 def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
     """Setup available program arguments."""
 
-    # TODO: extend these args
-
     parser.add_argument(
         '-d', '--data',
         action="store",
         default=DEFAULT_DS,
-        help="path to dataset",
+        help=f'Path to dataset [default: {DEFAULT_DS}]',
+    )
+    parser.add_argument(
+        '-m', '--model',
+        action='store',
+        default=ClsLoader.XGBOOST,
+        help=f'Learner. Options: {ClsLoader.DECISION_TREE} or '
+             f'{ClsLoader.XGBOOST}. [default: {ClsLoader.XGBOOST}]'
+    )
+    parser.add_argument(
+        "-r", "--robust",
+        action='store_true',
+        help="Use robust classifier (with defense)."
+    )
+    parser.add_argument(
+        '-a', '--attack',
+        action='store',
+        help=f'Evasion attack. Options: '
+             f'{AttackLoader.HOP_SKIP} or {AttackLoader.ZOO}'
     )
     parser.add_argument(
         "-v", "--version",

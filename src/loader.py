@@ -7,8 +7,9 @@ from xgb import XGBClassifier
 
 
 class ClsLoader:
-    XGBOOST = 0
-    DECISION_TREE = 1
+    """Load selected classifier."""
+    XGBOOST = 'xgb'
+    DECISION_TREE = 'tree'
 
     @staticmethod
     def load(kind=None) -> AbsClassifierInstance:
@@ -19,8 +20,9 @@ class ClsLoader:
 
 
 class AttackLoader:
-    HOP_SKIP = 0
-    ZOO = 1
+    """Load selected attack mode."""
+    HOP_SKIP = 'hop'
+    ZOO = 'zoo'
 
     @staticmethod
     def load(kind) -> AbsAttack:

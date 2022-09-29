@@ -56,7 +56,6 @@ def int_cols(num_mat):
     """Finds integer valued attributes in a 2d matrix"""
     indices = []
     for col_i in range(len(num_mat[0])):
-        # if np.all(np.mod(num_mat[:, col_i], 1) == 0):
         if set(list(np.unique(num_mat[:, col_i]))).issubset({0, 1}):
             indices.append(col_i)
     return indices
