@@ -2,9 +2,7 @@ import logging
 from os import path, makedirs
 
 import numpy as np
-import pandas as pd
 from colorama import Fore, Style  # terminal colors
-from sklearn.model_selection import train_test_split
 
 logger = logging.getLogger(__name__)
 
@@ -54,15 +52,6 @@ def show(msg, value, end='\n'):
     print(f'{msg} '.ljust(label_w, '-'), fmt_lines, end=end)
 
 
-def normalize(data):
-    """normalize values in range 0.0 - 1.0."""
-    np.seterr(divide='ignore', invalid='ignore')
-    for i in range(len(data[0])):
-        data[:, i] = (data[:, i]) / max(data[:, i])
-        data[:, i] = np.nan_to_num(data[:, i])
-    return data
-
-
 def int_cols(num_mat):
     """Finds integer valued attributes in a 2d matrix"""
     indices = []
@@ -75,32 +64,6 @@ def int_cols(num_mat):
 
 def freeze_types(num_mat):
     return int_cols(num_mat)
-
-
-def load_csv_data(dataset_path, test_size=0.1, max_size=-1):
-    """Read dataset and split to train/test using random sampling."""
-
-    df = pd.read_csv(dataset_path).fillna(0)
-    attrs = [col for col in df.columns]
-    split = 0 < test_size < len(df)
-    test_x, test_y = np.array([]), np.array([])
-
-    # sample training/test instances
-    if split:
-        train, test = train_test_split(df, test_size=test_size)
-        test_x = normalize(np.array(test)[:, :-1])
-        test_y = np.array(test)[:, -1].astype(int).flatten()
-    else:
-        train = df
-
-    train_x = normalize(np.array(train)[:, :-1])
-    train_y = np.array(train)[:, -1].astype(int).flatten()
-
-    if max_size > 0:
-        train_x, train_y = train_x[: max_size, :], train_y[: max_size]
-
-    classes = np.unique(train_y)
-    return attrs, classes, train_x, train_y, test_x, test_y
 
 
 def score(true_labels, predictions, positive=0, display=False):

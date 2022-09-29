@@ -23,7 +23,7 @@ from math import fabs
 import numpy as np
 from art.attacks.evasion import HopSkipJump
 
-import utility as tu
+from classifier import utility as tu
 
 logger = logging.getLogger(__name__)
 
@@ -76,7 +76,10 @@ def run_attack(cls, **cls_kwargs):
          fmt - pre-prediction formatter function for single data instance
          prd - prediction function that returns class labels for given data
     """
-    classifier, model, attrs, x, y, _, _ = cls.train(**cls_kwargs)
+    classifier = cls.classifier
+    attrs = cls.attrs
+    x = cls.train_x
+    y = cls.train_y
     fmt = cls.formatter
     prd = cls.predict
 
@@ -145,10 +148,9 @@ def run_attack(cls, **cls_kwargs):
 
 
 if __name__ == '__main__':
-    from train_xg import XGBClassifier
-    from train_dt import DecisionTree
+    from classifier import ClsLoader
 
     ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
-    cls = DecisionTree(ds)
+    cls = ClsLoader.load(ClsLoader.XGBOOST).load(ds).train()
 
     run_attack(cls, test_percent=0, robust=False)

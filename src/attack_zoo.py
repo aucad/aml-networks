@@ -22,7 +22,7 @@ import numpy as np
 from art.attacks.evasion import ZooAttack
 from matplotlib import pyplot as plt
 
-import utility as tu
+from classifier import utility as tu
 
 logger = logging.getLogger(__name__)
 warnings.filterwarnings("ignore")  # ignore import warnings
@@ -201,8 +201,7 @@ def zoo_attack(cls, **cls_kwargs):
 
 
 if __name__ == '__main__':
-    from train_xg import XGBClassifier
-    from train_dt import DecisionTree
+    from classifier.tree import DecisionTree
 
     ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
     cls = DecisionTree(ds)

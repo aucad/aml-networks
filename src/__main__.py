@@ -16,14 +16,13 @@ python src/__main__.py ./path/to/input_data.csv
 """
 import logging as lg
 from argparse import ArgumentParser
-from os import path
 from sys import exit
 from typing import Optional, List
 
 from attack_zoo import zoo_attack
 from attack_hop import run_attack as hop_attack
-from train_xg import XGBClassifier
-from utility import DEFAULT_DS
+from classifier import ClsLoader
+from classifier.utility import DEFAULT_DS
 
 NON_ROBUST, ROBUST = False, True
 VERSION = "0.1.0"
@@ -51,16 +50,12 @@ def main():
     # TODO: run the validator
 
 
-def plot_path(robust):
-    img_base_path = 'robust' if robust else 'non_robust'
-    return path.join(img_base_path)
-
-
 def run_attacks(dataset):
     for opt in (NON_ROBUST, ROBUST):
-        xgb = XGBClassifier(dataset)
-        zoo_attack(xgb, test_percent=0, robust=opt)
-        hop_attack(xgb, test_percent=0, robust=opt)
+        xgb = ClsLoader.load(ClsLoader.XGBOOST) \
+            .load(dataset, 0).train(robust=opt)
+        zoo_attack(xgb)
+        hop_attack(xgb)
 
 
 def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
