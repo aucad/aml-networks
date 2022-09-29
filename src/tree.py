@@ -14,7 +14,7 @@ from art.estimators.classification.scikitlearn \
 from matplotlib import pyplot as plt
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 
-from abscls import AbsClassifierInstance
+from cls import AbsClassifierInstance
 
 
 class DecisionTree(AbsClassifierInstance):

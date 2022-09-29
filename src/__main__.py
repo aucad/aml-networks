@@ -19,9 +19,7 @@ from argparse import ArgumentParser
 from sys import exit
 from typing import Optional, List
 
-from attack_zoo import zoo_attack
-from attack_hop import run_attack as hop_attack
-from loader import ClsLoader
+from loader import ClsLoader, AttackLoader
 from utility import DEFAULT_DS
 
 NON_ROBUST, ROBUST = False, True
@@ -43,19 +41,18 @@ def main():
         exit(1)
     else:
         __init_logger()
-        run_attacks(dataset)
+        run_attacks(dataset, ClsLoader.XGBOOST)
 
     # TODO: train selected classifier
     # TODO: run specific attack(s)
     # TODO: run the validator
 
 
-def run_attacks(dataset):
+def run_attacks(dataset, cls_kind=None):
     for opt in (NON_ROBUST, ROBUST):
-        xgb = ClsLoader.load(ClsLoader.XGBOOST) \
-            .load(dataset, .98).train(robust=opt)
-        zoo_attack(xgb)
-        hop_attack(xgb)
+        cls = ClsLoader.load(cls_kind).load(dataset, .98).train(robust=opt)
+        AttackLoader.load(AttackLoader.HOP_SKIP).set_cls(cls).run()
+        AttackLoader.load(AttackLoader.ZOO).set_cls(cls).run()
 
 
 def __parse_args(parser: ArgumentParser, args: Optional[List] = None):

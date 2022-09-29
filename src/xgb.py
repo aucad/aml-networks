@@ -10,13 +10,13 @@ from matplotlib import pyplot as plt
 # noinspection PyPackageRequirements
 from xgboost import plot_tree, DMatrix, train as xg_train
 
-from abscls import AbsClassifierInstance
+from cls import AbsClassifierInstance
 
 
 class XGBClassifier(AbsClassifierInstance):
 
     def __init__(self):
-        super().__init__('gxboost')
+        super().__init__('xgboost')
 
     @staticmethod
     def formatter(x, y):

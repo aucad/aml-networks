@@ -1,5 +1,7 @@
-from abscls import AbsClassifierInstance
+from cls import AbsClassifierInstance
 from attack import AbsAttack
+from hopskip import HopSkip
+from zoo import Zoo
 from tree import DecisionTree
 from xgb import XGBClassifier
 
@@ -9,7 +11,7 @@ class ClsLoader:
     DECISION_TREE = 1
 
     @staticmethod
-    def load(kind) -> AbsClassifierInstance:
+    def load(kind=None) -> AbsClassifierInstance:
         if kind == ClsLoader.DECISION_TREE:
             return DecisionTree()
         else:
@@ -17,12 +19,12 @@ class ClsLoader:
 
 
 class AttackLoader:
-    HOPSKIP = 0
+    HOP_SKIP = 0
     ZOO = 1
 
     @staticmethod
     def load(kind) -> AbsAttack:
-        if kind == AttackLoader.HOPSKIP:
-            return None
+        if kind == AttackLoader.HOP_SKIP:
+            return HopSkip()
         else:
-            return None
+            return Zoo()
