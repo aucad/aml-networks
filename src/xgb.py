@@ -3,21 +3,7 @@ Build a XGBoost model for provided dataset.
 
 Provide as input a path to a dataset, or script uses default
 dataset if none provided. The dataset must be numeric at all attributes.
-
-Default usage:
-
-```
-python src/xgb.py
-```
-
-Specify input data to use:
-
-```
-python src/xgb.py ./path/to/input_data.csv
-```
 """
-import logging
-from sys import argv
 
 from art.estimators.classification import XGBoostClassifier
 from matplotlib import pyplot as plt
@@ -25,8 +11,6 @@ from matplotlib import pyplot as plt
 from xgboost import plot_tree, DMatrix, train as xg_train
 
 from abscls import AbsClassifierInstance
-
-logger = logging.getLogger(__name__)
 
 
 class XGBClassifier(AbsClassifierInstance):
@@ -92,4 +76,4 @@ class XGBClassifier(AbsClassifierInstance):
 
 
 if __name__ == '__main__':
-    AbsClassifierInstance.default_run(XGBClassifier, argv)
+    AbsClassifierInstance.default_run(XGBClassifier)

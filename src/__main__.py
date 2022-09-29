@@ -21,7 +21,7 @@ from typing import Optional, List
 
 from attack_zoo import zoo_attack
 from attack_hop import run_attack as hop_attack
-from cloader import ClsLoader
+from loader import ClsLoader
 from utility import DEFAULT_DS
 
 NON_ROBUST, ROBUST = False, True

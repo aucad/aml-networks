@@ -9,15 +9,9 @@ attacks optimized for L2 and L∞ similarity metrics respectively.
 
 Implementation loosely based on this example:
 <https://github.com/Trusted-AI/adversarial-robustness-toolbox/blob/main/notebooks/classifier_blackbox.ipynb>
-
-Usage:
-
-```
-python src/attack_hop.py
-```
 """
+
 import logging
-from sys import argv
 from math import fabs
 
 import numpy as np
@@ -148,8 +142,8 @@ def run_attack(cls):
 
 
 if __name__ == '__main__':
-    from cloader import ClsLoader
+    from loader import ClsLoader
 
-    ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
-    cls = ClsLoader.load(ClsLoader.XGBOOST).load(ds, .95).train()
+    cls = ClsLoader.load(ClsLoader.XGBOOST)\
+        .load(tu.DEFAULT_DS, .95).train()
     run_attack(cls)

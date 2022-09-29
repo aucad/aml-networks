@@ -5,17 +5,11 @@ The black-box zeroth-order optimization attack from Pin-Yu Chen et
 al. (2018). This attack is a variant of the C&W attack which uses
 ADAM coordinate descent to perform numerical estimation of gradients.
 Paper: https://arxiv.org/abs/1708.03999
-
-Usage:
-
-```
-python src/attack_zoo.py
-```
 """
+
 import logging
 import warnings
 from os import path
-from sys import argv
 from itertools import combinations
 
 import numpy as np
@@ -204,8 +198,8 @@ def zoo_attack(cls):
 
 
 if __name__ == '__main__':
-    from cloader import ClsLoader
+    from loader import ClsLoader
 
-    ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
-    cls = ClsLoader.load(ClsLoader.XGBOOST).load(ds, .95).train()
+    cls = ClsLoader.load(ClsLoader.XGBOOST)\
+        .load(tu.DEFAULT_DS, .95).train()
     zoo_attack(cls)

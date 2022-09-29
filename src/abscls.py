@@ -78,7 +78,7 @@ class AbsClassifierInstance:
     def load(self, dataset_path, test_percent=0):
         self.ds_path = dataset_path
         self.test_percent = test_percent
-        self.load_csv_data()
+        self.__load_csv_data()
         return self
 
     def train(self, robust=False):
@@ -117,7 +117,7 @@ class AbsClassifierInstance:
             data[:, i] = np.nan_to_num(data[:, i])
         return data
 
-    def load_csv_data(self, max_size=-1):
+    def __load_csv_data(self, max_size=-1):
         """
         Read dataset and split to train/test using random sampling.
         """
@@ -151,7 +151,6 @@ class AbsClassifierInstance:
         self.test_y = test_y
 
     @staticmethod
-    def default_run(classifier_cls, argv):
+    def default_run(classifier_cls):
         from utility import DEFAULT_DS
-        ds = argv[1] if len(argv) > 1 else DEFAULT_DS
-        classifier_cls().load(ds, 0.2).train()
+        classifier_cls().load(DEFAULT_DS, 0.2).train()
