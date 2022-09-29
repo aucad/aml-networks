@@ -39,8 +39,11 @@ class XGBClassifier(AbsClassifierInstance):
         see:  https://xgboost.readthedocs.io/en/stable/parameter.html
         for full list of options
         """
+        dtrain = self.formatter(self.train_x, self.train_y)
         self.model = xg_train(
             num_boost_round=20,
+            dtrain=dtrain,
+            evals=[(dtrain, 'eval'), (dtrain, 'train')],
             params={
                 # tree_method controls which training method to use.
                 # We add a new option robust_exact for this
@@ -62,10 +65,7 @@ class XGBClassifier(AbsClassifierInstance):
                 # try silence most console output
                 'verbose_eval': False,
                 'silent': True,
-            },
-            dtrain=(dtrain := self.formatter(
-                self.train_x, self.train_y)),
-            evals=[(dtrain, 'eval'), (dtrain, 'train')])
+            })
 
     def prep_classifier(self):
         self.classifier = XGBoostClassifier(
