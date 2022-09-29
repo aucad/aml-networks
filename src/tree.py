@@ -7,13 +7,13 @@ at all attributes.
 Default usage:
 
 ```
-python src/classifier/tree.py
+python src/tree.py
 ```
 
 Usage with custom dataset:
 
 ```
-python src/classifier/tree.py ./path/to/input_data.csv
+python src/tree.py ./path/to/input_data.csv
 ```
 """
 import logging
@@ -28,7 +28,7 @@ from art.estimators.classification.scikitlearn \
 from matplotlib import pyplot as plt
 from sklearn import tree
 
-from base import AbsClassifierInstance
+from abscls import AbsClassifierInstance
 
 logger = logging.getLogger(__name__)
 

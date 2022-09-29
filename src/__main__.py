@@ -21,8 +21,8 @@ from typing import Optional, List
 
 from attack_zoo import zoo_attack
 from attack_hop import run_attack as hop_attack
-from classifier import ClsLoader
-from classifier.utility import DEFAULT_DS
+from cloader import ClsLoader
+from utility import DEFAULT_DS
 
 NON_ROBUST, ROBUST = False, True
 VERSION = "0.1.0"
@@ -53,7 +53,7 @@ def main():
 def run_attacks(dataset):
     for opt in (NON_ROBUST, ROBUST):
         xgb = ClsLoader.load(ClsLoader.XGBOOST) \
-            .load(dataset, 0).train(robust=opt)
+            .load(dataset, .98).train(robust=opt)
         zoo_attack(xgb)
         hop_attack(xgb)
 

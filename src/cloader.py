@@ -1,9 +1,6 @@
-
-
-
-from .base import AbsClassifierInstance
-from .tree import DecisionTree
-from .ensemble import XGBClassifier
+from abscls import AbsClassifierInstance
+from tree import DecisionTree
+from xgb import XGBClassifier
 
 
 class ClsLoader:

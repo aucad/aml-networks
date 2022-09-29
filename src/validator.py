@@ -9,7 +9,7 @@ import joblib
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 
-from classifier.utility import show
+from utility import show
 
 logger = logging.getLogger(__name__)
 

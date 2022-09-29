@@ -104,8 +104,7 @@ class AbsClassifierInstance:
             tu.ensure_out_dir(self.out_dir)
             self.plot()
 
-        return self.classifier, self.model, self.attrs, \
-               self.train_x, self.train_y, self.test_x, self.test_y
+        return self
 
     def normalize(self, data, capture=False):
         """normalize values in range 0.0 - 1.0."""

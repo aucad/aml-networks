@@ -23,7 +23,7 @@ from math import fabs
 import numpy as np
 from art.attacks.evasion import HopSkipJump
 
-from classifier import utility as tu
+import utility as tu
 
 logger = logging.getLogger(__name__)
 
@@ -68,7 +68,7 @@ def attack_instance(
     return x_adv, success, l2_error, label
 
 
-def run_attack(cls, **cls_kwargs):
+def run_attack(cls):
     """Run HopSkipJumpAttack attack on provided classifier
 
     Arguments:
@@ -148,9 +148,8 @@ def run_attack(cls, **cls_kwargs):
 
 
 if __name__ == '__main__':
-    from classifier import ClsLoader
+    from cloader import ClsLoader
 
     ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
-    cls = ClsLoader.load(ClsLoader.XGBOOST).load(ds).train()
-
-    run_attack(cls, test_percent=0, robust=False)
+    cls = ClsLoader.load(ClsLoader.XGBOOST).load(ds, .95).train()
+    run_attack(cls)

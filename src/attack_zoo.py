@@ -22,7 +22,7 @@ import numpy as np
 from art.attacks.evasion import ZooAttack
 from matplotlib import pyplot as plt
 
-from classifier import utility as tu
+import utility as tu
 
 logger = logging.getLogger(__name__)
 warnings.filterwarnings("ignore")  # ignore import warnings
@@ -168,7 +168,7 @@ def post_restore(mask_idx, x, adv):
     return adv
 
 
-def zoo_attack(cls, **cls_kwargs):
+def zoo_attack(cls):
     """Carry out ZOO attack on specified classifier.
 
     Arguments:
@@ -177,7 +177,10 @@ def zoo_attack(cls, **cls_kwargs):
          prd - prediction function that returns class labels for data
          img_path - dir path and file name for storing plots
     """
-    classifier, model, attrs, x, y, _, _ = cls.train(**cls_kwargs)
+    classifier = cls.classifier
+    attrs = cls.attrs
+    x = cls.train_x
+    y = cls.train_y
     fmt = cls.formatter
     prd = cls.predict
 
@@ -201,9 +204,8 @@ def zoo_attack(cls, **cls_kwargs):
 
 
 if __name__ == '__main__':
-    from classifier.tree import DecisionTree
+    from cloader import ClsLoader
 
     ds = argv[1] if len(argv) > 1 else tu.DEFAULT_DS
-    cls = DecisionTree(ds)
-
-    zoo_attack(cls, test_percent=0, robust=False)
+    cls = ClsLoader.load(ClsLoader.XGBOOST).load(ds, .95).train()
+    zoo_attack(cls)

@@ -7,13 +7,13 @@ dataset if none provided. The dataset must be numeric at all attributes.
 Default usage:
 
 ```
-python src/classifier/ensemble.py
+python src/xgb.py
 ```
 
 Specify input data to use:
 
 ```
-python src/classifier/ensemble.py ./path/to/input_data.csv
+python src/xgb.py ./path/to/input_data.csv
 ```
 """
 import logging
@@ -24,7 +24,7 @@ from matplotlib import pyplot as plt
 # noinspection PyPackageRequirements
 from xgboost import plot_tree, DMatrix, train as xg_train
 
-from base import AbsClassifierInstance
+from abscls import AbsClassifierInstance
 
 logger = logging.getLogger(__name__)
 
