@@ -10,11 +10,14 @@ attacks optimized for L2 and L∞ similarity metrics respectively.
 Implementation loosely based on this example:
 <https://github.com/Trusted-AI/adversarial-robustness-toolbox/blob/main/notebooks/classifier_blackbox.ipynb>
 """
+import logging
 
 import numpy as np
-from art.attacks.evasion import HopSkipJump
+from art.attacks.evasion import HopSkipJump as ARTHopSkipJump
 
 from src import AbsAttack
+
+logger = logging.getLogger(__name__)
 
 
 class HopSkip(AbsAttack):
@@ -68,7 +71,7 @@ class HopSkip(AbsAttack):
              prd - prediction function that returns class labels for given data
         """
         # create attack instance
-        attack = HopSkipJump(
+        attack = ARTHopSkipJump(
             # a trained classifier
             classifier=self.cls.classifier,
             # size of the batch used by the estimator during inference.

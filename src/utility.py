@@ -1,6 +1,9 @@
+import logging
 from os import path, makedirs
 
 from colorama import Fore, Style  # terminal colors
+
+logger = logging.getLogger(__name__)
 
 
 class BaseUtil:
@@ -15,12 +18,12 @@ class BaseUtil:
         return Fore.GREEN + str(text) + Style.RESET_ALL
 
     @staticmethod
-    def show(msg, value, end='\n'):
+    def show(msg, value):
         """Pretty print output with colors and alignment"""
         str_v = str(value)
 
         # wrap values lines
-        wrap_size, label_w = 70, 30
+        wrap_size, label_w, log_pad = 60, 24, 12
         chunks, chunk_size, lines = len(str_v), wrap_size, []
         if chunks < chunk_size:
             lines = [str_v]
@@ -33,7 +36,8 @@ class BaseUtil:
                 lines.append(line)
                 rest = remaining
         fmt_lines = "\n".join(
-            [(' ' * (label_w + 1) if i > 0 else '') + BaseUtil.color_text(s)
-             for i, s in enumerate(lines)])
+            [(' ' * (label_w + log_pad) if i > 0 else '')
+             + BaseUtil.color_text(s) for i, s in enumerate(lines)])
 
-        print(f'{msg} '.ljust(label_w, '-'), fmt_lines, end=end)
+        text = f'{msg} '.ljust(label_w, '-') + fmt_lines
+        logger.debug(text)

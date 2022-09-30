@@ -10,7 +10,7 @@ Paper: https://arxiv.org/abs/1708.03999
 from itertools import combinations
 
 import numpy as np
-from art.attacks.evasion import ZooAttack
+from art.attacks.evasion import ZooAttack as ARTZooAttack
 from matplotlib import pyplot as plt
 
 from src import AbsAttack
@@ -24,7 +24,7 @@ class Zoo(AbsAttack):
     def generate_adv_examples(self) -> None:
         """Generate the adversarial examples using ZOO attack."""
 
-        self.adv_x = ZooAttack(
+        self.adv_x = ARTZooAttack(
             # A trained classifier
             classifier=self.cls.classifier,
             # Confidence of adversarial examples: a higher value produces

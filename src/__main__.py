@@ -32,7 +32,7 @@ def main():
     """
     parser = ArgumentParser(prog=__title__, description=main.__doc__)
     args = __parse_args(parser)
-    __init_logger()
+    __init_logger(lg.FATAL - (0 if args.silent else 40))
 
     if not args.dataset:
         parser.print_help()
@@ -99,6 +99,11 @@ def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
         help="output directory [default: output]"
     )
     parser.add_argument(
+        '-s', "--silent",
+        action='store_true',
+        help="disable debug logging"
+    )
+    parser.add_argument(
         "-v", "--version",
         action="version",
         version="%(prog)s " + __version__,
@@ -106,12 +111,10 @@ def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
     return parser.parse_args(args)
 
 
-def __init_logger(level: int = lg.DEBUG, fn: Optional[str] = None):
+def __init_logger(level: int = lg.ERROR, fn: Optional[str] = None):
     """Create a logger instance"""
 
-    fmt = lg.Formatter(
-        "[%(asctime)s] %(levelname)s (%(module)s): %(message)s",
-        datefmt="%H:%M:%S")
+    fmt = lg.Formatter("[%(asctime)s]: %(message)s", datefmt="%H:%M:%S")
 
     logger = lg.getLogger(__title__)
     logger.setLevel(level)
