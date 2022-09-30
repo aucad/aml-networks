@@ -125,7 +125,8 @@ class HopSkip(AbsAttack):
         if evs > 0:
             ax = np.array(ax).reshape(x.shape)
             ay, evasions = np.array(ay), np.array(evasions)
-            tu.dump_result(evasions, x, y, ax, ay, self.cls.attrs)
+            tu.dump_result(evasions, x, y, ax, ay,
+                           self.cls.attrs, self.out_dir)
 
         tu.show('Evasion success', f'{evs} / {(evs / len(x)) * 100:.2f} %')
         if evs > 0:
@@ -135,6 +136,3 @@ class HopSkip(AbsAttack):
             tu.show('Mutated attrs', ", ".join(sorted(mut)))
         return evs
 
-
-if __name__ == '__main__':
-    AbsAttack.default_run(HopSkip)

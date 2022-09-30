@@ -6,13 +6,6 @@ from colorama import Fore, Style  # terminal colors
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_DS = 'data/CTU-1-1.csv'
-"""When no dataset is defined, use this one by default."""
-"""We use here a dataset with ~ 50/50 split"""
-
-RESULT_DIR = 'output'
-"""Directory for writing outputs"""
-
 
 def ensure_out_dir(dir_path):
     return path.exists(dir_path) or makedirs(dir_path)
@@ -110,7 +103,8 @@ def non_bin_attributes(np_array):
             if len(list(set(np_array[:, feat]))) > 2]
 
 
-def dump_result(evasions, train_x, train_y, adv_x, adv_y, attr):
+def dump_result(evasions, train_x, train_y, adv_x, adv_y, attr,
+                out_dir):
     """Write to csv file original and adversarial examples.
 
     arguments:
@@ -120,6 +114,7 @@ def dump_result(evasions, train_x, train_y, adv_x, adv_y, attr):
         adv_x - adversarial examples, np.array (2d)
         adv_y - adversarial labels, np.array (1d)
         attr - data attributes
+        out_dir - output directory
     """
 
     import csv
@@ -129,7 +124,7 @@ def dump_result(evasions, train_x, train_y, adv_x, adv_y, attr):
         labels = y[evasions].reshape(-1, 1)
         return (np.append(x[evasions, :], labels, 1)).tolist()
 
-    ensure_out_dir(RESULT_DIR)
+    ensure_out_dir(out_dir)
     inputs = [[fmt(train_x, train_y), 'ori.csv'],
               [fmt(adv_x, adv_y), 'adv.csv']]
 
@@ -137,7 +132,7 @@ def dump_result(evasions, train_x, train_y, adv_x, adv_y, attr):
     int_values = int_cols(train_x)
 
     for (rows, name) in inputs:
-        with open(path.join(RESULT_DIR, name),
+        with open(path.join(out_dir, name),
                   'w', newline='') as csvfile:
             w = csv.writer(csvfile, delimiter=',')
             w.writerow(attr)

@@ -129,9 +129,9 @@ class Zoo(AbsAttack):
                     ax.scatter(ad_f1, ad_f2, **adv_props)
 
             fig.tight_layout()
-            tu.ensure_out_dir(tu.RESULT_DIR)
+            tu.ensure_out_dir(self.out_dir)
             plt.savefig(path.join(
-                tu.RESULT_DIR,
+                self.out_dir,
                 f'{self.name}_{self.cls.name}_{f + 1}.png'))
 
     @staticmethod
@@ -189,10 +189,6 @@ class Zoo(AbsAttack):
         if len(evasions) > 0:
             self.plot(evasions, self.cls.attrs, adv)
             tu.dump_result(evasions, x_train, labels, adv, adv_y,
-                           self.cls.attrs)
+                           self.cls.attrs, self.out_dir)
 
         return evasions
-
-
-if __name__ == '__main__':
-    AbsAttack.default_run(Zoo)

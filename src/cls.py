@@ -5,6 +5,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from matplotlib import pyplot as plt
 from sklearn.model_selection import train_test_split
 
 import utility as tu
@@ -14,21 +15,20 @@ logger = logging.getLogger(__name__)
 
 class AbsClassifierInstance:
 
-    def __init__(self, name):
+    def __init__(self, name, out):
         self.name = name
+        self.model = None
+        self.classifier = None
         self.ds_path = None
         self.test_percent = 0
-        self.classifier = None
-        self.model = None
         self.attrs = np.array([])
         self.classes = np.array([])
         self.train_x = np.array([])
         self.train_y = np.array([])
         self.test_x = np.array([])
         self.test_y = np.array([])
-        self.plot_cls = False
         self.attr_ranges = {}
-        self.out_dir = tu.RESULT_DIR
+        self.out_dir = out
 
     @property
     def train_size(self):
@@ -52,12 +52,9 @@ class AbsClassifierInstance:
         return [tu.text_label(cn) for cn in self.classes]
 
     @property
-    def plot_filename(self):
-        return f'{self.name}_{Path(self.ds_path).stem}.png'
-
-    @property
     def plot_path(self):
-        return path.join(self.out_dir, self.plot_filename)
+        fn = f'{self.name}_{Path(self.ds_path).stem}.png'
+        return path.join(self.out_dir, fn)
 
     @staticmethod
     def formatter(x, y):
@@ -72,8 +69,14 @@ class AbsClassifierInstance:
     def prep_classifier(self):
         pass
 
-    def plot(self):
+    def tree_plotter(self):
         pass
+
+    def plot(self):
+        tu.ensure_out_dir(self.out_dir)
+        self.tree_plotter()
+        plt.tight_layout()
+        plt.savefig(self.plot_path, dpi=200)
 
     def load(self, dataset_path, test_percent=0):
         self.ds_path = dataset_path
@@ -99,10 +102,6 @@ class AbsClassifierInstance:
             (self.train_x, self.train_y))
         predictions = self.predict(self.formatter(*records))
         tu.score(records[1], predictions, display=True)
-
-        if self.plot_cls:
-            tu.ensure_out_dir(self.out_dir)
-            self.plot()
 
         return self
 
@@ -149,8 +148,3 @@ class AbsClassifierInstance:
         self.train_y = train_y
         self.test_x = test_x
         self.test_y = test_y
-
-    @staticmethod
-    def default_run(classifier_cls):
-        from utility import DEFAULT_DS
-        classifier_cls().load(DEFAULT_DS, 0.2).train()

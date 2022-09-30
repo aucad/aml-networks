@@ -10,8 +10,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 from art.estimators.classification.scikitlearn \
-    import ScikitlearnDecisionTreeClassifier
-from matplotlib import pyplot as plt
+    import ScikitlearnDecisionTreeClassifier as SkDT
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 
 from cls import AbsClassifierInstance
@@ -19,8 +18,8 @@ from cls import AbsClassifierInstance
 
 class DecisionTree(AbsClassifierInstance):
 
-    def __init__(self):
-        super().__init__('decision_tree')
+    def __init__(self, out):
+        super().__init__('decision_tree', out)
 
     @staticmethod
     def formatter(x, y):
@@ -34,20 +33,8 @@ class DecisionTree(AbsClassifierInstance):
         self.model.fit(self.train_x, self.train_y)
 
     def prep_classifier(self):
-        self.classifier = ScikitlearnDecisionTreeClassifier(self.model)
+        self.classifier = SkDT(self.model)
 
-    def plot(self):
-        """Plot the tree and save to file."""
-        plt.figure(dpi=200)
-        plot_tree(
-            self.model,
-            feature_names=self.attrs,
-            class_names=self.class_names,
-            filled=True
-        )
-        plt.savefig(self.plot_path)
-        plt.show()
-
-
-if __name__ == '__main__':
-    AbsClassifierInstance.default_run(DecisionTree)
+    def tree_plotter(self):
+        plot_tree(self.model, feature_names=self.attrs,
+                  class_names=self.class_names, filled=True)

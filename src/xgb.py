@@ -6,7 +6,6 @@ dataset if none provided. The dataset must be numeric at all attributes.
 """
 
 from art.estimators.classification import XGBoostClassifier
-from matplotlib import pyplot as plt
 # noinspection PyPackageRequirements
 from xgboost import plot_tree, DMatrix, train as xg_train
 
@@ -15,8 +14,8 @@ from cls import AbsClassifierInstance
 
 class XGBClassifier(AbsClassifierInstance):
 
-    def __init__(self):
-        super().__init__('xgboost')
+    def __init__(self, out):
+        super().__init__('xgboost', out)
 
     @staticmethod
     def formatter(x, y):
@@ -27,12 +26,9 @@ class XGBClassifier(AbsClassifierInstance):
         ax = 1 if len(tmp.shape) == 2 else 0
         return tmp.argmax(axis=ax)
 
-    def plot(self):
+    def tree_plotter(self):
         """Plot the tree and save to file."""
-        plot_tree(self.classifier, num_trees=20, rankdir='LR')
-        plt.tight_layout()
-        plt.savefig(self.plot_path, dpi=200)
-        plt.show()
+        plot_tree(self.model, num_trees=20, rankdir='LR')
 
     def prep_model(self, robust):
         """
@@ -73,7 +69,3 @@ class XGBClassifier(AbsClassifierInstance):
             nb_features=self.n_features,
             nb_classes=self.n_classes,
             clip_values=(0, 1))
-
-
-if __name__ == '__main__':
-    AbsClassifierInstance.default_run(XGBClassifier)

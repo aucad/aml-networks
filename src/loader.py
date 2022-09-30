@@ -12,11 +12,11 @@ class ClsLoader:
     DECISION_TREE = 'tree'
 
     @staticmethod
-    def load(kind=None) -> AbsClassifierInstance:
+    def load(out_dir, kind=None) -> AbsClassifierInstance:
         if kind == ClsLoader.DECISION_TREE:
-            return DecisionTree()
+            return DecisionTree(out_dir)
         else:
-            return XGBClassifier()
+            return XGBClassifier(out_dir)
 
 
 class AttackLoader:

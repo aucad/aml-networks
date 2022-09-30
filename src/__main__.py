@@ -20,11 +20,10 @@ from sys import exit
 from typing import Optional, List
 
 from loader import ClsLoader, AttackLoader
-from utility import DEFAULT_DS
 
-NON_ROBUST, ROBUST = False, True
 VERSION = "0.1.0"
 NAME = "src"
+DEFAULT_DS = 'data/CTU-1-1.csv'
 
 
 def main():
@@ -34,51 +33,71 @@ def main():
     """
     parser = ArgumentParser(prog=NAME, description=main.__doc__)
     args = __parse_args(parser)
-    dataset = args.data
     __init_logger()
 
-    if not dataset:
+    if not args.dataset:
         parser.print_help()
         exit(1)
 
-    run_attacks(dataset, ClsLoader.XGBOOST)
+    cls = ClsLoader \
+        .load(args.out, args.model) \
+        .load(args.dataset, args.test / 100) \
+        .train(robust=args.robust)
 
-    # TODO: apply selected args
+    if args.plot_model:
+        cls.plot()
 
-
-def run_attacks(dataset, cls_kind=None):
-    for opt in (NON_ROBUST, ROBUST):
-        cls = ClsLoader.load(cls_kind).load(dataset, .98).train(robust=opt)
-        AttackLoader.load(AttackLoader.HOP_SKIP).set_cls(cls).run()
-        AttackLoader.load(AttackLoader.ZOO).set_cls(cls).run()
+    if args.attack:
+        AttackLoader \
+            .load(args.attack).set_cls(cls) \
+            .run()
 
 
 def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
     """Setup available program arguments."""
 
     parser.add_argument(
-        '-d', '--data',
+        '-d', '--dataset',
         action="store",
         default=DEFAULT_DS,
-        help=f'Path to dataset [default: {DEFAULT_DS}]',
+        help=f'path to dataset [default: {DEFAULT_DS}]',
+    )
+    parser.add_argument(
+        '-t', '--test',
+        type=int,
+        choices=range(0, 100),
+        metavar="0-99",
+        help='test set split percentage [default: 0]',
+        default=0
     )
     parser.add_argument(
         '-m', '--model',
         action='store',
+        choices=[ClsLoader.DECISION_TREE, ClsLoader.XGBOOST],
         default=ClsLoader.XGBOOST,
-        help=f'Learner. Options: {ClsLoader.DECISION_TREE} or '
-             f'{ClsLoader.XGBOOST}. [default: {ClsLoader.XGBOOST}]'
+        help=f'model to train [default: {ClsLoader.XGBOOST}]'
     )
     parser.add_argument(
-        "-r", "--robust",
+        "--robust",
         action='store_true',
-        help="Use robust classifier (with defense)."
+        help="train a robust model"
+    )
+    parser.add_argument(
+        "--plot_model",
+        action='store_true',
+        help="plot the learned model"
     )
     parser.add_argument(
         '-a', '--attack',
         action='store',
-        help=f'Evasion attack. Options: '
-             f'{AttackLoader.HOP_SKIP} or {AttackLoader.ZOO}'
+        choices=[AttackLoader.HOP_SKIP, AttackLoader.ZOO],
+        help=f'evasion attack [default: None]'
+    )
+    parser.add_argument(
+        "-o", "--out",
+        action='store',
+        default="output",
+        help="output directory [default: output]"
     )
     parser.add_argument(
         "-v", "--version",
