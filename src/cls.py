@@ -148,6 +148,13 @@ class AbsClassifierInstance(BaseUtil):
             data[:, i] = np.nan_to_num(data[:, i])
         return data
 
+    def denormalize(self, data):
+        """Denormalize values to original value range."""
+        for i in range(self.n_features):
+            range_max = self.attr_ranges[i]
+            data[:, i] = range_max * (data[:, i])
+        return data
+
     def __load_csv_data(self, max_size=-1):
         """
         Read dataset and split to train/test using random sampling.

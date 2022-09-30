@@ -45,10 +45,10 @@ class AbsAttack(BaseUtil):
     def dump_result(self):
         """Write to csv file original and adversarial examples."""
 
-        def to_csv(x, y, name):
+        def dump(x, y, name):
             labels = y[self.evasions].reshape(-1, 1)
             rows = np.append(x[self.evasions, :], labels, 1)
-            f_name = path.join(self.out_dir, name)
+            f_name = path.join(self.out_dir, f'{name}.csv')
             # all masked columns + class label
             int_cols = self.cls.mask_cols + [self.cls.n_features]
             with open(f_name, 'w', newline='') as fp:
@@ -59,5 +59,7 @@ class AbsAttack(BaseUtil):
                      for i, val in enumerate(row)]
                     for row in rows])
 
-        to_csv(self.cls.train_x, self.cls.train_y, 'ori.csv')
-        to_csv(self.adv_x, self.adv_y, 'adv.csv')
+        dump(self.cls.train_x, self.cls.train_y, 'ori')
+        dump(self.cls.denormalize(self.cls.train_x), self.cls.train_y, 'orid')
+        dump(self.adv_x, self.adv_y, 'adv')
+        dump(self.cls.denormalize(self.adv_x), self.adv_y, 'advd')
