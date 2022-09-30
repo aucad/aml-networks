@@ -9,7 +9,7 @@ from art.estimators.classification import XGBoostClassifier
 # noinspection PyPackageRequirements
 from xgboost import plot_tree, DMatrix, train as xg_train
 
-from cls import AbsClassifierInstance
+from src import AbsClassifierInstance
 
 
 class XGBClassifier(AbsClassifierInstance):

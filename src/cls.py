@@ -8,12 +8,12 @@ import pandas as pd
 from matplotlib import pyplot as plt
 from sklearn.model_selection import train_test_split
 
-import utility as tu
+from src import BaseUtil
 
 logger = logging.getLogger(__name__)
 
 
-class AbsClassifierInstance:
+class AbsClassifierInstance(BaseUtil):
 
     def __init__(self, name, out):
         self.name = name
@@ -108,12 +108,12 @@ class AbsClassifierInstance:
         self.prep_model(robust)
         self.prep_classifier()
 
-        tu.show('Read dataset', self.ds_path)
-        tu.show('Attributes', self.n_features)
-        tu.show('Classifier', self.name)
-        tu.show('Classes', ", ".join(self.class_names))
-        tu.show('Training instances', self.train_size)
-        tu.show('Test instances', self.test_size)
+        self.show('Read dataset', self.ds_path)
+        self.show('Attributes', self.n_features)
+        self.show('Classifier', self.name)
+        self.show('Classes', ", ".join(self.class_names))
+        self.show('Training instances', self.train_size)
+        self.show('Test instances', self.test_size)
 
         # evaluate performance
         records = (
@@ -127,8 +127,8 @@ class AbsClassifierInstance:
                      if i in self.mask_cols and i < self.n_features]
         mutable = [a for i, a in enumerate(self.attrs)
                    if i not in self.mask_cols and i < self.n_features]
-        tu.show('Mutable', ", ".join(sorted(mutable)))
-        tu.show('Immutable', ", ".join(sorted(immutable)))
+        self.show('Mutable', ", ".join(sorted(mutable)))
+        self.show('Immutable', ", ".join(sorted(immutable)))
 
         return self
 
@@ -194,7 +194,7 @@ class AbsClassifierInstance:
         f_score = (2 * precision * recall) / (precision + recall)
 
         if display:
-            tu.show('Accuracy', f'{accuracy * 100:.2f} %')
-            tu.show('Precision', f'{precision * 100:.2f} %')
-            tu.show('Recall', f'{recall * 100:.2f} %')
-            tu.show('F-score', f'{f_score * 100:.2f} %')
+            AbsClassifierInstance.show('Accuracy', f'{accuracy * 100:.2f} %')
+            AbsClassifierInstance.show('Precision', f'{precision * 100:.2f} %')
+            AbsClassifierInstance.show('Recall', f'{recall * 100:.2f} %')
+            AbsClassifierInstance.show('F-score', f'{f_score * 100:.2f} %')

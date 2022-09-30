@@ -4,11 +4,10 @@ from os import path
 
 import numpy as np
 
-from cls import AbsClassifierInstance
-import utility as tu
+from src import BaseUtil, AbsClassifierInstance
 
 
-class AbsAttack:
+class AbsAttack(BaseUtil):
 
     def __init__(self, name):
         self.name = name
@@ -37,7 +36,7 @@ class AbsAttack:
             labels = y[evasions].reshape(-1, 1)
             return (np.append(x[evasions, :], labels, 1)).tolist()
 
-        tu.ensure_out_dir(self.out_dir)
+        self.ensure_out_dir(self.out_dir)
         inputs = [[fmt(self.cls.train_x, self.cls.train_y), 'ori.csv'],
                   [fmt(adv_x, adv_y), 'adv.csv']]
 
@@ -49,7 +48,7 @@ class AbsAttack:
                 for row in rows:
                     fmt_row = []
                     for i, val in enumerate(row):
-                        int_col = i in self.cls.mask_cols or\
+                        int_col = i in self.cls.mask_cols or \
                                   i == len(row) - 1
                         fmt_row.append(int(val) if int_col else val)
                     w.writerow(fmt_row)

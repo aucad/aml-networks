@@ -1,16 +1,17 @@
 """
-Carry out the adversarial attacks using XGBoost classifier.
+Command-line interface for training tree-based classifiers and
+performing adversarial attacks on those models.
 
 Usage:
 
 ```
-python src/__main__.py
+python -m src
 ```
 
-Use specific dataset:
+List all available options:
 
 ```
-python src/__main__.py ./path/to/input_data.csv
+python -m src --help
 ```
 
 """
@@ -19,10 +20,8 @@ from argparse import ArgumentParser
 from sys import exit
 from typing import Optional, List
 
-from loader import ClsLoader, AttackLoader
+from src import __version__, __title__, ClsLoader, AttackLoader
 
-VERSION = "0.1.0"
-NAME = "src"
 DEFAULT_DS = 'data/CTU-1-1.csv'
 
 
@@ -31,7 +30,7 @@ def main():
     Run adversarial ML attacks and defenses on tree-based classifiers
     on network data.
     """
-    parser = ArgumentParser(prog=NAME, description=main.__doc__)
+    parser = ArgumentParser(prog=__title__, description=main.__doc__)
     args = __parse_args(parser)
     __init_logger()
 
@@ -40,11 +39,11 @@ def main():
         exit(1)
 
     cls = ClsLoader \
-        .load(args.out, args.model) \
+        .load(args.out, args.cls) \
         .load(args.dataset, args.test / 100) \
         .train(robust=args.robust)
 
-    if args.plot_model:
+    if args.plot:
         cls.plot()
 
     if args.attack:
@@ -71,11 +70,11 @@ def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
         default=0
     )
     parser.add_argument(
-        '-m', '--model',
+        '-c', '--cls',
         action='store',
         choices=[ClsLoader.DECISION_TREE, ClsLoader.XGBOOST],
         default=ClsLoader.XGBOOST,
-        help=f'model to train [default: {ClsLoader.XGBOOST}]'
+        help=f'Classifier to train [default: {ClsLoader.XGBOOST}]'
     )
     parser.add_argument(
         "--robust",
@@ -83,9 +82,9 @@ def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
         help="train a robust model"
     )
     parser.add_argument(
-        "--plot_model",
+        "--plot",
         action='store_true',
-        help="plot the learned model"
+        help="generate plots"
     )
     parser.add_argument(
         '-a', '--attack',
@@ -102,7 +101,7 @@ def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
     parser.add_argument(
         "-v", "--version",
         action="version",
-        version="%(prog)s " + VERSION,
+        version="%(prog)s " + __version__,
     )
     return parser.parse_args(args)
 
@@ -114,7 +113,7 @@ def __init_logger(level: int = lg.DEBUG, fn: Optional[str] = None):
         "[%(asctime)s] %(levelname)s (%(module)s): %(message)s",
         datefmt="%H:%M:%S")
 
-    logger = lg.getLogger(NAME)
+    logger = lg.getLogger(__title__)
     logger.setLevel(level)
     stream_handler = lg.StreamHandler()
     stream_handler.setFormatter(fmt)

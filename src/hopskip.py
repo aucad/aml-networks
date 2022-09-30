@@ -16,8 +16,7 @@ from math import fabs
 import numpy as np
 from art.attacks.evasion import HopSkipJump
 
-import utility as tu
-from attack import AbsAttack
+from src import AbsAttack
 
 
 class HopSkip(AbsAttack):
@@ -121,11 +120,11 @@ class HopSkip(AbsAttack):
             ay, evasions = np.array(ay), np.array(evasions)
             self.dump_result(evasions, ax, ay)
 
-        tu.show('Evasion success',
+        self.show('Evasion success',
                 f'{evs} / {(evs / len(x)) * 100:.2f} %')
         if evs > 0:
-            tu.show('Error', f'{min(errors):.6f} - {max(errors):.6f}')
+            self.show('Error', f'{min(errors):.6f} - {max(errors):.6f}')
         if len(mut) > 0:
-            tu.show('Mutations:', f'{len(mut)} attributes')
-            tu.show('Mutated attrs', ", ".join(sorted(mut)))
+            self.show('Mutations:', f'{len(mut)} attributes')
+            self.show('Mutated attrs', ", ".join(sorted(mut)))
         return evs

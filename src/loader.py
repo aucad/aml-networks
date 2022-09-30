@@ -1,9 +1,5 @@
-from cls import AbsClassifierInstance
-from attack import AbsAttack
-from hopskip import HopSkip
-from zoo import Zoo
-from tree import DecisionTree
-from xgb import XGBClassifier
+from src import AbsClassifierInstance, AbsAttack, \
+    HopSkip, Zoo, DecisionTree, XGBClassifier
 
 
 class ClsLoader:

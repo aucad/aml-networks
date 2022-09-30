@@ -13,7 +13,7 @@ from art.estimators.classification.scikitlearn \
     import ScikitlearnDecisionTreeClassifier as SkDT
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 
-from cls import AbsClassifierInstance
+from src import AbsClassifierInstance
 
 
 class DecisionTree(AbsClassifierInstance):

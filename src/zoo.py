@@ -15,8 +15,7 @@ import numpy as np
 from art.attacks.evasion import ZooAttack
 from matplotlib import pyplot as plt
 
-import utility as tu
-from attack import AbsAttack
+from src import AbsAttack
 
 warnings.filterwarnings("ignore")  # ignore import warnings
 
@@ -136,7 +135,7 @@ class Zoo(AbsAttack):
                     ax.scatter(ad_f1, ad_f2, **adv_props)
 
             fig.tight_layout()
-            tu.ensure_out_dir(self.out_dir)
+            self.ensure_out_dir(self.out_dir)
             plt.savefig(path.join(
                 self.out_dir,
                 f'{self.name}_{self.cls.name}_{f + 1}.png'))
@@ -170,8 +169,8 @@ class Zoo(AbsAttack):
                        if int(x) != int(y)]
 
         acc = 100 * len(adv_success) / len(x_adv)
-        print('Zoo attack')
-        tu.show('Evasion success', f'{len(adv_success)} ({acc:.2f} %)')
+        self.show('Zoo attack', '')
+        self.show('Evasion success', f'{len(adv_success)} ({acc:.2f} %)')
         return np.array(adv_success), np.array(adversarial)
 
     def run(self):
