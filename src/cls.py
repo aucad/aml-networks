@@ -1,4 +1,6 @@
 import logging
+from collections import namedtuple
+
 from math import ceil
 from os import path
 from pathlib import Path
@@ -150,10 +152,11 @@ class AbsClassifierInstance(BaseUtil):
 
     def denormalize(self, data):
         """Denormalize values to original value range."""
+        data_copy = data.copy()
         for i in range(self.n_features):
             range_max = self.attr_ranges[i]
-            data[:, i] = range_max * (data[:, i])
-        return data
+            data_copy[:, i] = range_max * (data[:, i])
+        return data_copy
 
     def __load_csv_data(self, max_size=-1):
         """

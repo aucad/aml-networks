@@ -3,60 +3,59 @@ from __future__ import annotations
 import logging
 from random import uniform, randint
 from collections import Counter, namedtuple
-import warnings
-
-import joblib
-import numpy as np
-from sklearn.tree import DecisionTreeClassifier
-
-from src.utility import BaseUtil as tu
 
 logger = logging.getLogger(__name__)
-
-warnings.filterwarnings("ignore")  # ignore feature names warning
-
-VALID, INVALID = 0, 1
-
-TCP_MODEL: DecisionTreeClassifier = joblib.load('data/DT_tcp.sav')
-UDP_MODEL: DecisionTreeClassifier = joblib.load('data/DT_udp.sav')
-
-afix = lambda attrs: ",".join([a.replace(' ', '') for a in attrs])
-
-NBTCP = namedtuple('NBTCP', afix(TCP_MODEL.feature_names_in_))
-NBUDP = namedtuple('NBUDP', afix(UDP_MODEL.feature_names_in_))
 
 
 class NetworkProto:
     """Represents validatable instance"""
 
-    def __init__(self, name: str, kind: namedtuple, **kwargs):
+    def __init__(self, name: str, kind: namedtuple = None, **kwargs):
         self.name = name
+        kind = kind or namedtuple(name, ",".join(list(kwargs.keys())))
         self.attributes = kind._fields or []
         defaults = dict(
             [(a, 0) for a in self.attributes if a not in kwargs])
         self.record = kind(**defaults, **kwargs)
+
+    @staticmethod
+    def ensure_attrs():
+        return {}
+
+    def validator_model(self, attrs) -> namedtuple:
+        """validator model for current dataset"""
+        req_keys = list(self.ensure_attrs().keys())
+        attr_names = list(set(attrs + req_keys))
+        return namedtuple('xyz', ",".join(attr_names))
 
     @property
     def values(self):
         return [getattr(self.record, a) for a in self.attributes]
 
     @property
-    def is_valid(self):
-        return INVALID
+    def pass_validation_rules(self):
+        return False
 
-    def check(self, model: DecisionTreeClassifier):
-        if not self.is_valid:
-            return INVALID
-        return model.predict(np.array(self.values).reshape(1, -1))[0]
+    def check(self) -> bool:
+        # don't predict, just determine by rules
+        return self.pass_validation_rules
+        # return model.predict(np.array(self.values).reshape(1, -1))[0]
 
 
 class NbTCP(NetworkProto):
-    def __init__(self, **kwargs):
+    def __init__(self, model=None, **kwargs):
         # noinspection PyTypeChecker
-        super().__init__('NB15_tcp', NBTCP, **kwargs)
+        super().__init__('tcp', model, **kwargs)
+
+    @staticmethod
+    def ensure_attrs():
+        """If values are undefined for some records, these are the defaults."""
+        names = 'swin dwin synack ackdat tcprtt dbytes Dload dttl Djit Dpkts'
+        def_values = [255, 255] + [0] * 8
+        return dict([(a, b) for (a, b) in zip(names.split(' '), def_values)])
 
     @property
-    def is_valid(self):
+    def pass_validation_rules(self):
         if self.record.swin != 255 or self.record.dwin != 255:
             return False
         if round(self.record.synack + self.record.ackdat, 3) != \
@@ -70,12 +69,19 @@ class NbTCP(NetworkProto):
 
 
 class NbUDP(NetworkProto):
-    def __init__(self, **kwargs):
+    def __init__(self, model=None, **kwargs):
         # noinspection PyTypeChecker
-        super().__init__('NB15_udp', NBUDP, **kwargs)
+        super().__init__('udp', model, **kwargs)
+
+    @staticmethod
+    def ensure_attrs():
+        """If values are undefined for some records, these are the defaults."""
+        names = 'smeansz Spkts sbytes dmeansz Dpkts dbytes'
+        def_values = [0] * 6
+        return dict([(a, b) for (a, b) in zip(names.split(' '), def_values)])
 
     @property
-    def is_valid(self):
+    def pass_validation_rules(self):
         return self.record.smeansz * self.record.Spkts == \
                self.record.sbytes \
                and self.record.dmeansz * self.record.Dpkts == \
@@ -83,13 +89,20 @@ class NbUDP(NetworkProto):
 
 
 class Validator:
+    NB15 = 'NB15'
+    IOT23 = 'IOT23'
 
-    def __init__(self):
-        self.models = {'NB15_tcp': TCP_MODEL, 'NB15_udp': UDP_MODEL}
+    @staticmethod
+    def attr_fix(attrs):
+        return [a.replace(' ', '').replace('=', '_').replace('-', '')
+                for a in attrs]
+    @staticmethod
+    def kinds():
+        return [Validator.NB15, Validator.IOT23]
 
-    def validate(self, instance: NetworkProto):
-        model = self.models[instance.name]
-        return instance.check(model)
+    @staticmethod
+    def validate(instance: NetworkProto):
+        return instance.check()
 
     @staticmethod
     def random_test(n, proto=None):
@@ -101,11 +114,11 @@ class Validator:
                 randint(0, 1) == 0 else 'udp'
             inst = Generator.generate(kind)
             item_counter.append(inst.name)
-            valid += 1 if validator.validate(inst) == VALID else 0
-        tu.show('Generated', n)
-        tu.show('Valid', valid)
+            valid += 1 if validator.validate(inst) else 0
+        print('generated', n, 'valid', valid, end=' -> ')
         for item in Counter(item_counter).items():
-            tu.show(*item)
+            print(*item, end='  ')
+        print('')
 
 
 class Generator:
@@ -161,6 +174,7 @@ class Generator:
             dmeansz = randint(0, 1500)
             spkts = randint(0, 10646)
             dpkts = randint(0, 11018)
+
             return NbUDP(
                 sbytes=smeansz * spkts if r else randint(0, 14355774),
                 dbytes=dmeansz * dpkts if r else randint(0, 14657531),

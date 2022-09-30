@@ -21,6 +21,7 @@ from sys import exit
 from typing import Optional, List
 
 from src import __version__, __title__, ClsLoader, AttackLoader
+from src.validator import Validator
 
 DEFAULT_DS = 'data/CTU-1-1.csv'
 
@@ -47,8 +48,9 @@ def main():
         cls.plot()
 
     if args.attack:
-        AttackLoader \
-            .load(args.attack).set_cls(cls) \
+        AttackLoader.load(args.attack) \
+            .set_cls(cls) \
+            .set_validator(args.validator) \
             .run()
 
 
@@ -91,6 +93,12 @@ def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
         action='store',
         choices=[AttackLoader.HOP_SKIP, AttackLoader.ZOO],
         help=f'evasion attack [default: None]'
+    )
+    parser.add_argument(
+        '--validator',
+        action='store',
+        choices=Validator.kinds(),
+        help=f'dataset validator kind [default: None]'
     )
     parser.add_argument(
         "-o", "--out",

@@ -116,6 +116,7 @@ class Zoo(AbsAttack):
         self.adv_x = self.pseudo_mask(
             self.cls.mask_cols, self.cls.train_x, self.adv_x)
         self.eval_adv_examples()
+        self.validate()
         self.log_attack_stats()
 
         if self.attack_success:

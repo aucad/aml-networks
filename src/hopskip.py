@@ -115,6 +115,7 @@ class HopSkip(AbsAttack):
         self.evasions = np.array(evasions)
         self.adv_x = np.array(ax).reshape(x.shape)
         self.adv_y = np.array(ay)
+        self.validate()
         self.log_attack_stats()
 
         if self.attack_success:
