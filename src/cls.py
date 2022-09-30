@@ -32,11 +32,11 @@ class AbsClassifierInstance(BaseUtil):
         self.mask_cols = []
 
     @property
-    def train_size(self):
+    def n_train(self):
         return len(self.train_x)
 
     @property
-    def test_size(self):
+    def n_test(self):
         return len(self.test_x)
 
     @property
@@ -67,6 +67,18 @@ class AbsClassifierInstance(BaseUtil):
         fn = f'{self.name}_{Path(self.ds_path).stem}.png'
         return path.join(self.out_dir, fn)
 
+    @property
+    def mutable_attrs(self):
+        return sorted([
+            a for i, a in enumerate(self.attrs)
+            if i not in self.mask_cols and i < self.n_features])
+
+    @property
+    def immutable_attrs(self):
+        return sorted([
+            a for i, a in enumerate(self.attrs)
+            if i in self.mask_cols and i < self.n_features])
+
     @staticmethod
     def formatter(x, y):
         return x
@@ -92,7 +104,7 @@ class AbsClassifierInstance(BaseUtil):
         pass
 
     def plot(self):
-        tu.ensure_out_dir(self.out_dir)
+        self.ensure_out_dir(self.out_dir)
         self.tree_plotter()
         plt.tight_layout()
         plt.savefig(self.plot_path, dpi=200)
@@ -112,23 +124,16 @@ class AbsClassifierInstance(BaseUtil):
         self.show('Attributes', self.n_features)
         self.show('Classifier', self.name)
         self.show('Classes', ", ".join(self.class_names))
-        self.show('Training instances', self.train_size)
-        self.show('Test instances', self.test_size)
+        self.show('Training instances', self.n_train)
+        self.show('Test instances', self.n_test)
 
         # evaluate performance
         records = (
             (self.test_x, self.test_y)
-            if self.test_size > 0 else
+            if self.n_test > 0 else
             (self.train_x, self.train_y))
         predictions = self.predict(self.formatter(*records))
         self.score(records[1], predictions, display=True)
-
-        immutable = [a for i, a in enumerate(self.attrs)
-                     if i in self.mask_cols and i < self.n_features]
-        mutable = [a for i, a in enumerate(self.attrs)
-                   if i not in self.mask_cols and i < self.n_features]
-        self.show('Mutable', ", ".join(sorted(mutable)))
-        self.show('Immutable', ", ".join(sorted(immutable)))
 
         return self
 

@@ -7,8 +7,6 @@ ADAM coordinate descent to perform numerical estimation of gradients.
 Paper: https://arxiv.org/abs/1708.03999
 """
 
-import warnings
-from os import path
 from itertools import combinations
 
 import numpy as np
@@ -17,27 +15,16 @@ from matplotlib import pyplot as plt
 
 from src import AbsAttack
 
-warnings.filterwarnings("ignore")  # ignore import warnings
-
-colors = ['deepskyblue', 'lawngreen']
-diff_props = {'c': 'black', 'zorder': 2, 'lw': 1}
-class_props = {'edgecolor': 'black', 'lw': .5, 's': 20, 'zorder': 2}
-adv_props = {'zorder': 2, 'c': 'red', 'marker': 'x', 's': 12}
-
-plt.rc('axes', labelsize=6)
-plt.rc('xtick', labelsize=6)
-plt.rc('ytick', labelsize=6)
-
 
 class Zoo(AbsAttack):
 
     def __init__(self):
         super().__init__('zoo')
 
-    def adversarial_iot(self):
-        """Generate the adversarial examples."""
+    def generate_adv_examples(self) -> None:
+        """Generate the adversarial examples using ZOO attack."""
 
-        return ZooAttack(
+        self.adv_x = ZooAttack(
             # A trained classifier
             classifier=self.cls.classifier,
             # Confidence of adversarial examples: a higher value produces
@@ -87,9 +74,66 @@ class Zoo(AbsAttack):
         return [feat for feat in range(len(np_array[0]))
                 if len(list(set(np_array[:, feat]))) > 2]
 
-    def plot(self, evasions, attr, adv_ex):
+    @staticmethod
+    def pseudo_mask(mask_idx, x, adv):
+        """
+        Restore original attribute values along immutable columns.
+
+        We perform this operation after the attack, because masking
+        is not supported for this attack.
+        """
+        if x.shape != adv.shape:
+            raise Exception(
+                f'Shapes do not match {x.shape} {adv.shape}')
+        for idx in mask_idx:
+            ori_values = x[:, idx]
+            adv[:, idx] = ori_values
+        return adv
+
+    def eval_adv_examples(self):
+        """
+        Do prediction on adversarial vs original records and determine
+        which recors succeed at evading expected class label.
+        """
+        # predictions for training instances
+        ori_in = self.cls.formatter(self.cls.train_x, self.cls.train_y)
+        original = self.cls.predict(ori_in).flatten().tolist()
+
+        # adversarial predictions for same data
+        adv_in = self.cls.formatter(self.adv_x, self.cls.train_y)
+        adversarial = self.cls.predict(adv_in).flatten().tolist()
+        self.adv_y = np.array(adversarial)
+
+        # adversary succeeds iff predictions differ
+        self.evasions = np.array(
+            [i for i, (x, y) in enumerate(zip(original, adversarial))
+             if int(x) != int(y)])
+
+    def run(self):
+        """Runs the zoo attack."""
+        self.log_attack_setup()
+        self.generate_adv_examples()
+        self.adv_x = self.pseudo_mask(
+            self.cls.mask_cols, self.cls.train_x, self.adv_x)
+        self.eval_adv_examples()
+        self.log_attack_stats()
+
+        if self.attack_success:
+            self.plot()
+            self.dump_result()
+
+    def plot(self):
         """Visualize the adversarial attack results"""
 
+        colors = ['deepskyblue', 'lawngreen']
+        diff_props = {'c': 'black', 'zorder': 2, 'lw': 1}
+        class_props = {'edgecolor': 'black', 'lw': .5, 's': 20, 'zorder': 2}
+        adv_props = {'zorder': 2, 'c': 'red', 'marker': 'x', 's': 12}
+        plt.rc('axes', labelsize=6)
+        plt.rc('xtick', labelsize=6)
+        plt.rc('ytick', labelsize=6)
+
+        evasions, attr, adv_ex = self.evasions, self.cls.attrs, self.adv_x
         x_train, y_train = self.cls.train_x, self.cls.train_y
         class_labels = list([int(i) for i in np.unique(y_train)])
 
@@ -136,60 +180,4 @@ class Zoo(AbsAttack):
 
             fig.tight_layout()
             self.ensure_out_dir(self.out_dir)
-            plt.savefig(path.join(
-                self.out_dir,
-                f'{self.name}_{self.cls.name}_{f + 1}.png'))
-
-    @staticmethod
-    def post_restore(mask_idx, x, adv):
-        """Restore attribute values along immutable columns."""
-        if x.shape != adv.shape:
-            raise Exception(
-                f'Shapes do not match {x.shape} {adv.shape}')
-        for idx in mask_idx:
-            ori_values = x[:, idx]
-            adv[:, idx] = ori_values
-        return adv
-
-    def adv_examples(self, x_adv):
-        """Make a list of adversarial instance indices that succeed in
-        evasion. """
-        # predictions for training instances
-        ori_inputs = self.cls.formatter(self.cls.train_x,
-                                        self.cls.train_y)
-        original = self.cls.predict(ori_inputs).flatten().tolist()
-
-        # adversarial predictions for same data
-        adv_inputs = self.cls.formatter(x_adv, self.cls.train_y)
-        adversarial = self.cls.predict(adv_inputs).flatten().tolist()
-
-        # adv succeeds when predictions differ
-        adv_success = [i for i, (x, y) in
-                       enumerate(zip(original, adversarial))
-                       if int(x) != int(y)]
-
-        acc = 100 * len(adv_success) / len(x_adv)
-        self.show('Zoo attack', '')
-        self.show('Evasion success', f'{len(adv_success)} ({acc:.2f} %)')
-        return np.array(adv_success), np.array(adversarial)
-
-    def run(self):
-        """Carry out ZOO attack on specified classifier.
-
-        Arguments:
-             cls_loader - function to load classifier and its data
-             fmt - pre-prediction formatter function for a data instance
-             prd - prediction function that returns class labels for data
-             img_path - dir path and file name for storing plots
-        """
-        x, y = self.cls.train_x, self.cls.train_y
-        x_train, labels = x[:], y[:]
-        a = self.adversarial_iot()
-        adv = self.post_restore(self.cls.mask_cols, x_train, a)
-        evasions, adv_y = self.adv_examples(adv)
-
-        if len(evasions) > 0:
-            self.plot(evasions, self.cls.attrs, adv)
-            self.dump_result(evasions, adv, adv_y)
-
-        return evasions
+            plt.savefig(self.figure_name(f + 1))

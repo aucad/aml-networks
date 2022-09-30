@@ -11,8 +11,6 @@ Implementation loosely based on this example:
 <https://github.com/Trusted-AI/adversarial-robustness-toolbox/blob/main/notebooks/classifier_blackbox.ipynb>
 """
 
-from math import fabs
-
 import numpy as np
 from art.attacks.evasion import HopSkipJump
 
@@ -37,7 +35,7 @@ class HopSkip(AbsAttack):
                 mask[:, i] = 0
         return mask
 
-    def attack_instance(self, attack, target, initial_label, mask=None):
+    def attack_instance(self, attack, target, initial_label, mask):
         """Apply attack to specified instance."""
 
         max_iter, iter_step = 10, 10
@@ -93,14 +91,14 @@ class HopSkip(AbsAttack):
         )
 
         ax, ay = [], []
-        x, y = self.cls.train_x, self.cls.train_y
         x_adv, errors, evasions = [], [], []
+        x, y = self.cls.train_x, self.cls.train_y
         ori_inputs = self.cls.formatter(x, y)
         predictions = self.cls.predict(ori_inputs).flatten().tolist()
-        mutations = set()
         mask = self.get_mask(x, self.cls.mask_cols)
+        self.log_attack_setup()
 
-        print('HopSkipJump')
+        # TODO: do this on the matrix, not individually
         for index, instance in enumerate(x):
             init_label = predictions[index]
             xa, success, l2, new_label = self.attack_instance(
@@ -110,21 +108,12 @@ class HopSkip(AbsAttack):
             if success:
                 evasions.append(index)
                 errors.append(l2)
-                for i, attr_o in enumerate(instance):
-                    if fabs(attr_o - xa[0, i]) > 0.0001:
-                        mutations.add(self.cls.attrs[i])
 
-        evs, mut = len(evasions), list(mutations)
-        if evs > 0:
-            ax = np.array(ax).reshape(x.shape)
-            ay, evasions = np.array(ay), np.array(evasions)
-            self.dump_result(evasions, ax, ay)
+        self.evasions = np.array(evasions)
+        self.adv_x = np.array(ax).reshape(x.shape)
+        self.adv_y = np.array(ay)
+        self.log_attack_stats()
 
-        self.show('Evasion success',
-                f'{evs} / {(evs / len(x)) * 100:.2f} %')
-        if evs > 0:
+        if self.attack_success:
+            self.dump_result()
             self.show('Error', f'{min(errors):.6f} - {max(errors):.6f}')
-        if len(mut) > 0:
-            self.show('Mutations:', f'{len(mut)} attributes')
-            self.show('Mutated attrs', ", ".join(sorted(mut)))
-        return evs
