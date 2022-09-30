@@ -1,10 +1,12 @@
 import csv
+from collections import Counter
 from typing import Optional
 from os import path
 
 import numpy as np
 
-from src import BaseUtil, AbsClassifierInstance, Validator, NbTCP
+from src import BaseUtil, AbsClassifierInstance
+from src import Validator, NbTCP, NbUDP, IotTCP, IotUDP
 
 
 class AbsAttack(BaseUtil):
@@ -51,8 +53,13 @@ class AbsAttack(BaseUtil):
             if self.validator_kind == Validator.NB15:
                 if proto == self.tcp:
                     v_inst = NbTCP(attrs, **rec_nd)
-                if proto == self.udp:
-                    v_inst = NbTCP(attrs, **rec_nd)
+                elif proto == self.udp:
+                    v_inst = NbUDP(attrs, **rec_nd)
+            elif self.validator_kind == Validator.IOT23:
+                if proto == self.tcp:
+                    v_inst = IotTCP(attrs, **rec_nd)
+                elif proto == self.udp:
+                    v_inst = IotUDP(attrs, **rec_nd)
             temp_arr.append(not v_inst or Validator.validate(v_inst))
         self.valid_result = np.array(temp_arr)
 
@@ -64,11 +71,15 @@ class AbsAttack(BaseUtil):
     def log_attack_stats(self):
         ev, tot = len(self.evasions), self.cls.n_train
         p = 100 * (ev / tot)
-        self.show('Evasion success', f'{ev} of {tot} - {p:.1f} %')
+        self.show('Evasions total', f'{ev} of {tot} - {p:.1f} %')
         if self.validator_kind:
             v = len([s for s in self.valid_result if s])
-            q = 100 * (v / ev)
-            self.show('Validation success', f'{v} of {ev} - {q:.1f} %')
+            q = 100 * (v / tot)
+            self.show('Valid total', f'{v} of {tot} - {q:.1f} %')
+            ve = sum([1 for (i, is_valid) in enumerate(self.valid_result)
+                      if is_valid and i in self.evasions])
+            r = 100 * (ve / tot)
+            self.show('Evades and valid', f'{ve} of {tot} - {r:.1f} %')
 
     def dump_result(self):
         """Write to csv file original and adversarial examples."""
