@@ -107,7 +107,7 @@ def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
     return parser.parse_args(args)
 
 
-def __init_logger(level: int = lg.ERROR, fn: Optional[str] = None):
+def __init_logger(level: int = lg.DEBUG, fn: Optional[str] = None):
     """Create a logger instance"""
 
     fmt = lg.Formatter(

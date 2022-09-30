@@ -1,6 +1,9 @@
+import logging
 from os import path, makedirs
 
 from colorama import Fore, Style  # terminal colors
+
+logger = logging.getLogger(__name__)
 
 
 def ensure_out_dir(dir_path):

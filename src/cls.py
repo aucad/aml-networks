@@ -72,9 +72,10 @@ class AbsClassifierInstance:
         return x
 
     def set_mask_cols(self):
-        indices, mat = [], self.train_x
-        for col_i in range(len(mat[0])):
-            if set(list(np.unique(mat[:, col_i]))).issubset({0, 1}):
+        indices = []
+        for col_i in range(self.n_features):
+            col_values = list(np.unique(self.train_x[:, col_i]))
+            if set(col_values).issubset({0, 1}):
                 indices.append(col_i)
         self.mask_cols = indices
 
@@ -122,19 +123,19 @@ class AbsClassifierInstance:
         predictions = self.predict(self.formatter(*records))
         self.score(records[1], predictions, display=True)
 
-        immut_attr = [self.attrs[i] for i in self.mask_cols]
-        mut_attrs = [self.attrs[i] for i in range(self.n_features)
-                     if i not in self.mask_cols]
-
-        tu.show('Mutable', ", ".join(sorted(mut_attrs)))
-        tu.show('Immutable', ", ".join(sorted(immut_attr)))
+        immutable = [a for i, a in enumerate(self.attrs)
+                     if i in self.mask_cols and i < self.n_features]
+        mutable = [a for i, a in enumerate(self.attrs)
+                   if i not in self.mask_cols and i < self.n_features]
+        tu.show('Mutable', ", ".join(sorted(mutable)))
+        tu.show('Immutable', ", ".join(sorted(immutable)))
 
         return self
 
     def normalize(self, data, capture=False):
         """normalize values in range 0.0 - 1.0."""
         np.seterr(divide='ignore', invalid='ignore')
-        for i in range(len(data[0])):
+        for i in range(self.n_features):
             range_max = max(data[:, i])
             if capture:
                 self.attr_ranges[i] = ceil(range_max)
@@ -148,16 +149,16 @@ class AbsClassifierInstance:
         """
 
         df = pd.read_csv(self.ds_path).fillna(0)
-        attrs = [col for col in df.columns]
+        self.attrs = [col for col in df.columns]
+        self.test_x, self.test_y = np.array([]), np.array([])
         split = 0 < self.test_percent < len(df)
-        test_x, test_y = np.array([]), np.array([])
 
         # sample training/test instances
         if split:
             train, test = train_test_split(
                 df, test_size=self.test_percent)
-            test_x = self.normalize(np.array(test)[:, :-1])
-            test_y = np.array(test)[:, -1].astype(int).flatten()
+            self.test_x = self.normalize(np.array(test)[:, :-1])
+            self.test_y = np.array(test)[:, -1].astype(int).flatten()
         else:
             train = df
 
@@ -168,12 +169,9 @@ class AbsClassifierInstance:
             train_x = train_x[: max_size, :]
             train_y = train_y[: max_size]
 
-        self.attrs = attrs
         self.classes = np.unique(train_y)
         self.train_x = train_x
         self.train_y = train_y
-        self.test_x = test_x
-        self.test_y = test_y
 
     @staticmethod
     def score(true_labels, predictions, positive=0, display=False):
