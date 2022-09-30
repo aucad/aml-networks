@@ -116,8 +116,6 @@ HOPSKIPJUMP ATTACK
 --------------------------------------------------
 Success rate ----------------- 100.00
 Error min/max ---------------- 0.022092 - 0.667910
-mutations: ------------------- 18 attributes
-conn_state=OTH :: conn_state=RSTR :: proto=icmp :: orig_pkts :: conn_state=SH :: resp_ip_bytes :: resp_bytes :: conn_state=REJ :: orig_bytes :: orig_ip_bytes :: conn_state=SF :: proto=udp :: conn_state=S0 :: conn_state=RSTOS0 :: duration :: resp_pkts :: conn_state=RSTRH :: proto=tcp
 
 
 Read dataset ----------------- data/CTU-1-1.csv
@@ -136,8 +134,6 @@ HOPSKIPJUMP ATTACK
 --------------------------------------------------
 Success rate ----------------- 100.00
 Error min/max ---------------- 0.647870 - 1.038313
-mutations: ------------------- 18 attributes
-conn_state=RSTR :: conn_state=RSTOS0 :: orig_bytes :: conn_state=REJ :: resp_bytes :: orig_pkts :: resp_ip_bytes :: conn_state=S0 :: conn_state=SF :: proto=udp :: orig_ip_bytes :: resp_pkts :: proto=icmp :: conn_state=RSTRH :: conn_state=OTH :: conn_state=SH :: duration :: proto=tcp
 ```
 
 ## Classifier visualizations
