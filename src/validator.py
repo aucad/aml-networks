@@ -1,10 +1,6 @@
 from __future__ import annotations
 
-import logging
-from random import uniform, randint
-from collections import Counter, namedtuple
-
-logger = logging.getLogger(__name__)
+from collections import namedtuple
 
 
 class NetworkProto:
@@ -40,9 +36,7 @@ class NetworkProto:
         return False
 
     def check(self) -> bool:
-        # don't predict, just determine by rules
         return self.validation_rules
-        # return model.predict(np.array(self.values).reshape(1, -1))[0]
 
 
 class NbTCP(NetworkProto):
