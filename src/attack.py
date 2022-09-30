@@ -4,8 +4,7 @@ from os import path
 
 import numpy as np
 
-from src import BaseUtil, AbsClassifierInstance
-from src.validator import Validator, NbTCP, NbUDP
+from src import BaseUtil, AbsClassifierInstance, Validator, NbTCP
 
 
 class AbsAttack(BaseUtil):
@@ -17,7 +16,7 @@ class AbsAttack(BaseUtil):
         self.evasions = np.array([])
         self.adv_x = np.array([])
         self.adv_y = np.array([])
-        self.valid_idx = []
+        self.valid_result = np.array([])
         self.validator_kind = None
 
     @property
@@ -42,15 +41,20 @@ class AbsAttack(BaseUtil):
     def validate(self):
         if self.validator_kind is None:
             return
-
-        cls_attrs = Validator.attr_fix(self.cls.attrs[:self.cls.n_features])
+        temp_arr = []
+        attrs = self.cls.attrs[:self.cls.n_features]
         for (index, record) in enumerate(self.cls.denormalize(self.adv_x)):
-            rec_nd = dict([(a, b) for a, b in zip(cls_attrs, record)])
-            # TODO: determine proto -> choose right validation model
-            model = NbTCP().validator_model(cls_attrs)
-            validatable_inst = NbTCP(model, **rec_nd)
-            if Validator.validate(validatable_inst):
-                self.valid_idx.append(index)
+            # make a dictionary of record
+            rec_nd = dict([(a, b) for a, b in zip(attrs, record)])
+            proto = self.cls.determine_proto(record)
+            v_inst = None
+            if self.validator_kind == Validator.NB15:
+                if proto == self.tcp:
+                    v_inst = NbTCP(attrs, **rec_nd)
+                if proto == self.udp:
+                    v_inst = NbTCP(attrs, **rec_nd)
+            temp_arr.append(not v_inst or Validator.validate(v_inst))
+        self.valid_result = np.array(temp_arr)
 
     def log_attack_setup(self):
         self.show('Attack', self.name)
@@ -62,7 +66,7 @@ class AbsAttack(BaseUtil):
         p = 100 * (ev / tot)
         self.show('Evasion success', f'{ev} of {tot} - {p:.1f} %')
         if self.validator_kind:
-            v = len(self.valid_idx)
+            v = len([s for s in self.valid_result if s])
             q = 100 * (v / ev)
             self.show('Validation success', f'{v} of {ev} - {q:.1f} %')
 
@@ -70,16 +74,26 @@ class AbsAttack(BaseUtil):
         """Write to csv file original and adversarial examples."""
 
         def dump(x, y, name):
+            attrs = self.cls.attrs[:]
+            int_cols = self.cls.mask_cols + [self.cls.n_features]
             labels = y[self.evasions].reshape(-1, 1)
             rows = np.append(x[self.evasions, :], labels, 1)
+            if self.validator_kind:
+                valid = self.valid_result[self.evasions].reshape(-1, 1)
+                int_cols.append(len(rows[0]))
+                rows = np.append(rows[:, :], valid, 1)
+                attrs.append('valid')
+
+            self.ensure_out_dir(self.out_dir)
             f_name = path.join(self.out_dir, f'{name}.csv')
+
             # all masked columns + class label
-            int_cols = self.cls.mask_cols + [self.cls.n_features]
             with open(f_name, 'w', newline='') as fp:
                 w = csv.writer(fp, delimiter=',')
-                w.writerow(self.cls.attrs)
+                w.writerow(attrs)
                 w.writerows([
-                    [int(val) if i in int_cols else val
+                    [bool(val) if i == len(self.cls.attrs) + 1 else
+                     int(val) if i in int_cols else val
                      for i, val in enumerate(row)]
                     for row in rows])
 

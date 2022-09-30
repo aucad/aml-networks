@@ -10,22 +10,25 @@ logger = logging.getLogger(__name__)
 class NetworkProto:
     """Represents validatable instance"""
 
-    def __init__(self, name: str, kind: namedtuple = None, **kwargs):
+    def __init__(self, name: str, kind: namedtuple, **kwargs):
         self.name = name
-        kind = kind or namedtuple(name, ",".join(list(kwargs.keys())))
         self.attributes = kind._fields or []
-        defaults = dict(
-            [(a, 0) for a in self.attributes if a not in kwargs])
-        self.record = kind(**defaults, **kwargs)
+        defaults = dict([(a, 0) for a in self.attributes if a not in kwargs])
+        self.record: namedtuple = kind(**defaults, **kwargs)
 
     @staticmethod
     def ensure_attrs():
         return {}
 
-    def validator_model(self, attrs) -> namedtuple:
+    @staticmethod
+    def key_vals_dict(names, values):
+        return dict([(a, b) for (a, b) in zip(names.split(' '), values)])
+
+    def validation_model(self, attrs, kwargs) -> namedtuple:
         """validator model for current dataset"""
         req_keys = list(self.ensure_attrs().keys())
-        attr_names = list(set(attrs + req_keys))
+        instance_keys = list(kwargs.keys())
+        attr_names = list(set((attrs or []) + req_keys + instance_keys))
         return namedtuple('xyz', ",".join(attr_names))
 
     @property
@@ -33,29 +36,29 @@ class NetworkProto:
         return [getattr(self.record, a) for a in self.attributes]
 
     @property
-    def pass_validation_rules(self):
+    def validation_rules(self):
         return False
 
     def check(self) -> bool:
         # don't predict, just determine by rules
-        return self.pass_validation_rules
+        return self.validation_rules
         # return model.predict(np.array(self.values).reshape(1, -1))[0]
 
 
 class NbTCP(NetworkProto):
-    def __init__(self, model=None, **kwargs):
+    def __init__(self, attrs=None, **kwargs):
         # noinspection PyTypeChecker
-        super().__init__('tcp', model, **kwargs)
+        super().__init__(
+            'tcp', self.validation_model(attrs, kwargs), **kwargs)
 
     @staticmethod
     def ensure_attrs():
         """If values are undefined for some records, these are the defaults."""
         names = 'swin dwin synack ackdat tcprtt dbytes Dload dttl Djit Dpkts'
-        def_values = [255, 255] + [0] * 8
-        return dict([(a, b) for (a, b) in zip(names.split(' '), def_values)])
+        return NetworkProto.key_vals_dict(names, [255, 255] + [0] * 8)
 
     @property
-    def pass_validation_rules(self):
+    def validation_rules(self):
         if self.record.swin != 255 or self.record.dwin != 255:
             return False
         if round(self.record.synack + self.record.ackdat, 3) != \
@@ -69,19 +72,19 @@ class NbTCP(NetworkProto):
 
 
 class NbUDP(NetworkProto):
-    def __init__(self, model=None, **kwargs):
+    def __init__(self, attrs=None, **kwargs):
         # noinspection PyTypeChecker
-        super().__init__('udp', model, **kwargs)
+        super().__init__(
+            'udp', self.validation_model(attrs, kwargs), **kwargs)
 
     @staticmethod
     def ensure_attrs():
         """If values are undefined for some records, these are the defaults."""
         names = 'smeansz Spkts sbytes dmeansz Dpkts dbytes'
-        def_values = [0] * 6
-        return dict([(a, b) for (a, b) in zip(names.split(' '), def_values)])
+        return NetworkProto.key_vals_dict(names, [0] * 6)
 
     @property
-    def pass_validation_rules(self):
+    def validation_rules(self):
         return self.record.smeansz * self.record.Spkts == \
                self.record.sbytes \
                and self.record.dmeansz * self.record.Dpkts == \
@@ -91,14 +94,6 @@ class NbUDP(NetworkProto):
 class Validator:
     NB15 = 'NB15'
     IOT23 = 'IOT23'
-
-    @staticmethod
-    def attr_fix(attrs):
-        return [a.replace(' ', '').replace('=', '_').replace('-', '')
-                for a in attrs]
-    @staticmethod
-    def kinds():
-        return [Validator.NB15, Validator.IOT23]
 
     @staticmethod
     def validate(instance: NetworkProto):

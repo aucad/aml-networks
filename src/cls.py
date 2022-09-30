@@ -85,6 +85,20 @@ class AbsClassifierInstance(BaseUtil):
     def formatter(x, y):
         return x
 
+    def determine_proto(self, record):
+        """Determine protocol for some records, by scan of the attribute
+        values, and active bit. Returns other if not found."""
+        proto_label = next(
+            (a for a, b in
+             [(lbl, int(record[i])) for i, lbl
+              in enumerate(self.attrs) if 'proto' in lbl]
+             if b == 1), self.proto_other)
+        if 'tcp' in proto_label:
+            return self.tcp
+        if 'udp' in proto_label:
+            return self.udp
+        return self.proto_other
+
     def set_mask_cols(self):
         indices = []
         for col_i in range(self.n_features):
@@ -158,13 +172,19 @@ class AbsClassifierInstance(BaseUtil):
             data_copy[:, i] = range_max * (data[:, i])
         return data_copy
 
+    @staticmethod
+    def attr_fix(attrs):
+        return [a.replace(' ', '').replace('=', '_').replace('-', '')
+                for a in attrs]
+
     def __load_csv_data(self, max_size=-1):
         """
         Read dataset and split to train/test using random sampling.
         """
 
         df = pd.read_csv(self.ds_path).fillna(0)
-        self.attrs = [col for col in df.columns]
+        self.attrs = AbsClassifierInstance.attr_fix(
+            [col for col in df.columns])
         self.test_x, self.test_y = np.array([]), np.array([])
         split = 0 < self.test_percent < len(df)
 

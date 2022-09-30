@@ -8,6 +8,18 @@ logger = logging.getLogger(__name__)
 
 class BaseUtil:
 
+    @property
+    def tcp(self):
+        return 'tcp'
+
+    @property
+    def udp(self):
+        return 'udp'
+
+    @property
+    def proto_other(self):
+        return 'unknown protocol'
+
     @staticmethod
     def ensure_out_dir(dir_path):
         return path.exists(dir_path) or makedirs(dir_path)

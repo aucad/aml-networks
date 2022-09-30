@@ -97,7 +97,7 @@ def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
     parser.add_argument(
         '--validator',
         action='store',
-        choices=Validator.kinds(),
+        choices=[Validator.NB15],
         help=f'dataset validator kind [default: None]'
     )
     parser.add_argument(
