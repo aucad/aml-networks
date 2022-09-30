@@ -50,7 +50,8 @@ class HopSkip(AbsAttack):
             x_adv = attack.generate(
                 x=target_arr, x_adv_init=x_adv, mask=mask_arr)
             error_before = l2_error
-            l2_error = np.linalg.norm(np.reshape(x_adv[0] - target, [-1]))
+            l2_error = np.linalg.norm(
+                np.reshape(x_adv[0] - target, [-1]))
             error_change = error_before - l2_error
             label = np.argmax(self.cls.classifier.predict(x_adv)[0])
             success = initial_label != label
@@ -98,16 +99,9 @@ class HopSkip(AbsAttack):
         ori_inputs = self.cls.formatter(x, y)
         predictions = self.cls.predict(ori_inputs).flatten().tolist()
         mutations = set()
-        int_attrs = tu.freeze_types(x)
-        mask = self.get_mask(x, int_attrs)
+        mask = self.get_mask(x, self.cls.mask_cols)
 
         print('HopSkipJump')
-        tu.show('Immutable', ", ".join([
-            self.cls.attrs[i] for i in int_attrs]))
-        tu.show('Mutable', ", ".join(sorted(
-            [self.cls.attrs[i] for i in range(self.cls.n_features) if
-             i not in int_attrs])))
-
         for index, instance in enumerate(x):
             init_label = predictions[index]
             xa, success, l2, new_label = self.attack_instance(
@@ -125,14 +119,13 @@ class HopSkip(AbsAttack):
         if evs > 0:
             ax = np.array(ax).reshape(x.shape)
             ay, evasions = np.array(ay), np.array(evasions)
-            tu.dump_result(evasions, x, y, ax, ay,
-                           self.cls.attrs, self.out_dir)
+            self.dump_result(evasions, ax, ay)
 
-        tu.show('Evasion success', f'{evs} / {(evs / len(x)) * 100:.2f} %')
+        tu.show('Evasion success',
+                f'{evs} / {(evs / len(x)) * 100:.2f} %')
         if evs > 0:
             tu.show('Error', f'{min(errors):.6f} - {max(errors):.6f}')
         if len(mut) > 0:
             tu.show('Mutations:', f'{len(mut)} attributes')
             tu.show('Mutated attrs', ", ".join(sorted(mut)))
         return evs
-

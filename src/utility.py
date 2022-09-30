@@ -1,24 +1,15 @@
-import logging
 from os import path, makedirs
 
-import numpy as np
 from colorama import Fore, Style  # terminal colors
-
-logger = logging.getLogger(__name__)
 
 
 def ensure_out_dir(dir_path):
     return path.exists(dir_path) or makedirs(dir_path)
 
 
-def text_label(i):
-    """convert text label to numeric"""
-    return 'malicious' if i == 1 else 'benign'
-
-
-def int_label(text):
-    """convert numeric label to text label"""
-    return 0 if text.lower() == 'benign' else 1
+def color_text(text):
+    """Display terminal text in color."""
+    return Fore.GREEN + str(text) + Style.RESET_ALL
 
 
 def show(msg, value, end='\n'):
@@ -43,104 +34,3 @@ def show(msg, value, end='\n'):
          for i, s in enumerate(lines)])
 
     print(f'{msg} '.ljust(label_w, '-'), fmt_lines, end=end)
-
-
-def int_cols(num_mat):
-    """Finds integer valued attributes in a 2d matrix"""
-    indices = []
-    for col_i in range(len(num_mat[0])):
-        if set(list(np.unique(num_mat[:, col_i]))).issubset({0, 1}):
-            indices.append(col_i)
-    return indices
-
-
-def freeze_types(num_mat):
-    return int_cols(num_mat)
-
-
-def score(true_labels, predictions, positive=0, display=False):
-    """Calculate performance metrics."""
-    sc, tp_tn, num_pos_pred, num_pos_actual = 0, 0, 0, 0
-    for actual, pred in zip(true_labels, predictions):
-        int_pred = int(round(pred, 0))
-        if int_pred == positive:
-            num_pos_pred += 1
-        if actual == positive:
-            num_pos_actual += 1
-        if int_pred == actual:
-            tp_tn += 1
-        if int_pred == actual and int_pred == positive:
-            sc += 1
-
-    accuracy = tp_tn / len(predictions)
-    precision = 1 if num_pos_pred == 0 else sc / num_pos_pred
-    recall = 1 if num_pos_actual == 0 else sc / num_pos_actual
-    f_score = (2 * precision * recall) / (precision + recall)
-
-    if display:
-        show('Accuracy', f'{accuracy * 100:.2f} %')
-        show('Precision', f'{precision * 100:.2f} %')
-        show('Recall', f'{recall * 100:.2f} %')
-        show('F-score', f'{f_score * 100:.2f} %')
-
-    return accuracy, precision, recall, f_score
-
-
-def color_text(text):
-    """Display terminal text in color."""
-    return Fore.GREEN + str(text) + Style.RESET_ALL
-
-
-def binary_attributes(np_array):
-    """Get column indices of binary attributes"""
-    return [feat for feat in range(len(np_array[0]))
-            if len(list(set(np_array[:, feat]))) == 2]
-
-
-def non_bin_attributes(np_array):
-    """Get column indices of non-binary attributes"""
-    return [feat for feat in range(len(np_array[0]))
-            if len(list(set(np_array[:, feat]))) > 2]
-
-
-def dump_result(evasions, train_x, train_y, adv_x, adv_y, attr,
-                out_dir):
-    """Write to csv file original and adversarial examples.
-
-    arguments:
-        evasions - list of indices where attack succeeded
-        train_x - original training data, np.array (2d)
-        train_y - original labels, np.array (1d)
-        adv_x - adversarial examples, np.array (2d)
-        adv_y - adversarial labels, np.array (1d)
-        attr - data attributes
-        out_dir - output directory
-    """
-
-    import csv
-
-    def fmt(x, y):
-        # append row and label, for each row
-        labels = y[evasions].reshape(-1, 1)
-        return (np.append(x[evasions, :], labels, 1)).tolist()
-
-    ensure_out_dir(out_dir)
-    inputs = [[fmt(train_x, train_y), 'ori.csv'],
-              [fmt(adv_x, adv_y), 'adv.csv']]
-
-    # include label column
-    int_values = int_cols(train_x)
-
-    for (rows, name) in inputs:
-        with open(path.join(out_dir, name),
-                  'w', newline='') as csvfile:
-            w = csv.writer(csvfile, delimiter=',')
-            w.writerow(attr)
-            for row in rows:
-                fmt_row = []
-                for i, val in enumerate(row):
-                    if i in int_values or i == len(row) - 1:
-                        fmt_row.append(int(val))
-                    else:
-                        fmt_row.append(val)
-                w.writerow(fmt_row)

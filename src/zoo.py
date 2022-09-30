@@ -82,6 +82,12 @@ class Zoo(AbsAttack):
             verbose=True) \
             .generate(x=self.cls.train_x)
 
+    @staticmethod
+    def non_bin_attributes(np_array):
+        """Get column indices of non-binary attributes"""
+        return [feat for feat in range(len(np_array[0]))
+                if len(list(set(np_array[:, feat]))) > 2]
+
     def plot(self, evasions, attr, adv_ex):
         """Visualize the adversarial attack results"""
 
@@ -93,7 +99,7 @@ class Zoo(AbsAttack):
         markers = ['o', 's']
         x_min, y_min, x_max, y_max = -0.1, -0.1, 1.1, 1.1
 
-        non_binary_attrs = tu.non_bin_attributes(x_train)
+        non_binary_attrs = self.non_bin_attributes(x_train)
         attr_pairs = list(combinations(non_binary_attrs, 2))
         fig_count = len(attr_pairs) // subplots
 
@@ -125,7 +131,8 @@ class Zoo(AbsAttack):
                     xt_f2 = x_train[j:j + 1, f2]
                     ad_f1 = adv_ex[j:j + 1, f1]
                     ad_f2 = adv_ex[j:j + 1, f2]
-                    ax.plot([xt_f1, ad_f1], [xt_f2, ad_f2], **diff_props)
+                    ax.plot([xt_f1, ad_f1], [xt_f2, ad_f2],
+                            **diff_props)
                     ax.scatter(ad_f1, ad_f2, **adv_props)
 
             fig.tight_layout()
@@ -138,7 +145,8 @@ class Zoo(AbsAttack):
     def post_restore(mask_idx, x, adv):
         """Restore attribute values along immutable columns."""
         if x.shape != adv.shape:
-            raise Exception(f'Shapes do not match {x.shape} {adv.shape}')
+            raise Exception(
+                f'Shapes do not match {x.shape} {adv.shape}')
         for idx in mask_idx:
             ori_values = x[:, idx]
             adv[:, idx] = ori_values
@@ -148,7 +156,8 @@ class Zoo(AbsAttack):
         """Make a list of adversarial instance indices that succeed in
         evasion. """
         # predictions for training instances
-        ori_inputs = self.cls.formatter(self.cls.train_x, self.cls.train_y)
+        ori_inputs = self.cls.formatter(self.cls.train_x,
+                                        self.cls.train_y)
         original = self.cls.predict(ori_inputs).flatten().tolist()
 
         # adversarial predictions for same data
@@ -175,20 +184,13 @@ class Zoo(AbsAttack):
              img_path - dir path and file name for storing plots
         """
         x, y = self.cls.train_x, self.cls.train_y
-        int_attrs = tu.freeze_types(x)
-        tu.show('Immutable', ", ".join([self.cls.attrs[i] for i in int_attrs]))
-        tu.show('Mutable', ", ".join(sorted(
-            [self.cls.attrs[i] for i in range(self.cls.n_features) if
-             i not in int_attrs])))
-
         x_train, labels = x[:], y[:]
         a = self.adversarial_iot()
-        adv = self.post_restore(int_attrs, x_train, a)
+        adv = self.post_restore(self.cls.mask_cols, x_train, a)
         evasions, adv_y = self.adv_examples(adv)
 
         if len(evasions) > 0:
             self.plot(evasions, self.cls.attrs, adv)
-            tu.dump_result(evasions, x_train, labels, adv, adv_y,
-                           self.cls.attrs, self.out_dir)
+            self.dump_result(evasions, adv, adv_y)
 
         return evasions

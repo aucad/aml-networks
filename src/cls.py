@@ -29,6 +29,7 @@ class AbsClassifierInstance:
         self.test_y = np.array([])
         self.attr_ranges = {}
         self.out_dir = out
+        self.mask_cols = []
 
     @property
     def train_size(self):
@@ -46,10 +47,20 @@ class AbsClassifierInstance:
     def n_classes(self):
         return len(self.classes)
 
+    @staticmethod
+    def text_label(i):
+        """convert text label to numeric"""
+        return 'malicious' if i == 1 else 'benign'
+
+    @staticmethod
+    def int_label(text):
+        """convert numeric label to text label"""
+        return 0 if text.lower() == 'benign' else 1
+
     @property
     def class_names(self):
         """class labels as text"""
-        return [tu.text_label(cn) for cn in self.classes]
+        return [self.text_label(cn) for cn in self.classes]
 
     @property
     def plot_path(self):
@@ -59,6 +70,13 @@ class AbsClassifierInstance:
     @staticmethod
     def formatter(x, y):
         return x
+
+    def set_mask_cols(self):
+        indices, mat = [], self.train_x
+        for col_i in range(len(mat[0])):
+            if set(list(np.unique(mat[:, col_i]))).issubset({0, 1}):
+                indices.append(col_i)
+        self.mask_cols = indices
 
     def predict(self, data):
         return self.model.predict(data)
@@ -82,6 +100,7 @@ class AbsClassifierInstance:
         self.ds_path = dataset_path
         self.test_percent = test_percent
         self.__load_csv_data()
+        self.set_mask_cols()
         return self
 
     def train(self, robust=False):
@@ -101,7 +120,14 @@ class AbsClassifierInstance:
             if self.test_size > 0 else
             (self.train_x, self.train_y))
         predictions = self.predict(self.formatter(*records))
-        tu.score(records[1], predictions, display=True)
+        self.score(records[1], predictions, display=True)
+
+        immut_attr = [self.attrs[i] for i in self.mask_cols]
+        mut_attrs = [self.attrs[i] for i in range(self.n_features)
+                     if i not in self.mask_cols]
+
+        tu.show('Mutable', ", ".join(sorted(mut_attrs)))
+        tu.show('Immutable', ", ".join(sorted(immut_attr)))
 
         return self
 
@@ -148,3 +174,29 @@ class AbsClassifierInstance:
         self.train_y = train_y
         self.test_x = test_x
         self.test_y = test_y
+
+    @staticmethod
+    def score(true_labels, predictions, positive=0, display=False):
+        """Calculate performance metrics."""
+        sc, tp_tn, num_pos_pred, num_pos_actual = 0, 0, 0, 0
+        for actual, pred in zip(true_labels, predictions):
+            int_pred = int(round(pred, 0))
+            if int_pred == positive:
+                num_pos_pred += 1
+            if actual == positive:
+                num_pos_actual += 1
+            if int_pred == actual:
+                tp_tn += 1
+            if int_pred == actual and int_pred == positive:
+                sc += 1
+
+        accuracy = tp_tn / len(predictions)
+        precision = 1 if num_pos_pred == 0 else sc / num_pos_pred
+        recall = 1 if num_pos_actual == 0 else sc / num_pos_actual
+        f_score = (2 * precision * recall) / (precision + recall)
+
+        if display:
+            tu.show('Accuracy', f'{accuracy * 100:.2f} %')
+            tu.show('Precision', f'{precision * 100:.2f} %')
+            tu.show('Recall', f'{recall * 100:.2f} %')
+            tu.show('F-score', f'{f_score * 100:.2f} %')
