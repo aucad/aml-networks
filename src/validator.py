@@ -9,7 +9,7 @@ import joblib
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 
-from utility import show
+from src.utility import BaseUtil as tu
 
 logger = logging.getLogger(__name__)
 
@@ -102,10 +102,10 @@ class Validator:
             inst = Generator.generate(kind)
             item_counter.append(inst.name)
             valid += 1 if validator.validate(inst) == VALID else 0
-        show('Generated', n)
-        show('Valid', valid)
+        tu.show('Generated', n)
+        tu.show('Valid', valid)
         for item in Counter(item_counter).items():
-            show(*item)
+            tu.show(*item)
 
 
 class Generator:

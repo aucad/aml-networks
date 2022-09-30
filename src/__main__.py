@@ -1,33 +1,28 @@
 """
-Carry out the adversarial attacks using XGBoost classifier.
+Command-line interface for training tree-based classifiers and
+performing adversarial attacks on those models.
 
 Usage:
 
 ```
-python src/__main__.py
+python -m src
 ```
 
-Use specific dataset:
+List all available options:
 
 ```
-python src/__main__.py ./path/to/input_data.csv
+python -m src --help
 ```
 
 """
 import logging as lg
 from argparse import ArgumentParser
-from os import path
 from sys import exit
 from typing import Optional, List
 
-from attack_zoo import zoo_attack
-from attack_hop import run_attack as hop_attack
-from train_xg import train, formatter, predict
-from utility import DEFAULT_DS
+from src import __version__, __title__, ClsLoader, AttackLoader
 
-NON_ROBUST, ROBUST = False, True
-VERSION = "0.1.0"
-NAME = "src"
+DEFAULT_DS = 'data/CTU-1-1.csv'
 
 
 def main():
@@ -35,53 +30,83 @@ def main():
     Run adversarial ML attacks and defenses on tree-based classifiers
     on network data.
     """
-    parser = ArgumentParser(prog=NAME, description=main.__doc__)
+    parser = ArgumentParser(prog=__title__, description=main.__doc__)
     args = __parse_args(parser)
-    dataset = args.data
+    __init_logger(lg.FATAL - (0 if args.silent else 40))
 
-    if not dataset:
+    if not args.dataset:
         parser.print_help()
         exit(1)
-    else:
-        __init_logger()
-        run_attacks(dataset)
 
+    cls = ClsLoader \
+        .load(args.out, args.cls) \
+        .load(args.dataset, args.test / 100) \
+        .train(robust=args.robust)
 
-def plot_path(robust):
-    img_base_path = 'robust' if robust else 'non_robust'
-    return path.join(img_base_path)
+    if args.plot:
+        cls.plot()
 
-
-def run_attacks(dataset):
-    for opt in (NON_ROBUST, ROBUST):
-        zoo_attack(
-            train, formatter, predict,
-            img_path=plot_path(opt),
-            dataset=dataset,
-            test_size=0,
-            robust=opt)
-        hop_attack(
-            train, formatter, predict,
-            dataset=dataset,
-            test_size=0,
-            robust=opt)
+    if args.attack:
+        AttackLoader \
+            .load(args.attack).set_cls(cls) \
+            .run()
 
 
 def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
     """Setup available program arguments."""
 
-    # TODO: extend these args
-
     parser.add_argument(
-        '-d', '--data',
+        '-d', '--dataset',
         action="store",
         default=DEFAULT_DS,
-        help="path to dataset",
+        help=f'path to dataset [default: {DEFAULT_DS}]',
+    )
+    parser.add_argument(
+        '-t', '--test',
+        type=int,
+        choices=range(0, 100),
+        metavar="0-99",
+        help='test set split percentage [default: 0]',
+        default=0
+    )
+    parser.add_argument(
+        '-c', '--cls',
+        action='store',
+        choices=[ClsLoader.DECISION_TREE, ClsLoader.XGBOOST],
+        default=ClsLoader.XGBOOST,
+        help=f'Classifier to train [default: {ClsLoader.XGBOOST}]'
+    )
+    parser.add_argument(
+        "--robust",
+        action='store_true',
+        help="train a robust model"
+    )
+    parser.add_argument(
+        "--plot",
+        action='store_true',
+        help="generate plots"
+    )
+    parser.add_argument(
+        '-a', '--attack',
+        action='store',
+        choices=[AttackLoader.HOP_SKIP, AttackLoader.ZOO],
+        help=f'evasion attack [default: None]'
+    )
+    parser.add_argument(
+        "-o", "--out",
+        action='store',
+        default="output",
+        help="output directory [default: output]"
+    )
+    parser.add_argument(
+        '-s', "--silent",
+        action='store_true',
+        help="disable debug logging"
     )
     parser.add_argument(
         "-v", "--version",
         action="version",
-        version="%(prog)s " + VERSION,
+        version="%(prog)s " + __version__,
     )
     return parser.parse_args(args)
 
@@ -89,11 +114,9 @@ def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
 def __init_logger(level: int = lg.ERROR, fn: Optional[str] = None):
     """Create a logger instance"""
 
-    fmt = lg.Formatter(
-        "[%(asctime)s] %(levelname)s (%(module)s): %(message)s",
-        datefmt="%H:%M:%S")
+    fmt = lg.Formatter("[%(asctime)s]: %(message)s", datefmt="%H:%M:%S")
 
-    logger = lg.getLogger(NAME)
+    logger = lg.getLogger(__title__)
     logger.setLevel(level)
     stream_handler = lg.StreamHandler()
     stream_handler.setFormatter(fmt)
