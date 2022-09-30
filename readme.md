@@ -67,12 +67,15 @@ python -m src --help
 | `data`              | Preprocessed data sets, ready for running various attacks   |
 | `src`               | Source code                                                 |
 | 　`└─ examples/`     | ART attack examples, for reference                          |
-| 　`└─ attack_hop.py` | HopSkipJump attack implementation                           |
-| 　`└─ attack_zoo.py` | ZOO attack implementation                                   |
-| 　`└─ train_dt.py`   | Decision tree classifier training                           |
-| 　`└─ train_xg.py`   | XGBoost classifier training                                 |
-| 　`└─ utility.py`    | Common helpers                                              |
+| 　`└─ attack.py`     | Abstract base class for an attack                           |
+| 　`└─ cls.py`        | Abstract base class for a classifier                        |
+| 　`└─ hopskip.py`    | HopSkipJump attack implementation                           |
+| 　`└─ loader.py`     | Utility for loading models and attacks                      |
+| 　`└─ tree.py`       | Decision tree classifier training                           |
+| 　`└─ utility.py`    | Shared functionality and utils                              |
 | 　`└─ validator.py`  | Post-attack record validator                                |
+| 　`└─ xgb.py`        | XGBoost classifier training                                 |
+| 　`└─ zoo.py`        | ZOO attack implementation                                   |
 
 ## Notes on ART Attacks
 
