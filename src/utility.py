@@ -35,7 +35,7 @@ class BaseUtil:
         str_v = str(value)
 
         # wrap values lines
-        wrap_size, label_w, log_pad = 60, 24, 12
+        wrap_size, label_w, log_pad = 42, 18, 12
         chunks, chunk_size, lines = len(str_v), wrap_size, []
         if chunks < chunk_size:
             lines = [str_v]

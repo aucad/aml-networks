@@ -140,8 +140,8 @@ class AbsClassifierInstance(BaseUtil):
         self.show('Attributes', self.n_features)
         self.show('Classifier', self.name)
         self.show('Classes', ", ".join(self.class_names))
-        self.show('Training instances', self.n_train)
-        self.show('Test instances', self.n_test)
+        self.show('Training size', self.n_train)
+        self.show('Test size', self.n_test)
 
         # evaluate performance
         records = (

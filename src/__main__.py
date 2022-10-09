@@ -81,7 +81,7 @@ def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
     parser.add_argument(
         "--robust",
         action='store_true',
-        help="train a robust model"
+        help="train a robust model, xgboost only"
     )
     parser.add_argument(
         "--plot",
