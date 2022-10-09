@@ -57,7 +57,6 @@ class NbTCP(NetworkProto):
 
     @staticmethod
     def validate(record):
-        """validation criteria for UNSW-NB15 TCP record"""
         if record.swin != 255 or record.dwin != 255:
             return False
         # synack + ackdat = tcprtt
