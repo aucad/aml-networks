@@ -35,7 +35,7 @@ class NetworkProto:
 
     @staticmethod
     def validate(record):
-        return False
+        return True
 
     def check(self) -> bool:
         return self.validate(self.record)
@@ -142,14 +142,42 @@ class NbOther(NetworkProto):
 # noinspection PyTypeChecker
 class IotTCP(NetworkProto):
     def __init__(self, attrs=None, **kwargs):
-        super().__init__('udp', self.v_model(attrs, kwargs), **kwargs)
+        super().__init__('tcp', self.v_model(attrs, kwargs), **kwargs)
 
     @staticmethod
     def ensure_attrs():
-        return NetworkProto.kv_dict('', [])
+        names = 'conn_state_S0 conn_state_SF conn_state_OTH ' \
+                'conn_state_REJ history_ShADadFf history_DdA ' \
+                'resp_ip_bytes resp_pkts orig_ip_bytes orig_pkts'
+        return NetworkProto.kv_dict(names, [0] * 10)
 
     @staticmethod
     def validate(record):
+        # in S0 resp_pkts = 0 and resp_ip_bytes = 0
+        if record.conn_state_S0 == 1:
+            if record.resp_pkts != 0 or record.resp_ip_bytes != 0:
+                return False
+        # number of packets would be smaller than the bytes sent,
+        # this is also true for the receiving
+        if record.orig_pkts < record.orig_ip_bytes or \
+                record.resp_pkts < record.resp_ip_bytes:
+            return False
+        # In TCP the orig_pkts >= to resp_pkts
+        if record.orig_pkts < record.resp_pkts:
+            return False
+        # usually orig_ip_bytes are larger and equal to resp_ip_bytes
+        if record.orig_ip_bytes < record.resp_ip_bytes:
+            # unless either history ShADadFf and state SF
+            # or history DdA and state: OTH
+            if not ((record.history_ShADadFf == 1 and
+                     record.conn_state_SF == 1) or
+                    (record.history_DdA == 1 and
+                     record.conn_state_OTH == 1)):
+                return False
+        # if conn state REJ then orig_ip_bytes=0 and resp_ip_bytes=0
+        if record.conn_state_REJ == 1:
+            if record.orig_ip_bytes != 0 or record.resp_ip_bytes != 0:
+                return False
         return True
 
 
@@ -160,57 +188,68 @@ class IotUDP(NetworkProto):
 
     @staticmethod
     def ensure_attrs():
-        return NetworkProto.kv_dict('', [])
+        names = 'conn_state_S0 conn_state_SF history_Dd ' \
+                'resp_ip_bytes resp_pkts orig_ip_bytes orig_pkts'
+        return NetworkProto.kv_dict(names, [0] * 7)
+
+    @staticmethod
+    def validate(record):
+        # in S0 resp_pkts = 0 and resp_ip_bytes = 0
+        if record.conn_state_S0 == 1:
+            if record.resp_pkts != 0 or record.resp_ip_bytes != 0:
+                return False
+        # number of packets is smaller than the bytes sent,
+        # also true for the receiving
+        if record.orig_pkts < record.orig_ip_bytes or \
+                record.resp_pkts < record.resp_ip_bytes:
+            return False
+        # orig_pkts is always greater or equal to resp_pkts
+        # unless history is Dd and state is SF.
+        if record.orig_pkts < record.resp_pkts:
+            if not (record.history_Dd == 1 and
+                    record.conn_state_SF == 1):
+                return False
+        if record.orig_pkts >= record.resp_pkts:
+            # orig_ip_bytes is also >= resp_ip_bytes unless state is SF
+            if not (record.orig_ip_bytes >= record.resp_ip_bytes or
+                    record.conn_state_SF == 1):
+                return False
+        return True
+
+
+# noinspection PyTypeChecker
+class IotICMP(NetworkProto):
+    def __init__(self, attrs=None, **kwargs):
+        super().__init__('icmp', self.v_model(attrs, kwargs), **kwargs)
+
+    @staticmethod
+    def ensure_attrs():
+        names = 'conn_state_S0 resp_ip_bytes resp_pkts ' \
+                'orig_ip_bytes orig_pkts'
+        return NetworkProto.kv_dict(names, [0] * 5)
+
+    @staticmethod
+    def validate(record):
+        # in S0 resp_pkts = 0 and resp_ip_bytes = 0
+        if record.conn_state_S0 == 1:
+            if record.resp_pkts != 0 or record.resp_ip_bytes != 0:
+                return False
+        # number of packets would be smaller than the bytes sent,
+        # this is also true for the receiving
+        if record.orig_pkts < record.orig_ip_bytes or \
+                record.resp_pkts < record.resp_ip_bytes:
+            return False
+        return True
+
+
+# noinspection PyTypeChecker
+class IotOther(NetworkProto):
+    def __init__(self, attrs=None, **kwargs):
+        super().__init__('other', self.v_model(attrs, kwargs), **kwargs)
 
     @staticmethod
     def validate(record):
         return True
-
-    # TODO : implement these plus (?) rules from here
-    # https://drive.google.com/drive/folders/1q5jfv0N-zWWi7e4qM3VSjrdIlN5QEMqd
-    #
-    #     # 0: valid 1: invalid
-    #     print(att_dict)
-    #     proto_sum = int(att_dict['proto_imcp']) +
-    #     int(att_dict['proto_tcp']) + int(att_dict['proto_udp'])
-    #     if proto_sum != 1:
-    #         return 1
-    #     state_sum = int(att_dict['conn_state_OTH']) +
-    #     int(att_dict['conn_state_REJ']) +
-    #     int(att_dict['conn_state_RSTO']) +
-    #     int(att_dict['conn_state_RSTR']) +
-    #     int(att_dict['conn_state_RSTRH']) +
-    #     int(att_dict['conn_state_S0']) +
-    #     int(att_dict['conn_state_S1']) +
-    #     int(att_dict['conn_state_S2']) +
-    #     int(att_dict['conn_state_SF']) +
-    #     int(att_dict['conn_state_SH']) +
-    #     int(att_dict['conn_state_SHR'])
-    #
-    #     if state_sum != 1:
-    #         return 1
-    #
-    #     if int(att_dict['resp_pkts']) == 0:
-    #         if int(att_dict['resp_ip_bytes']) != 0:
-    #             return 1
-    #
-    #     if int(att_dict['proto_tcp']) == 1:
-    #         if int(att_dict['orig_pkts']) < int(att_dict['resp_pkts']):
-    #             return 1
-    #
-    #     if int(att_dict['proto_tcp']) == 1:
-    #         if int(att_dict['orig_ip_bytes']) <
-    #         int(att_dict['resp_ip_bytes']):
-    #             if int(att_dict['conn_state_SF']) != 1:
-    #                 return 1
-    #
-    #     if int(att_dict['proto_udp']) == 1:
-    #         if int(att_dict['orig_ip_bytes']) <
-    #         int(att_dict['resp_ip_bytes']):
-    #             if int(att_dict['conn_state_SF']) != 1:
-    #                 return 1
-    #
-    #     return 0
 
 
 class Validator:

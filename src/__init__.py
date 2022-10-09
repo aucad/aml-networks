@@ -7,7 +7,7 @@ __version__ = "0.1.0"
 
 from src.utility import BaseUtil
 from src.validator import Validator, \
-    NbTCP, NbUDP, NbOther, IotTCP, IotUDP
+    NbTCP, NbUDP, NbOther, IotTCP, IotUDP, IotICMP, IotOther
 from src.cls import AbsClassifierInstance
 from src.tree import DecisionTree
 from src.xgb import XGBClassifier

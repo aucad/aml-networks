@@ -20,8 +20,8 @@ from argparse import ArgumentParser
 from sys import exit
 from typing import Optional, List
 
-from src import __version__, __title__, ClsLoader, AttackLoader
-from src.validator import Validator
+from src import __version__, __title__, \
+    ClsLoader, AttackLoader, Validator
 
 DEFAULT_DS = 'data/CTU-1-1.csv'
 
@@ -97,7 +97,7 @@ def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
     parser.add_argument(
         '--validator',
         action='store',
-        choices=[Validator.NB15],
+        choices=[Validator.NB15, Validator.IOT23],
         help=f'dataset validator kind [default: None]'
     )
     parser.add_argument(

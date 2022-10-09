@@ -97,6 +97,8 @@ class AbsClassifierInstance(BaseUtil):
             return self.tcp
         if 'udp' in proto_label:
             return self.udp
+        if 'icmp' in proto_label:
+            return self.icmp
         return self.proto_other
 
     def set_mask_cols(self):
@@ -174,7 +176,13 @@ class AbsClassifierInstance(BaseUtil):
 
     @staticmethod
     def attr_fix(attrs):
-        return [a.replace(' ', '').replace('=', '_').replace('-', '')
+        """Remove selected special chars from attributes so that
+        the remaining forms a valid Python identifier."""
+        return [a.replace(' ', '')
+                .replace('=', '_')
+                .replace('-', '')
+                .replace('^', '_')
+                .replace('conn_state_other', 'conn_state_OTH')
                 for a in attrs]
 
     def __load_csv_data(self, max_size=-1):
@@ -189,6 +197,7 @@ class AbsClassifierInstance(BaseUtil):
         split = 0 < self.test_percent < len(df)
 
         # sample training/test instances
+        # TODO: if test split gives only one class, redo
         if split:
             train, test = train_test_split(
                 df, test_size=self.test_percent)
@@ -229,7 +238,11 @@ class AbsClassifierInstance(BaseUtil):
         f_score = (2 * precision * recall) / (precision + recall)
 
         if display:
-            AbsClassifierInstance.show('Accuracy', f'{accuracy * 100:.2f} %')
-            AbsClassifierInstance.show('Precision', f'{precision * 100:.2f} %')
-            AbsClassifierInstance.show('Recall', f'{recall * 100:.2f} %')
-            AbsClassifierInstance.show('F-score', f'{f_score * 100:.2f} %')
+            AbsClassifierInstance.show('Accuracy',
+                                       f'{accuracy * 100:.2f} %')
+            AbsClassifierInstance.show('Precision',
+                                       f'{precision * 100:.2f} %')
+            AbsClassifierInstance.show('Recall',
+                                       f'{recall * 100:.2f} %')
+            AbsClassifierInstance.show('F-score',
+                                       f'{f_score * 100:.2f} %')

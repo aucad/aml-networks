@@ -1,12 +1,12 @@
 import csv
-from collections import Counter
 from typing import Optional
 from os import path
 
 import numpy as np
 
 from src import BaseUtil, AbsClassifierInstance
-from src import Validator, NbTCP, NbUDP, NbOther, IotTCP, IotUDP
+from src import Validator, \
+    NbTCP, NbUDP, NbOther, IotTCP, IotUDP, IotICMP, IotOther
 
 
 class AbsAttack(BaseUtil):
@@ -26,7 +26,8 @@ class AbsAttack(BaseUtil):
         return len(self.evasions) > 0
 
     def figure_name(self, n):
-        return path.join(self.out_dir, f'{self.name}_{self.cls.name}_{n}.png')
+        return path.join(self.out_dir,
+                         f'{self.name}_{self.cls.name}_{n}.png')
 
     def set_cls(self, cls: AbsClassifierInstance):
         self.cls = cls
@@ -45,7 +46,8 @@ class AbsAttack(BaseUtil):
             return
         temp_arr = []
         attrs = self.cls.attrs[:self.cls.n_features]
-        for (index, record) in enumerate(self.cls.denormalize(self.adv_x)):
+        for (index, record) in enumerate(
+                self.cls.denormalize(self.adv_x)):
             # make a dictionary of record
             rec_nd = dict([(a, b) for a, b in zip(attrs, record)])
             proto = self.cls.determine_proto(record)
@@ -62,6 +64,10 @@ class AbsAttack(BaseUtil):
                     v_inst = IotTCP(attrs, **rec_nd)
                 elif proto == self.udp:
                     v_inst = IotUDP(attrs, **rec_nd)
+                elif proto == self.icmp:
+                    v_inst = IotICMP(attrs, **rec_nd)
+                else:
+                    v_inst = IotOther(attrs, **rec_nd)
             temp_arr.append(not v_inst or Validator.validate(v_inst))
         self.valid_result = np.array(temp_arr)
 
@@ -78,8 +84,9 @@ class AbsAttack(BaseUtil):
             v = len([s for s in self.valid_result if s])
             q = 100 * (v / tot)
             self.show('Total valid', f'{v} of {tot} - {q:.1f} %')
-            ve = sum([1 for (i, is_valid) in enumerate(self.valid_result)
-                      if is_valid and i in self.evasions])
+            ve = sum(
+                [1 for (i, is_valid) in enumerate(self.valid_result)
+                 if is_valid and i in self.evasions])
             r = 100 * (ve / tot)
             self.show('Evades + valid', f'{ve} of {tot} - {r:.1f} %')
 
@@ -111,6 +118,7 @@ class AbsAttack(BaseUtil):
                     for row in rows])
 
         dump(self.cls.train_x, self.cls.train_y, 'ori')
-        dump(self.cls.denormalize(self.cls.train_x), self.cls.train_y, 'orid')
+        dump(self.cls.denormalize(self.cls.train_x), self.cls.train_y,
+             'orid')
         dump(self.adv_x, self.adv_y, 'adv')
         dump(self.cls.denormalize(self.adv_x), self.adv_y, 'advd')

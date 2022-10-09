@@ -17,6 +17,10 @@ class BaseUtil:
         return 'udp'
 
     @property
+    def icmp(self):
+        return 'icmp'
+
+    @property
     def proto_other(self):
         return 'unknown protocol'
 
