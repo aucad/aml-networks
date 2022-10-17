@@ -7,11 +7,8 @@ ADAM coordinate descent to perform numerical estimation of gradients.
 Paper: https://arxiv.org/abs/1708.03999
 """
 
-from itertools import combinations
-
 import numpy as np
 from art.attacks.evasion import ZooAttack as ARTZooAttack
-from matplotlib import pyplot as plt
 
 from src import AbsAttack
 
@@ -74,12 +71,6 @@ class Zoo(AbsAttack):
             .generate(x=self.cls.train_x)
 
     @staticmethod
-    def non_bin_attributes(np_array):
-        """Get column indices of non-binary attributes"""
-        return [feat for feat in range(len(np_array[0]))
-                if len(list(set(np_array[:, feat]))) > 2]
-
-    @staticmethod
     def pseudo_mask(mask_idx, x, adv):
         """
         Restore original attribute values along immutable columns.
@@ -139,65 +130,3 @@ class Zoo(AbsAttack):
         if self.attack_success:
             self.plot()
             self.dump_result()
-
-    def plot(self):
-        """Visualize the adversarial attack results"""
-
-        colors = ['deepskyblue', 'lawngreen']
-        diff_props = {'c': 'black', 'zorder': 2, 'lw': 1}
-        class_props = {'edgecolor': 'black', 'lw': .5, 's': 20,
-                       'zorder': 2}
-        adv_props = {'zorder': 2, 'c': 'red', 'marker': 'x', 's': 12}
-        plt.rc('axes', labelsize=6)
-        plt.rc('xtick', labelsize=6)
-        plt.rc('ytick', labelsize=6)
-
-        evasions, attr, adv_ex = \
-            self.evasions, self.cls.attrs, self.adv_x
-        x_train, y_train = self.cls.train_x, self.cls.train_y
-        class_labels = list([int(i) for i in np.unique(y_train)])
-
-        rows, cols = 2, 3
-        subplots = rows * cols
-        markers = ['o', 's']
-        x_min, y_min, x_max, y_max = -0.1, -0.1, 1.1, 1.1
-
-        non_binary_attrs = self.non_bin_attributes(x_train)
-        attr_pairs = list(combinations(non_binary_attrs, 2))
-        fig_count = len(attr_pairs) // subplots
-
-        # generate plots
-        for f in range(fig_count):
-            fig, axs = plt.subplots(nrows=rows, ncols=cols, dpi=250)
-            axs = axs.flatten()
-
-            for subplot_index in range(subplots):
-
-                ax = axs[subplot_index]
-                f1, f2 = attr_pairs[(f * subplots) + subplot_index]
-                ax.set_xlim((x_min, x_max))
-                ax.set_ylim((y_min, y_max))
-                ax.set_xlabel(attr[f1])
-                ax.set_ylabel(attr[f2])
-                ax.set_aspect('equal', adjustable='box')
-
-                # Plot original samples
-                for cl in class_labels:
-                    x_f1 = x_train[y_train == cl][:, f1]
-                    x_f2 = x_train[y_train == cl][:, f2]
-                    style = {'c': colors[cl], 'marker': markers[cl]}
-                    ax.scatter(x_f1, x_f2, **class_props, **style)
-
-                # Plot adversarial examples and difference vectors
-                for j in evasions:
-                    xt_f1 = x_train[j:j + 1, f1]
-                    xt_f2 = x_train[j:j + 1, f2]
-                    ad_f1 = adv_ex[j:j + 1, f1]
-                    ad_f2 = adv_ex[j:j + 1, f2]
-                    ax.plot([xt_f1, ad_f1], [xt_f2, ad_f2],
-                            **diff_props)
-                    ax.scatter(ad_f1, ad_f2, **adv_props)
-
-            fig.tight_layout()
-            self.ensure_out_dir(self.out_dir)
-            plt.savefig(self.figure_name(f + 1))

@@ -104,6 +104,7 @@ class HopSkip(AbsAttack):
         errors = errors[self.evasions]
 
         if self.attack_success:
+            self.plot()
             self.dump_result()
             err_min = min(errors)
             err_max = max(errors)
