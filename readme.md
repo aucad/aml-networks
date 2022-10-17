@@ -33,8 +33,8 @@ To visualize XGBoost models, install [graphviz](https://graphviz.org/) and make 
 By default, attacks are configured to use a modified version of XGBoost classifier, enhanced with adversarial robustness
 property.
 
-The XGBoost classifier must be built locally [from source](https://github.com/chenhongge/RobustTrees),
-following [instructions here](https://github.com/chenhongge/RobustTrees/tree/master/python-package#from-source).
+The XGBoost classifier must be built locally [from source](./RobustTrees),
+following [instructions here](./RobustTrees/tree/master/python-package#from-source).
 
 After local build, set up Python environment to use this classifier version:
 

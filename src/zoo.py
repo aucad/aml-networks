@@ -18,27 +18,31 @@ from src import AbsAttack
 
 class Zoo(AbsAttack):
 
-    def __init__(self):
-        super().__init__('zoo')
+    def __init__(self, iterated):
+        super().__init__('zoo', iterated)
+        self.max_iter = 80
+        self.iter_step = 10
 
-    def generate_adv_examples(self) -> None:
+    def generate_adv_examples(self, iters) -> None:
         """Generate the adversarial examples using ZOO attack."""
 
         self.adv_x = ARTZooAttack(
             # A trained classifier
             classifier=self.cls.classifier,
-            # Confidence of adversarial examples: a higher value produces
-            # examples that are farther away, from the original input,
-            # but classified with higher confidence as the target class.
+            # Confidence of adversarial examples: a higher value
+            # produces examples that are farther away, from the
+            # original input, but classified with higher confidence
+            # as the target class.
             confidence=0.5,
             # Should the attack target one specific class
             # this doesn't matter in a binary problem!
             targeted=False,
-            # The initial learning rate for the attack algorithm. Smaller
-            # values produce better results but are slower to converge.
+            # The initial learning rate for the attack algorithm.
+            # Smaller values produce better results but are slower to
+            # converge.
             learning_rate=1e-1,
             # The maximum number of iterations.
-            max_iter=80,
+            max_iter=iters,
             # Number of times to adjust constant with binary search
             # (positive value).
             binary_search_steps=10,
@@ -50,12 +54,13 @@ class Zoo(AbsAttack):
             # True if gradient descent should be abandoned when it gets
             # stuck.
             abort_early=True,
-            # True if to use the resizing strategy from the paper: first,
-            # compute attack on inputs resized to 32x32, then increase
-            # size if needed to 64x64, followed by 128x128.
+            # True if to use the resizing strategy from the paper:
+            # first, compute attack on inputs resized to 32x32,
+            # then increase size if needed to 64x64, followed by
+            # 128x128.
             use_resize=False,
-            # True if to use importance sampling when choosing coordinates
-            # to update.
+            # True if to use importance sampling when choosing
+            # coordinates to update.
             use_importance=False,
             # Number of coordinate updates to run in parallel.
             nb_parallel=5,
@@ -93,7 +98,7 @@ class Zoo(AbsAttack):
     def eval_adv_examples(self):
         """
         Do prediction on adversarial vs original records and determine
-        which recors succeed at evading expected class label.
+        which records succeed at evading expected class label.
         """
         # predictions for training instances
         ori_in = self.cls.formatter(self.cls.train_x, self.cls.train_y)
@@ -109,13 +114,22 @@ class Zoo(AbsAttack):
             [i for i, (x, y) in enumerate(zip(original, adversarial))
              if int(x) != int(y)])
 
-    def run(self):
+    def run(self, max_iter):
         """Runs the zoo attack."""
+
+        self.max_iter = max_iter if max_iter > 0 else self.max_iter
+        attack_iter = self.max_iter if self.iterated else 1
         self.log_attack_setup()
-        self.generate_adv_examples()
-        self.adv_x = self.pseudo_mask(
-            self.cls.mask_cols, self.cls.train_x, self.adv_x)
-        self.eval_adv_examples()
+
+        for mi in range(0, attack_iter, self.iter_step):
+            iters = mi if self.iterated else self.max_iter
+            self.generate_adv_examples(iters)
+            self.adv_x = self.pseudo_mask(
+                self.cls.mask_cols, self.cls.train_x, self.adv_x)
+            self.eval_adv_examples()
+            if len(self.evasions == self.cls.n_train):
+                break
+
         self.validate()
         self.log_attack_stats()
 
@@ -128,13 +142,15 @@ class Zoo(AbsAttack):
 
         colors = ['deepskyblue', 'lawngreen']
         diff_props = {'c': 'black', 'zorder': 2, 'lw': 1}
-        class_props = {'edgecolor': 'black', 'lw': .5, 's': 20, 'zorder': 2}
+        class_props = {'edgecolor': 'black', 'lw': .5, 's': 20,
+                       'zorder': 2}
         adv_props = {'zorder': 2, 'c': 'red', 'marker': 'x', 's': 12}
         plt.rc('axes', labelsize=6)
         plt.rc('xtick', labelsize=6)
         plt.rc('ytick', labelsize=6)
 
-        evasions, attr, adv_ex = self.evasions, self.cls.attrs, self.adv_x
+        evasions, attr, adv_ex = \
+            self.evasions, self.cls.attrs, self.adv_x
         x_train, y_train = self.cls.train_x, self.cls.train_y
         class_labels = list([int(i) for i in np.unique(y_train)])
 

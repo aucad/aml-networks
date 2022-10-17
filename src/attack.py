@@ -11,7 +11,7 @@ from src import Validator, \
 
 class AbsAttack(BaseUtil):
 
-    def __init__(self, name):
+    def __init__(self, name, iterated):
         self.name = name
         self.out_dir = None
         self.cls: Optional[AbsClassifierInstance] = None
@@ -20,6 +20,9 @@ class AbsAttack(BaseUtil):
         self.adv_y = np.array([])
         self.valid_result = np.array([])
         self.validator_kind = None
+        self.iterated = iterated
+        self.max_iter = 100
+        self.iter_step = 10
 
     @property
     def attack_success(self):
@@ -38,7 +41,7 @@ class AbsAttack(BaseUtil):
         self.validator_kind = kind
         return self
 
-    def run(self):
+    def run(self, max_iter):
         pass
 
     def validate(self):
@@ -75,6 +78,7 @@ class AbsAttack(BaseUtil):
         self.show('Attack', self.name)
         self.show('Mutable', ", ".join(self.cls.mutable_attrs))
         self.show('Immutable', ", ".join(self.cls.immutable_attrs))
+        self.show('Max iterations', self.max_iter)
 
     def log_attack_stats(self):
         ev, tot = len(self.evasions), self.cls.n_train

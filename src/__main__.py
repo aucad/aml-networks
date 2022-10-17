@@ -48,10 +48,10 @@ def main():
         cls.plot()
 
     if args.attack:
-        AttackLoader.load(args.attack) \
+        AttackLoader.load(args.attack, args.iterated) \
             .set_cls(cls) \
             .set_validator(args.validator) \
-            .run()
+            .run(max_iter=args.iter)
 
 
 def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
@@ -69,6 +69,14 @@ def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
         choices=range(0, 100),
         metavar="0-99",
         help='test set split percentage [default: 0]',
+        default=0
+    )
+    parser.add_argument(
+        '-i', '--iter',
+        type=int,
+        choices=range(1, 10000),
+        metavar="1-10000",
+        help='max attack iterations [default: not set]',
         default=0
     )
     parser.add_argument(
@@ -110,6 +118,11 @@ def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
         '-s', "--silent",
         action='store_true',
         help="disable debug logging"
+    )
+    parser.add_argument(
+        "--iterated",
+        action='store_true',
+        help="Run attack with increasing max_iter"
     )
     parser.add_argument(
         "-v", "--version",

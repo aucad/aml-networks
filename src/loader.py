@@ -21,8 +21,9 @@ class AttackLoader:
     ZOO = 'zoo'
 
     @staticmethod
-    def load(kind) -> AbsAttack:
+    def load(kind, iterated) -> AbsAttack:
+        args = {'iterated': iterated}
         if kind == AttackLoader.HOP_SKIP:
-            return HopSkip()
+            return HopSkip(**args)
         else:
-            return Zoo()
+            return Zoo(**args)
