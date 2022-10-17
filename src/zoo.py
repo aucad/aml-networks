@@ -118,16 +118,19 @@ class Zoo(AbsAttack):
         """Runs the zoo attack."""
 
         self.max_iter = max_iter if max_iter > 0 else self.max_iter
-        attack_iter = self.max_iter if self.iterated else 1
+        attack_iter = self.max_iter if self.iterated else 2
         self.log_attack_setup()
+        ev_conv = 0  # count rounds where evasion # stays stable
 
-        for mi in range(0, attack_iter, self.iter_step):
+        for mi in range(1, attack_iter, self.iter_step):
             iters = mi if self.iterated else self.max_iter
+            ev_init = len(self.evasions)
             self.generate_adv_examples(iters)
             self.adv_x = self.pseudo_mask(
                 self.cls.mask_cols, self.cls.train_x, self.adv_x)
             self.eval_adv_examples()
-            if len(self.evasions == self.cls.n_train):
+            ev_conv += 1 if ev_init == len(self.evasions) else 0
+            if len(self.evasions) == self.cls.n_train or ev_conv > 2:
                 break
 
         self.validate()
