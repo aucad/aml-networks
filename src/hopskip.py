@@ -22,8 +22,8 @@ logger = logging.getLogger(__name__)
 
 class HopSkip(AbsAttack):
 
-    def __init__(self, iterated):
-        super().__init__('hopskip', iterated)
+    def __init__(self, *args):
+        super().__init__('hopskip', *args)
         self.max_iter = 10
         self.iter_step = 1
 
@@ -101,7 +101,7 @@ class HopSkip(AbsAttack):
         self.adv_y = labels
         self.validate()
         self.log_attack_stats()
-        errors = errors[self.evasions]
+        errors = errors[self.evasions] if len(self.evasions) else [0]
 
         if self.attack_success:
             self.plot()

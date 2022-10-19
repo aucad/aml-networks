@@ -15,8 +15,8 @@ from src import AbsAttack
 
 class Zoo(AbsAttack):
 
-    def __init__(self, iterated):
-        super().__init__('zoo', iterated)
+    def __init__(self, *args):
+        super().__init__('zoo', *args)
         self.max_iter = 80
         self.iter_step = 10
 

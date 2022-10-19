@@ -13,7 +13,7 @@ from matplotlib import pyplot as plt
 
 class AbsAttack(BaseUtil):
 
-    def __init__(self, name, iterated):
+    def __init__(self, name, iterated, plot):
         self.name = name
         self.out_dir = None
         self.cls: Optional[AbsClassifierInstance] = None
@@ -25,6 +25,7 @@ class AbsAttack(BaseUtil):
         self.iterated = iterated
         self.max_iter = 100
         self.iter_step = 10
+        self.plot_result = plot
 
     @property
     def attack_success(self):
@@ -137,6 +138,8 @@ class AbsAttack(BaseUtil):
 
     def plot(self):
         """Visualize the adversarial attack results"""
+        if not self.plot_result:
+            return
 
         colors = ['deepskyblue', 'lawngreen']
         diff_props = {'c': 'black', 'zorder': 2, 'lw': 1}

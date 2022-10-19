@@ -48,7 +48,7 @@ def main():
         cls.plot()
 
     if args.attack:
-        AttackLoader.load(args.attack, args.iterated) \
+        AttackLoader.load(args.attack, args.iterated, args.plot) \
             .set_cls(cls) \
             .set_validator(args.validator) \
             .run(max_iter=args.iter)
