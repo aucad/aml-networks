@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import namedtuple
+from typing import Tuple
 
 
 class NetworkProto:
@@ -35,9 +36,9 @@ class NetworkProto:
 
     @staticmethod
     def validate(record):
-        return True
+        return True, None
 
-    def check(self) -> bool:
+    def check(self) -> Tuple[bool, any]:
         return self.validate(self.record)
 
 
@@ -58,32 +59,32 @@ class NbTCP(NetworkProto):
     @staticmethod
     def validate(record):
         if record.swin != 255 or record.dwin != 255:
-            return False
+            return False, "swin-dwin mismatch"
         # synack + ackdat = tcprtt
         if round(record.synack + record.ackdat, 3) != \
                 round(record.tcprtt, 3):
-            return False
+            return False, "synack+ackdat != tcprtt"
         if record.dur > 0:
             # if dur > 0 in state INT: dbytes = 0
             if record.state_INT == 1:
                 if record.dbytes != 0:
-                    return False
+                    return False, "dbytes nonzero in state INT"
             # if dur > 0 then dbytes > 0
             elif not record.dbytes > 0:
                 return False
         # if dur = 0 then dbytes = 0
         if record.dur == 0 and record.dbytes != 0:
-            return False
+            return False, "dbytes nonzero when dur is 0"
         # if dbytes = 0 then everything destinations related is 0
         if record.dbytes == 0 and (
                 record.Dload != 0 or record.dttl != 0 or
                 record.Djit != 0 or record.Dpkts != 0):
-            return False
+            return False, "dest attrs nonzero when dbytes is 0"
         # stime + dur + (some small value) = ltime
         # can have stime==ltime
         if record.ltime < record.stime + record.dur:
-            return False
-        return True
+            return False, "ltime < stime"
+        return True, None
 
 
 # noinspection PyTypeChecker
@@ -106,16 +107,16 @@ class NbUDP(NetworkProto):
                 and record.stcpb == 0 and record.dtcpb == 0
                 and record.synack == 0 and record.ackdat == 0
                 and record.tcprtt == 0):
-            return False
+            return False, "tcp fields nonzero for other proto"
         # Smeansz * Spkts = sbytes and Dmeansz * Dpkts = dpytes
         if (record.smeansz * record.Spkts != record.sbytes) \
                 or (record.dmeansz * record.Dpkts != record.dbytes):
-            return False
+            return False, "invalid smeansz or dmeansz"
         # if sjit = 0 then (Smeansz * 8)/sload + something small = dur
         if record.sjit == 0 and record.Sload != 0 and \
                 record.dur < (record.smeansz * 8 / record.Sload):
-            return False
-        return True
+            return False, "invalid dur for sjit=0"
+        return True, None
 
 
 # noinspection PyTypeChecker
@@ -132,10 +133,12 @@ class NbOther(NetworkProto):
     @staticmethod
     def validate(record):
         # TCP related fields must be 0
-        return (record.swin == 0 and record.dwin == 0
+        if not (record.swin == 0 and record.dwin == 0
                 and record.stcpb == 0 and record.dtcpb == 0
                 and record.synack == 0 and record.ackdat == 0
-                and record.tcprtt == 0)
+                and record.tcprtt == 0):
+            return False, "tcp fields nonzero for other proto"
+        return True, None
 
 
 # noinspection PyTypeChecker
@@ -155,15 +158,15 @@ class IotTCP(NetworkProto):
         # in S0 resp_pkts = 0 and resp_ip_bytes = 0
         if record.conn_state_S0 == 1:
             if record.resp_pkts != 0 or record.resp_ip_bytes != 0:
-                return False
+                return False, "S0: packets or bytes non-0"
         # number of packets would be smaller than the bytes sent,
         # this is also true for the receiving
         if record.orig_pkts < record.orig_ip_bytes or \
                 record.resp_pkts < record.resp_ip_bytes:
-            return False
+            return False,
         # In TCP the orig_pkts >= to resp_pkts
         if record.orig_pkts < record.resp_pkts:
-            return False
+            return False, "TCP: ori packets < resp packets"
         # usually orig_ip_bytes are larger and equal to resp_ip_bytes
         if record.orig_ip_bytes < record.resp_ip_bytes:
             # unless either history ShADadFf and state SF
@@ -172,12 +175,12 @@ class IotTCP(NetworkProto):
                      record.conn_state_SF == 1) or
                     (record.history_DdA == 1 and
                      record.conn_state_OTH == 1)):
-                return False
+                return False, "TCP: history-conn_state mismatch"
         # if conn state REJ then orig_ip_bytes=0 and resp_ip_bytes=0
         if record.conn_state_REJ == 1:
             if record.orig_ip_bytes != 0 or record.resp_ip_bytes != 0:
-                return False
-        return True
+                return False, "in REJ state bytes is 0"
+        return True, None
 
 
 # noinspection PyTypeChecker
@@ -196,24 +199,24 @@ class IotUDP(NetworkProto):
         # in S0 resp_pkts = 0 and resp_ip_bytes = 0
         if record.conn_state_S0 == 1:
             if record.resp_pkts != 0 or record.resp_ip_bytes != 0:
-                return False
+                return False, "S0: packets or bytes non-0"
         # number of packets is smaller than the bytes sent,
         # also true for the receiving
         if record.orig_pkts < record.orig_ip_bytes or \
                 record.resp_pkts < record.resp_ip_bytes:
-            return False
+            return False, "packets > bytes"
         # orig_pkts is always greater or equal to resp_pkts
         # unless history is Dd and state is SF.
         if record.orig_pkts < record.resp_pkts:
             if not (record.history_Dd == 1 and
                     record.conn_state_SF == 1):
-                return False
+                return False, "UDP: history-conn_state mismatch"
         if record.orig_pkts >= record.resp_pkts:
             # orig_ip_bytes is also >= resp_ip_bytes unless state is SF
             if not (record.orig_ip_bytes >= record.resp_ip_bytes or
                     record.conn_state_SF == 1):
-                return False
-        return True
+                return False, "UDP: packet-bytes mismatch"
+        return True, None
 
 
 # noinspection PyTypeChecker
@@ -232,13 +235,13 @@ class IotICMP(NetworkProto):
         # in S0 resp_pkts = 0 and resp_ip_bytes = 0
         if record.conn_state_S0 == 1:
             if record.resp_pkts != 0 or record.resp_ip_bytes != 0:
-                return False
+                return False, "S0: packets or bytes non-0"
         # number of packets would be smaller than the bytes sent,
         # this is also true for the receiving
         if record.orig_pkts < record.orig_ip_bytes or \
                 record.resp_pkts < record.resp_ip_bytes:
-            return False
-        return True
+            return False, "packets > bytes"
+        return True, None
 
 
 # noinspection PyTypeChecker
@@ -248,13 +251,87 @@ class IotOther(NetworkProto):
 
     @staticmethod
     def validate(record):
-        return True
+        return True, None
 
 
 class Validator:
+    # validator kinds
     NB15 = 'NB15'
     IOT23 = 'IOT23'
+
+    # known protocols
+    TCP = 'tcp'
+    UDP = 'udp'
+    ICMP = 'icmp'
+    OTHER = 'unknown proto'
 
     @staticmethod
     def validate(instance: NetworkProto):
         return instance.check()
+
+    @staticmethod
+    def determine_proto(attrs, record):
+        """Determine protocol for some records, by scan of the attribute
+        values, and active bit. Returns other if not found."""
+        proto_label = next(
+            (a for a, b in
+             [(lbl, int(record[i])) for i, lbl
+              in enumerate(attrs) if 'proto' in lbl]
+             if b == 1), Validator.OTHER)
+        if 'tcp' in proto_label:
+            return Validator.TCP
+        if 'udp' in proto_label:
+            return Validator.UDP
+        if 'icmp' in proto_label:
+            return Validator.ICMP
+        return Validator.OTHER
+
+    @staticmethod
+    def batch_validate(validator_kind, attrs, denorm_records):
+        temp_arr, reasons = [], {}
+        for (index, record) in enumerate(denorm_records):
+            # make a dictionary of record
+            rec_nd = dict([(a, b) for a, b in zip(attrs, record)])
+            proto = Validator.determine_proto(attrs, record)
+            v_inst = None
+            if validator_kind == Validator.NB15:
+                if proto == Validator.TCP:
+                    v_inst = NbTCP(attrs, **rec_nd)
+                elif proto == Validator.UDP:
+                    v_inst = NbUDP(attrs, **rec_nd)
+                else:
+                    v_inst = NbOther(attrs, **rec_nd)
+            elif validator_kind == Validator.IOT23:
+                if proto == Validator.TCP:
+                    v_inst = IotTCP(attrs, **rec_nd)
+                elif proto == Validator.UDP:
+                    v_inst = IotUDP(attrs, **rec_nd)
+                elif proto == Validator.ICMP:
+                    v_inst = IotICMP(attrs, **rec_nd)
+                else:
+                    v_inst = IotOther(attrs, **rec_nd)
+            if not v_inst:
+                temp_arr.append(True)
+            else:
+                is_valid, reason = Validator.validate(v_inst)
+                temp_arr.append(is_valid)
+                if not is_valid:
+                    if reason not in reasons:
+                        reasons[reason] = 1
+                    else:
+                        reasons[reason] += 1
+        return temp_arr, reasons
+
+    @staticmethod
+    def validate_dataset(ds_path, validator_kind):
+        """Debug validator on some dataset"""
+        import pandas as pd
+        import numpy as np
+        from src import AbsClassifierInstance
+        df = pd.read_csv(ds_path).fillna(0)
+        attrs = AbsClassifierInstance.attr_fix(
+            [col for col in df.columns])
+        records = np.array(df)[:, :-1]
+        return Validator.batch_validate(
+            validator_kind, attrs, records)
+

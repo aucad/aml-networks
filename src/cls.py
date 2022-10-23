@@ -85,22 +85,6 @@ class AbsClassifierInstance(BaseUtil):
     def formatter(x, y):
         return x
 
-    def determine_proto(self, record):
-        """Determine protocol for some records, by scan of the attribute
-        values, and active bit. Returns other if not found."""
-        proto_label = next(
-            (a for a, b in
-             [(lbl, int(record[i])) for i, lbl
-              in enumerate(self.attrs) if 'proto' in lbl]
-             if b == 1), self.proto_other)
-        if 'tcp' in proto_label:
-            return self.tcp
-        if 'udp' in proto_label:
-            return self.udp
-        if 'icmp' in proto_label:
-            return self.icmp
-        return self.proto_other
-
     def set_mask_cols(self):
         indices = []
         for col_i in range(self.n_features):
@@ -205,7 +189,7 @@ class AbsClassifierInstance(BaseUtil):
             self.test_y = np.array(test)[:, -1].astype(int).flatten()
         else:
             train = df
-
+            
         train_x = self.normalize(np.array(train)[:, :-1], capture=True)
         train_y = np.array(train)[:, -1].astype(int).flatten()
 

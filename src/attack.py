@@ -6,8 +6,7 @@ from typing import Optional
 import numpy as np
 
 from src import BaseUtil, AbsClassifierInstance
-from src import Validator, \
-    NbTCP, NbUDP, NbOther, IotTCP, IotUDP, IotICMP, IotOther
+from src import Validator
 from matplotlib import pyplot as plt
 
 
@@ -26,6 +25,7 @@ class AbsAttack(BaseUtil):
         self.max_iter = 100
         self.iter_step = 10
         self.plot_result = plot
+        self.validation_reasons = {}
 
     @property
     def attack_success(self):
@@ -41,6 +41,13 @@ class AbsAttack(BaseUtil):
         return self
 
     @staticmethod
+    def dump_reasons(reasons):
+        v_reasons = '\n'.join(
+            [f'{v}x - {k}' for k, v in reasons.items()])
+        BaseUtil.show('Invalid total', sum(reasons.values()))
+        BaseUtil.show('Invalid reasons', v_reasons)
+
+    @staticmethod
     def non_bin_attributes(np_array):
         """Get column indices of non-binary attributes"""
         return [feat for feat in range(len(np_array[0]))
@@ -54,40 +61,25 @@ class AbsAttack(BaseUtil):
         pass
 
     def validate(self):
-        if self.validator_kind is None:
-            return
-        temp_arr = []
-        attrs = self.cls.attrs[:self.cls.n_features]
-        for (index, record) in enumerate(
-                self.cls.denormalize(self.adv_x)):
-            # make a dictionary of record
-            rec_nd = dict([(a, b) for a, b in zip(attrs, record)])
-            proto = self.cls.determine_proto(record)
-            v_inst = None
-            if self.validator_kind == Validator.NB15:
-                if proto == self.tcp:
-                    v_inst = NbTCP(attrs, **rec_nd)
-                elif proto == self.udp:
-                    v_inst = NbUDP(attrs, **rec_nd)
-                else:
-                    v_inst = NbOther(attrs, **rec_nd)
-            elif self.validator_kind == Validator.IOT23:
-                if proto == self.tcp:
-                    v_inst = IotTCP(attrs, **rec_nd)
-                elif proto == self.udp:
-                    v_inst = IotUDP(attrs, **rec_nd)
-                elif proto == self.icmp:
-                    v_inst = IotICMP(attrs, **rec_nd)
-                else:
-                    v_inst = IotOther(attrs, **rec_nd)
-            temp_arr.append(not v_inst or Validator.validate(v_inst))
-        self.valid_result = np.array(temp_arr)
+        if self.validator_kind is not None:
+            attrs = self.cls.attrs[:self.cls.n_features]
+            records = self.cls.denormalize(self.adv_x)
+            result, reasons = Validator.batch_validate(
+                self.validator_kind, attrs, records)
+            self.validation_reasons = reasons
+            self.valid_result = np.array(result)
 
     def log_attack_setup(self):
         self.show('Attack', self.name)
         self.show('Mutable', ", ".join(self.cls.mutable_attrs))
         self.show('Immutable', ", ".join(self.cls.immutable_attrs))
         self.show('Max iterations', self.max_iter)
+
+        if self.validator_kind:
+            self.show('Validating', self.cls.ds_path)
+            _, reasons = Validator.validate_dataset(
+                self.cls.ds_path, self.validator_kind)
+            AbsAttack.dump_reasons(reasons)
 
     def log_attack_stats(self):
         ev, tot = len(self.evasions), self.cls.n_train
@@ -102,6 +94,7 @@ class AbsAttack(BaseUtil):
                  if is_valid and i in self.evasions])
             r = 100 * (ve / tot)
             self.show('Evades + valid', f'{ve} of {tot} - {r:.1f} %')
+            AbsAttack.dump_reasons(self.validation_reasons)
 
     def dump_result(self):
         """Write to csv file original and adversarial examples."""
@@ -132,9 +125,9 @@ class AbsAttack(BaseUtil):
 
         dump(self.cls.train_x, self.cls.train_y, 'ori')
         dump(self.cls.denormalize(self.cls.train_x), self.cls.train_y,
-             'orid')
+             'ori_denorm')
         dump(self.adv_x, self.adv_y, 'adv')
-        dump(self.cls.denormalize(self.adv_x), self.adv_y, 'advd')
+        dump(self.cls.denormalize(self.adv_x), self.adv_y, 'adv_denorm')
 
     def plot(self):
         """Visualize the adversarial attack results"""

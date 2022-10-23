@@ -8,22 +8,6 @@ logger = logging.getLogger(__name__)
 
 class BaseUtil:
 
-    @property
-    def tcp(self):
-        return 'tcp'
-
-    @property
-    def udp(self):
-        return 'udp'
-
-    @property
-    def icmp(self):
-        return 'icmp'
-
-    @property
-    def proto_other(self):
-        return 'unknown protocol'
-
     @staticmethod
     def ensure_out_dir(dir_path):
         return path.exists(dir_path) or makedirs(dir_path)
@@ -46,8 +30,14 @@ class BaseUtil:
         else:
             rest = str_v
             while len(rest) > 0:
-                spc = rest[:chunk_size].rfind(" ")
-                i = chunk_size if (spc < chunk_size // 2) else spc
+                newline = rest[:chunk_size].find("\n")
+                if newline < 0 and len(rest) < chunk_size:
+                    i = len(rest)
+                else:
+                    space = rest[:chunk_size].rfind(" ")
+                    i = newline if newline > 0 else \
+                        (space if space > (chunk_size // 2)
+                         else chunk_size)
                 line, remaining = rest[:i].strip(), rest[i:].strip()
                 lines.append(line)
                 rest = remaining
