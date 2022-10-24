@@ -79,9 +79,9 @@ class AbsAttack(BaseUtil):
             self.show('Validating', self.cls.ds_path)
             indices, reasons = Validator.validate_dataset(
                 self.cls.ds_path, self.validator_kind)
-            AbsAttack.dump_reasons(reasons)
-            # print the indices of invalid records
             if 0 < len(indices):
+                AbsAttack.dump_reasons(reasons)
+                # print the indices of invalid records
                 rec_i = ' '.join([
                     # offset by 2; for attrs + init index=1
                     str(i + 2) for i, v in enumerate(indices)
@@ -101,7 +101,8 @@ class AbsAttack(BaseUtil):
                  if is_valid and i in self.evasions])
             r = 100 * (ve / tot)
             self.show('Evades + valid', f'{ve} of {tot} - {r:.1f} %')
-            AbsAttack.dump_reasons(self.validation_reasons)
+            if v != tot:
+                AbsAttack.dump_reasons(self.validation_reasons)
 
     def dump_result(self):
         """Write to csv file original and adversarial examples."""
