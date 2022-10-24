@@ -4,6 +4,7 @@ Build a XGBoost model for provided dataset.
 Provide as input a path to a dataset, or script uses default
 dataset if none provided. The dataset must be numeric at all attributes.
 """
+import sys, os
 
 from art.estimators.classification import XGBoostClassifier
 # noinspection PyPackageRequirements
@@ -36,6 +37,8 @@ class XGBClassifier(AbsClassifierInstance):
         for full list of options
         """
         dtrain = self.formatter(self.train_x, self.train_y)
+        # https://stackoverflow.com/a/8391735
+        sys.stdout = open(os.devnull, 'w')  # block print
         self.model = xg_train(
             num_boost_round=20,
             dtrain=dtrain,
@@ -62,6 +65,7 @@ class XGBClassifier(AbsClassifierInstance):
                 'verbose_eval': False,
                 'silent': True,
             })
+        sys.stdout = sys.__stdout__  # re-enable print
 
     def prep_classifier(self):
         self.classifier = XGBoostClassifier(
