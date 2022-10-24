@@ -68,7 +68,7 @@ class NbTCP(NetworkProto):
             # if dur > 0 in state INT: dbytes = 0
             if record.state_INT == 1:
                 if record.dbytes != 0:
-                    return False, "dbytes nonzero in state INT"
+                    return False, "dbytes nonzero when INT"
             # if dur > 0 then dbytes > 0
             # elif not record.dbytes > 0:
             #     return False, "dbytes is 0 for dur > 0"
@@ -79,7 +79,7 @@ class NbTCP(NetworkProto):
         if record.dbytes == 0 and (
                 record.Dload != 0 or record.dttl != 0 or
                 record.Djit != 0 or record.Dpkts != 0):
-            return False, "dest attrs nonzero when dbytes is 0"
+            return False, "dest attrs nonzero"
         # stime + dur + (some small value) = ltime
         # can have stime == ltime
         if record.ltime < record.stime:
@@ -107,11 +107,13 @@ class NbUDP(NetworkProto):
                 and record.stcpb == 0 and record.dtcpb == 0
                 and record.synack == 0 and record.ackdat == 0
                 and record.tcprtt == 0):
-            return False, "tcp fields nonzero for other proto"
-        # Smeansz * Spkts = sbytes and Dmeansz * Dpkts = dpytes
-        if (record.smeansz * record.Spkts != record.sbytes) \
-                or (record.dmeansz * record.Dpkts != record.dbytes):
-            return False, "invalid smeansz or dmeansz"
+            return False, "nonzero tcp fields"
+        # Smeansz * Spkts = sbytes
+        if record.smeansz * record.Spkts != record.sbytes:
+            return False, "invalid smeansz"
+        # Dmeansz * Dpkts = dpytes
+        if record.dmeansz * record.Dpkts != record.dbytes:
+            return False, "invalid dmeansz"
         # if sjit = 0 then (Smeansz * 8)/sload + something small = dur
         if record.sjit == 0 and record.Sload != 0 and \
                 record.dur < (record.smeansz * 8 / record.Sload):
@@ -137,7 +139,7 @@ class NbOther(NetworkProto):
                 and record.stcpb == 0 and record.dtcpb == 0
                 and record.synack == 0 and record.ackdat == 0
                 and record.tcprtt == 0):
-            return False, "tcp fields nonzero for other proto"
+            return False, "nonzero tcp fields"
         return True, None
 
 
@@ -158,7 +160,7 @@ class IotTCP(NetworkProto):
         # in S0 resp_pkts = 0 and resp_ip_bytes = 0
         if record.conn_state_S0 == 1:
             if record.resp_pkts != 0 or record.resp_ip_bytes != 0:
-                return False, "S0: packets or bytes non-0"
+                return False, "S0 packets or bytes nonzero"
         # number of packets would be smaller than the bytes sent,
         if record.orig_pkts > record.orig_ip_bytes:
             return False, "ori packets > bytes"
@@ -168,7 +170,7 @@ class IotTCP(NetworkProto):
         # if conn state REJ then orig_ip_bytes=0 and resp_ip_bytes=0
         if record.conn_state_REJ == 1:
             if record.orig_ip_bytes != 0 or record.resp_ip_bytes != 0:
-                return False, "in REJ state bytes is 0"
+                return False, "REJ state bytes is 0"
         return True, None
 
 
@@ -188,7 +190,7 @@ class IotUDP(NetworkProto):
         # in S0 resp_pkts = 0 and resp_ip_bytes = 0
         if record.conn_state_S0 == 1:
             if record.resp_pkts != 0 or record.resp_ip_bytes != 0:
-                return False, "S0: packets or bytes non-0"
+                return False, "S0: packets/bytes not 0"
         # number of packets is smaller than the bytes sent,
         if record.orig_pkts > record.orig_ip_bytes:
             return False, "ori packets > bytes"
@@ -200,12 +202,12 @@ class IotUDP(NetworkProto):
         if record.orig_pkts < record.resp_pkts:
             if not (record.history_Dd == 1 and
                     record.conn_state_SF == 1):
-                return False, "UDP: history-conn_state mismatch"
+                return False, "history/conn_state mismatch"
         if record.orig_pkts >= record.resp_pkts:
             # orig_ip_bytes is also >= resp_ip_bytes unless state is SF
             if not (record.orig_ip_bytes >= record.resp_ip_bytes or
                     record.conn_state_SF == 1):
-                return False, "UDP: packet-bytes mismatch"
+                return False, "packet-bytes mismatch"
         return True, None
 
 
@@ -225,7 +227,7 @@ class IotICMP(NetworkProto):
         # in S0 resp_pkts = 0 and resp_ip_bytes = 0
         if record.conn_state_S0 == 1:
             if record.resp_pkts != 0 or record.resp_ip_bytes != 0:
-                return False, "S0: packets or bytes non-0"
+                return False, "S0: packets/bytes not 0"
         # number of packets would be smaller than the bytes sent,
         if record.orig_pkts > record.orig_ip_bytes:
             return False, "ori packets > bytes"
