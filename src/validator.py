@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections import namedtuple
-from typing import Tuple
+from typing import Tuple, Union, List
 
 
 class NetworkProto:
@@ -35,10 +35,10 @@ class NetworkProto:
         return [getattr(self.record, a) for a in self.attributes]
 
     @staticmethod
-    def validate(record):
+    def validate(record) -> Tuple[bool, Union[str, None]]:
         return True, None
 
-    def check(self) -> Tuple[bool, any]:
+    def check(self) -> Tuple[bool, Union[str, None]]:
         return self.validate(self.record)
 
 
@@ -57,7 +57,7 @@ class NbTCP(NetworkProto):
             names, [255, 255, 1] + [0] * 11)
 
     @staticmethod
-    def validate(record):
+    def validate(record) -> Tuple[bool, Union[str, None]]:
         if record.swin != 255 or record.dwin != 255:
             return False, "swin-dwin mismatch"
         # synack + ackdat = tcprtt
@@ -101,7 +101,7 @@ class NbUDP(NetworkProto):
         return NetworkProto.kv_dict(names, [0] * 14)
 
     @staticmethod
-    def validate(record):
+    def validate(record) -> Tuple[bool, Union[str, None]]:
         # TCP related fields must be 0
         if not (record.swin == 0 and record.dwin == 0
                 and record.stcpb == 0 and record.dtcpb == 0
@@ -131,7 +131,7 @@ class NbOther(NetworkProto):
         return NetworkProto.kv_dict(names, [0] * 7)
 
     @staticmethod
-    def validate(record):
+    def validate(record) -> Tuple[bool, Union[str, None]]:
         # TCP related fields must be 0
         if not (record.swin == 0 and record.dwin == 0
                 and record.stcpb == 0 and record.dtcpb == 0
@@ -154,7 +154,7 @@ class IotTCP(NetworkProto):
         return NetworkProto.kv_dict(names, [0] * 10)
 
     @staticmethod
-    def validate(record):
+    def validate(record) -> Tuple[bool, Union[str, None]]:
         # in S0 resp_pkts = 0 and resp_ip_bytes = 0
         if record.conn_state_S0 == 1:
             if record.resp_pkts != 0 or record.resp_ip_bytes != 0:
@@ -195,7 +195,7 @@ class IotUDP(NetworkProto):
         return NetworkProto.kv_dict(names, [0] * 7)
 
     @staticmethod
-    def validate(record):
+    def validate(record) -> Tuple[bool, Union[str, None]]:
         # in S0 resp_pkts = 0 and resp_ip_bytes = 0
         if record.conn_state_S0 == 1:
             if record.resp_pkts != 0 or record.resp_ip_bytes != 0:
@@ -231,7 +231,7 @@ class IotICMP(NetworkProto):
         return NetworkProto.kv_dict(names, [0] * 5)
 
     @staticmethod
-    def validate(record):
+    def validate(record) -> Tuple[bool, Union[str, None]]:
         # in S0 resp_pkts = 0 and resp_ip_bytes = 0
         if record.conn_state_S0 == 1:
             if record.resp_pkts != 0 or record.resp_ip_bytes != 0:
@@ -250,7 +250,7 @@ class IotOther(NetworkProto):
         super().__init__('other', self.v_model(attrs, kwargs), **kwargs)
 
     @staticmethod
-    def validate(record):
+    def validate(record) -> Tuple[bool, Union[str, None]]:
         return True, None
 
 
@@ -266,7 +266,8 @@ class Validator:
     OTHER = 'unknown proto'
 
     @staticmethod
-    def validate(instance: NetworkProto):
+    def validate(instance: NetworkProto) \
+            -> Tuple[bool, Union[str, None]]:
         return instance.check()
 
     @staticmethod
@@ -287,9 +288,10 @@ class Validator:
         return Validator.OTHER
 
     @staticmethod
-    def batch_validate(validator_kind, attrs, denorm_records):
+    def batch_validate(validator_kind, attrs, records) \
+            -> Tuple[List[bool], dict]:
         temp_arr, reasons = [], {}
-        for (index, record) in enumerate(denorm_records):
+        for (index, record) in enumerate(records):
             # make a dictionary of record
             rec_nd = dict([(a, b) for a, b in zip(attrs, record)])
             proto = Validator.determine_proto(attrs, record)
@@ -316,10 +318,11 @@ class Validator:
                 is_valid, reason = Validator.validate(v_inst)
                 temp_arr.append(is_valid)
                 if not is_valid:
-                    if reason not in reasons:
-                        reasons[reason] = 1
+                    res = f'{v_inst.name} {reason}'
+                    if res not in reasons:
+                        reasons[res] = 1
                     else:
-                        reasons[reason] += 1
+                        reasons[res] += 1
         return temp_arr, reasons
 
     @staticmethod
@@ -334,4 +337,3 @@ class Validator:
         records = np.array(df)[:, :-1]
         return Validator.batch_validate(
             validator_kind, attrs, records)
-
