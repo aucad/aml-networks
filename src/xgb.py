@@ -15,8 +15,8 @@ from src import AbsClassifierInstance
 
 class XGBClassifier(AbsClassifierInstance):
 
-    def __init__(self, out):
-        super().__init__('xgboost', out)
+    def __init__(self, *args):
+        super().__init__('xgboost', *args)
 
     @staticmethod
     def formatter(x, y):

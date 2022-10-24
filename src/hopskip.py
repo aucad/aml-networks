@@ -72,7 +72,7 @@ class HopSkip(AbsAttack):
         """
 
         self.max_iter = max_iter if max_iter > 0 else self.max_iter
-        x, y = self.cls.train_x, self.cls.train_y
+        x, y = self.ori_x, self.ori_y
         ori_inputs = self.cls.formatter(x, y)
         mask = self.get_mask(x, self.cls.mask_cols)
         predictions = np.array(self.cls.predict(ori_inputs)
@@ -88,13 +88,14 @@ class HopSkip(AbsAttack):
             iters = mi if self.iterated else self.max_iter
             x_adv = self.attack_instance(iters).generate(
                 x_adv_init=x_adv, x=target, mask=np.array(mask))
+            self.clear_one_line()
             labels = np.argmax(self.cls.classifier.predict(x_adv), 1)
             errors = np.linalg.norm((target - x_adv), axis=1)
             ev_init = len(self.evasions)
             self.evasions = np.array(
                 (np.where(labels != predictions)[0]).flatten().tolist())
             ev_conv += 1 if ev_init == len(self.evasions) else 0
-            if len(self.evasions) == self.cls.n_train or ev_conv > 2:
+            if len(self.evasions) == self.n_records or ev_conv > 2:
                 break
 
         self.adv_x = x_adv

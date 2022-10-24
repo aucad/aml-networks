@@ -13,4 +13,4 @@ from src.xgb import XGBClassifier
 from src.attack import AbsAttack
 from src.hopskip import HopSkip
 from src.zoo import Zoo
-from src.loader import ClsLoader, AttackLoader
+from src.loader import ClsLoader, AttackLoader, DatasetLoader

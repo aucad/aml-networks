@@ -68,7 +68,8 @@ class Zoo(AbsAttack):
             variable_h=0.8,
             # Show progress bar.
             verbose=True) \
-            .generate(x=self.cls.train_x)
+            .generate(x=self.ori_x)
+        self.clear_one_line()
 
     @staticmethod
     def pseudo_mask(mask_idx, x, adv):
@@ -91,12 +92,12 @@ class Zoo(AbsAttack):
         Do prediction on adversarial vs original records and determine
         which records succeed at evading expected class label.
         """
-        # predictions for training instances
-        ori_in = self.cls.formatter(self.cls.train_x, self.cls.train_y)
+        # predictions for original instances
+        ori_in = self.cls.formatter(self.ori_x, self.ori_y)
         original = self.cls.predict(ori_in).flatten().tolist()
 
         # adversarial predictions for same data
-        adv_in = self.cls.formatter(self.adv_x, self.cls.train_y)
+        adv_in = self.cls.formatter(self.adv_x, self.ori_y)
         adversarial = self.cls.predict(adv_in).flatten().tolist()
         self.adv_y = np.array(adversarial)
 
@@ -118,10 +119,10 @@ class Zoo(AbsAttack):
             ev_init = len(self.evasions)
             self.generate_adv_examples(iters)
             self.adv_x = self.pseudo_mask(
-                self.cls.mask_cols, self.cls.train_x, self.adv_x)
+                self.cls.mask_cols, self.ori_x, self.adv_x)
             self.eval_adv_examples()
             ev_conv += 1 if ev_init == len(self.evasions) else 0
-            if len(self.evasions) == self.cls.n_train or ev_conv > 2:
+            if len(self.evasions) == self.n_records or ev_conv > 2:
                 break
 
         self.validate()

@@ -47,3 +47,8 @@ class BaseUtil:
 
         text = f'{msg} '.ljust(label_w, '-') + fmt_lines
         logger.debug(text)
+
+    @staticmethod
+    def clear_one_line():
+        cols = 128
+        print("\033[A{}\033[A".format(' ' * cols), end='\r')

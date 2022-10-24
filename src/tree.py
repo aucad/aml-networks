@@ -18,8 +18,8 @@ from src import AbsClassifierInstance
 
 class DecisionTree(AbsClassifierInstance):
 
-    def __init__(self, out):
-        super().__init__('decision_tree', out)
+    def __init__(self, *args):
+        super().__init__('decision_tree', *args)
 
     @staticmethod
     def formatter(x, y):

@@ -17,21 +17,38 @@ logger = logging.getLogger(__name__)
 
 class AbsClassifierInstance(BaseUtil):
 
-    def __init__(self, name, out):
+    def __init__(self, name, out, attrs, x, y, ds_path):
         self.name = name
-        self.model = None
+        self.out_dir = out
+        self.attrs = self.attr_fix(attrs[:])
+        self.classes = np.unique(y)
+        self.ds_path = ds_path
         self.classifier = None
-        self.ds_path = None
-        self.test_percent = 0
-        self.attrs = np.array([])
-        self.classes = np.array([])
+        self.model = None
+        self.classes = np.unique(y)
         self.train_x = np.array([])
         self.train_y = np.array([])
         self.test_x = np.array([])
         self.test_y = np.array([])
         self.attr_ranges = {}
-        self.out_dir = out
         self.mask_cols = []
+        self.fold_n = 1
+        self.capture_ranges(x)
+        self.set_mask_cols(x)
+        self.show('Classifier', self.name)
+        self.show('Classes', ", ".join(self.class_names))
+        self.show('Mutable', ", ".join(self.mutable_attrs))
+        self.show('Immutable', ", ".join(self.immutable_attrs))
+
+    def reset(self):
+        self.classifier = None
+        self.model = None
+        self.train_x = np.array([])
+        self.train_y = np.array([])
+        self.test_x = np.array([])
+        self.test_y = np.array([])
+        self.fold_n = 1
+        return self
 
     @property
     def n_train(self):
@@ -85,10 +102,10 @@ class AbsClassifierInstance(BaseUtil):
     def formatter(x, y):
         return x
 
-    def set_mask_cols(self):
+    def set_mask_cols(self, X):
         indices = []
         for col_i in range(self.n_features):
-            col_values = list(np.unique(self.train_x[:, col_i]))
+            col_values = list(np.unique(X[:, col_i]))
             if set(col_values).issubset({0, 1}):
                 indices.append(col_i)
         self.mask_cols = indices
@@ -111,23 +128,19 @@ class AbsClassifierInstance(BaseUtil):
         plt.tight_layout()
         plt.savefig(self.plot_path, dpi=200)
 
-    def load(self, dataset_path, test_percent=0):
-        self.ds_path = dataset_path
-        self.test_percent = test_percent
-        self.__load_csv_data()
-        self.set_mask_cols()
+    def load(self, X, y, fold_train, fold_test, fold_n):
+        self.train_x = self.normalize(X[fold_train, :])
+        self.train_y = y[fold_train].astype(int).flatten()
+        self.test_x = self.normalize(X[fold_test, :])
+        self.test_y = y[fold_test].astype(int).flatten()
+        self.classes = np.unique(y)
+        self.fold_n = fold_n
         return self
 
     def train(self, robust=False):
         self.prep_model(robust)
         self.prep_classifier()
-
-        self.show('Read dataset', self.ds_path)
-        self.show('Attributes', self.n_features)
-        self.show('Classifier', self.name)
-        self.show('Classes', ", ".join(self.class_names))
-        self.show('Training size', self.n_train)
-        self.show('Test size', self.n_test)
+        self.show('K-fold', self.fold_n)
 
         # evaluate performance
         records = (
@@ -139,13 +152,18 @@ class AbsClassifierInstance(BaseUtil):
 
         return self
 
-    def normalize(self, data, capture=False):
+    def capture_ranges(self, data):
         """normalize values in range 0.0 - 1.0."""
         np.seterr(divide='ignore', invalid='ignore')
         for i in range(self.n_features):
             range_max = max(data[:, i])
-            if capture:
-                self.attr_ranges[i] = ceil(range_max)
+            self.attr_ranges[i] = ceil(range_max)
+
+    def normalize(self, data):
+        """normalize values in range 0.0 - 1.0."""
+        np.seterr(divide='ignore', invalid='ignore')
+        for i in range(self.n_features):
+            range_max = self.attr_ranges[i]
             data[:, i] = (data[:, i]) / range_max
             data[:, i] = np.nan_to_num(data[:, i])
         return data
@@ -169,38 +187,6 @@ class AbsClassifierInstance(BaseUtil):
                 .replace('conn_state_other', 'conn_state_OTH')
                 for a in attrs]
 
-    def __load_csv_data(self, max_size=-1):
-        """
-        Read dataset and split to train/test using random sampling.
-        """
-
-        df = pd.read_csv(self.ds_path).fillna(0)
-        self.attrs = AbsClassifierInstance.attr_fix(
-            [col for col in df.columns])
-        self.test_x, self.test_y = np.array([]), np.array([])
-        split = 0 < self.test_percent < len(df)
-
-        # sample training/test instances
-        # TODO: if test split gives only one class, redo
-        if split:
-            train, test = train_test_split(
-                df, test_size=self.test_percent)
-            self.test_x = self.normalize(np.array(test)[:, :-1])
-            self.test_y = np.array(test)[:, -1].astype(int).flatten()
-        else:
-            train = df
-            
-        train_x = self.normalize(np.array(train)[:, :-1], capture=True)
-        train_y = np.array(train)[:, -1].astype(int).flatten()
-
-        if max_size > 0:
-            train_x = train_x[: max_size, :]
-            train_y = train_y[: max_size]
-
-        self.classes = np.unique(train_y)
-        self.train_x = train_x
-        self.train_y = train_y
-
     @staticmethod
     def score(true_labels, predictions, positive=0, display=False):
         """Calculate performance metrics."""
@@ -222,11 +208,7 @@ class AbsClassifierInstance(BaseUtil):
         f_score = (2 * precision * recall) / (precision + recall)
 
         if display:
-            AbsClassifierInstance.show('Accuracy',
-                                       f'{accuracy * 100:.2f} %')
-            AbsClassifierInstance.show('Precision',
-                                       f'{precision * 100:.2f} %')
-            AbsClassifierInstance.show('Recall',
-                                       f'{recall * 100:.2f} %')
-            AbsClassifierInstance.show('F-score',
-                                       f'{f_score * 100:.2f} %')
+            BaseUtil.show('Accuracy', f'{accuracy * 100:.2f} %')
+            BaseUtil.show('Precision', f'{precision * 100:.2f} %')
+            BaseUtil.show('Recall', f'{recall * 100:.2f} %')
+            BaseUtil.show('F-score', f'{f_score * 100:.2f} %')

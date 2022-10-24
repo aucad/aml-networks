@@ -21,7 +21,7 @@ from sys import exit
 from typing import Optional, List
 
 from src import __version__, __title__, \
-    ClsLoader, AttackLoader, Validator
+    ClsLoader, AttackLoader, Validator, DatasetLoader
 
 DEFAULT_DS = 'data/CTU-1-1.csv'
 
@@ -39,19 +39,28 @@ def main():
         parser.print_help()
         exit(1)
 
-    cls = ClsLoader \
-        .load(args.out, args.cls) \
-        .load(args.dataset, args.test / 100) \
-        .train(robust=args.robust)
+    x, y, attrs, folds = DatasetLoader.load_csv(
+        args.dataset, args.kfolds)
+    cls = ClsLoader.init(
+        args.cls, args.out, attrs, x, y, args.dataset)
+    attack = AttackLoader \
+        .load(args.attack, args.iterated, args.plot,
+              args.validator, args.dataset) \
+        if args.attack else None
 
-    if args.plot:
-        cls.plot()
+    for i, fold in enumerate(folds):
+        print(" ")
+        cls.reset() \
+            .load(x.copy(), y.copy(), *fold, i + 1) \
+            .train(robust=args.robust)
 
-    if args.attack:
-        AttackLoader.load(args.attack, args.iterated, args.plot) \
-            .set_cls(cls) \
-            .set_validator(args.validator) \
-            .run(max_iter=args.iter)
+        if args.plot:
+            cls.plot()
+
+        if args.attack:
+            attack.reset() \
+                .set_cls(cls) \
+                .run(max_iter=args.iter)
 
 
 def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
@@ -64,12 +73,12 @@ def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
         help=f'path to dataset [default: {DEFAULT_DS}]',
     )
     parser.add_argument(
-        '-t', '--test',
+        '-k', '--kfolds',
         type=int,
-        choices=range(0, 100),
-        metavar="0-99",
-        help='test set split percentage [default: 0]',
-        default=0
+        choices=range(1, 11),
+        metavar="1-10",
+        help='K-folds number of splits [default: 5]',
+        default=5
     )
     parser.add_argument(
         '-i', '--iter',
