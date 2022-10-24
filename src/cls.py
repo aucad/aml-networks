@@ -155,7 +155,7 @@ class AbsClassifierInstance(BaseUtil):
         data_copy = data.copy()
         for i in range(self.n_features):
             range_max = self.attr_ranges[i]
-            data_copy[:, i] = range_max * (data[:, i])
+            data_copy[:, i] = np.rint(range_max * (data[:, i]))
         return data_copy
 
     @staticmethod
