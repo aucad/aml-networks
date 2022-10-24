@@ -100,7 +100,6 @@ class AbsAttack(BaseUtil):
 
     def validate_dataset(self, ds_path):
         if self.validator_kind:
-            self.show('Validating', ds_path)
             indices, reasons = Validator.validate_dataset(
                 ds_path, self.validator_kind)
             if 0 < sum(reasons.values()):
@@ -110,9 +109,10 @@ class AbsAttack(BaseUtil):
                     # offset by 2; for attrs + init index=1
                     str(i + 2) for i, v in enumerate(indices)
                     if not v])
+                self.show('Validated', ds_path)
                 self.show('records', rec_i)
             else:
-                self.show(f'{ds_path} is valid', '')
+                self.show('Validated', f'{ds_path} is valid')
 
     def log_attack_stats(self):
         ev, tot = len(self.evasions), self.n_records
@@ -130,14 +130,14 @@ class AbsAttack(BaseUtil):
             if v != tot:
                 AbsAttack.dump_reasons(self.validation_reasons)
         if ev > 0:
-            final_labels = self.adv_y[self.evasions] \
-                .reshape(-1, 1).flatten().tolist()
+            final_labels = self.adv_y[self.evasions].flatten().tolist()
             evasion_freq = '\n'.join([txt for _, txt in sorted(
                 [(final_labels.count(c),
                   f'{final_labels.count(c)} * '
                   f'{self.cls.text_label((c + 1) % 2)} to '
                   f'{self.cls.text_label(c)}')
-                 for c in self.cls.classes], reverse=True)])
+                 for c in self.cls.classes if final_labels.count(c) > 0]
+                , reverse=True)])
             self.show('Evasion classes', evasion_freq)
 
     def dump_result(self):
@@ -180,8 +180,7 @@ class AbsAttack(BaseUtil):
 
         colors = ['deepskyblue', 'lawngreen']
         diff_props = {'c': 'black', 'zorder': 2, 'lw': 1}
-        class_props = {'edgecolor': 'black', 'lw': .5, 's': 20,
-                       'zorder': 2}
+        class_props = {'edgecolor': 'black', 'lw': .5, 's': 20, 'zorder': 2}
         adv_props = {'zorder': 2, 'c': 'red', 'marker': 'x', 's': 12}
         plt.rc('axes', labelsize=6)
         plt.rc('xtick', labelsize=6)

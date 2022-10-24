@@ -77,6 +77,8 @@ class HopSkip(AbsAttack):
         mask = self.get_mask(x, self.cls.mask_cols)
         predictions = np.array(self.cls.predict(ori_inputs)
                                .flatten().tolist())
+        correct = np.array(
+            (np.where(np.array(y) == predictions)[0]).flatten().tolist())
         self.log_attack_setup()
 
         target = np.array(x)
@@ -92,12 +94,12 @@ class HopSkip(AbsAttack):
             labels = np.argmax(self.cls.classifier.predict(x_adv), 1)
             errors = np.linalg.norm((target - x_adv), axis=1)
             ev_init = len(self.evasions)
-            self.evasions = np.array(
-                (np.where(labels != predictions)[0]).flatten().tolist())
+            evades = np.array((np.where(labels != predictions)[0])
+                              .flatten().tolist())
+            self.evasions = np.intersect1d(evades, correct)
             ev_conv += 1 if ev_init == len(self.evasions) else 0
             if len(self.evasions) == self.n_records or ev_conv > 2:
                 break
-
         self.adv_x = x_adv
         self.adv_y = labels
         self.validate()

@@ -95,6 +95,8 @@ class Zoo(AbsAttack):
         # predictions for original instances
         ori_in = self.cls.formatter(self.ori_x, self.ori_y)
         original = self.cls.predict(ori_in).flatten().tolist()
+        correct = np.array((np.where(np.array(self.ori_y) == original)[0])
+                           .flatten().tolist())
 
         # adversarial predictions for same data
         adv_in = self.cls.formatter(self.adv_x, self.ori_y)
@@ -102,9 +104,10 @@ class Zoo(AbsAttack):
         self.adv_y = np.array(adversarial)
 
         # adversary succeeds iff predictions differ
-        self.evasions = np.array(
+        evades = np.array(
             [i for i, (x, y) in enumerate(zip(original, adversarial))
              if int(x) != int(y)])
+        self.evasions = np.intersect1d(evades, correct)
 
     def run(self, max_iter):
         """Runs the zoo attack."""
