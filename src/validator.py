@@ -160,9 +160,9 @@ class IotTCP(NetworkProto):
             if record.resp_pkts != 0 or record.resp_ip_bytes != 0:
                 return False, "S0: packets or bytes non-0"
         # number of packets would be smaller than the bytes sent,
-        # this is also true for the receiving
         if record.orig_pkts > record.orig_ip_bytes:
             return False, "ori packets > bytes"
+        # this is also true for the receiving
         if record.resp_pkts > record.resp_ip_bytes:
             return False, "resp packets > bytes"
         # In TCP the orig_pkts >= to resp_pkts
