@@ -190,10 +190,11 @@ class IotUDP(NetworkProto):
             if record.resp_pkts != 0 or record.resp_ip_bytes != 0:
                 return False, "S0: packets or bytes non-0"
         # number of packets is smaller than the bytes sent,
+        if record.orig_pkts > record.orig_ip_bytes:
+            return False, "ori packets > bytes"
         # also true for the receiving
-        if record.orig_pkts < record.orig_ip_bytes or \
-                record.resp_pkts < record.resp_ip_bytes:
-            return False, "packets > bytes"
+        if record.resp_pkts > record.resp_ip_bytes:
+            return False, "resp packets > bytes"
         # orig_pkts is always greater or equal to resp_pkts
         # unless history is Dd and state is SF.
         if record.orig_pkts < record.resp_pkts:
@@ -226,10 +227,11 @@ class IotICMP(NetworkProto):
             if record.resp_pkts != 0 or record.resp_ip_bytes != 0:
                 return False, "S0: packets or bytes non-0"
         # number of packets would be smaller than the bytes sent,
+        if record.orig_pkts > record.orig_ip_bytes:
+            return False, "ori packets > bytes"
         # this is also true for the receiving
-        if record.orig_pkts < record.orig_ip_bytes or \
-                record.resp_pkts < record.resp_ip_bytes:
-            return False, "packets > bytes"
+        if record.resp_pkts > record.resp_ip_bytes:
+            return False, "resp packets > bytes"
         return True, None
 
 
