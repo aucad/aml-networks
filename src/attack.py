@@ -79,7 +79,7 @@ class AbsAttack(BaseUtil):
             self.show('Validating', self.cls.ds_path)
             indices, reasons = Validator.validate_dataset(
                 self.cls.ds_path, self.validator_kind)
-            if 0 < len(indices):
+            if 0 < sum(reasons.values()):
                 AbsAttack.dump_reasons(reasons)
                 # print the indices of invalid records
                 rec_i = ' '.join([
