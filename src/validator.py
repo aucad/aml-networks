@@ -166,8 +166,8 @@ class IotTCP(NetworkProto):
         if record.resp_pkts > record.resp_ip_bytes:
             return False, "resp packets > bytes"
         # In TCP the orig_pkts >= to resp_pkts
-        if record.orig_pkts < record.resp_pkts:
-            return False, "TCP: ori packets < resp packets"
+        # if record.orig_pkts < record.resp_pkts:
+        #     return False, "TCP: ori packets < resp packets"
         # usually orig_ip_bytes are larger and equal to resp_ip_bytes
         if record.orig_ip_bytes < record.resp_ip_bytes:
             # unless either history ShADadFf and state SF
