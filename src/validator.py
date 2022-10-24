@@ -109,11 +109,11 @@ class NbUDP(NetworkProto):
                 and record.tcprtt == 0):
             return False, "nonzero tcp fields"
         # Smeansz * Spkts = sbytes
-        if record.smeansz * record.Spkts != record.sbytes:
-            return False, "invalid smeansz"
+        # if record.smeansz * record.Spkts != record.sbytes:
+        #     return False, "invalid smeansz"
         # Dmeansz * Dpkts = dpytes
-        if record.dmeansz * record.Dpkts != record.dbytes:
-            return False, "invalid dmeansz"
+        # if record.dmeansz * record.Dpkts != record.dbytes:
+        #     return False, "invalid dmeansz"
         # if sjit = 0 then (Smeansz * 8)/sload + something small = dur
         if record.sjit == 0 and record.Sload != 0 and \
                 record.dur < (record.smeansz * 8 / record.Sload):
