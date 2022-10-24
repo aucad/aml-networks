@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 class AbsClassifierInstance(BaseUtil):
 
-    def __init__(self, name, out, attrs, x, y, ds_path):
+    def __init__(self, name, out, attrs, x, y, ds_path, robust=False):
         self.name = name
         self.out_dir = out
         self.attrs = self.attr_fix(attrs[:])
@@ -35,7 +35,9 @@ class AbsClassifierInstance(BaseUtil):
         self.fold_n = 1
         self.capture_ranges(x)
         self.set_mask_cols(x)
+        self.robust = robust
         self.show('Classifier', self.name)
+        self.show('Robust', self.robust)
         self.show('Classes', ", ".join(self.class_names))
         self.show('Mutable', ", ".join(self.mutable_attrs))
         self.show('Immutable', ", ".join(self.immutable_attrs))
@@ -137,8 +139,8 @@ class AbsClassifierInstance(BaseUtil):
         self.fold_n = fold_n
         return self
 
-    def train(self, robust=False):
-        self.prep_model(robust)
+    def train(self):
+        self.prep_model(self.robust)
         self.prep_classifier()
         self.show('K-fold', self.fold_n)
 
@@ -181,10 +183,10 @@ class AbsClassifierInstance(BaseUtil):
         """Remove selected special chars from attributes so that
         the remaining forms a valid Python identifier."""
         return [a.replace(' ', '')
-                .replace('=', '_')
-                .replace('-', '')
-                .replace('^', '_')
-                .replace('conn_state_other', 'conn_state_OTH')
+                    .replace('=', '_')
+                    .replace('-', '')
+                    .replace('^', '_')
+                    .replace('conn_state_other', 'conn_state_OTH')
                 for a in attrs]
 
     @staticmethod

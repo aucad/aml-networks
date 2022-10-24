@@ -46,7 +46,7 @@ def main():
     x, y, attrs, folds = DatasetLoader.load_csv(
         args.dataset, args.kfolds)
     cls = ClsLoader.init(
-        args.cls, args.out, attrs, x, y, args.dataset)
+        args.cls, args.out, attrs, x, y, args.dataset, args.robust)
     attack = AttackLoader \
         .load(args.attack, args.iterated, args.plot,
               args.validator, args.dataset, ts) \
@@ -56,7 +56,7 @@ def main():
         print(" ")
         cls.reset() \
             .load(x.copy(), y.copy(), *fold, i + 1) \
-            .train(robust=args.robust)
+            .train()
 
         if args.plot:
             cls.plot()
@@ -70,7 +70,7 @@ def main():
     seconds = round((end_time - start_time) / 1e9, 2)
     minutes = int(seconds // 60)
     seconds = seconds - (minutes * 60)
-    cls.show('Time', f'{minutes} min {seconds} s')
+    cls.show('Time', f'{minutes} min {seconds:.2f} s')
 
     if args.save_log:
         print('Log file:', lf)
