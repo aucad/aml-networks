@@ -169,14 +169,14 @@ class IotTCP(NetworkProto):
         # if record.orig_pkts < record.resp_pkts:
         #     return False, "TCP: ori packets < resp packets"
         # usually orig_ip_bytes are larger and equal to resp_ip_bytes
-        if record.orig_ip_bytes < record.resp_ip_bytes:
-            # unless either history ShADadFf and state SF
-            # or history DdA and state: OTH
-            if not ((record.history_ShADadFf == 1 and
-                     record.conn_state_SF == 1) or
-                    (record.history_DdA == 1 and
-                     record.conn_state_OTH == 1)):
-                return False, "TCP: history-conn_state mismatch"
+        # if record.orig_ip_bytes < record.resp_ip_bytes:
+        #     # unless either history ShADadFf and state SF
+        #     # or history DdA and state: OTH
+        #     if not ((record.history_ShADadFf == 1 and
+        #              record.conn_state_SF == 1) or
+        #             (record.history_DdA == 1 and
+        #              record.conn_state_OTH == 1)):
+        #         return False, "TCP: history-conn_state mismatch"
         # if conn state REJ then orig_ip_bytes=0 and resp_ip_bytes=0
         if record.conn_state_REJ == 1:
             if record.orig_ip_bytes != 0 or record.resp_ip_bytes != 0:
