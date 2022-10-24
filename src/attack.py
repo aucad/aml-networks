@@ -77,9 +77,16 @@ class AbsAttack(BaseUtil):
 
         if self.validator_kind:
             self.show('Validating', self.cls.ds_path)
-            _, reasons = Validator.validate_dataset(
+            indices, reasons = Validator.validate_dataset(
                 self.cls.ds_path, self.validator_kind)
             AbsAttack.dump_reasons(reasons)
+            # print the indices of invalid records
+            if 0 < len(indices):
+                rec_i = ' '.join([
+                    # offset by 2; for attrs + init index=1
+                    str(i + 2) for i, v in enumerate(indices)
+                    if not v])
+                self.show('records', rec_i)
 
     def log_attack_stats(self):
         ev, tot = len(self.evasions), self.cls.n_train
