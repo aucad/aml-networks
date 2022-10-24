@@ -12,7 +12,7 @@ from matplotlib import pyplot as plt
 
 class AbsAttack(BaseUtil):
 
-    def __init__(self, name, iterated, plot, validator_kind, ds_path):
+    def __init__(self, name, iterated, plot, validator_kind, ds_path, ts):
         self.name = name
         self.iterated = iterated
         self.plot_result = plot
@@ -28,6 +28,7 @@ class AbsAttack(BaseUtil):
         self.adv_y = np.array([])
         self.valid_result = np.array([])
         self.validation_reasons = {}
+        self.ts = ts
 
         self.show('Attack', self.name)
         self.show('Max iterations', self.max_iter)
@@ -54,8 +55,9 @@ class AbsAttack(BaseUtil):
         return len(self.evasions) > 0
 
     def figure_name(self, n):
-        return path.join(self.out_dir,
-                         f'{self.name}_{self.cls.name}_{n}.png')
+        return path.join(
+            self.out_dir,
+            f'{self.ts}_{self.name}_{self.cls.name}_{self.cls.fold_n}_{n}.png')
 
     def set_cls(self, cls: AbsClassifierInstance):
         self.cls = cls
@@ -68,7 +70,9 @@ class AbsAttack(BaseUtil):
     def dump_reasons(reasons):
         count = sum(reasons.values())
         v_reasons = '\n'.join(
-            [f'{v} * {k}' for k, v in reasons.items()])
+            [txt for _, txt in sorted(
+                [(v, f'{v} * {k}') for k, v in reasons.items()],
+                reverse=True)])
         BaseUtil.show('Invalid total', count)
         if count > 0:
             BaseUtil.show('Invalid reasons', v_reasons)
@@ -128,11 +132,12 @@ class AbsAttack(BaseUtil):
         if ev > 0:
             final_labels = self.adv_y[self.evasions] \
                 .reshape(-1, 1).flatten().tolist()
-            evasion_freq = '\n'.join(sorted([
-                f'{final_labels.count(c)} * '
-                f'{self.cls.text_label((c + 1) % 2)} to '
-                f'{self.cls.text_label(c)}'
-                for c in self.cls.classes], reverse=True))
+            evasion_freq = '\n'.join([txt for _, txt in sorted(
+                [(final_labels.count(c),
+                  f'{final_labels.count(c)} * '
+                  f'{self.cls.text_label((c + 1) % 2)} to '
+                  f'{self.cls.text_label(c)}')
+                 for c in self.cls.classes], reverse=True)])
             self.show('Evasion classes', evasion_freq)
 
     def dump_result(self):
@@ -150,7 +155,8 @@ class AbsAttack(BaseUtil):
                 attrs.append('valid')
 
             self.ensure_out_dir(self.out_dir)
-            f_name = path.join(self.out_dir, f'{name}.csv')
+            f_name = path.join(
+                self.out_dir, f'{self.ts}_{self.cls.fold_n}_{name}.csv')
 
             # all masked columns + class label
             with open(f_name, 'w', newline='') as fp:

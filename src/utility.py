@@ -23,9 +23,9 @@ class BaseUtil:
         str_v = str(value)
 
         # wrap values lines
-        wrap_size, label_w, log_pad = 42, 18, 12
+        wrap_size, label_w, log_pad = 512, 18, 0
         chunks, chunk_size, lines = len(str_v), wrap_size, []
-        if chunks < chunk_size:
+        if chunks < chunk_size and str_v.find("\n") < 0:
             lines = [str_v]
         else:
             rest = str_v
@@ -43,12 +43,12 @@ class BaseUtil:
                 rest = remaining
         fmt_lines = "\n".join(
             [(' ' * (label_w + log_pad) if i > 0 else '')
-             + BaseUtil.color_text(s) for i, s in enumerate(lines)])
+             + s for i, s in enumerate(lines)])
 
         text = f'{msg} '.ljust(label_w, '-') + fmt_lines
         logger.debug(text)
 
     @staticmethod
     def clear_one_line():
-        cols = 128
+        cols = 256
         print("\033[A{}\033[A".format(' ' * cols), end='\r')
