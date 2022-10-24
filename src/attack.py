@@ -91,6 +91,14 @@ class AbsAttack(BaseUtil):
     def log_attack_stats(self):
         ev, tot = len(self.evasions), self.cls.n_train
         p = 100 * (ev / tot)
+        final_labels = self.adv_y[self.evasions] \
+            .reshape(-1, 1).flatten().tolist()
+        evasion_freq = '\n'.join([
+            f'{final_labels.count(c)} * '
+            f'{self.cls.text_label((c + 1) % 2)} to '
+            f'{self.cls.text_label(c)}'
+            for c in self.cls.classes])
+
         self.show('Total evasions', f'{ev} of {tot} - {p:.1f} %')
         if self.validator_kind:
             v = len([s for s in self.valid_result if s])
@@ -103,6 +111,7 @@ class AbsAttack(BaseUtil):
             self.show('Evades + valid', f'{ve} of {tot} - {r:.1f} %')
             if v != tot:
                 AbsAttack.dump_reasons(self.validation_reasons)
+        self.show('Evasion classes', evasion_freq)
 
     def dump_result(self):
         """Write to csv file original and adversarial examples."""
