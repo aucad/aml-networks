@@ -97,8 +97,8 @@ class NbUDP(NetworkProto):
         """Defaults for undefined attributes."""
         names = 'swin dwin stcpb dtcpb synack ' \
                 'ackdat tcprtt smeansz Spkts sbytes ' \
-                'dmeansz Dpkts dbytes sjit'
-        return NetworkProto.kv_dict(names, [0] * 14)
+                'dmeansz Dpkts dbytes sjit Sload'
+        return NetworkProto.kv_dict(names, [0] * 15)
 
     @staticmethod
     def validate(record) -> Tuple[bool, Union[str, None]]:
