@@ -58,8 +58,8 @@ class NbTCP(NetworkProto):
 
     @staticmethod
     def validate(record) -> Tuple[bool, Union[str, None]]:
-        if record.swin != 255 or record.dwin != 255:
-            return False, "swin-dwin mismatch"
+        # if record.swin != 255 or record.dwin != 255:
+        #    return False, "swin-dwin mismatch"
         # synack + ackdat = tcprtt
         if round(record.synack + record.ackdat, 3) != \
                 round(record.tcprtt, 3):
@@ -70,19 +70,19 @@ class NbTCP(NetworkProto):
                 if record.dbytes != 0:
                     return False, "dbytes nonzero in state INT"
             # if dur > 0 then dbytes > 0
-            elif not record.dbytes > 0:
-                return False
+            # elif not record.dbytes > 0:
+            #     return False, "dbytes is 0 for dur > 0"
         # if dur = 0 then dbytes = 0
-        if record.dur == 0 and record.dbytes != 0:
-            return False, "dbytes nonzero when dur is 0"
+        # if record.dur == 0 and record.dbytes != 0:
+        #     return False, "dbytes nonzero when dur is 0"
         # if dbytes = 0 then everything destinations related is 0
         if record.dbytes == 0 and (
                 record.Dload != 0 or record.dttl != 0 or
                 record.Djit != 0 or record.Dpkts != 0):
             return False, "dest attrs nonzero when dbytes is 0"
         # stime + dur + (some small value) = ltime
-        # can have stime==ltime
-        if record.ltime < record.stime + record.dur:
+        # can have stime == ltime
+        if record.ltime < record.stime:
             return False, "ltime < stime"
         return True, None
 
