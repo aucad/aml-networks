@@ -56,7 +56,7 @@ To see available options, run:
 python -m src --help
 ```
 
-## Directory organization
+## Source code directory organization
 
 | Directory           | Description                                                 |
 |:--------------------|:------------------------------------------------------------|
@@ -76,28 +76,3 @@ python -m src --help
 | 　`└─ validator.py`  | Post-attack record validator                                |
 | 　`└─ xgb.py`        | XGBoost classifier training                                 |
 | 　`└─ zoo.py`        | ZOO attack implementation                                   |
-
-## Notes on ART Attacks
-
-See [ART evasion attacks wiki ↗](https://github.com/Trusted-AI/adversarial-robustness-toolbox/wiki/ART-Attacks#1-evasion-attacks)
-
-| Attack                     | Box | Mask | Compatible | Issue Explanation                                                                              |
-|:---------------------------|:---:|:----:|:----------:|:-----------------------------------------------------------------------------------------------|
-| Adversarial Patch          | ▫️  |  ✔️  |     ➖      | Requires neural network classifier                                                             |
-| Auto Attack                | ▪️  |  ➖   |     ➖      | Classifier must support loss type `cross_entropy`                                              |
-| Boundary Attack            | ▪️  |  ➖   |     ➖      | This attack has not yet been tested for binary classification with a single output classifier  |
-| Carlini and Wagner L0      | ▫️  |  ✔️  |     ➖      | Requires ClassGradientsMixin based classifier                                                  |
-| DPatch                     | ▫️  |  ✔️  |     ➖      | Requires classifier derived from `LossGradientsMixin`                                          |
-| Frame Saliency Attack      | ▫️  |  ✔️  |     ➖      | Requires neural network classifier                                                             | 
-| GeoDA                      | ▪️  |  ➖   |     ➖      | `XGBoostClassifier` object has no attribute `'channels_first'` (same error for decision trees) |
-| HopSkipJump                | ▪️  |  ✔️  |     ✔️     |                                                                                                |
-| Pixel Attack               | ▪️  |  ➖   |     ➖      | Requires neural network classifier                                                             |
-| Projected Gradient Descent | ▫️  |  ✔️  |     ➖      | Requires classifier derived from `LossGradientsMixin`                                          |
-| Query-efficient Black-box  | ▪️  |  ➖   |     ➖      | `QueryEfficientGradientEstimationClassifier` is not an attack implementation                   |
-| ShapeShifter Attack        | ▫️  |  ✔️  |     ➖      | Requires TensorFlowFasterRCNN classifier                                                       |
-| SignOPT Attack             | ▪️  |  ➖   |     ➖      | This attack has not yet been tested for binary classification with a single output classifier  |
-| SimBA                      | ▪️  |  ➖   |     ➖      | Requires neural network classifier                                                             |
-| Spatial Transformation     | ▪️  |  ➖   |     ➖      | Requires neural network classifier                                                             |
-| Square Attack              | ▪️  |  ➖   |     ➖      | Requires neural network classifier                                                             |
-| Threshold Attack           | ▪️  |  ➖   |     ➖      | Requires neural network classifier                                                             |
-| Zeroth Order Optimisation  | ▪️  |  ➖️  |     ✔️     |                                                                                                |
