@@ -4,6 +4,7 @@ Build a XGBoost model for provided dataset.
 Provide as input a path to a dataset, or script uses default
 dataset if none provided. The dataset must be numeric at all attributes.
 """
+import logging
 import sys, os
 
 from art.estimators.classification import XGBoostClassifier
@@ -11,6 +12,8 @@ from art.estimators.classification import XGBoostClassifier
 from xgboost import plot_tree, DMatrix, train as xg_train
 
 from src import AbsClassifierInstance
+
+logger = logging.getLogger(__name__)
 
 
 class XGBClassifier(AbsClassifierInstance):
@@ -27,9 +30,14 @@ class XGBClassifier(AbsClassifierInstance):
         ax = 1 if len(tmp.shape) == 2 else 0
         return tmp.argmax(axis=ax)
 
+    # noinspection PyBroadException
     def tree_plotter(self):
         """Plot the tree and save to file."""
-        plot_tree(self.model, num_trees=20, rankdir='LR')
+        try:
+            plot_tree(self.model, num_trees=20, rankdir='LR')
+        except:
+            logger.warning('Failed to visualize tree. ' +
+                           'Make sure graphviz is in path.')
 
     def prep_model(self, robust):
         """

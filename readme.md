@@ -26,15 +26,16 @@ For Apple chips, install compatible `tensorflow` separately:
 python -m pip install tensorflow-macos
 ```
 
-To visualize XGBoost models, install [graphviz](https://graphviz.org/) and make sure it is in path.
+**Optional**: To visualize XGBoost models, install [graphviz](https://graphviz.org/) and make sure it is in path.
 
 ### Setup XGBoost
 
 By default, attacks are configured to use a modified version of XGBoost classifier, enhanced with adversarial robustness
-property.
+property. This classifier is not installed with the other package dependencies.
 
-The XGBoost classifier must be built locally [from source](./RobustTrees),
+The XGBoost classifier must be built locally [from source](./RobustTrees) (also included as submodule `RobustTrees`),
 following [instructions here](./RobustTrees/tree/master/python-package#from-source).
+  
 
 After local build, set up Python environment to use this classifier version:
 
@@ -42,37 +43,38 @@ After local build, set up Python environment to use this classifier version:
 python -m pip install -e "/absolute/local/path/to/RobustTrees/python-package"
 ```
 
-### Usage
+## Usage
 
-This application has a command line interface. Standard interaction:
+This application is intended for use over command line interface. Standard interaction:
 
 ```
-python -m src [ARGS]
+python3 -m src [ARGS]
 ```
 
 To see available options, run:
 
 ```
-python -m src --help
+python3 -m src --help
 ```
 
 ## Source code directory organization
 
-| Directory           | Description                                                 |
-|:--------------------|:------------------------------------------------------------|
-| `results`           | Results of various experiments                              |
-| 　`└─ comparisons`   | Comparison of classifiers, on IoT data, obtained using Weka |
-| 　`└─ decision_tree` | Adversarial attacks on decision trees                       |
-| 　`└─ xgboost`       | Adversarial attacks on XGBoost classifier                   |
-| `data`              | Preprocessed data sets, ready for running various attacks   |
-| `src`               | Source code                                                 |
-| 　`└─ examples/`     | ART attack examples, for reference                          |
-| 　`└─ attack.py`     | Abstract base class for an attack                           |
-| 　`└─ cls.py`        | Abstract base class for a classifier                        |
-| 　`└─ hopskip.py`    | HopSkipJump attack implementation                           |
-| 　`└─ loader.py`     | Utility for loading models and attacks                      |
-| 　`└─ tree.py`       | Decision tree classifier training                           |
-| 　`└─ utility.py`    | Shared functionality and utils                              |
-| 　`└─ validator.py`  | Post-attack record validator                                |
-| 　`└─ xgb.py`        | XGBoost classifier training                                 |
-| 　`└─ zoo.py`        | ZOO attack implementation                                   |
+| Directory                   | Description                                                 |
+|:----------------------------|:------------------------------------------------------------|
+| `results`                   | Results of various experiments                              |
+| 　`└─ comparisons`           | Comparison of classifiers, on IoT data, obtained using Weka |
+| 　`└─ decision_tree`         | Adversarial attacks on decision trees                       |
+| 　`└─ xgboost`               | Adversarial attacks on XGBoost classifier                   |
+| `data`                      | Preprocessed data sets, ready for running various attacks   |
+| `src`                       | Source code                                                 |
+| 　`└─ __init__.py`           | Python package setup                                        |
+| 　`└─ __main__.py`           | CLI interface                                               |
+| 　`└─ attack.py`             | Abstract base class for an attack                           |
+| 　`└─ cls.py`                | Abstract base class for a classifier                        |
+| 　`└─ hopskip.py`            | HopSkipJump attack implementation                           |
+| 　`└─ loader.py`             | Utility for loading models and attacks                      |
+| 　`└─ tree.py`               | Decision tree classifier training                           |
+| 　`└─ utility.py`            | Shared functionality and utils                              |
+| 　`└─ validator.py`          | Post-attack record validator                                |
+| 　`└─ xgb.py`                | XGBoost classifier training                                 |
+| 　`└─ zoo.py`                | ZOO attack implementation                                   |
