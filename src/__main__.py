@@ -37,12 +37,14 @@ def main():
     """
     parser = ArgumentParser(prog=__title__, description=main.__doc__)
     args = __parse_args(parser)
-    log_level = lg.FATAL - (0 if args.silent else 40)
-    lf, ts = __init_logger(log_level, args.save_log, args.out)
-
     if not args.dataset:
         parser.print_help()
         exit(1)
+
+    log_level = lg.FATAL - (0 if args.silent else 40)
+    ds_name = (args.dataset.split("/")[-1]).replace('.csv', '')
+    token = f'{ds_name}_{args.attack}_rob-{"t" if args.robust else "f"}_'
+    lf, ts = __init_logger(log_level, args.save_log, args.out, token)
 
     # TODO: cleanup this things
     start_time = time.time_ns()
@@ -51,8 +53,8 @@ def main():
     cls = ClsLoader.init(
         args.cls, args.out, attrs, x, y, args.dataset, args.robust)
     attack = AttackLoader \
-        .load(args.attack, args.iterated, args.plot,
-              args.validator, args.dataset, ts) \
+        .load(args.attack, False, args.plot,
+              args.validator, args.dataset, ts, args.save_rec) \
         if args.attack else None
     averages = []
     for i, fold in enumerate(folds):
@@ -72,7 +74,7 @@ def main():
 
     attack.show('=' * 52, '')
     a = list(np.mean(np.array(averages), axis=0))
-    v, e, t = a[4], a[5], a[6]
+    v, e, t = a[-3:]
     print('AVERAGES', '')
     print('Classifier', '')
     attack.show('Accuracy', f'{a[0] * 100:.2f} %')
@@ -98,6 +100,7 @@ def __init_logger(
         level: int = lg.ERROR,
         save_log: Optional[bool] = False,
         out_dir: Optional[str] = None,
+        token: Optional[str] = None
 ):
     """Create a logger instance"""
 
@@ -109,13 +112,13 @@ def __init_logger(
     stream_handler = lg.StreamHandler()
     stream_handler.setFormatter(fmt)
     logger.addHandler(stream_handler)
-    ts = str(round(time.time() * 1000))
+    ts = str(round(time.time() * 1000))[-4:]
     log_file = None
 
     if save_log:
         from src import BaseUtil
         BaseUtil.ensure_out_dir(out_dir)
-        log_file = path.join(out_dir, f'{ts}_log')
+        log_file = path.join(out_dir, f'{token}{ts}_log')
         file_handler = lg.FileHandler(log_file)
         file_handler.setFormatter(fmt)
         logger.addHandler(file_handler)
@@ -157,7 +160,7 @@ def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
     parser.add_argument(
         "--robust",
         action='store_true',
-        help="train a robust model, xgboost only"
+        help="train a robust model (xgboost only)"
     )
     parser.add_argument(
         "--plot",
@@ -188,14 +191,14 @@ def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
         help="save terminal output to a file",
     )
     parser.add_argument(
+        "--save_rec",
+        action='store_true',
+        help="save records (original and adversarial)",
+    )
+    parser.add_argument(
         '-s', "--silent",
         action='store_true',
         help="disable debug logging"
-    )
-    parser.add_argument(
-        "--iterated",
-        action='store_true',
-        help="Run attack with increasing max_iter"
     )
     parser.add_argument(
         "-v", "--version",

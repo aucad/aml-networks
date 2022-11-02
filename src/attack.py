@@ -12,7 +12,8 @@ from matplotlib import pyplot as plt
 
 class AbsAttack(BaseUtil):
 
-    def __init__(self, name, iterated, plot, validator_kind, ds_path, uuid):
+    def __init__(self, name, iterated, plot, validator_kind, ds_path, uuid,
+                 dump_records):
         self.name = name
         self.iterated = iterated
         self.plot_result = plot
@@ -29,6 +30,7 @@ class AbsAttack(BaseUtil):
         self.valid_result = np.array([])
         self.validation_reasons = {}
         self.uuid = uuid
+        self.save_records = dump_records
         self.show('Attack', self.name)
         self.show('Max iterations', self.max_iter)
         self.validate_dataset(ds_path)
@@ -180,6 +182,8 @@ class AbsAttack(BaseUtil):
 
     def dump_result(self):
         """Write to csv file original and adversarial examples."""
+        if not self.save_records:
+            return
 
         def dump(x, y, name):
             attrs = self.cls.attrs[:]
