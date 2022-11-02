@@ -159,12 +159,12 @@ class AbsAttack(BaseUtil):
             if 0 < sum(reasons.values()):
                 AbsAttack.dump_reasons(reasons)
                 # print the indices of invalid records
-                rec_i = ' '.join([
+                rec_i = ','.join([
                     # offset by 2; for attrs + init index=1
                     str(i + 2) for i, v in enumerate(indices)
                     if not v])
                 self.show('Validated', ds_path)
-                self.show('records', rec_i)
+                self.show('records', f'[{rec_i}]')
             else:
                 self.show('Validated', f'{ds_path} is valid')
 
