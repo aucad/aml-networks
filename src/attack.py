@@ -12,7 +12,7 @@ from matplotlib import pyplot as plt
 
 class AbsAttack(BaseUtil):
 
-    def __init__(self, name, iterated, plot, validator_kind, ds_path, ts):
+    def __init__(self, name, iterated, plot, validator_kind, ds_path, uuid):
         self.name = name
         self.iterated = iterated
         self.plot_result = plot
@@ -28,8 +28,7 @@ class AbsAttack(BaseUtil):
         self.adv_y = np.array([])
         self.valid_result = np.array([])
         self.validation_reasons = {}
-        self.ts = ts
-
+        self.uuid = uuid
         self.show('Attack', self.name)
         self.show('Max iterations', self.max_iter)
         self.validate_dataset(ds_path)
@@ -51,13 +50,66 @@ class AbsAttack(BaseUtil):
         return len(self.ori_x)
 
     @property
+    def n_evasions(self):
+        return len(self.evasions)
+
+    @property
+    def n_valid(self):
+        return len(self.idx_valid_evades)
+
+    @property
+    def idx_valid_evades(self):
+        if self.validator_kind:
+            valid_idx = set([i for i, s in enumerate(self.valid_result) if s])
+            evasion_ids = set(self.evasions)
+            return np.array(list(valid_idx.intersection(evasion_ids)))
+        return self.evasions.copy()
+
+    @property
+    def evasion_success(self):
+        if self.n_records > 0:
+            return 100 * (self.n_evasions / self.n_records)
+        return 0
+
+    @property
+    def validation_success(self):
+        if self.n_evasions > 0:
+            return 100 * (self.n_valid / self.n_evasions)
+        return 0
+
+    @property
     def attack_success(self):
         return len(self.evasions) > 0
+
+    @property
+    def label_stats(self) -> dict:
+        result, final_labels = {}, []
+        if self.validator_kind:
+            if self.n_valid > 0:
+                final_labels = self.adv_y[self.idx_valid_evades] \
+                    .flatten().tolist()
+        elif self.n_evasions > 0:
+            final_labels = self.adv_y[self.evasions] \
+                .flatten().tolist()
+        for label in self.cls.classes:
+            n = final_labels.count(label)
+            result[label] = n
+        return result
+
+    @property
+    def stats(self):
+        return self.n_valid, self.n_evasions, self.n_records
+
+    def printable_label_stats(self):
+        counts = sorted(list(self.label_stats.items()),
+                        key=lambda x: x[1], reverse=True)
+        return [f'{n} * {self.cls.text_label(lbl)}'
+                for lbl, n in counts if n > 0]
 
     def figure_name(self, n):
         return path.join(
             self.out_dir,
-            f'{self.ts}_{self.name}_{self.cls.name}_{self.cls.fold_n}_{n}.png')
+            f'{self.uuid}_{self.name}_{self.cls.name}_{self.cls.fold_n}_{n}.png')
 
     def set_cls(self, cls: AbsClassifierInstance):
         self.cls = cls
@@ -115,30 +167,16 @@ class AbsAttack(BaseUtil):
                 self.show('Validated', f'{ds_path} is valid')
 
     def log_attack_stats(self):
-        ev, tot = len(self.evasions), self.n_records
-        p = 100 * (ev / tot)
-        self.show('Total evasions', f'{ev} of {tot} - {p:.1f} %')
+        v, e, t = self.stats
+        p, r = self.evasion_success, self.validation_success
+        ls = self.printable_label_stats()
+        self.show('Total evasions', f'{e} of {t} - {p:.1f} %')
         if self.validator_kind:
-            v = len([s for s in self.valid_result if s])
-            q = 100 * (v / tot)
-            self.show('Total valid', f'{v} of {tot} - {q:.1f} %')
-            ve = sum(
-                [1 for (i, is_valid) in enumerate(self.valid_result)
-                 if is_valid and i in self.evasions])
-            r = 100 * (ve / tot)
-            self.show('Evades + valid', f'{ve} of {tot} - {r:.1f} %')
-            if v != tot:
-                AbsAttack.dump_reasons(self.validation_reasons)
-        if ev > 0:
-            final_labels = self.adv_y[self.evasions].flatten().tolist()
-            evasion_freq = '\n'.join([txt for _, txt in sorted(
-                [(final_labels.count(c),
-                  f'{final_labels.count(c)} * '
-                  f'{self.cls.text_label((c + 1) % 2)} to '
-                  f'{self.cls.text_label(c)}')
-                 for c in self.cls.classes if final_labels.count(c) > 0]
-                , reverse=True)])
-            self.show('Evasion classes', evasion_freq)
+            self.show('Valid evasions', f'{v} of {e} - {r:.1f} %')
+        if e > 0:
+            self.show('Class labels', '\n'.join(ls))
+        if self.validator_kind and len(self.validation_reasons.keys()) > 0:
+            AbsAttack.dump_reasons(self.validation_reasons)
 
     def dump_result(self):
         """Write to csv file original and adversarial examples."""
@@ -156,7 +194,7 @@ class AbsAttack(BaseUtil):
 
             self.ensure_out_dir(self.out_dir)
             f_name = path.join(
-                self.out_dir, f'{self.ts}_{self.cls.fold_n}_{name}.csv')
+                self.out_dir, f'{self.uuid}_{self.cls.fold_n}_{name}.csv')
 
             # all masked columns + class label
             with open(f_name, 'w', newline='') as fp:

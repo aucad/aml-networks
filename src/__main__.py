@@ -22,6 +22,8 @@ from os import path
 from sys import exit
 from typing import Optional, List
 
+import numpy as np
+
 from src import __version__, __title__, \
     ClsLoader, AttackLoader, Validator, DatasetLoader
 
@@ -42,6 +44,7 @@ def main():
         parser.print_help()
         exit(1)
 
+    # TODO: cleanup this things
     start_time = time.time_ns()
     x, y, attrs, folds = DatasetLoader.load_csv(
         args.dataset, args.kfolds)
@@ -51,7 +54,7 @@ def main():
         .load(args.attack, args.iterated, args.plot,
               args.validator, args.dataset, ts) \
         if args.attack else None
-
+    averages = []
     for i, fold in enumerate(folds):
         print(" ")
         cls.reset() \
@@ -65,6 +68,21 @@ def main():
             attack.reset() \
                 .set_cls(cls) \
                 .run(max_iter=args.iter)
+        averages.append(list(cls.stats) + list(attack.stats))
+
+    attack.show('=' * 52, '')
+    a = list(np.mean(np.array(averages), axis=0))
+    v, e, t = a[4], a[5], a[6]
+    print('AVERAGES', '')
+    print('Classifier', '')
+    attack.show('Accuracy', f'{a[0] * 100:.2f} %')
+    attack.show('Precision', f'{a[1] * 100:.2f} %')
+    attack.show('Recall', f'{a[2] * 100:.2f} %')
+    attack.show('F-score', f'{a[3] * 100:.2f} %')
+    print('Attack', '')
+    attack.show('Total evasions', f'{e} of {t} - {(100 * (e / t)):.1f} %')
+    if args.validator and e > 0:
+        attack.show('Valid evasions', f'{v} of {e} - {100 * (v / e):.1f} %')
 
     end_time = time.time_ns()
     seconds = round((end_time - start_time) / 1e9, 2)

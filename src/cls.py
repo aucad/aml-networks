@@ -41,6 +41,7 @@ class AbsClassifierInstance(BaseUtil):
         self.show('Classes', ", ".join(self.class_names))
         self.show('Mutable', ", ".join(self.mutable_attrs))
         self.show('Immutable', ", ".join(self.immutable_attrs))
+        self.stats = []
 
     def reset(self):
         self.classifier = None
@@ -50,6 +51,7 @@ class AbsClassifierInstance(BaseUtil):
         self.test_x = np.array([])
         self.test_y = np.array([])
         self.fold_n = 1
+        self.stats = []
         return self
 
     @property
@@ -150,7 +152,7 @@ class AbsClassifierInstance(BaseUtil):
             if self.n_test > 0 else
             (self.train_x, self.train_y))
         predictions = self.predict(self.formatter(*records))
-        self.score(records[1], predictions, display=True)
+        self.stats = self.score(records[1], predictions, display=True)
 
         return self
 
@@ -208,9 +210,9 @@ class AbsClassifierInstance(BaseUtil):
         precision = 1 if num_pos_pred == 0 else sc / num_pos_pred
         recall = 1 if num_pos_actual == 0 else sc / num_pos_actual
         f_score = (2 * precision * recall) / (precision + recall)
-
         if display:
             BaseUtil.show('Accuracy', f'{accuracy * 100:.2f} %')
             BaseUtil.show('Precision', f'{precision * 100:.2f} %')
             BaseUtil.show('Recall', f'{recall * 100:.2f} %')
             BaseUtil.show('F-score', f'{f_score * 100:.2f} %')
+        return [accuracy, precision, recall, f_score]
