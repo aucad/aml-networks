@@ -52,9 +52,9 @@ class NbTCP(NetworkProto):
         """Defaults for undefined attributes."""
         names = 'swin dwin ltime ' \
                 'synack ackdat tcprtt dbytes Dload ' \
-                'dttl Djit Dpkts dur state_INT stime'
+                'dttl Djit Dpkts dur state_INT stime state_FIN'
         return NetworkProto.kv_dict(
-            names, [255, 255, 1] + [0] * 11)
+            names, [255, 255, 1] + [0] * 12)
 
     @staticmethod
     def validate(record) -> Tuple[bool, Union[str, None]]:
@@ -64,17 +64,18 @@ class NbTCP(NetworkProto):
         if round(record.synack + record.ackdat, 3) != \
                 round(record.tcprtt, 3):
             return False, "synack+ackdat != tcprtt"
-        if record.dur > 0:
-            # if dur > 0 in state INT: dbytes = 0
-            if record.state_INT == 1:
-                if record.dbytes != 0:
-                    return False, "dbytes nonzero when INT"
-            # if dur > 0 then dbytes > 0
-            # elif not record.dbytes > 0:
-            #     return False, "dbytes is 0 for dur > 0"
-        # if dur = 0 then dbytes = 0
-        # if record.dur == 0 and record.dbytes != 0:
-        #     return False, "dbytes nonzero when dur is 0"
+        if record.state_FIN != 1:
+            if record.dur > 0:
+                # if dur > 0 in state INT: dbytes = 0
+                if record.state_INT == 1:
+                    if record.dbytes != 0:
+                        return False, "dbytes nonzero when INT"
+                # if dur > 0 then dbytes > 0
+                # elif not record.dbytes > 0:
+                #     return False, "dbytes is 0 for dur > 0"
+            # if dur = 0 then dbytes = 0
+            if record.dur == 0 and record.dbytes != 0:
+                return False, "dbytes nonzero when dur is 0"
         # if dbytes = 0 then everything destinations related is 0
         if record.dbytes == 0 and (
                 record.Dload != 0 or record.dttl != 0 or
