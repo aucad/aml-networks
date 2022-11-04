@@ -48,7 +48,6 @@ class Experiment:
     VALIDATORS = [Validator.NB15, Validator.IOT23]
 
     def __init__(self, uuid, **kwargs):
-        print(uuid)
         self.start_time = 0
         self.end_time = 0
         self.uuid = uuid
