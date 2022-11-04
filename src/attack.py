@@ -196,7 +196,6 @@ class AbsAttack(BaseUtil):
                 rows = np.append(rows[:, :], valid, 1)
                 attrs.append('valid')
 
-            self.ensure_out_dir(self.out_dir)
             f_name = path.join(
                 self.out_dir, f'{self.uuid}_{self.cls.fold_n}_{name}.csv')
 
@@ -275,5 +274,9 @@ class AbsAttack(BaseUtil):
                     ax.scatter(ad_f1, ad_f2, **adv_props)
 
             fig.tight_layout()
-            self.ensure_out_dir(self.out_dir)
             plt.savefig(self.figure_name(f + 1))
+
+    @staticmethod
+    def clear_one_line():
+        cols = 256
+        print("\033[A{}\033[A".format(' ' * cols), end='\r')

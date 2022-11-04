@@ -127,7 +127,6 @@ class AbsClassifierInstance(BaseUtil):
         pass
 
     def plot(self):
-        self.ensure_out_dir(self.out_dir)
         self.tree_plotter()
         plt.tight_layout()
         plt.savefig(self.plot_path, dpi=200)

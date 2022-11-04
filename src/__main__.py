@@ -15,19 +15,15 @@ python -m src --help
 ```
 
 """
-import logging as lg
+import logging
+import os
 import time
 from argparse import ArgumentParser
-from os import path
+from pathlib import Path
 from sys import exit
 from typing import Optional, List
 
-import numpy as np
-
-from src import __version__, __title__, \
-    ClsLoader, AttackLoader, Validator, DatasetLoader
-
-DEFAULT_DS = 'data/CTU-1-1.csv'
+from src import __version__, __title__, Experiment
 
 
 def main():
@@ -37,92 +33,50 @@ def main():
     """
     parser = ArgumentParser(prog=__title__, description=main.__doc__)
     args = __parse_args(parser)
+    save_log = not args.no_log
+
     if not args.dataset:
         parser.print_help()
         exit(1)
 
-    log_level = lg.FATAL - (0 if args.silent else 40)
-    ds_name = (args.dataset.split("/")[-1]).replace('.csv', '')
-    token = f'{ds_name}_{args.attack}_rob-{"t" if args.robust else "f"}_'
-    lf, ts = __init_logger(log_level, args.save_log, args.out, token)
-
-    # TODO: cleanup this things
-    start_time = time.time_ns()
-    x, y, attrs, folds = DatasetLoader.load_csv(
-        args.dataset, args.kfolds)
-    cls = ClsLoader.init(
-        args.cls, args.out, attrs, x, y, args.dataset, args.robust)
-    attack = AttackLoader \
-        .load(args.attack, False, args.plot,
-              args.validator, args.dataset, ts, args.save_rec) \
-        if args.attack else None
-    averages = []
-    for i, fold in enumerate(folds):
-        print(" ")
-        cls.reset() \
-            .load(x.copy(), y.copy(), *fold, i + 1) \
-            .train()
-
-        if args.plot:
-            cls.plot()
-
-        if args.attack:
-            attack.reset() \
-                .set_cls(cls) \
-                .run(max_iter=args.iter)
-        averages.append(list(cls.stats) + list(attack.stats))
-
-    attack.show('=' * 52, '')
-    a = list(np.mean(np.array(averages), axis=0))
-    v, e, t = a[-3:]
-    print('AVERAGES', '')
-    print('Classifier', '')
-    attack.show('Accuracy', f'{a[0] * 100:.2f} %')
-    attack.show('Precision', f'{a[1] * 100:.2f} %')
-    attack.show('Recall', f'{a[2] * 100:.2f} %')
-    attack.show('F-score', f'{a[3] * 100:.2f} %')
-    print('Attack', '')
-    attack.show('Total evasions', f'{e} of {t} - {(100 * (e / t)):.1f} %')
-    if args.validator and e > 0:
-        attack.show('Valid evasions', f'{v} of {e} - {100 * (v / e):.1f} %')
-
-    end_time = time.time_ns()
-    seconds = round((end_time - start_time) / 1e9, 2)
-    minutes = int(seconds // 60)
-    seconds = seconds - (minutes * 60)
-    cls.show('Time', f'{minutes} min {seconds:.2f} s')
-
-    if args.save_log:
-        print('Log file:', lf)
-
-
-def __init_logger(
-        level: int = lg.ERROR,
-        save_log: Optional[bool] = False,
-        out_dir: Optional[str] = None,
-        token: Optional[str] = None
-):
-    """Create a logger instance"""
-
-    # fmt = lg.Formatter("[%(asctime)s]: %(message)s", datefmt="%H:%M:%S")
-    fmt = lg.Formatter("%(message)s")
-
-    logger = lg.getLogger(__title__)
-    logger.setLevel(level)
-    stream_handler = lg.StreamHandler()
-    stream_handler.setFormatter(fmt)
-    logger.addHandler(stream_handler)
     ts = str(round(time.time() * 1000))[-4:]
-    log_file = None
+    ln = log_name(ts, args)
+    ensure_out_dir(args.out)
+
+    __init_logger(
+        level=logging.FATAL - (0 if args.silent else 40),
+        fn=ln if save_log else None)
+
+    Experiment(ts, **args.__dict__).run()
 
     if save_log:
-        from src import BaseUtil
-        BaseUtil.ensure_out_dir(out_dir)
-        log_file = path.join(out_dir, f'{token}{ts}_log')
-        file_handler = lg.FileHandler(log_file)
+        print('Log file:', ln)
+
+
+def __init_logger(level: int, fn: str = None):
+    """Create a logger instance"""
+    fmt = logging.Formatter("%(message)s")
+
+    logger = logging.getLogger(__title__)
+    logger.setLevel(level)
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(fmt)
+    logger.addHandler(stream_handler)
+
+    if fn is not None:
+        file_handler = logging.FileHandler(filename=f'{fn}_log.txt')
         file_handler.setFormatter(fmt)
         logger.addHandler(file_handler)
-    return log_file, ts
+
+
+def ensure_out_dir(dir_path):
+    return os.path.exists(dir_path) or os.makedirs(dir_path)
+
+
+def log_name(ts, args):
+    ds_name = Path(args.dataset).stem
+    token = f'robust{"T" if args.robust else "F"}_{ds_name}_{args.attack}'
+    return os.path.join(args.out, f'{token}_{ts}')
 
 
 def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
@@ -131,8 +85,8 @@ def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
     parser.add_argument(
         '-d', '--dataset',
         action="store",
-        default=DEFAULT_DS,
-        help=f'path to dataset [default: {DEFAULT_DS}]',
+        default=Experiment.DEFAULT_DS,
+        help=f'path to dataset [default: {Experiment.DEFAULT_DS}]',
     )
     parser.add_argument(
         '-k', '--kfolds',
@@ -153,9 +107,9 @@ def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
     parser.add_argument(
         '-c', '--cls',
         action='store',
-        choices=[ClsLoader.DECISION_TREE, ClsLoader.XGBOOST],
-        default=ClsLoader.XGBOOST,
-        help=f'Classifier to train [default: {ClsLoader.XGBOOST}]'
+        choices=Experiment.CLASSIFIERS,
+        default=Experiment.DEFAULT_CLS,
+        help=f'Classifier to train [default: {Experiment.DEFAULT_CLS}]'
     )
     parser.add_argument(
         "--robust",
@@ -170,13 +124,13 @@ def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
     parser.add_argument(
         '-a', '--attack',
         action='store',
-        choices=[AttackLoader.HOP_SKIP, AttackLoader.ZOO],
+        choices=Experiment.ATTACKS,
         help=f'evasion attack [default: None]'
     )
     parser.add_argument(
         '--validator',
         action='store',
-        choices=[Validator.NB15, Validator.IOT23],
+        choices=Experiment.VALIDATORS,
         help=f'dataset validator kind [default: None]'
     )
     parser.add_argument(
@@ -186,9 +140,9 @@ def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
         help="output directory [default: output]"
     )
     parser.add_argument(
-        "--save_log",
+        "--no_log",
         action='store_true',
-        help="save terminal output to a file",
+        help="do not save terminal output to a file",
     )
     parser.add_argument(
         "--save_rec",
