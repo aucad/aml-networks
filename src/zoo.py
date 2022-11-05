@@ -1,5 +1,5 @@
-"""
-Zeroth-Order Optimization (ZOO) evasion attack using tree-base classifier.
+"""Zeroth-Order Optimization (ZOO) evasion attack using tree-base
+classifier.
 
 The black-box zeroth-order optimization attack from Pin-Yu Chen et
 al. (2018). This attack is a variant of the C&W attack which uses
@@ -16,9 +16,7 @@ from src import AbsAttack
 class Zoo(AbsAttack):
 
     def __init__(self, *args):
-        super().__init__('zoo', *args)
-        self.max_iter = 80
-        self.iter_step = 10
+        super().__init__('zoo', 80, 10, *args)
 
     def generate_adv_examples(self, iters) -> None:
         """Generate the adversarial examples using ZOO attack."""
@@ -95,8 +93,9 @@ class Zoo(AbsAttack):
         # predictions for original instances
         ori_in = self.cls.formatter(self.ori_x, self.ori_y)
         original = self.cls.predict(ori_in).flatten().tolist()
-        correct = np.array((np.where(np.array(self.ori_y) == original)[0])
-                           .flatten().tolist())
+        correct = np.array(
+            (np.where(np.array(self.ori_y) == original)[0])
+            .flatten().tolist())
 
         # adversarial predictions for same data
         adv_in = self.cls.formatter(self.adv_x, self.ori_y)
@@ -109,12 +108,9 @@ class Zoo(AbsAttack):
              if int(x) != int(y)])
         self.evasions = np.intersect1d(evades, correct)
 
-    def run(self, max_iter):
+    def run(self):
         """Runs the zoo attack."""
-
-        self.max_iter = max_iter if max_iter > 0 else self.max_iter
         attack_iter = self.max_iter if self.iterated else 2
-        self.log_attack_setup()
         ev_conv = 0  # count rounds where evasion # stays stable
 
         for mi in range(1, attack_iter, self.iter_step):
@@ -128,9 +124,4 @@ class Zoo(AbsAttack):
             if len(self.evasions) == self.n_records or ev_conv > 2:
                 break
 
-        self.validate()
-        self.log_attack_stats()
-
-        if self.attack_success:
-            self.plot()
-            self.dump_result()
+        self.post_run()

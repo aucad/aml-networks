@@ -1,21 +1,11 @@
-import logging
-from collections import namedtuple
-
 from math import ceil
 from os import path
 from pathlib import Path
 
 import numpy as np
-import pandas as pd
-from matplotlib import pyplot as plt
-from sklearn.model_selection import train_test_split
-
-from src import BaseUtil
-
-logger = logging.getLogger(__name__)
 
 
-class AbsClassifierInstance(BaseUtil):
+class AbsClassifierInstance:
 
     def __init__(self, name, out, attrs, x, y, ds_path, robust=False):
         self.name = name
@@ -36,12 +26,11 @@ class AbsClassifierInstance(BaseUtil):
         self.capture_ranges(x)
         self.set_mask_cols(x)
         self.robust = robust
-        self.show('Classifier', self.name)
-        self.show('Robust', self.robust)
-        self.show('Classes', ", ".join(self.class_names))
-        self.show('Mutable', ", ".join(self.mutable_attrs))
-        self.show('Immutable', ", ".join(self.immutable_attrs))
-        self.stats = []
+        self.n_pred = 0
+        self.n_true_pn = 0
+        self.n_actl_pos = 0
+        self.n_pred_pos = 0
+        self.n_true_p = 0
 
     def reset(self):
         self.classifier = None
@@ -51,7 +40,11 @@ class AbsClassifierInstance(BaseUtil):
         self.test_x = np.array([])
         self.test_y = np.array([])
         self.fold_n = 1
-        self.stats = []
+        self.n_pred = 0
+        self.n_true_pn = 0
+        self.n_actl_pos = 0
+        self.n_pred_pos = 0
+        self.n_true_p = 0
         return self
 
     @property
@@ -106,6 +99,27 @@ class AbsClassifierInstance(BaseUtil):
     def formatter(x, y):
         return x
 
+    @property
+    def accuracy(self):
+        if self.n_pred > 0:
+            return self.n_true_pn / self.n_pred
+        return -1
+
+    @property
+    def precision(self):
+        return 1 if self.n_pred_pos == 0 else \
+            self.n_true_p / self.n_pred_pos
+
+    @property
+    def recall(self):
+        return 1 if self.n_actl_pos == 0 else \
+            self.n_true_p / self.n_actl_pos
+
+    @property
+    def f_score(self):
+        return (2 * self.precision * self.recall) / \
+               (self.precision + self.recall)
+
     def set_mask_cols(self, X):
         indices = []
         for col_i in range(self.n_features):
@@ -126,11 +140,6 @@ class AbsClassifierInstance(BaseUtil):
     def tree_plotter(self):
         pass
 
-    def plot(self):
-        self.tree_plotter()
-        plt.tight_layout()
-        plt.savefig(self.plot_path, dpi=200)
-
     def load(self, X, y, fold_train, fold_test, fold_n):
         self.train_x = self.normalize(X[fold_train, :])
         self.train_y = y[fold_train].astype(int).flatten()
@@ -143,7 +152,6 @@ class AbsClassifierInstance(BaseUtil):
     def train(self):
         self.prep_model(self.robust)
         self.prep_classifier()
-        self.show('K-fold', self.fold_n)
 
         # evaluate performance
         records = (
@@ -151,8 +159,7 @@ class AbsClassifierInstance(BaseUtil):
             if self.n_test > 0 else
             (self.train_x, self.train_y))
         predictions = self.predict(self.formatter(*records))
-        self.stats = self.score(records[1], predictions, display=True)
-
+        self.score(records[1], predictions)
         return self
 
     def capture_ranges(self, data):
@@ -184,34 +191,27 @@ class AbsClassifierInstance(BaseUtil):
         """Remove selected special chars from attributes so that
         the remaining forms a valid Python identifier."""
         return [a.replace(' ', '')
-                    .replace('=', '_')
-                    .replace('-', '')
-                    .replace('^', '_')
-                    .replace('conn_state_other', 'conn_state_OTH')
+                .replace('=', '_')
+                .replace('-', '')
+                .replace('^', '_')
+                .replace('conn_state_other', 'conn_state_OTH')
                 for a in attrs]
 
-    @staticmethod
-    def score(true_labels, predictions, positive=0, display=False):
+    def score(self, true_labels, predictions, positive=0):
         """Calculate performance metrics."""
-        sc, tp_tn, num_pos_pred, num_pos_actual = 0, 0, 0, 0
+        tp, tp_tn, p_pred, p_actual = 0, 0, 0, 0
         for actual, pred in zip(true_labels, predictions):
             int_pred = int(round(pred, 0))
             if int_pred == positive:
-                num_pos_pred += 1
+                p_pred += 1
             if actual == positive:
-                num_pos_actual += 1
+                p_actual += 1
             if int_pred == actual:
                 tp_tn += 1
             if int_pred == actual and int_pred == positive:
-                sc += 1
-
-        accuracy = tp_tn / len(predictions)
-        precision = 1 if num_pos_pred == 0 else sc / num_pos_pred
-        recall = 1 if num_pos_actual == 0 else sc / num_pos_actual
-        f_score = (2 * precision * recall) / (precision + recall)
-        if display:
-            BaseUtil.show('Accuracy', f'{accuracy * 100:.2f} %')
-            BaseUtil.show('Precision', f'{precision * 100:.2f} %')
-            BaseUtil.show('Recall', f'{recall * 100:.2f} %')
-            BaseUtil.show('F-score', f'{f_score * 100:.2f} %')
-        return [accuracy, precision, recall, f_score]
+                tp += 1
+        self.n_pred = len(predictions)
+        self.n_actl_pos = p_actual
+        self.n_pred_pos = p_pred
+        self.n_true_pn = tp_tn
+        self.n_true_p = tp

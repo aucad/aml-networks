@@ -158,7 +158,7 @@ class IotTCP(NetworkProto):
 
     @staticmethod
     def validate(record) -> Tuple[bool, Union[str, None]]:
-        #if record.orig_pkts < record.resp_pkts:
+        # if record.orig_pkts < record.resp_pkts:
         #    return False, "ori pkts < resp pkts"
         # in S0 resp_pkts = 0 and resp_ip_bytes = 0
         if record.conn_state_S0 == 1:
@@ -330,7 +330,7 @@ class Validator:
         return temp_arr, reasons
 
     @staticmethod
-    def validate_dataset(ds_path, validator_kind):
+    def dataset_validate(ds_path, validator_kind):
         """Debug validator on some dataset"""
         import pandas as pd
         import numpy as np
@@ -341,3 +341,9 @@ class Validator:
         records = np.array(df)[:, :-1]
         return Validator.batch_validate(
             validator_kind, attrs, records)
+
+    @staticmethod
+    def dump_reasons(reasons):
+        return '\n'.join([txt for _, txt in sorted(
+            [(v, f'{v} * {k}') for k, v in reasons.items()],
+            reverse=True)])

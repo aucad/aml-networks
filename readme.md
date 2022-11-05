@@ -59,22 +59,23 @@ python3 -m src --help
 
 ## Source code directory organization
 
-| Directory                   | Description                                                 |
-|:----------------------------|:------------------------------------------------------------|
-| `results`                   | Results of various experiments                              |
-| 　`└─ comparisons`           | Comparison of classifiers, on IoT data, obtained using Weka |
-| 　`└─ decision_tree`         | Adversarial attacks on decision trees                       |
-| 　`└─ xgboost`               | Adversarial attacks on XGBoost classifier                   |
-| `data`                      | Preprocessed data sets, ready for running various attacks   |
-| `src`                       | Source code                                                 |
-| 　`└─ __init__.py`           | Python package setup                                        |
-| 　`└─ __main__.py`           | CLI interface                                               |
-| 　`└─ attack.py`             | Abstract base class for an attack                           |
-| 　`└─ cls.py`                | Abstract base class for a classifier                        |
-| 　`└─ hopskip.py`            | HopSkipJump attack implementation                           |
-| 　`└─ loader.py`             | Utility for loading models and attacks                      |
-| 　`└─ tree.py`               | Decision tree classifier training                           |
-| 　`└─ utility.py`            | Shared functionality and utils                              |
-| 　`└─ validator.py`          | Post-attack record validator                                |
-| 　`└─ xgb.py`                | XGBoost classifier training                                 |
-| 　`└─ zoo.py`                | ZOO attack implementation                                   |
+| Directory           | Description                                                 |
+|:--------------------|:------------------------------------------------------------|
+| `results`           | Results of various experiments                              |
+| 　`└─ comparisons`   | Comparison of classifiers, on IoT data, obtained using Weka |
+| 　`└─ decision_tree` | Adversarial attacks on decision trees                       |
+| 　`└─ xgboost`       | Adversarial attacks on XGBoost classifier                   |
+| `data`              | Preprocessed data sets, ready for running various attacks   |
+| `src`               | Source code                                                 |
+| 　`└─ __init__.py`   | Python package setup                                        |
+| 　`└─ __main__.py`   | CLI interface                                               |
+| 　`└─ attack.py`     | Abstract base class for an attack                           |
+| 　`└─ cls.py`        | Abstract base class for a classifier                        |
+| 　`└─ experiment.py` | Runs an attack experiment                                   |
+| 　`└─ hopskip.py`    | HopSkipJump attack implementation                           |
+| 　`└─ plot.py`       | Plots figures                                               |
+| 　`└─ tree.py`       | Decision tree classifier training                           |
+| 　`└─ utility.py`    | Shared functionality utilities                              |
+| 　`└─ validator.py`  | Post-attack record validator                                |
+| 　`└─ xgb.py`        | XGBoost classifier training                                 |
+| 　`└─ zoo.py`        | ZOO attack implementation                                   |

@@ -39,13 +39,11 @@ def main():
         parser.print_help()
         exit(1)
 
-    ts = str(round(time.time() * 1000))[-4:]
-    ln = log_name(ts, args)
     ensure_out_dir(args.out)
-
-    __init_logger(
-        level=logging.FATAL - (0 if args.silent else 40),
-        fn=ln if save_log else None)
+    ts = str(round(time.time() * 1000))[-4:]
+    log_level = logging.FATAL if args.silent else logging.DEBUG
+    ln = log_name(ts, args)
+    init_logger(log_level, fn=ln if save_log else None)
 
     Experiment(ts, **args.__dict__).run()
 
@@ -53,7 +51,7 @@ def main():
         print('Log file:', ln)
 
 
-def __init_logger(level: int, fn: str = None):
+def init_logger(level: int, fn: str = None):
     """Create a logger instance"""
     fmt = logging.Formatter("%(message)s")
 
@@ -74,8 +72,8 @@ def ensure_out_dir(dir_path):
 
 
 def log_name(ts, args):
-    ds_name = Path(args.dataset).stem
-    token = f'robust{"T" if args.robust else "F"}_{ds_name}_{args.attack}'
+    ds = Path(args.dataset).stem
+    token = f'robust{"T" if args.robust else "F"}_{args.attack}_{ds}'
     return os.path.join(args.out, f'{token}_{ts}')
 
 
@@ -99,8 +97,8 @@ def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
     parser.add_argument(
         '-i', '--iter',
         type=int,
-        choices=range(1, 10000),
-        metavar="1-10000",
+        choices=range(1, 500),
+        metavar="1-500",
         help='max attack iterations [default: not set]',
         default=0
     )
@@ -140,19 +138,19 @@ def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
         help="output directory [default: output]"
     )
     parser.add_argument(
-        "--no_log",
+        "--capture",
         action='store_true',
-        help="do not save terminal output to a file",
+        help="save generated records (original, adversarial)",
     )
     parser.add_argument(
-        "--save_rec",
+        '-l', "--no_log",
         action='store_true',
-        help="save records (original and adversarial)",
+        help="disable automatic saving of console log",
     )
     parser.add_argument(
         '-s', "--silent",
         action='store_true',
-        help="disable debug logging"
+        help="disable logging output to console"
     )
     parser.add_argument(
         "-v", "--version",
