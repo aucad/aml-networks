@@ -1,3 +1,5 @@
+# flake8: noqa: E402
+
 """
 This script builds a decision tree classifier for provided dataset.
 Provide as input a path to a dataset, or script uses default
@@ -10,7 +12,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 from art.estimators.classification.scikitlearn \
-    import ScikitlearnDecisionTreeClassifier as SkDT
+    import ScikitlearnDecisionTreeClassifier
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 
 from src import AbsClassifierInstance
@@ -33,7 +35,7 @@ class DecisionTree(AbsClassifierInstance):
         self.model.fit(self.train_x, self.train_y)
 
     def prep_classifier(self):
-        self.classifier = SkDT(self.model)
+        self.classifier = ScikitlearnDecisionTreeClassifier(self.model)
 
     def tree_plotter(self):
         plot_tree(self.model, feature_names=self.attrs,

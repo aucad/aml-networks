@@ -120,10 +120,10 @@ class AbsClassifierInstance:
         return (2 * self.precision * self.recall) / \
                (self.precision + self.recall)
 
-    def set_mask_cols(self, X):
+    def set_mask_cols(self, x):
         indices = []
         for col_i in range(self.n_features):
-            col_values = list(np.unique(X[:, col_i]))
+            col_values = list(np.unique(x[:, col_i]))
             if set(col_values).issubset({0, 1}):
                 indices.append(col_i)
         self.mask_cols = indices
@@ -140,10 +140,10 @@ class AbsClassifierInstance:
     def tree_plotter(self):
         pass
 
-    def load(self, X, y, fold_train, fold_test, fold_n):
-        self.train_x = self.normalize(X[fold_train, :])
+    def load(self, x, y, fold_train, fold_test, fold_n):
+        self.train_x = self.normalize(x[fold_train, :])
         self.train_y = y[fold_train].astype(int).flatten()
-        self.test_x = self.normalize(X[fold_test, :])
+        self.test_x = self.normalize(x[fold_test, :])
         self.test_y = y[fold_test].astype(int).flatten()
         self.classes = np.unique(y)
         self.fold_n = fold_n

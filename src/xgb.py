@@ -4,16 +4,14 @@ Build a XGBoost model for provided dataset.
 Provide as input a path to a dataset, or script uses default
 dataset if none provided. The dataset must be numeric at all attributes.
 """
-import logging
-import sys, os
+import os
+import sys
 
 from art.estimators.classification import XGBoostClassifier
 # noinspection PyPackageRequirements
 from xgboost import plot_tree, DMatrix, train as xg_train
 
 from src import AbsClassifierInstance
-
-logger = logging.getLogger(__name__)
 
 
 class XGBClassifier(AbsClassifierInstance):
@@ -33,24 +31,20 @@ class XGBClassifier(AbsClassifierInstance):
     # noinspection PyBroadException
     def tree_plotter(self):
         """Plot the tree and save to file."""
-        try:
-            plot_tree(self.model, num_trees=20, rankdir='LR')
-        except:
-            logger.warning('Failed to visualize tree. ' +
-                           'Make sure graphviz is in path.')
+        plot_tree(self.model, num_trees=20, rankdir='LR')
 
     def prep_model(self, robust):
         """
         see:  https://xgboost.readthedocs.io/en/stable/parameter.html
         for full list of options
         """
-        dtrain = self.formatter(self.train_x, self.train_y)
+        d_train = self.formatter(self.train_x, self.train_y)
         # https://stackoverflow.com/a/8391735
         sys.stdout = open(os.devnull, 'w')  # block print
         self.model = xg_train(
             num_boost_round=20,
-            dtrain=dtrain,
-            evals=[(dtrain, 'eval'), (dtrain, 'train')],
+            dtrain=d_train,
+            evals=[(d_train, 'eval'), (d_train, 'train')],
             params={
                 # tree_method controls which training method to use.
                 # We add a new option robust_exact for this

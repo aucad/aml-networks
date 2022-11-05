@@ -6,7 +6,7 @@ from pathlib import Path
 from collections import namedtuple
 from typing import Tuple, Union, List
 
-from src import Show
+from src import Show, utility
 
 
 class NetworkProto:
@@ -191,52 +191,9 @@ class IotTCP(NetworkProto):
 
 
 # noinspection PyTypeChecker
-class IotUDP(NetworkProto):
+class IotOther(NetworkProto):
     def __init__(self, attrs=None, **kwargs):
-        super().__init__('udp', self.v_model(attrs, kwargs), **kwargs)
-
-    @staticmethod
-    def ensure_attrs():
-        names = 'conn_state_S0 conn_state_SF history_Dd ' \
-                'resp_ip_bytes resp_pkts orig_ip_bytes orig_pkts'
-        return NetworkProto.kv_dict(names, [0] * 7)
-
-    @staticmethod
-    def validate(record) -> Tuple[bool, Union[str, None]]:
-        # in S0 resp_pkts = 0 and resp_ip_bytes = 0
-        if record.conn_state_S0 == 1:
-            if record.resp_pkts != 0 or record.resp_ip_bytes != 0:
-                return False, "S0: packets/bytes not 0"
-        # number of packets is smaller than the bytes sent,
-        if record.orig_pkts > record.orig_ip_bytes:
-            return False, "ori packets > bytes"
-        # also true for the receiving
-        if record.resp_pkts > record.resp_ip_bytes:
-            return False, "resp packets > bytes"
-        # orig_pkts is always greater or equal to resp_pkts
-        # unless history is Dd and state is SF.
-        if record.orig_pkts < record.resp_pkts:
-            if not (record.history_Dd == 1 and
-                    record.conn_state_SF == 1):
-                return False, "history/conn_state mismatch"
-        if record.orig_pkts >= record.resp_pkts:
-            # orig_ip_bytes is also >= resp_ip_bytes unless state is SF
-            if not (record.orig_ip_bytes >= record.resp_ip_bytes or
-                    record.conn_state_SF == 1):
-                return False, "packet-bytes mismatch"
-        return True, None
-
-
-# noinspection PyTypeChecker
-class IotICMP(NetworkProto):
-    def __init__(self, attrs=None, **kwargs):
-        super().__init__('icmp', self.v_model(attrs, kwargs), **kwargs)
-
-    @staticmethod
-    def ensure_attrs():
-        names = 'conn_state_S0 resp_ip_bytes resp_pkts ' \
-                'orig_ip_bytes orig_pkts'
-        return NetworkProto.kv_dict(names, [0] * 5)
+        super().__init__('other', self.v_model(attrs, kwargs), **kwargs)
 
     @staticmethod
     def validate(record) -> Tuple[bool, Union[str, None]]:
@@ -254,13 +211,46 @@ class IotICMP(NetworkProto):
 
 
 # noinspection PyTypeChecker
-class IotOther(NetworkProto):
+class IotUDP(NetworkProto):
     def __init__(self, attrs=None, **kwargs):
-        super().__init__('other', self.v_model(attrs, kwargs), **kwargs)
+        super().__init__('udp', self.v_model(attrs, kwargs), **kwargs)
+
+    @staticmethod
+    def ensure_attrs():
+        names = 'conn_state_S0 conn_state_SF history_Dd ' \
+                'resp_ip_bytes resp_pkts orig_ip_bytes orig_pkts'
+        return NetworkProto.kv_dict(names, [0] * 7)
 
     @staticmethod
     def validate(record) -> Tuple[bool, Union[str, None]]:
-        return True, None
+        # orig_pkts is always greater or equal to resp_pkts
+        # unless history is Dd and state is SF.
+        if record.orig_pkts < record.resp_pkts:
+            if not (record.history_Dd == 1 and
+                    record.conn_state_SF == 1):
+                return False, "history/conn_state mismatch"
+        if record.orig_pkts >= record.resp_pkts:
+            # orig_ip_bytes is also >= resp_ip_bytes unless state is SF
+            if not (record.orig_ip_bytes >= record.resp_ip_bytes or
+                    record.conn_state_SF == 1):
+                return False, "packet-bytes mismatch"
+        return IotOther.validate(record)
+
+
+# noinspection PyTypeChecker
+class IotICMP(NetworkProto):
+    def __init__(self, attrs=None, **kwargs):
+        super().__init__('icmp', self.v_model(attrs, kwargs), **kwargs)
+
+    @staticmethod
+    def ensure_attrs():
+        names = 'conn_state_S0 resp_ip_bytes resp_pkts ' \
+                'orig_ip_bytes orig_pkts'
+        return NetworkProto.kv_dict(names, [0] * 5)
+
+    @staticmethod
+    def validate(record) -> Tuple[bool, Union[str, None]]:
+        return IotOther.validate(record)
 
 
 class Validator:
@@ -355,6 +345,7 @@ class Validator:
 
     @staticmethod
     def validate_dataset(validator, dataset, capture, out):
+        Show('Validating', dataset)
         idx, reasons = Validator.check_dataset(dataset, validator)
         if sum(reasons.values()) > 0:
             recs = [str(i + 2) for i, v in enumerate(idx) if not v]
@@ -373,4 +364,5 @@ class Validator:
                         cf.write(raw_data[i])
                 Show('Examples', fn)
         else:
-            Show('Result', f'{dataset} is valid')
+            utility.clear_one_line()
+            Show('Validated', f' ✓ {dataset}')

@@ -1,44 +1,44 @@
 import logging
 from collections import namedtuple
+from typing import Tuple
 
 import numpy as np
 import pandas as pd
 import time
 from sklearn.model_selection import KFold
 
+# noinspection PyUnresolvedReferences
 from src import AbsClassifierInstance, AbsAttack, Validator, \
     HopSkip, Zoo, DecisionTree, XGBClassifier, Show
 
 logger = logging.getLogger(__name__)
 
 
-class ClsLoader:
-    """Load selected classifier."""
-    XGBOOST = 'xgb'
-    DECISION_TREE = 'tree'
-
-    @staticmethod
-    def init(kind, *args) -> AbsClassifierInstance:
-        if kind == ClsLoader.DECISION_TREE:
-            return DecisionTree(*args)
-        else:
-            return XGBClassifier(*args)
-
-
-class AttackLoader:
-    """Load selected attack mode."""
-    HOP_SKIP = 'hop'
-    ZOO = 'zoo'
-
-    @staticmethod
-    def load(kind, *args) -> AbsAttack:
-        if kind == AttackLoader.HOP_SKIP:
-            return HopSkip(*args)
-        else:
-            return Zoo(*args)
-
-
 class Experiment:
+    class ClsLoader:
+        """Load selected classifier."""
+        XGBOOST = 'xgb'
+        DECISION_TREE = 'tree'
+
+        @staticmethod
+        def init(kind, *args) -> AbsClassifierInstance:
+            if kind == Experiment.ClsLoader.DECISION_TREE:
+                return DecisionTree(*args)
+            else:
+                return XGBClassifier(*args)
+
+    class AttackLoader:
+        """Load selected attack mode."""
+        HOP_SKIP = 'hop'
+        ZOO = 'zoo'
+
+        @staticmethod
+        def load(kind, *args) -> AbsAttack:
+            if kind == Experiment.AttackLoader.HOP_SKIP:
+                return HopSkip(*args)
+            else:
+                return Zoo(*args)
+
     DEFAULT_DS = 'data/CTU-1-1.csv'
     DEFAULT_CLS = ClsLoader.XGBOOST
     CLASSIFIERS = [ClsLoader.DECISION_TREE, ClsLoader.XGBOOST]
@@ -46,11 +46,11 @@ class Experiment:
     VALIDATORS = [Validator.NB15, Validator.IOT23]
 
     def __init__(self, uuid, **kwargs):
-        self.cls = None
-        self.attack = None
+        self.uuid = uuid
         self.start_time = 0
         self.end_time = 0
-        self.uuid = uuid
+        self.cls = None
+        self.attack = None
         self.attrs = []
         self.X = None
         self.y = None
@@ -134,7 +134,7 @@ class Experiment:
         return len(self.attrs)
 
     @property
-    def duration(self):
+    def duration(self) -> Tuple[int, float]:
         seconds = round((self.end_time - self.start_time) / 1e9, 6)
         minutes = int(seconds // 60)
         seconds = seconds - (minutes * 60)
@@ -160,15 +160,15 @@ class Experiment:
 
     def run(self):
         config = self.config
-        self.load_csv(config.dataset, config.kfolds)
+        self.load_csv(config.dataset, config.folds)
         cls_args = (config.cls, config.out, self.attrs, self.X,
                     self.y, config.dataset, config.robust)
         atk_args = (config.attack, False, False,
                     config.validator, self.uuid,
                     config.capture, config.iter)
 
-        self.cls = ClsLoader.init(*cls_args)
-        self.attack = AttackLoader.load(*atk_args) \
+        self.cls = Experiment.ClsLoader.init(*cls_args)
+        self.attack = Experiment.AttackLoader.load(*atk_args) \
             if config.attack else None
         self.log_experiment_setup()
 
@@ -187,7 +187,7 @@ class Experiment:
         Show('Robust', self.config.robust)
         Show('Classes', ", ".join(self.cls.class_names))
         Show('Attack', self.attack.name)
-        Show('K-folds', self.config.kfolds)
+        Show('K-folds', self.config.folds)
         Show('Attack max iter', self.attack.max_iter)
         Show('Mutable', ", ".join(self.cls.mutable_attrs))
         Show('Immutable', ", ".join(self.cls.immutable_attrs))
@@ -215,20 +215,17 @@ class Experiment:
         Show('L-norm', f'{min_e:.6f} - {max_e:.6f}')
 
     def log_experiment_result(self):
-        sh = lambda x, y: Show(f'Avg. {x}', f'{(y * 100):.2f} %')
-        e = self.stats.avg_n_evasions
-        t = self.stats.avg_n_records
-        v = self.stats.avg_n_valid
-        p = self.stats.ev_percent
-        q = self.stats.vd_percent
-        min_, sec = self.duration
-
         Show('=' * 52, '')
-        sh('Accuracy', self.stats.avg_accuracy)
-        sh('Precision', self.stats.avg_precision)
-        sh('Recall', self.stats.avg_recall)
-        sh('F-score', self.stats.avg_f_score)
-        Show('Total evasions', f'{e} of {t} - {p:.1f} %')
-        if self.config.validator and e > 0:
-            Show('Valid evasions', f'{v} of {e} - {q:.1f} %')
-        Show('Time', f'{min_} min {sec:.2f} s')
+        Show('Avg. Accuracy',
+             f'{(self.stats.avg_accuracy * 100):.2f} %')
+        Show('Avg. Precision',
+             f'{(self.stats.avg_precision * 100):.2f} %')
+        Show('Avg. Recall', f'{(self.stats.avg_recall * 100):.2f} %')
+        Show('Avg. F-score', f'{(self.stats.avg_f_score * 100):.2f} %')
+        Show('Total evasions', f'{self.stats.avg_n_evasions} of '
+                               f'{self.stats.avg_n_records} - '
+                               f'{self.stats.ev_percent:.1f} %')
+        Show('Valid evasions', f'{self.stats.avg_n_valid} of '
+                               f'{self.stats.avg_n_evasions} - '
+                               f'{self.stats.vd_percent:.1f} %')
+        Show('Time', "{0} min {1:.2f} s".format(*self.duration))

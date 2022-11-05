@@ -1,10 +1,18 @@
 import logging
+import os
+import time
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
 
-def show(msg, value):
-    """Pretty print output with colors and alignment"""
+def show(label: str, value: Any):
+    """Pretty print labelled text with alignment.
+
+    Arguments:
+        label - description of the text
+        value - the text to print
+    """
     str_v = str(value)
 
     # wrap values lines
@@ -30,7 +38,29 @@ def show(msg, value):
         [(' ' * (label_w + log_pad) if i > 0 else '')
          + s for i, s in enumerate(lines)])
 
-    text = f'{msg} '.ljust(label_w, '-') + fmt_lines
+    text = f'{label} '.ljust(label_w, '-') + fmt_lines
     logger.debug(text)
 
-Show = show
+
+def clear_one_line():
+    """Clear previous line of terminal output."""
+    cols = 256
+    print("\033[A{}\033[A".format(' ' * cols), end='\r')
+
+
+def ensure_dir(dir_path: str):
+    """Make sure a directory exists.
+
+    Arguments:
+        dir_path - path to a directory
+    """
+    return os.path.exists(dir_path) or os.makedirs(dir_path)
+
+
+def ts_str(length: int = 4) -> str:
+    """Make a string of current timestamp.
+
+    Arguments:
+        length - number of digits to keep (from the smallest unit)
+    """
+    return str(round(time.time() * 1000))[-length:]

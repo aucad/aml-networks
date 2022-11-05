@@ -4,7 +4,7 @@ from typing import Optional
 
 import numpy as np
 
-from src import AbsClassifierInstance, Validator
+from src import AbsClassifierInstance, Validator, utility
 
 
 class AbsAttack:
@@ -180,5 +180,4 @@ class AbsAttack:
 
     @staticmethod
     def clear_one_line():
-        cols = 256
-        print("\033[A{}\033[A".format(' ' * cols), end='\r')
+        utility.clear_one_line()

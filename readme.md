@@ -20,22 +20,15 @@ Install required dependencies:
 python -m pip install -r requirements.txt
 ```
 
-For Apple chips, install compatible `tensorflow` separately:
-
-```
-python -m pip install tensorflow-macos
-```
-
-### Setup XGBoost
+### Build and Install Robust XGBoost
 
 By default, attacks are configured to use a modified version of XGBoost classifier, enhanced with adversarial robustness
 property. This classifier is not installed with the other package dependencies.
 
-The XGBoost classifier must be built locally [from source](./RobustTrees) (also included as submodule `RobustTrees`),
-following [instructions here](./RobustTrees/tree/master/python-package#from-source).
-  
+The XGBoost classifier must be built locally [from source](./RobustTrees) (also included as a submodule `RobustTrees`),
+Following the [instructions here](./RobustTrees/tree/master/python-package#from-source) to build it from source.
 
-After local build, set up Python environment to use this classifier version:
+After local build, set up Python environment to use this classifier in experiments:
 
 ```
 python -m pip install -e "/absolute/local/path/to/RobustTrees/python-package"
@@ -43,17 +36,31 @@ python -m pip install -e "/absolute/local/path/to/RobustTrees/python-package"
 
 ## Usage
 
-This application is intended for use over command line interface. Standard interaction:
+This application is intended for use over command line interface.
+There are two execution modes: `experiment` and `validate`.
+
+- `experiment` mode trains a classifier and performs adversarial
+  attack according to provided arguments
+- `validate` mode will check a dataset for correctness
+
+Standard interaction:
 
 ```
-python3 -m src [ARGS]
+python3 -m src {experiment|validate} [ARGS]
 ```
 
-To see available options, run:
+To see available options for experiments, run:
 
 ```
-python3 -m src --help
+python3 -m src experiment --help
 ```
+
+To see available options for the validator, run:
+
+```
+python3 -m src validate --help
+```
+
 
 ## Source code directory organization
 
@@ -71,7 +78,6 @@ python3 -m src --help
 | 　`└─ cls.py`        | Abstract base class for a classifier                        |
 | 　`└─ experiment.py` | Runs an attack experiment                                   |
 | 　`└─ hopskip.py`    | HopSkipJump attack implementation                           |
-| 　`└─ plot.py`       | Plots figures                                               |
 | 　`└─ tree.py`       | Decision tree classifier training                           |
 | 　`└─ utility.py`    | Shared functionality utilities                              |
 | 　`└─ validator.py`  | Post-attack record validator                                |

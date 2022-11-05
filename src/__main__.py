@@ -17,13 +17,12 @@ python -m src --help
 """
 import logging
 import os
-import time
 from argparse import ArgumentParser
 from pathlib import Path
 from sys import exit
 from typing import Optional, List
 
-from src import __version__, __title__, Experiment, Validator, Show
+from src import __version__, __title__, Experiment, Validator, utility
 
 
 def main():
@@ -32,27 +31,28 @@ def main():
     on network data.
     """
     parser = ArgumentParser(prog=__title__, description=main.__doc__)
-    args = __parse_args(parser)
+    args = parse_args(parser)
 
     if not args.dataset:
         parser.print_help()
         exit(1)
 
-    ensure_out_dir(args.out)
-    save_log = args.which == 'exp' and not args.no_log
-    ts = str(round(time.time() * 1000))[-4:]
+    is_exp, is_validator = args.which == 'exp', args.which == 'vld'
+    ts = utility.ts_str()
+    utility.ensure_dir(args.out)
+    save_log = is_exp and not args.no_log and not args.silent
+    ln = log_name(ts, args) if save_log else None
     log_level = logging.FATAL if args.silent else logging.DEBUG
-    ln = log_name(ts, args)
-    init_logger(log_level, fn=ln if save_log else None)
+    init_logger(log_level, ln)
 
-    if args.which == 'vld':
+    if is_validator:
         Validator.validate_dataset(
             args.validator, args.dataset, args.capture, args.out)
 
-    if args.which == 'exp':
+    if is_exp:
         Experiment(ts, **args.__dict__).run()
 
-    if save_log:
+    if ln:
         print('Log file:', ln)
 
 
@@ -72,10 +72,6 @@ def init_logger(level: int, fn: str = None):
         logger.addHandler(file_handler)
 
 
-def ensure_out_dir(dir_path):
-    return os.path.exists(dir_path) or os.makedirs(dir_path)
-
-
 def log_name(ts, args):
     ds = Path(args.dataset).stem
     rb = f'robust_{"T" if args.robust else "F"}_' \
@@ -84,7 +80,7 @@ def log_name(ts, args):
     return os.path.join(args.out, f'{rb}{atk}{ds}_{ts}_log.txt')
 
 
-def __parse_args(parser: ArgumentParser, args: Optional[List] = None):
+def parse_args(parser: ArgumentParser, args: Optional[List] = None):
     """Setup available program arguments."""
 
     subparsers = parser.add_subparsers(help='commands')
@@ -107,18 +103,26 @@ def exp_args(parser: ArgumentParser):
         '-d', '--dataset',
         action="store",
         default=Experiment.DEFAULT_DS,
-        help=f'path to dataset to validate',
+        help=f'path to dataset  [default: {Experiment.DEFAULT_DS}]',
     )
     parser.add_argument(
-        '--validator',
+        '-c', '--cls',
+        action='store',
+        choices=Experiment.CLASSIFIERS,
+        default=Experiment.DEFAULT_CLS,
+        help=f'classifier [default: {Experiment.DEFAULT_CLS}]'
+    )
+    parser.add_argument(
+        '-a', '--attack',
+        action='store',
+        choices=Experiment.ATTACKS,
+        help='evasion attack [default: None]'
+    )
+    parser.add_argument(
+        '-v', '--validator',
         action='store',
         choices=Experiment.VALIDATORS,
-        help=f'dataset validator kind [default: None]'
-    )
-    parser.add_argument(
-        "--capture",
-        action='store_true',
-        help="save generated records (original, adversarial)",
+        help='dataset validator kind [default: None]'
     )
     parser.add_argument(
         "-o", "--out",
@@ -127,11 +131,11 @@ def exp_args(parser: ArgumentParser):
         help="output directory [default: output]"
     )
     parser.add_argument(
-        '-k', '--kfolds',
+        '-f', '--folds',
         type=int,
         choices=range(1, 11),
         metavar="1-10",
-        help='K-folds number of splits [default: 5]',
+        help='number of k-folds splits [default: 5]',
         default=5
     )
     parser.add_argument(
@@ -139,15 +143,8 @@ def exp_args(parser: ArgumentParser):
         type=int,
         choices=range(1, 500),
         metavar="1-500",
-        help='max attack iterations [default: not set]',
+        help='max attack iterations',
         default=0
-    )
-    parser.add_argument(
-        '-c', '--cls',
-        action='store',
-        choices=Experiment.CLASSIFIERS,
-        default=Experiment.DEFAULT_CLS,
-        help=f'Classifier to train [default: {Experiment.DEFAULT_CLS}]'
     )
     parser.add_argument(
         "--robust",
@@ -155,18 +152,17 @@ def exp_args(parser: ArgumentParser):
         help="train a robust model (xgboost only)"
     )
     parser.add_argument(
-        '-a', '--attack',
-        action='store',
-        choices=Experiment.ATTACKS,
-        help=f'evasion attack [default: None]'
+        "--capture",
+        action='store_true',
+        help="save generated records (original, adversarial)",
     )
     parser.add_argument(
-        '-l', "--no_log",
+        "--no_log",
         action='store_true',
         help="disable automatic saving of console log",
     )
     parser.add_argument(
-        '-s', "--silent",
+        "--silent",
         action='store_true',
         help="disable logging output to console"
     )
@@ -178,15 +174,14 @@ def vld_args(parser: ArgumentParser):
         '-d', '--dataset',
         dest='dataset',
         action="store",
-        default=Experiment.DEFAULT_DS,
-        help=f'path to dataset to validate',
+        help='path to dataset to validate',
     )
     parser.add_argument(
-        '--validator',
+        '-v', '--validator',
         dest='validator',
         action='store',
         choices=Experiment.VALIDATORS,
-        help=f'dataset validator kind [default: None]'
+        help='dataset validator kind [default: None]'
     )
     parser.add_argument(
         "--capture",

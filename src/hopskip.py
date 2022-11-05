@@ -3,7 +3,7 @@ Applying HopSkipJumpAttack on tree-based classifier.
 
 HopSkipJumpAttack - a family of algorithms based on a novel estimate
 of the gradient direction using binary information at the decision
-boundary. The proposed family includes both untargeted and targeted
+boundary. The proposed family includes both un-targeted and targeted
 attacks optimized for L2 and L∞ similarity metrics respectively.
 (Chen et al., 2019) Paper: https://arxiv.org/abs/1904.02144
 """
@@ -17,7 +17,7 @@ from src import AbsAttack
 class HopSkip(AbsAttack):
 
     def __init__(self, *args):
-        super().__init__('hopskip', 10, 1, *args)
+        super().__init__('hop', 10, 1, *args)
 
     @staticmethod
     def get_mask(target, freeze_indices):
@@ -66,7 +66,7 @@ class HopSkip(AbsAttack):
         correct = np.array((np.where(np.array(y) == predictions)[0])
                            .flatten().tolist())
         target = np.array(x)
-        errors, labels, x_adv = None, None, None
+        labels, x_adv = None, None
         attack_iter = self.max_iter if self.iterated else 2
         ev_conv = 0  # count rounds where evasion # stays stable
 
@@ -87,4 +87,3 @@ class HopSkip(AbsAttack):
         self.adv_x = x_adv
         self.adv_y = labels
         self.post_run()
-
