@@ -26,8 +26,6 @@ For Apple chips, install compatible `tensorflow` separately:
 python -m pip install tensorflow-macos
 ```
 
-**Optional**: To visualize XGBoost models, install [graphviz](https://graphviz.org/) and make sure it is in path.
-
 ### Setup XGBoost
 
 By default, attacks are configured to use a modified version of XGBoost classifier, enhanced with adversarial robustness

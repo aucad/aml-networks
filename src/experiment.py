@@ -135,7 +135,7 @@ class Experiment:
 
     @property
     def duration(self):
-        seconds = round((self.end_time - self.start_time) / 1e9, 2)
+        seconds = round((self.end_time - self.start_time) / 1e9, 6)
         minutes = int(seconds // 60)
         seconds = seconds - (minutes * 60)
         return minutes, seconds
@@ -191,6 +191,7 @@ class Experiment:
         Show('Attack max iter', self.attack.max_iter)
         Show('Mutable', ", ".join(self.cls.mutable_attrs))
         Show('Immutable', ", ".join(self.cls.immutable_attrs))
+        Show('=' * 52, '')
 
     def log_fold_result(self, fold_n):
         Show('Fold', fold_n)
@@ -230,4 +231,4 @@ class Experiment:
         Show('Total evasions', f'{e} of {t} - {p:.1f} %')
         if self.config.validator and e > 0:
             Show('Valid evasions', f'{v} of {e} - {q:.1f} %')
-        Show('Time', f'{min_} min {sec:.0f} s')
+        Show('Time', f'{min_} min {sec:.2f} s')

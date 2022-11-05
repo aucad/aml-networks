@@ -39,7 +39,7 @@ def main():
         exit(1)
 
     ensure_out_dir(args.out)
-    save_log = hasattr(args, 'no_log') and args.no_log
+    save_log = args.which == 'exp' and not args.no_log
     ts = str(round(time.time() * 1000))[-4:]
     log_level = logging.FATAL if args.silent else logging.DEBUG
     ln = log_name(ts, args)
