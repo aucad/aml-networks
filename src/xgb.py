@@ -11,10 +11,10 @@ from art.estimators.classification import XGBoostClassifier
 # noinspection PyPackageRequirements
 from xgboost import plot_tree, DMatrix, train as xg_train
 
-from src import AbsClassifierInstance
+from src import Classifier
 
 
-class XGBClassifier(AbsClassifierInstance):
+class XGB(Classifier):
 
     def __init__(self, *args):
         super().__init__('xgboost', *args)

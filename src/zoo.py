@@ -10,10 +10,10 @@ Paper: https://arxiv.org/abs/1708.03999
 import numpy as np
 from art.attacks.evasion import ZooAttack as ARTZooAttack
 
-from src import AbsAttack
+from src import Attack, utility
 
 
-class Zoo(AbsAttack):
+class Zoo(Attack):
 
     def __init__(self, *args):
         super().__init__('zoo', 80, 10, *args)
@@ -67,7 +67,7 @@ class Zoo(AbsAttack):
             # Show progress bar.
             verbose=True) \
             .generate(x=self.ori_x)
-        self.clear_one_line()
+        utility.clear_one_line()
 
     @staticmethod
     def pseudo_mask(mask_idx, x, adv):

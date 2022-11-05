@@ -5,7 +5,7 @@ from pathlib import Path
 import numpy as np
 
 
-class AbsClassifierInstance:
+class Classifier:
 
     def __init__(self, name, out, attrs, x, y, ds_path, robust=False):
         self.name = name
@@ -101,9 +101,8 @@ class AbsClassifierInstance:
 
     @property
     def accuracy(self):
-        if self.n_pred > 0:
-            return self.n_true_pn / self.n_pred
-        return -1
+        return -1 if self.n_pred == 0 else \
+            self.n_true_pn / self.n_pred
 
     @property
     def precision(self):

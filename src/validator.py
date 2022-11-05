@@ -265,14 +265,16 @@ class Validator:
     OTHER = 'unknown proto'
 
     @staticmethod
-    def validate(instance: NetworkProto) \
-            -> Tuple[bool, Union[str, None]]:
+    def validate(instance: NetworkProto) -> Tuple[bool, str]:
         return instance.check()
 
     @staticmethod
-    def determine_proto(attrs, record):
-        """Determine protocol for some records, by scan of the attribute
-        values, and active bit. Returns other if not found."""
+    def determine_proto(attrs, record) -> str:
+        """Determine protocol for a record.
+
+        This method scans the attributes values to find an active bit.
+        Returns `Validator.OTHER` when active bit is not found.
+        """
         proto_label = next(
             (a for a, b in
              [(lbl, int(record[i])) for i, lbl
@@ -329,9 +331,9 @@ class Validator:
         """Debug validator on some dataset"""
         import pandas as pd
         import numpy as np
-        from src import AbsClassifierInstance
+        from src import Classifier
         df = pd.read_csv(ds_path).fillna(0)
-        attrs = AbsClassifierInstance.attr_fix(
+        attrs = Classifier.attr_fix(
             [col for col in df.columns])
         records = np.array(df)[:, :-1]
         return Validator.batch_validate(

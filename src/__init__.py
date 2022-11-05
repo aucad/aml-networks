@@ -10,12 +10,12 @@ __license__ = ""
 __version__ = "0.1.0"
 
 # noinspection PyPep8Naming
-from src.utility import show as Show
+from src.utility import show as Show, show_ratio as Ratio, sdiv
 from src.validator import Validator
-from src.cls import AbsClassifierInstance
+from src.cls import Classifier
 from src.tree import DecisionTree
-from src.xgb import XGBClassifier
-from src.attack import AbsAttack
+from src.xgb import XGB
+from src.attack import Attack
 from src.hopskip import HopSkip
 from src.zoo import Zoo
 from src.experiment import Experiment

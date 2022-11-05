@@ -4,10 +4,10 @@ from typing import Optional
 
 import numpy as np
 
-from src import AbsClassifierInstance, Validator, utility
+from src import Classifier, Validator, sdiv
 
 
-class AbsAttack:
+class Attack:
 
     def __init__(
             self, name, default_iter, iter_step, iterated, plot,
@@ -22,7 +22,7 @@ class AbsAttack:
         self.iter_step = iter_step
         self.save_records = dump_records
         self.out_dir = None
-        self.cls: Optional[AbsClassifierInstance] = None
+        self.cls: Optional[Classifier] = None
         self.evasions = np.array([])
         self.ori_x = np.array([])
         self.ori_y = np.array([])
@@ -55,6 +55,10 @@ class AbsAttack:
         return len(self.idx_valid_evades)
 
     @property
+    def use_validator(self):
+        return self.validator_kind is not None
+
+    @property
     def idx_valid_evades(self):
         if self.validator_kind:
             v_ids = [i for i, s in enumerate(self.valid_result) if s]
@@ -64,24 +68,31 @@ class AbsAttack:
 
     @property
     def evasion_success(self):
-        if self.n_records > 0:
-            return 100 * (self.n_evasions / self.n_records)
-        return 0
+        return sdiv(self.n_evasions, self.n_records) * 100
 
     @property
     def validation_success(self):
-        if self.n_evasions > 0:
-            return 100 * (self.n_valid / self.n_evasions)
-        return 0
+        return sdiv(self.n_valid, self.n_evasions) * 100
 
     @property
     def attack_success(self):
         return len(self.evasions) > 0
 
     @property
+    def error(self):
+        target, x_adv = np.array(self.ori_x), np.array(self.adv_x)
+        errors = np.linalg.norm((target - x_adv), axis=1)
+        errors = errors[self.evasions] if len(self.evasions) else [0]
+        err_min, err_max = 0, 0
+        if self.attack_success:
+            err_min = min(errors)
+            err_max = max(errors)
+        return err_min, err_max
+
+    @property
     def label_stats(self) -> dict:
         result, final_labels = {}, []
-        if self.validator_kind:
+        if self.use_validator:
             if self.n_valid > 0:
                 final_labels = self.adv_y[self.idx_valid_evades] \
                     .flatten().tolist()
@@ -105,7 +116,7 @@ class AbsAttack:
             f'{self.uuid}_{self.name}_{self.cls.name}_'
             f'{self.cls.fold_n}_{n}.png')
 
-    def set_cls(self, cls: AbsClassifierInstance):
+    def set_cls(self, cls: Classifier):
         self.cls = cls
         self.out_dir = cls.out_dir
         self.ori_x = cls.test_x.copy()
@@ -127,7 +138,7 @@ class AbsAttack:
             self.dump_result()
 
     def validate(self):
-        if self.validator_kind and self.n_evasions > 0:
+        if self.use_validator and self.n_evasions > 0:
             attrs = self.cls.attrs[:self.cls.n_features]
             records = self.cls.denormalize(self.adv_x)
             result, reasons = Validator.batch_validate(
@@ -168,16 +179,3 @@ class AbsAttack:
         dump(self.cls.denormalize(self.ori_x), self.ori_y, 'ori')
         dump(self.cls.denormalize(self.adv_x), self.adv_y, 'adv')
 
-    def calculate_error(self):
-        target, x_adv = np.array(self.ori_x), np.array(self.adv_x)
-        errors = np.linalg.norm((target - x_adv), axis=1)
-        errors = errors[self.evasions] if len(self.evasions) else [0]
-        err_min, err_max = 0, 0
-        if self.attack_success:
-            err_min = min(errors)
-            err_max = max(errors)
-        return err_min, err_max
-
-    @staticmethod
-    def clear_one_line():
-        utility.clear_one_line()

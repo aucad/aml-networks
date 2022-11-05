@@ -10,6 +10,8 @@ Descriptions of datasets:
 
 ## Setup
 
+This repo includes submodules. Clone it, [including its submodules](https://stackoverflow.com/a/4438292).
+
 Required Python environment: 3.8 or 3.9 [^1]
 
 [^1]: This is a hard requirement. Numpy requires >= 3.8; robust XGBoost relies on Python features removed after 3.9.
@@ -40,8 +42,8 @@ This application is intended for use over command line interface.
 There are two execution modes: `experiment` and `validate`.
 
 - `experiment` mode trains a classifier and performs adversarial
-  attack according to provided arguments
-- `validate` mode will check a dataset for correctness
+  attack according to provided arguments.
+- `validate` mode will check a dataset for correctness.
 
 Standard interaction:
 
@@ -64,22 +66,25 @@ python3 -m src validate --help
 
 ## Source code directory organization
 
-| Directory           | Description                                                 |
-|:--------------------|:------------------------------------------------------------|
-| `results`           | Results of various experiments                              |
-| 　`└─ comparisons`   | Comparison of classifiers, on IoT data, obtained using Weka |
-| 　`└─ decision_tree` | Adversarial attacks on decision trees                       |
-| 　`└─ xgboost`       | Adversarial attacks on XGBoost classifier                   |
-| `data`              | Preprocessed data sets, ready for running various attacks   |
-| `src`               | Source code                                                 |
-| 　`└─ __init__.py`   | Python package setup                                        |
-| 　`└─ __main__.py`   | CLI interface                                               |
-| 　`└─ attack.py`     | Abstract base class for an attack                           |
-| 　`└─ cls.py`        | Abstract base class for a classifier                        |
-| 　`└─ experiment.py` | Runs an attack experiment                                   |
-| 　`└─ hopskip.py`    | HopSkipJump attack implementation                           |
-| 　`└─ tree.py`       | Decision tree classifier training                           |
-| 　`└─ utility.py`    | Shared functionality utilities                              |
-| 　`└─ validator.py`  | Post-attack record validator                                |
-| 　`└─ xgb.py`        | XGBoost classifier training                                 |
-| 　`└─ zoo.py`        | ZOO attack implementation                                   |
+| Directory           | Description                               |
+|:--------------------|:------------------------------------------|
+| `results`           | Results of various experiments            |
+| 　`└─ comparisons`   | Comparison of classifiers, on IoT data    |
+| 　`└─ decision_tree` | Adversarial attacks on decision trees     |
+| 　`└─ xgboost`       | Adversarial attacks on XGBoost classifier |
+| `data`              | Preprocessed data sets                    |
+| `src`               | Source code                               |
+| 　`└─ __init__.py`   | Python package setup                      |
+| 　`└─ __main__.py`   | CLI interface                             |
+| 　`└─ attack.py`     | Abstract base class for an attack         |
+| 　`└─ cls.py`        | Abstract base class for a classifier      |
+| 　`└─ experiment.py` | Runs an attack experiment                 |
+| 　`└─ hopskip.py`    | HopSkipJump attack implementation         |
+| 　`└─ tree.py`       | Decision tree classifier training         |
+| 　`└─ utility.py`    | Shared functionality utilities            |
+| 　`└─ validator.py`  | Network dataset  validator                |
+| 　`└─ xgb.py`        | XGBoost classifier training               |
+| 　`└─ zoo.py`        | ZOO attack implementation                 |
+
+Here is a UML diagram to explain the class relationships
+

@@ -8,8 +8,8 @@ import time
 from sklearn.model_selection import KFold
 
 # noinspection PyUnresolvedReferences
-from src import AbsClassifierInstance, AbsAttack, Validator, \
-    HopSkip, Zoo, DecisionTree, XGBClassifier, Show
+from src import Classifier, Attack, Validator, \
+    HopSkip, Zoo, DecisionTree, XGB, Show, Ratio, sdiv, utility
 
 logger = logging.getLogger(__name__)
 
@@ -21,11 +21,11 @@ class Experiment:
         DECISION_TREE = 'tree'
 
         @staticmethod
-        def init(kind, *args) -> AbsClassifierInstance:
+        def init(kind, *args) -> Classifier:
             if kind == Experiment.ClsLoader.DECISION_TREE:
                 return DecisionTree(*args)
             else:
-                return XGBClassifier(*args)
+                return XGB(*args)
 
     class AttackLoader:
         """Load selected attack mode."""
@@ -33,16 +33,79 @@ class Experiment:
         ZOO = 'zoo'
 
         @staticmethod
-        def load(kind, *args) -> AbsAttack:
+        def load(kind, *args) -> Attack:
             if kind == Experiment.AttackLoader.HOP_SKIP:
                 return HopSkip(*args)
             else:
                 return Zoo(*args)
 
+    class Stats:
+        """Track average results of K-folds."""
+
+        def __init__(self):
+            self.__accuracy = []
+            self.__precision = []
+            self.__recall = []
+            self.__f_score = []
+            self.__n_records = []
+            self.__n_evasions = []
+            self.__n_valid = []
+
+        def append_attack(self, attack: Attack):
+            self.__n_evasions.append(attack.n_evasions)
+            self.__n_valid.append(attack.n_valid)
+            self.__n_records.append(attack.n_records)
+
+        def append_cls(self, cls: Classifier):
+            self.__accuracy.append(cls.accuracy)
+            self.__precision.append(cls.precision)
+            self.__recall.append(cls.recall)
+            self.__f_score.append(cls.f_score)
+
+        @staticmethod
+        def calc_average(arr):
+            return sdiv(sum(arr), len(arr))
+
+        @property
+        def accuracy(self) -> float:
+            return self.calc_average(self.__accuracy)
+
+        @property
+        def precision(self) -> float:
+            return self.calc_average(self.__precision)
+
+        @property
+        def recall(self) -> float:
+            return self.calc_average(self.__recall)
+
+        @property
+        def f_score(self) -> float:
+            return self.calc_average(self.__f_score)
+
+        @property
+        def n_evasions(self) -> float:
+            return self.calc_average(self.__n_evasions)
+
+        @property
+        def n_valid(self) -> float:
+            return self.calc_average(self.__n_valid)
+
+        @property
+        def n_records(self) -> float:
+            return self.calc_average(self.__n_records)
+
+        @property
+        def evasion_ratio(self) -> float:
+            return sdiv(self.n_evasions, self.n_records)
+
+        @property
+        def valid_ratio(self) -> float:
+            return sdiv(self.n_valid, self.n_evasions)
+
     DEFAULT_DS = 'data/CTU-1-1.csv'
     DEFAULT_CLS = ClsLoader.XGBOOST
-    CLASSIFIERS = [ClsLoader.DECISION_TREE, ClsLoader.XGBOOST]
     ATTACKS = [AttackLoader.HOP_SKIP, AttackLoader.ZOO]
+    CLASSIFIERS = [ClsLoader.DECISION_TREE, ClsLoader.XGBOOST]
     VALIDATORS = [Validator.NB15, Validator.IOT23]
 
     def __init__(self, uuid, **kwargs):
@@ -58,72 +121,6 @@ class Experiment:
         self.stats = Experiment.Stats()
         config_keys = ",".join(kwargs.keys())
         self.config = namedtuple('exp', config_keys)(**kwargs)
-
-    class Stats:
-
-        def __init__(self):
-            self.accuracy = []
-            self.precision = []
-            self.recall = []
-            self.f_score = []
-            self.n_attack_records = []
-            self.n_evasions = []
-            self.n_valid = []
-
-        def append_attack(self, attack: AbsAttack):
-            self.n_evasions.append(attack.n_evasions)
-            self.n_valid.append(attack.n_valid)
-            self.n_attack_records.append(attack.n_records)
-
-        def append_cls(self, cls: AbsClassifierInstance):
-            self.accuracy.append(cls.accuracy)
-            self.precision.append(cls.precision)
-            self.recall.append(cls.recall)
-            self.f_score.append(cls.f_score)
-
-        @staticmethod
-        def calc_average(arr):
-            return 0 if len(arr) == 0 else sum(arr) / len(arr)
-
-        @property
-        def avg_accuracy(self) -> float:
-            return self.calc_average(self.accuracy)
-
-        @property
-        def avg_precision(self) -> float:
-            return self.calc_average(self.precision)
-
-        @property
-        def avg_recall(self) -> float:
-            return self.calc_average(self.recall)
-
-        @property
-        def avg_f_score(self) -> float:
-            return self.calc_average(self.f_score)
-
-        @property
-        def avg_n_evasions(self) -> float:
-            return self.calc_average(self.n_evasions)
-
-        @property
-        def avg_n_valid(self) -> float:
-            return self.calc_average(self.n_valid)
-
-        @property
-        def avg_n_records(self) -> float:
-            return self.calc_average(self.n_attack_records)
-
-        @property
-        def ev_percent(self) -> float:
-            if self.avg_n_records == 0:
-                return 0
-            return 100 * self.avg_n_evasions / self.avg_n_records
-
-        @property
-        def vd_percent(self) -> float:
-            if self.avg_n_evasions == 0:
-                return 0
-            return 100 * self.avg_n_valid / self.avg_n_evasions
 
     @property
     def n_records(self):
@@ -199,33 +196,23 @@ class Experiment:
         Show('Precision', f'{self.cls.precision * 100:.2f} %')
         Show('Recall', f'{self.cls.recall * 100:.2f} %')
         Show('F-score', f'{self.cls.f_score * 100:.2f} %')
-        Show('Total evasions',
-             f'{self.attack.n_evasions} of {self.attack.n_records} '
-             f'- {self.attack.evasion_success:.1f} %')
-        if self.attack.validator_kind:
-            Show('Valid evasions',
-                 f'{self.attack.n_valid} of {self.attack.n_evasions} '
-                 f'- {self.attack.validation_success:.1f} %')
+        Ratio('Evasions', self.attack.n_evasions, self.attack.n_records)
+        if self.attack.use_validator:
+            Ratio('Valid', self.attack.n_valid, self.attack.n_evasions)
         if self.attack.n_evasions > 0:
             ls = self.attack.printable_label_stats()
             Show('Class labels', '\n'.join(ls))
         if self.attack.n_evasions != self.attack.n_valid:
             Validator.dump_reasons(self.attack.validation_reasons)
-        min_e, max_e = self.attack.calculate_error()
-        Show('L-norm', f'{min_e:.6f} - {max_e:.6f}')
+        Show('L-norm', "{0:.6f} - {1:.6f}".format(*self.attack.error))
 
     def log_experiment_result(self):
         Show('=' * 52, '')
-        Show('Avg. Accuracy',
-             f'{(self.stats.avg_accuracy * 100):.2f} %')
-        Show('Avg. Precision',
-             f'{(self.stats.avg_precision * 100):.2f} %')
-        Show('Avg. Recall', f'{(self.stats.avg_recall * 100):.2f} %')
-        Show('Avg. F-score', f'{(self.stats.avg_f_score * 100):.2f} %')
-        Show('Total evasions', f'{self.stats.avg_n_evasions} of '
-                               f'{self.stats.avg_n_records} - '
-                               f'{self.stats.ev_percent:.1f} %')
-        Show('Valid evasions', f'{self.stats.avg_n_valid} of '
-                               f'{self.stats.avg_n_evasions} - '
-                               f'{self.stats.vd_percent:.1f} %')
+        Show('Avg. Accuracy', f'{(self.stats.accuracy * 100):.2f} %')
+        Show('Avg. Precision', f'{(self.stats.precision * 100):.2f} %')
+        Show('Avg. Recall', f'{(self.stats.recall * 100):.2f} %')
+        Show('Avg. F-score', f'{(self.stats.f_score * 100):.2f} %')
+        Ratio('Evasions', self.stats.n_evasions, self.stats.n_records)
+        if self.attack.use_validator:
+            Ratio('Valid', self.stats.n_valid, self.stats.n_evasions)
         Show('Time', "{0} min {1:.2f} s".format(*self.duration))

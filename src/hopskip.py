@@ -11,10 +11,10 @@ attacks optimized for L2 and L∞ similarity metrics respectively.
 import numpy as np
 from art.attacks.evasion import HopSkipJump as ARTHopSkipJump
 
-from src import AbsAttack
+from src import Attack, utility
 
 
-class HopSkip(AbsAttack):
+class HopSkip(Attack):
 
     def __init__(self, *args):
         super().__init__('hop', 10, 1, *args)
@@ -74,7 +74,7 @@ class HopSkip(AbsAttack):
             iters = mi if self.iterated else self.max_iter
             x_adv = self.attack_instance(iters).generate(
                 x_adv_init=x_adv, x=target, mask=np.array(mask))
-            self.clear_one_line()
+            utility.clear_one_line()
             labels = np.argmax(self.cls.classifier.predict(x_adv), 1)
             ev_init = len(self.evasions)
             evades = np.array((np.where(labels != predictions)[0])

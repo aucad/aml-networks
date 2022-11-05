@@ -42,6 +42,13 @@ def show(label: str, value: Any):
     logger.debug(text)
 
 
+def show_ratio(label, num, denom):
+    if denom == 0:
+        return show(label, 0)
+    ratio = 100 * num / denom
+    return show(label, f'{num} of {denom} - {ratio:.1f} %')
+
+
 def clear_one_line():
     """Clear previous line of terminal output."""
     cols = 256
@@ -64,3 +71,8 @@ def ts_str(length: int = 4) -> str:
         length - number of digits to keep (from the smallest unit)
     """
     return str(round(time.time() * 1000))[-length:]
+
+
+def sdiv(num, denom):
+    """Save division."""
+    return 0 if denom == 0 else num / denom

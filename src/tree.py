@@ -15,10 +15,10 @@ from art.estimators.classification.scikitlearn \
     import ScikitlearnDecisionTreeClassifier
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 
-from src import AbsClassifierInstance
+from src import Classifier
 
 
-class DecisionTree(AbsClassifierInstance):
+class DecisionTree(Classifier):
 
     def __init__(self, *args):
         super().__init__('decision_tree', *args)
