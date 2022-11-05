@@ -124,7 +124,6 @@ class AbsAttack:
     def post_run(self):
         self.validate()
         if self.attack_success:
-            self.plot()
             self.dump_result()
 
     def validate(self):

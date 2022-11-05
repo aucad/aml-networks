@@ -159,14 +159,11 @@ class Experiment:
         self.log_fold_result(fold_num)
 
     def run(self):
-        if not self.validate_dataset():
-            return False
-
         config = self.config
         self.load_csv(config.dataset, config.kfolds)
         cls_args = (config.cls, config.out, self.attrs, self.X,
                     self.y, config.dataset, config.robust)
-        atk_args = (config.attack, False, config.plot,
+        atk_args = (config.attack, False, False,
                     config.validator, self.uuid,
                     config.capture, config.iter)
 
@@ -190,7 +187,8 @@ class Experiment:
         Show('Robust', self.config.robust)
         Show('Classes', ", ".join(self.cls.class_names))
         Show('Attack', self.attack.name)
-        Show('Max iterations', self.config.iter)
+        Show('K-folds', self.config.kfolds)
+        Show('Attack max iter', self.attack.max_iter)
         Show('Mutable', ", ".join(self.cls.mutable_attrs))
         Show('Immutable', ", ".join(self.cls.immutable_attrs))
 
@@ -233,19 +231,3 @@ class Experiment:
         if self.config.validator and e > 0:
             Show('Valid evasions', f'{v} of {e} - {q:.1f} %')
         Show('Time', f'{min_} min {sec:.0f} s')
-
-    def validate_dataset(self):
-        if v := self.config.validator:
-            ds = self.config.dataset
-            idx, reasons = Validator.dataset_validate(ds, v)
-            if sum(reasons.values()) > 0:
-                # print the indices of invalid records
-                # offset by 2; for attrs + init index=1
-                recs = [str(i + 2) for i, v in enumerate(idx) if not v]
-                Show('Validated', ds)
-                Show('Invalid reasons', Validator.dump_reasons(reasons))
-                Show('Records', f'[{",".join(recs)}]')
-                return False
-            else:
-                Show('Validated', f'{ds} is valid')
-                return True

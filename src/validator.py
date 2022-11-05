@@ -1,7 +1,12 @@
 from __future__ import annotations
 
+import os
+import time
+from pathlib import Path
 from collections import namedtuple
 from typing import Tuple, Union, List
+
+from src import Show
 
 
 class NetworkProto:
@@ -330,7 +335,7 @@ class Validator:
         return temp_arr, reasons
 
     @staticmethod
-    def dataset_validate(ds_path, validator_kind):
+    def check_dataset(ds_path, validator_kind):
         """Debug validator on some dataset"""
         import pandas as pd
         import numpy as np
@@ -347,3 +352,25 @@ class Validator:
         return '\n'.join([txt for _, txt in sorted(
             [(v, f'{v} * {k}') for k, v in reasons.items()],
             reverse=True)])
+
+    @staticmethod
+    def validate_dataset(validator, dataset, capture, out):
+        idx, reasons = Validator.check_dataset(dataset, validator)
+        if sum(reasons.values()) > 0:
+            recs = [str(i + 2) for i, v in enumerate(idx) if not v]
+            Show('Result', f'{dataset} is invalid')
+            Show('Invalid reasons', Validator.dump_reasons(reasons))
+            Show('Invalid records', f'[{",".join(recs)}]')
+            if capture:
+                ds = Path(dataset).stem
+                ts = str(round(time.time() * 1000))[-4:]
+                fn = os.path.join(out, f'invalid_{ds}_{ts}.csv')
+                raw_data = open(dataset, "r").readlines()
+                with open(fn, 'w', newline='') as cf:
+                    cf.write(raw_data[0])
+                    for i in [i + 1 for i, v in enumerate(idx) if
+                              not v]:
+                        cf.write(raw_data[i])
+                Show('Examples', fn)
+        else:
+            Show('Result', f'{dataset} is valid')

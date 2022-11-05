@@ -33,5 +33,4 @@ def show(msg, value):
     text = f'{msg} '.ljust(label_w, '-') + fmt_lines
     logger.debug(text)
 
-
 Show = show
