@@ -14,4 +14,4 @@ from src.attack import AbsAttack
 from src.hopskip import HopSkip
 from src.zoo import Zoo
 from src.experiment import Experiment
-from src.plot import AttackPlotter
+from src.plot import Plotter
