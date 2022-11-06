@@ -16,9 +16,7 @@ python -m src --help
 
 """
 import logging
-import os
 from argparse import ArgumentParser
-from pathlib import Path
 from sys import exit
 from typing import Optional, List
 
@@ -37,23 +35,17 @@ def main():
         parser.print_help()
         exit(1)
 
-    is_exp, is_validator = args.which == 'exp', args.which == 'vld'
-    ts = utility.ts_str()
     utility.ensure_dir(args.out)
-    save_log = is_exp and not args.no_log and not args.silent
-    ln = log_name(ts, args) if save_log else None
-    log_level = logging.FATAL if args.silent else logging.DEBUG
-    init_logger(log_level, ln)
+    is_exp, is_validator = args.which == 'exp', args.which == 'vld'
+    fn = utility.generate_name(utility.ts_str(), args, 'txt')
+    init_logger(logging.FATAL if args.silent else logging.DEBUG, fn)
 
     if is_validator:
         Validator.validate_dataset(
             args.validator, args.dataset, args.capture, args.out)
 
     if is_exp:
-        Experiment(ts, **args.__dict__).run()
-
-    if ln:
-        print('Log file:', ln)
+        Experiment(**args.__dict__).run()
 
 
 def init_logger(level: int, fn: str = None):
@@ -70,14 +62,6 @@ def init_logger(level: int, fn: str = None):
         file_handler = logging.FileHandler(filename=f'{fn}')
         file_handler.setFormatter(fmt)
         logger.addHandler(file_handler)
-
-
-def log_name(ts, args):
-    ds = Path(args.dataset).stem
-    rb = f'robust_{"T" if args.robust else "F"}_' \
-        if hasattr(args, 'robust') else ''
-    atk = f'{args.attack}_' if hasattr(args, 'attack') else ''
-    return os.path.join(args.out, f'{rb}{atk}{ds}_{ts}_log.txt')
 
 
 def parse_args(parser: ArgumentParser, args: Optional[List] = None):
@@ -157,14 +141,14 @@ def exp_args(parser: ArgumentParser):
         help="save generated records (original, adversarial)",
     )
     parser.add_argument(
-        "--no_log",
+        "--no_save",
         action='store_true',
-        help="disable automatic saving of console log",
+        help="disable save result to file",
     )
     parser.add_argument(
         "--silent",
         action='store_true',
-        help="disable logging output to console"
+        help="disable console log"
     )
 
 
@@ -195,9 +179,9 @@ def vld_args(parser: ArgumentParser):
         help="output directory [default: output]"
     )
     parser.add_argument(
-        '-s', "--silent",
+        "--silent",
         action='store_true',
-        help="disable logging output to console"
+        help="disable console log"
     )
 
 

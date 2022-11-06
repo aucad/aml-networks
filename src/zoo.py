@@ -64,9 +64,10 @@ class Zoo(Attack):
             # Step size for numerical estimation of derivatives.
             variable_h=0.8,
             # Show progress bar.
-            verbose=True) \
+            verbose=not self.silent) \
             .generate(x=self.ori_x)
-        utility.clear_one_line()
+        if not self.silent:
+            utility.clear_one_line()
 
     @staticmethod
     def pseudo_mask(mask_idx, x, adv):

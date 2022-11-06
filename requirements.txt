@@ -5,3 +5,4 @@ pandas==1.5.0
 torch==1.12.1
 tensorflow==2.10.0; sys_platform != 'Darwin' or platform_machine != 'arm64'
 tensorflow-macos; platform_system == "Darwin" and platform_machine == 'arm64'
+psutil==5.9.3

@@ -80,6 +80,7 @@ python3 -m src validate --help
 | 　`└─ classifier.py` | Abstract base class for a classifier      |
 | 　`└─ experiment.py` | Runs an attack experiment                 |
 | 　`└─ hopskip.py`    | HopSkipJump attack implementation         |
+| 　`└─ machine.py`    | Captures current machine details          |
 | 　`└─ tree.py`       | Decision tree classifier training         |
 | 　`└─ utility.py`    | Shared functionality utilities            |
 | 　`└─ validator.py`  | Network dataset  validator                |

@@ -2,27 +2,28 @@ SHELL := /bin/bash
 
 DATA_DIR = ./data
 
+ITERS = 2 5
 ATTACKS = hop zoo
+ROBUST = T_ROBUST F_ROBUST
 
-IOT_DATASETS = CTU-1-1
 IOT_OPTIONS = --validator IOT23
-
-NB15_DATASETS = nb15-10K
 NB_OPTIONS = --validator NB15
 
-all: non_robust robust
+DS_1 = -d ./data/CTU-1-1.csv $(IOT_OPTIONS)
+DS_2 = -d ./data/nb15-10K.csv $(NB_OPTIONS)
 
-non_robust:
-	$(foreach attack, $(ATTACKS), $(foreach ds, $(IOT_DATASETS),  \
-        python -m src experiment -a $(attack) -d ./data/$(ds).csv $(IOT_OPTIONS) ; ))
-	$(foreach attack, $(ATTACKS), $(foreach ds, $(NB15_DATASETS),  \
-        python -m src experiment -a $(attack) -d ./data/$(ds).csv $(NB_OPTIONS) ; ))
+T_ROBUST := --robust
+F_ROBUST :=
 
-robust:
-	$(foreach attack, $(ATTACKS), $(foreach ds, $(IOT_DATASETS),  \
-        python -m src experiment -a $(attack) -d ./data/$(ds).csv $(IOT_OPTIONS) --robust ; ))
-	$(foreach attack, $(ATTACKS), $(foreach ds, $(NB15_DATASETS),  \
-        python -m src experiment -a $(attack) -d ./data/$(ds).csv $(NB_OPTIONS) --robust ; ))
+DATASETS := DS_1 DS_2
+
+all:
+	$(foreach r, $(ROBUST), $(foreach attack, $(ATTACKS), $(foreach ds, $(DATASETS),  \
+        python -m src experiment -a $(attack) $($(ds)) $($(r)) ; )))
+
+iterated:
+	$(foreach i, $(ITERS), $(foreach r, $(ROBUST), $(foreach attack, $(ATTACKS), $(foreach ds, $(DATASETS),  \
+        python -m src experiment -a $(attack) $($(ds)) $($(r)) --iter $(i) ; ))))
 
 valid:
 	@$(foreach file, $(wildcard $(DATA_DIR)/CTU*),  \

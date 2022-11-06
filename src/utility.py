@@ -2,12 +2,26 @@ import csv
 import logging
 import os
 import time
+from pathlib import Path
 from typing import Any
 
 import numpy as np
 import pandas as pd
 
 logger = logging.getLogger(__name__)
+
+
+def name_only(file):
+    return Path(file).stem
+
+
+def generate_name(ts, args, extension=None):
+    ds = name_only(args.dataset)
+    rb = f'robust_{"T" if args.robust else "F"}_' \
+        if hasattr(args, 'robust') else ''
+    atk = f'{args.attack}_' if hasattr(args, 'attack') else ''
+    ext = f'.{extension}' if extension else ''
+    return os.path.join(args.out, f'{rb}{atk}{ds}_{ts}{ext}')
 
 
 def show(label: str, value: Any):

@@ -1,30 +1,24 @@
-from math import ceil
-from os import path
-from pathlib import Path
-
 import numpy as np
 
 
 class Classifier:
 
-    def __init__(self, name, out, attrs, x, y, ds_path, robust=False):
+    def __init__(
+            self, name, out, attrs, y, robust, mask_cols, attr_ranges
+    ):
         self.name = name
         self.out_dir = out
         self.attrs = attrs[:]
         self.classes = np.unique(y)
-        self.ds_path = ds_path
         self.classifier = None
         self.model = None
-        self.classes = np.unique(y)
         self.train_x = np.array([])
         self.train_y = np.array([])
         self.test_x = np.array([])
         self.test_y = np.array([])
-        self.attr_ranges = {}
-        self.mask_cols = []
+        self.attr_ranges = attr_ranges
+        self.mask_cols = mask_cols
         self.fold_n = 1
-        self.capture_ranges(x)
-        self.set_mask_cols(x)
         self.robust = robust
         self.n_pred = 0
         self.n_true_pn = 0
@@ -79,11 +73,6 @@ class Classifier:
         return [self.text_label(cn) for cn in self.classes]
 
     @property
-    def plot_path(self):
-        fn = f'{self.name}_{Path(self.ds_path).stem}.png'
-        return path.join(self.out_dir, fn)
-
-    @property
     def mutable_attrs(self):
         return sorted([
             a for i, a in enumerate(self.attrs)
@@ -94,10 +83,6 @@ class Classifier:
         return sorted([
             a for i, a in enumerate(self.attrs)
             if i in self.mask_cols and i < self.n_features])
-
-    @staticmethod
-    def formatter(x, y):
-        return x
 
     @property
     def accuracy(self):
@@ -119,13 +104,9 @@ class Classifier:
         return (2 * self.precision * self.recall) / \
                (self.precision + self.recall)
 
-    def set_mask_cols(self, x):
-        indices = []
-        for col_i in range(self.n_features):
-            col_values = list(np.unique(x[:, col_i]))
-            if set(col_values).issubset({0, 1}):
-                indices.append(col_i)
-        self.mask_cols = indices
+    @staticmethod
+    def formatter(x, y):
+        return x
 
     def predict(self, data):
         return self.model.predict(data)
@@ -151,20 +132,11 @@ class Classifier:
     def train(self):
         self.prep_model(self.robust)
         self.prep_classifier()
-        records = (
-            (self.test_x, self.test_y)
-            if self.n_test > 0 else
-            (self.train_x, self.train_y))
+        records = ((self.test_x, self.test_y) if self.n_test > 0
+                   else (self.train_x, self.train_y))
         predictions = self.predict(self.formatter(*records))
         self.score(records[1], predictions)
         return self
-
-    def capture_ranges(self, data):
-        """normalize values in range 0.0 - 1.0."""
-        np.seterr(divide='ignore', invalid='ignore')
-        for i in range(self.n_features):
-            range_max = max(data[:, i])
-            self.attr_ranges[i] = ceil(range_max)
 
     def normalize(self, data):
         """normalize values in range 0.0 - 1.0."""

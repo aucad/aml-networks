@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import os
-from pathlib import Path
 from collections import namedtuple
+from pathlib import Path
 from typing import Tuple, Union, List
 
 from src import Show, utility
@@ -311,14 +311,13 @@ class Validator:
 
     @staticmethod
     def validate_dataset(validator, dataset, capture=False, out=None):
-        Show('Validating', dataset)
         attrs, rows = utility.read_dataset(dataset)
         idx, reasons = Validator.validate_records(
             validator, attrs, rows[:, :-1])
 
         if sum(reasons.values()) > 0:
             invalid_idx = [i for i, v in enumerate(idx) if not v]
-            Show('Result', f'{dataset} is invalid')
+            Show('Validation', f'{dataset} is invalid')
             Show('Invalid reasons', utility.dump_num_dict(reasons))
             Show('Invalid records',
                  f'[{",".join([str(r + 2) for r in invalid_idx])}]')
@@ -328,5 +327,4 @@ class Validator:
                 utility.write_dataset(fn, attrs, rows[invalid_idx, :])
                 Show('Examples', fn)
         else:
-            utility.clear_one_line()
             Show('Validated', f' ✓ {dataset}')

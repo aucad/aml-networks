@@ -55,9 +55,10 @@ class HopSkip(Attack):
             # adversarial examples.
             init_size=100,
             # Show progress bars
-            verbose=True
+            verbose=not self.silent
         ).generate(x_adv_init=None, x=x, mask=np.array(mask))
-        utility.clear_one_line()
+        if not self.silent:
+            utility.clear_one_line()
 
     def run(self):
         """Run HopSkipJumpAttack attack."""

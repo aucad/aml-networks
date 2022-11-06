@@ -9,7 +9,8 @@ from src import Classifier, Validator, sdiv, utility
 class Attack:
 
     def __init__(
-            self, name, default_iter, validator, uuid, capture, iters
+            self, name, default_iter, validator, uuid, capture, iters,
+            silent
     ):
         self.uuid = uuid
         self.name = name
@@ -26,6 +27,7 @@ class Attack:
         self.adv_y = np.array([])
         self.valid_result = np.array([])
         self.validation_reasons = {}
+        self.silent = silent
 
     def reset(self):
         self.cls = None
