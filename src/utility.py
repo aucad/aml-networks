@@ -1,7 +1,11 @@
+import csv
 import logging
 import os
 import time
 from typing import Any
+
+import numpy as np
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 
@@ -64,6 +68,17 @@ def ensure_dir(dir_path: str):
     return os.path.exists(dir_path) or os.makedirs(dir_path)
 
 
+def attr_fix(attrs):
+    """Remove selected special chars from attributes so that
+    the remaining forms a valid Python identifier."""
+    return [a.replace(' ', '')
+            .replace('=', '_')
+            .replace('-', '')
+            .replace('^', '_')
+            .replace('conn_state_other', 'conn_state_OTH')
+            for a in attrs]
+
+
 def ts_str(length: int = 4) -> str:
     """Make a string of current timestamp.
 
@@ -76,3 +91,20 @@ def ts_str(length: int = 4) -> str:
 def sdiv(num, denom):
     """Save division."""
     return 0 if denom == 0 else num / denom
+
+
+def read_dataset(dataset_path):
+    df = pd.read_csv(dataset_path).fillna(0)
+    attrs = attr_fix([col for col in df.columns])
+    rows = np.array(df)
+    return attrs, rows
+
+
+def write_dataset(file_name, attrs, rows, int_cols=None):
+    with open(file_name, 'w', newline='') as fp:
+        w = csv.writer(fp, delimiter=',')
+        w.writerow(attrs)
+        w.writerows([
+            [int(val) if i in (int_cols or []) else val
+             for i, val in enumerate(row)]
+            for row in rows])

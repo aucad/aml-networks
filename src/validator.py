@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import os
-import time
 from pathlib import Path
 from collections import namedtuple
 from typing import Tuple, Union, List
@@ -9,7 +8,7 @@ from typing import Tuple, Union, List
 from src import Show, utility
 
 
-class NetworkProto:
+class Protocol:
     """Represents validatable instance"""
 
     def __init__(self, name: str, kind: namedtuple, **kwargs):
@@ -48,7 +47,7 @@ class NetworkProto:
 
 
 # noinspection PyTypeChecker
-class NbTCP(NetworkProto):
+class NbTCP(Protocol):
     def __init__(self, attrs: namedtuple = None, **kwargs):
         super().__init__('tcp', self.v_model(attrs, kwargs), **kwargs)
 
@@ -58,7 +57,7 @@ class NbTCP(NetworkProto):
         names = 'swin dwin ltime ' \
                 'synack ackdat tcprtt dbytes Dload ' \
                 'dttl Djit Dpkts dur state_INT stime state_FIN'
-        return NetworkProto.kv_dict(
+        return Protocol.kv_dict(
             names, [255, 255, 1] + [0] * 12)
 
     @staticmethod
@@ -94,7 +93,7 @@ class NbTCP(NetworkProto):
 
 
 # noinspection PyTypeChecker
-class NbUDP(NetworkProto):
+class NbUDP(Protocol):
     def __init__(self, attrs=None, **kwargs):
         super().__init__('udp', self.v_model(attrs, kwargs), **kwargs)
 
@@ -104,7 +103,7 @@ class NbUDP(NetworkProto):
         names = 'swin dwin stcpb dtcpb synack ' \
                 'ackdat tcprtt smeansz Spkts sbytes ' \
                 'dmeansz Dpkts dbytes sjit Sload'
-        return NetworkProto.kv_dict(names, [0] * 15)
+        return Protocol.kv_dict(names, [0] * 15)
 
     @staticmethod
     def validate(record) -> Tuple[bool, Union[str, None]]:
@@ -128,7 +127,7 @@ class NbUDP(NetworkProto):
 
 
 # noinspection PyTypeChecker
-class NbOther(NetworkProto):
+class NbOther(Protocol):
     def __init__(self, attrs=None, **kwargs):
         super().__init__('other', self.v_model(attrs, kwargs), **kwargs)
 
@@ -136,7 +135,7 @@ class NbOther(NetworkProto):
     def ensure_attrs():
         """Defaults for undefined attributes."""
         names = 'swin dwin stcpb dtcpb synack ackdat tcprtt'
-        return NetworkProto.kv_dict(names, [0] * 7)
+        return Protocol.kv_dict(names, [0] * 7)
 
     @staticmethod
     def validate(record) -> Tuple[bool, Union[str, None]]:
@@ -150,7 +149,7 @@ class NbOther(NetworkProto):
 
 
 # noinspection PyTypeChecker
-class IotTCP(NetworkProto):
+class IotTCP(Protocol):
     def __init__(self, attrs=None, **kwargs):
         super().__init__('tcp', self.v_model(attrs, kwargs), **kwargs)
 
@@ -159,12 +158,12 @@ class IotTCP(NetworkProto):
         names = 'conn_state_S0 conn_state_SF conn_state_OTH ' \
                 'conn_state_REJ history_ShADadFf history_DdA ' \
                 'resp_ip_bytes resp_pkts orig_ip_bytes orig_pkts'
-        return NetworkProto.kv_dict(names, [0] * 10)
+        return Protocol.kv_dict(names, [0] * 10)
 
     @staticmethod
     def validate(record) -> Tuple[bool, Union[str, None]]:
         # if record.orig_pkts < record.resp_pkts:
-        #    return False, "ori pkts < resp pkts"
+        #     return False, "ori pkts < resp pkts"
         # in S0 resp_pkts = 0 and resp_ip_bytes = 0
         if record.conn_state_S0 == 1:
             if record.resp_pkts != 0 or record.resp_ip_bytes != 0:
@@ -191,7 +190,7 @@ class IotTCP(NetworkProto):
 
 
 # noinspection PyTypeChecker
-class IotOther(NetworkProto):
+class IotOther(Protocol):
     def __init__(self, attrs=None, **kwargs):
         super().__init__('other', self.v_model(attrs, kwargs), **kwargs)
 
@@ -211,7 +210,7 @@ class IotOther(NetworkProto):
 
 
 # noinspection PyTypeChecker
-class IotUDP(NetworkProto):
+class IotUDP(Protocol):
     def __init__(self, attrs=None, **kwargs):
         super().__init__('udp', self.v_model(attrs, kwargs), **kwargs)
 
@@ -219,7 +218,7 @@ class IotUDP(NetworkProto):
     def ensure_attrs():
         names = 'conn_state_S0 conn_state_SF history_Dd ' \
                 'resp_ip_bytes resp_pkts orig_ip_bytes orig_pkts'
-        return NetworkProto.kv_dict(names, [0] * 7)
+        return Protocol.kv_dict(names, [0] * 7)
 
     @staticmethod
     def validate(record) -> Tuple[bool, Union[str, None]]:
@@ -238,7 +237,7 @@ class IotUDP(NetworkProto):
 
 
 # noinspection PyTypeChecker
-class IotICMP(NetworkProto):
+class IotICMP(Protocol):
     def __init__(self, attrs=None, **kwargs):
         super().__init__('icmp', self.v_model(attrs, kwargs), **kwargs)
 
@@ -246,7 +245,7 @@ class IotICMP(NetworkProto):
     def ensure_attrs():
         names = 'conn_state_S0 resp_ip_bytes resp_pkts ' \
                 'orig_ip_bytes orig_pkts'
-        return NetworkProto.kv_dict(names, [0] * 5)
+        return Protocol.kv_dict(names, [0] * 5)
 
     @staticmethod
     def validate(record) -> Tuple[bool, Union[str, None]]:
@@ -258,112 +257,81 @@ class Validator:
     NB15 = 'NB15'
     IOT23 = 'IOT23'
 
-    # known protocols
-    TCP = 'tcp'
-    UDP = 'udp'
-    ICMP = 'icmp'
-    OTHER = 'unknown proto'
-
     @staticmethod
-    def validate(instance: NetworkProto) -> Tuple[bool, str]:
-        return instance.check()
-
-    @staticmethod
-    def determine_proto(attrs, record) -> str:
-        """Determine protocol for a record.
+    def determine_proto(validator_kind, attrs, record) \
+            -> Union[Protocol, None]:
+        """Determine protocol for a record, and instantiate
+        protocol validator.
 
         This method scans the attributes values to find an active bit.
-        Returns `Validator.OTHER` when active bit is not found.
+        Returns None when active bit is not found.
         """
+        rec_nd = dict([(a, b) for a, b in zip(attrs, record)])
         proto_label = next(
             (a for a, b in
              [(lbl, int(record[i])) for i, lbl
               in enumerate(attrs) if 'proto' in lbl]
-             if b == 1), Validator.OTHER)
+             if b == 1), 'other')
         if 'tcp' in proto_label:
-            return Validator.TCP
+            if validator_kind == Validator.NB15:
+                return NbTCP(attrs, **rec_nd)
+            if validator_kind == Validator.IOT23:
+                return IotTCP(attrs, **rec_nd)
         if 'udp' in proto_label:
-            return Validator.UDP
+            if validator_kind == Validator.NB15:
+                return NbUDP(attrs, **rec_nd)
+            if validator_kind == Validator.IOT23:
+                return IotUDP(attrs, **rec_nd)
         if 'icmp' in proto_label:
-            return Validator.ICMP
-        return Validator.OTHER
+            if validator_kind == Validator.IOT23:
+                return IotICMP(attrs, **rec_nd)
+        if validator_kind == Validator.NB15:
+            return NbOther(attrs, **rec_nd)
+        if validator_kind == Validator.IOT23:
+            return IotOther(attrs, **rec_nd)
+        return None
 
     @staticmethod
-    def batch_validate(validator_kind, attrs, records) \
+    def validate_records(validator_kind, attrs, records) \
             -> Tuple[List[bool], dict]:
         temp_arr, reasons = [], {}
         for (index, record) in enumerate(records):
-            # make a dictionary of record
-            rec_nd = dict([(a, b) for a, b in zip(attrs, record)])
-            proto = Validator.determine_proto(attrs, record)
-            v_inst = None
-            if validator_kind == Validator.NB15:
-                if proto == Validator.TCP:
-                    v_inst = NbTCP(attrs, **rec_nd)
-                elif proto == Validator.UDP:
-                    v_inst = NbUDP(attrs, **rec_nd)
-                else:
-                    v_inst = NbOther(attrs, **rec_nd)
-            elif validator_kind == Validator.IOT23:
-                if proto == Validator.TCP:
-                    v_inst = IotTCP(attrs, **rec_nd)
-                elif proto == Validator.UDP:
-                    v_inst = IotUDP(attrs, **rec_nd)
-                elif proto == Validator.ICMP:
-                    v_inst = IotICMP(attrs, **rec_nd)
-                else:
-                    v_inst = IotOther(attrs, **rec_nd)
-            if not v_inst:
+            instance = Validator.determine_proto(
+                validator_kind, attrs, record)
+            if not instance:
                 temp_arr.append(True)
             else:
-                is_valid, reason = Validator.validate(v_inst)
+                is_valid, reason = instance.check()
                 temp_arr.append(is_valid)
                 if not is_valid:
-                    res = f'{v_inst.name} {reason}'
-                    if res not in reasons:
-                        reasons[res] = 1
-                    else:
-                        reasons[res] += 1
+                    key = f'{instance.name} {reason}'
+                    reasons[key] = 1 + (
+                        reasons[key] if key in reasons else 0)
         return temp_arr, reasons
 
     @staticmethod
-    def check_dataset(ds_path, validator_kind):
-        """Debug validator on some dataset"""
-        import pandas as pd
-        import numpy as np
-        from src import Classifier
-        df = pd.read_csv(ds_path).fillna(0)
-        attrs = Classifier.attr_fix(
-            [col for col in df.columns])
-        records = np.array(df)[:, :-1]
-        return Validator.batch_validate(
-            validator_kind, attrs, records)
-
-    @staticmethod
     def dump_reasons(reasons):
-        return '\n'.join([txt for _, txt in sorted(
-            [(v, f'{v} * {k}') for k, v in reasons.items()],
-            reverse=True)])
+        reason_pairs = [(v, f'{v} * {k}') for k, v in reasons.items()]
+        sorted_reasons = sorted(reason_pairs, reverse=True)
+        return '\n'.join([txt for _, txt in sorted_reasons])
 
     @staticmethod
     def validate_dataset(validator, dataset, capture, out):
         Show('Validating', dataset)
-        idx, reasons = Validator.check_dataset(dataset, validator)
+        attrs, rows = utility.read_dataset(dataset)
+        idx, reasons = Validator.validate_records(
+            validator, attrs, rows[:, :-1])
+
         if sum(reasons.values()) > 0:
-            recs = [str(i + 2) for i, v in enumerate(idx) if not v]
+            invalid_idx = [i for i, v in enumerate(idx) if not v]
             Show('Result', f'{dataset} is invalid')
             Show('Invalid reasons', Validator.dump_reasons(reasons))
-            Show('Invalid records', f'[{",".join(recs)}]')
+            Show('Invalid records',
+                 f'[{",".join([str(r + 2) for r in invalid_idx])}]')
             if capture:
-                ds = Path(dataset).stem
-                ts = str(round(time.time() * 1000))[-4:]
-                fn = os.path.join(out, f'invalid_{ds}_{ts}.csv')
-                raw_data = open(dataset, "r").readlines()
-                with open(fn, 'w', newline='') as cf:
-                    cf.write(raw_data[0])
-                    for i in [i + 1 for i, v in enumerate(idx) if
-                              not v]:
-                        cf.write(raw_data[i])
+                ds, ts = Path(dataset).stem, utility.ts_str()
+                fn = os.path.join(out, f'{ts}_invalid_{ds}.csv')
+                utility.write_dataset(fn, attrs, rows[invalid_idx, :])
                 Show('Examples', fn)
         else:
             utility.clear_one_line()

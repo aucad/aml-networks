@@ -7,7 +7,6 @@ ADAM coordinate descent to perform numerical estimation of gradients.
 Paper: https://arxiv.org/abs/1708.03999
 """
 
-import numpy as np
 from art.attacks.evasion import ZooAttack as ARTZooAttack
 
 from src import Attack, utility
@@ -16,7 +15,7 @@ from src import Attack, utility
 class Zoo(Attack):
 
     def __init__(self, *args):
-        super().__init__('zoo', 80, 10, *args)
+        super().__init__('zoo', 80, *args)
 
     def generate_adv_examples(self, iters) -> None:
         """Generate the adversarial examples using ZOO attack."""
@@ -85,43 +84,10 @@ class Zoo(Attack):
             adv[:, idx] = ori_values
         return adv
 
-    def eval_adv_examples(self):
-        """
-        Do prediction on adversarial vs original records and determine
-        which records succeed at evading expected class label.
-        """
-        # predictions for original instances
-        ori_in = self.cls.formatter(self.ori_x, self.ori_y)
-        original = self.cls.predict(ori_in).flatten().tolist()
-        correct = np.array(
-            (np.where(np.array(self.ori_y) == original)[0])
-            .flatten().tolist())
-
-        # adversarial predictions for same data
-        adv_in = self.cls.formatter(self.adv_x, self.ori_y)
-        adversarial = self.cls.predict(adv_in).flatten().tolist()
-        self.adv_y = np.array(adversarial)
-
-        # adversary succeeds iff predictions differ
-        evades = np.array(
-            [i for i, (x, y) in enumerate(zip(original, adversarial))
-             if int(x) != int(y)])
-        self.evasions = np.intersect1d(evades, correct)
-
     def run(self):
         """Runs the zoo attack."""
-        attack_iter = self.max_iter if self.iterated else 2
-        ev_conv = 0  # count rounds where evasion # stays stable
-
-        for mi in range(1, attack_iter, self.iter_step):
-            iters = mi if self.iterated else self.max_iter
-            ev_init = len(self.evasions)
-            self.generate_adv_examples(iters)
-            self.adv_x = self.pseudo_mask(
-                self.cls.mask_cols, self.ori_x, self.adv_x)
-            self.eval_adv_examples()
-            ev_conv += 1 if ev_init == len(self.evasions) else 0
-            if len(self.evasions) == self.n_records or ev_conv > 2:
-                break
-
+        self.generate_adv_examples(self.max_iter)
+        self.adv_x = self.pseudo_mask(
+            self.cls.mask_cols, self.ori_x, self.adv_x)
+        self.eval_examples()
         self.post_run()

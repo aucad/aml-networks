@@ -64,7 +64,7 @@ python3 -m src validate --help
 ```
 
 
-## Source code directory organization
+## Source code organization
 
 | Directory           | Description                               |
 |:--------------------|:------------------------------------------|
@@ -77,7 +77,7 @@ python3 -m src validate --help
 | 　`└─ __init__.py`   | Python package setup                      |
 | 　`└─ __main__.py`   | CLI interface                             |
 | 　`└─ attack.py`     | Abstract base class for an attack         |
-| 　`└─ cls.py`        | Abstract base class for a classifier      |
+| 　`└─ classifier.py` | Abstract base class for a classifier      |
 | 　`└─ experiment.py` | Runs an attack experiment                 |
 | 　`└─ hopskip.py`    | HopSkipJump attack implementation         |
 | 　`└─ tree.py`       | Decision tree classifier training         |
@@ -85,6 +85,4 @@ python3 -m src validate --help
 | 　`└─ validator.py`  | Network dataset  validator                |
 | 　`└─ xgb.py`        | XGBoost classifier training               |
 | 　`└─ zoo.py`        | ZOO attack implementation                 |
-
-Here is a UML diagram to explain the class relationships
 

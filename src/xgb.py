@@ -14,7 +14,7 @@ from xgboost import plot_tree, DMatrix, train as xg_train
 from src import Classifier
 
 
-class XGB(Classifier):
+class XgBoost(Classifier):
 
     def __init__(self, *args):
         super().__init__('xgboost', *args)

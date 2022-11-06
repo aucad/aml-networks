@@ -10,7 +10,7 @@ class Classifier:
     def __init__(self, name, out, attrs, x, y, ds_path, robust=False):
         self.name = name
         self.out_dir = out
-        self.attrs = self.attr_fix(attrs[:])
+        self.attrs = attrs[:]
         self.classes = np.unique(y)
         self.ds_path = ds_path
         self.classifier = None
@@ -151,8 +151,6 @@ class Classifier:
     def train(self):
         self.prep_model(self.robust)
         self.prep_classifier()
-
-        # evaluate performance
         records = (
             (self.test_x, self.test_y)
             if self.n_test > 0 else
@@ -184,17 +182,6 @@ class Classifier:
             range_max = self.attr_ranges[i]
             data_copy[:, i] = np.rint(range_max * (data[:, i]))
         return data_copy
-
-    @staticmethod
-    def attr_fix(attrs):
-        """Remove selected special chars from attributes so that
-        the remaining forms a valid Python identifier."""
-        return [a.replace(' ', '')
-                .replace('=', '_')
-                .replace('-', '')
-                .replace('^', '_')
-                .replace('conn_state_other', 'conn_state_OTH')
-                for a in attrs]
 
     def score(self, true_labels, predictions, positive=0):
         """Calculate performance metrics."""

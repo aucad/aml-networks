@@ -30,6 +30,9 @@ valid:
 	@$(foreach file, $(wildcard $(DATA_DIR)/nb15*), \
 		python -m src validate -d $(file) $(NB_OPTIONS) --capture;)
 
+code_stats:
+	@cd src && find . -name '*.py' | xargs wc -l && cd ..
+
 clean:
 	@rm -fr output/
 	@find . -name '*.pyc' -exec rm -f {} +

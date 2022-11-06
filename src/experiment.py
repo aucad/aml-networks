@@ -1,15 +1,13 @@
 import logging
 from collections import namedtuple
-from typing import Tuple
-
-import numpy as np
-import pandas as pd
+from typing import Tuple, List
 import time
+
 from sklearn.model_selection import KFold
 
 # noinspection PyUnresolvedReferences
-from src import Classifier, Attack, Validator, \
-    HopSkip, Zoo, DecisionTree, XGB, Show, Ratio, sdiv, utility
+from src import Classifier, Attack, Validator, utility, \
+    HopSkip, Zoo, DecisionTree, XgBoost, Show, Ratio, sdiv
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +23,7 @@ class Experiment:
             if kind == Experiment.ClsLoader.DECISION_TREE:
                 return DecisionTree(*args)
             else:
-                return XGB(*args)
+                return XgBoost(*args)
 
     class AttackLoader:
         """Load selected attack mode."""
@@ -63,7 +61,7 @@ class Experiment:
             self.__f_score.append(cls.f_score)
 
         @staticmethod
-        def calc_average(arr):
+        def calc_average(arr) -> float:
             return sdiv(sum(arr), len(arr))
 
         @property
@@ -123,11 +121,11 @@ class Experiment:
         self.config = namedtuple('exp', config_keys)(**kwargs)
 
     @property
-    def n_records(self):
+    def n_records(self) -> int:
         return len(self.X)
 
     @property
-    def n_attr(self):
+    def n_attr(self) -> int:
         return len(self.attrs)
 
     @property
@@ -137,15 +135,14 @@ class Experiment:
         seconds = seconds - (minutes * 60)
         return minutes, seconds
 
-    def load_csv(self, ds_path, n_splits):
-        df = pd.read_csv(ds_path).fillna(0)
-        self.attrs = [col for col in df.columns]
-        self.X = (np.array(df)[:, :-1])
-        self.y = np.array(df)[:, -1].astype(int).flatten()
+    def load_csv(self, ds_path: str, n_splits: int):
+        self.attrs, rows = utility.read_dataset(ds_path)
+        self.X = rows[:, :-1]
+        self.y = rows[:, -1].astype(int).flatten()
         self.folds = [(tr_i, ts_i) for tr_i, ts_i
                       in KFold(n_splits=n_splits).split(self.X)]
 
-    def do_fold(self, fold_num, fold_indices):
+    def do_fold(self, fold_num: int, fold_indices: List[int]):
         self.cls.reset().load(
             self.X.copy(), self.y.copy(),
             *fold_indices, fold_num).train()
@@ -160,8 +157,7 @@ class Experiment:
         self.load_csv(config.dataset, config.folds)
         cls_args = (config.cls, config.out, self.attrs, self.X,
                     self.y, config.dataset, config.robust)
-        atk_args = (config.attack, False, False,
-                    config.validator, self.uuid,
+        atk_args = (config.attack, config.validator, self.uuid,
                     config.capture, config.iter)
 
         self.cls = Experiment.ClsLoader.init(*cls_args)
@@ -190,7 +186,7 @@ class Experiment:
         Show('Immutable', ", ".join(self.cls.immutable_attrs))
         Show('=' * 52, '')
 
-    def log_fold_result(self, fold_n):
+    def log_fold_result(self, fold_n: int):
         Show('Fold', fold_n)
         Show('Accuracy', f'{self.cls.accuracy * 100:.2f} %')
         Show('Precision', f'{self.cls.precision * 100:.2f} %')
