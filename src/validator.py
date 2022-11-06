@@ -99,9 +99,9 @@ class NbUDP(Protocol):
     @staticmethod
     def ensure_attrs():
         """Defaults for undefined attributes."""
-        names = 'swin dwin stcpb dtcpb synack ' \
-                'ackdat tcprtt smeansz Spkts sbytes ' \
-                'dmeansz Dpkts dbytes sjit Sload'
+        names = 'smeansz Spkts sbytes dmeansz Dpkts dbytes ' \
+                'swin dwin stcpb dtcpb synack ' \
+                'ackdat tcprtt sjit Sload'
         return Protocol.kv_dict(names, [0] * 15)
 
     @staticmethod
@@ -112,12 +112,18 @@ class NbUDP(Protocol):
                 and record.synack == 0 and record.ackdat == 0
                 and record.tcprtt == 0):
             return False, "nonzero tcp fields"
-        # Smeansz * Spkts = sbytes
-        # if record.smeansz * record.Spkts != record.sbytes:
-        #     return False, "invalid smeansz"
-        # Dmeansz * Dpkts = dpytes
-        # if record.dmeansz * record.Dpkts != record.dbytes:
-        #     return False, "invalid dmeansz"
+        # ensure all 3 are included as dataset features
+        if record.smeansz > 0 and record.Spkts > 0 \
+                and record.sbytes >= 0:
+            # Smeansz * Spkts = sbytes
+            if record.smeansz * record.Spkts != record.sbytes:
+                return False, f"invalid smeansz"
+        # ensure all 3 are included as dataset features
+        if record.dmeansz > 0 and record.Dpkts > 0 \
+                and record.dbytes > 0:
+            # Dmeansz * Dpkts = dpytes
+            if record.dmeansz * record.Dpkts != record.dbytes:
+                return False, "invalid dmeansz"
         # if sjit = 0 then (Smeansz * 8)/sload + something small = dur
         if record.sjit == 0 and record.Sload != 0 and \
                 record.dur < (record.smeansz * 8 / record.Sload):
