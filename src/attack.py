@@ -72,7 +72,11 @@ class Attack:
 
     @property
     def has_evasions(self):
-        return len(self.evasions) > 0
+        return len(self.idx_valid_evades) > 0
+
+    @property
+    def has_invalid(self):
+        return len(self.validation_reasons.keys()) > 0
 
     @property
     def error(self):
@@ -97,14 +101,9 @@ class Attack:
                 .flatten().tolist()
         for label in self.cls.classes:
             n = final_labels.count(label)
-            result[label] = n
+            key = self.cls.text_label(label)
+            result[key] = n
         return result
-
-    def printable_label_stats(self):
-        counts = sorted(list(self.label_stats.items()),
-                        key=lambda x: x[1], reverse=True)
-        return [f'{n} * {self.cls.text_label(lbl)}'
-                for lbl, n in counts if n > 0]
 
     def figure_name(self, n):
         return path.join(

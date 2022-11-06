@@ -159,6 +159,9 @@ class Experiment:
                     self.y, config.dataset, config.robust)
         atk_args = (config.attack, config.validator, self.uuid,
                     config.capture, config.iter)
+        if config.validator:
+            Validator.validate_dataset(
+                config.validator, config.dataset)
 
         self.cls = Experiment.ClsLoader.init(*cls_args)
         self.attack = Experiment.AttackLoader.load(*atk_args) \
@@ -195,11 +198,12 @@ class Experiment:
         Ratio('Evasions', self.attack.n_evasions, self.attack.n_records)
         if self.attack.use_validator:
             Ratio('Valid', self.attack.n_valid, self.attack.n_evasions)
-        if self.attack.n_evasions > 0:
-            ls = self.attack.printable_label_stats()
-            Show('Class labels', '\n'.join(ls))
-        if self.attack.n_evasions != self.attack.n_valid:
-            Validator.dump_reasons(self.attack.validation_reasons)
+        if self.attack.has_evasions:
+            Show('Class labels', utility.dump_num_dict(
+                self.attack.label_stats))
+        if self.attack.has_invalid:
+            Show('Invalid reasons', utility.dump_num_dict(
+                self.attack.validation_reasons))
         Show('L-norm', "{0:.6f} - {1:.6f}".format(*self.attack.error))
 
     def log_experiment_result(self):

@@ -310,13 +310,7 @@ class Validator:
         return temp_arr, reasons
 
     @staticmethod
-    def dump_reasons(reasons):
-        reason_pairs = [(v, f'{v} * {k}') for k, v in reasons.items()]
-        sorted_reasons = sorted(reason_pairs, reverse=True)
-        return '\n'.join([txt for _, txt in sorted_reasons])
-
-    @staticmethod
-    def validate_dataset(validator, dataset, capture, out):
+    def validate_dataset(validator, dataset, capture=False, out=None):
         Show('Validating', dataset)
         attrs, rows = utility.read_dataset(dataset)
         idx, reasons = Validator.validate_records(
@@ -325,7 +319,7 @@ class Validator:
         if sum(reasons.values()) > 0:
             invalid_idx = [i for i, v in enumerate(idx) if not v]
             Show('Result', f'{dataset} is invalid')
-            Show('Invalid reasons', Validator.dump_reasons(reasons))
+            Show('Invalid reasons', utility.dump_num_dict(reasons))
             Show('Invalid records',
                  f'[{",".join([str(r + 2) for r in invalid_idx])}]')
             if capture:

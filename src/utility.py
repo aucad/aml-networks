@@ -93,6 +93,13 @@ def sdiv(num, denom):
     return 0 if denom == 0 else num / denom
 
 
+def dump_num_dict(reasons):
+    reason_pairs = [(v, f'{v} * {k}')
+                    for k, v in reasons.items() if v > 0]
+    sorted_reasons = sorted(reason_pairs, reverse=True)
+    return '\n'.join([txt for _, txt in sorted_reasons])
+
+
 def read_dataset(dataset_path):
     df = pd.read_csv(dataset_path).fillna(0)
     attrs = attr_fix([col for col in df.columns])
