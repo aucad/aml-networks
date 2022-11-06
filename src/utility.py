@@ -19,9 +19,10 @@ def generate_name(ts, args, extension=None):
     ds = name_only(args.dataset)
     rb = f'robust_{"T" if args.robust else "F"}_' \
         if hasattr(args, 'robust') else ''
+    i = f'_i{args.iter}' if args.iter > 0 else ''
     atk = f'{args.attack}_' if hasattr(args, 'attack') else ''
     ext = f'.{extension}' if extension else ''
-    return os.path.join(args.out, f'{rb}{atk}{ds}_{ts}{ext}')
+    return os.path.join(args.out, f'{rb}{atk}{ds}{i}_{ts}{ext}')
 
 
 def show(label: str, value: Any):
@@ -34,7 +35,7 @@ def show(label: str, value: Any):
     str_v = str(value)
 
     # wrap values lines
-    wrap_size, label_w, log_pad = 512, 18, 0
+    wrap_size, label_w, log_pad = 512, 18, 12
     chunks, chunk_size, lines = len(str_v), wrap_size, []
     if chunks < chunk_size and str_v.find("\n") < 0:
         lines = [str_v]

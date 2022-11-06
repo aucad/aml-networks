@@ -35,10 +35,11 @@ def main():
         parser.print_help()
         exit(1)
 
+    ts = utility.ts_str()
     utility.ensure_dir(args.out)
     is_exp, is_validator = args.which == 'exp', args.which == 'vld'
-    fn = utility.generate_name(utility.ts_str(), args, 'txt') \
-        if is_exp else None
+    fn = utility.generate_name(ts, args, 'txt') \
+        if is_exp and not args.no_save else None
     init_logger(logging.FATAL if args.silent else logging.DEBUG, fn)
 
     if is_validator:
@@ -46,22 +47,24 @@ def main():
             args.validator, args.dataset, args.capture, args.out)
 
     if is_exp:
-        Experiment(**args.__dict__).run()
+        Experiment(ts, **args.__dict__).run()
 
 
 def init_logger(level: int, fn: str = None):
     """Create a logger instance"""
-    fmt = logging.Formatter("%(message)s")
+    fmt = "[%(asctime)s]: %(message)s"
+    date_fmt = "%H:%M:%S"
+    formatter = logging.Formatter(fmt, datefmt=date_fmt)
 
     logger = logging.getLogger(__title__)
     logger.setLevel(level)
     stream_handler = logging.StreamHandler()
-    stream_handler.setFormatter(fmt)
+    stream_handler.setFormatter(formatter)
     logger.addHandler(stream_handler)
 
     if fn is not None:
         file_handler = logging.FileHandler(filename=f'{fn}')
-        file_handler.setFormatter(fmt)
+        file_handler.setFormatter(formatter)
         logger.addHandler(file_handler)
 
 
@@ -126,7 +129,7 @@ def exp_args(parser: ArgumentParser):
     parser.add_argument(
         '-i', '--iter',
         type=int,
-        choices=range(1, 500),
+        choices=range(0, 500),
         metavar="1-500",
         help='max attack iterations',
         default=0

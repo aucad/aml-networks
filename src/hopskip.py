@@ -18,7 +18,7 @@ from src import Attack, utility
 class HopSkip(Attack):
 
     def __init__(self, *args):
-        super().__init__('hop', 10, *args)
+        super().__init__('hopskipjump', 10, *args)
 
     @staticmethod
     def get_mask(target: np.array, freeze: List[int]) -> np.array:

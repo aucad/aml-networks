@@ -4,10 +4,6 @@ Link to notes:
 
 <https://docs.google.com/document/d/1xqCDqrakSaXkOxijwse3zQ23Rm7-38m-rMJp7iLjS6A/edit?usp=sharing>
 
-Descriptions of datasets:
-
-<https://augustauniversity.box.com/s/ioj5v4ddiwcs9fs451rppzf5vhzohfpo>
-
 ## Setup
 
 This repository includes a submodule. 
@@ -37,6 +33,16 @@ After local build, set up Python environment to use this classifier in experimen
 python -m pip install -e "/absolute/local/path/to/RobustTrees/python-package"
 ```
 
+## Datasets
+
+We consider two data sources: 
+
+1. [Aposemat IoT-23](https://www.stratosphereips.org/datasets-iot23/) is a labeled dataset with malicious and benign IoT network traffic.
+
+2. [UNSW-NB15](https://research.unsw.edu.au/projects/unsw-nb15-dataset) is a network intrusion dataset that contains nine different attacks.
+
+Preprocessed, sampled data is included in `data/` directory. The input data is expected to be in csv format.
+
 ## Usage
 
 This application is intended for use over command line interface.
@@ -44,9 +50,24 @@ There are two execution modes: `experiment` and `validate`.
 
 - `experiment` mode trains a classifier and performs adversarial
   attack according to provided arguments.
-- `validate` mode will check a dataset for correctness.
+- `validate` mode will check a dataset records for correctness.
 
-Standard interaction:
+**Quick start**
+
+Run all experiments
+
+```
+make all
+```
+
+Validate datasets
+
+```
+make valid
+```
+
+
+**CLI commands**
 
 ```
 python3 -m src {experiment|validate} [ARGS]

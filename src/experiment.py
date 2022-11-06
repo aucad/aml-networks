@@ -114,8 +114,8 @@ class Experiment:
     CLASSIFIERS = [ClsLoader.DECISION_TREE, ClsLoader.XGBOOST]
     VALIDATORS = [Validator.NB15, Validator.IOT23]
 
-    def __init__(self, **kwargs):
-        self.uuid = utility.ts_str()
+    def __init__(self, uuid, **kwargs):
+        self.uuid = uuid
         self.start_time = 0
         self.end_time = 0
         self.cls = None
@@ -267,9 +267,8 @@ class Experiment:
             'validator': self.config.validator,
             'classifier': self.config.cls,
             'attack': self.config.attack,
-            'attr_ranges': dict([
-                (self.attrs[k], v) for k, v in
-                self.attr_ranges.items()]),
+            'attr_ranges': dict(
+                zip(self.attrs, self.attr_ranges.values())),
             'start': self.start_time,
             'end': self.end_time,
             'current_utc': int(time.time_ns()),
