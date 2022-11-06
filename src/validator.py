@@ -62,8 +62,11 @@ class NbTCP(Protocol):
 
     @staticmethod
     def validate(record) -> Tuple[bool, Union[str, None]]:
-        # if record.swin != 255 or record.dwin != 255:
-        #    return False, "swin-dwin mismatch"
+        if record.swin != 255 or record.dwin != 255:
+            # OK if dbytes==0 then dwin==0 or state is FIN
+            if not ((record.dbytes == 0 and record.dwin == 0)
+                    or record.state_FIN == 1):
+                return False, "invalid swin/dwin"
         # synack + ackdat = tcprtt
         if round(record.synack + record.ackdat, 3) != \
                 round(record.tcprtt, 3):
