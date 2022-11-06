@@ -37,7 +37,8 @@ def main():
 
     utility.ensure_dir(args.out)
     is_exp, is_validator = args.which == 'exp', args.which == 'vld'
-    fn = utility.generate_name(utility.ts_str(), args, 'txt')
+    fn = utility.generate_name(utility.ts_str(), args, 'txt') \
+        if is_exp else None
     init_logger(logging.FATAL if args.silent else logging.DEBUG, fn)
 
     if is_validator:
