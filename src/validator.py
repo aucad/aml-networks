@@ -72,14 +72,10 @@ class NbTCP(Protocol):
                 round(record.tcprtt, 3):
             return False, "synack+ackdat != tcprtt"
         if record.state_FIN != 1:
-            if record.dur > 0:
-                # if dur > 0 in state INT: dbytes = 0
-                if record.state_INT == 1:
-                    if record.dbytes != 0:
-                        return False, "dbytes nonzero when INT"
-                # if dur > 0 then dbytes > 0
-                # elif not record.dbytes > 0:
-                #     return False, "dbytes is 0 for dur > 0"
+            # if dur > 0 in state INT: dbytes = 0
+            if record.dur > 0 and record.state_INT == 1 and \
+                    record.dbytes != 0:
+                return False, "dbytes nonzero when INT"
             # if dur = 0 then dbytes = 0
             if record.dur == 0 and record.dbytes != 0:
                 return False, "dbytes nonzero when dur is 0"
