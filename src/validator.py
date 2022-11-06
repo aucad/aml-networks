@@ -117,7 +117,7 @@ class NbUDP(Protocol):
                 and record.sbytes >= 0:
             # Smeansz * Spkts = sbytes
             if record.smeansz * record.Spkts != record.sbytes:
-                return False, f"invalid smeansz"
+                return False, "invalid smeansz"
         # ensure all 3 are included as dataset features
         if record.dmeansz > 0 and record.Dpkts > 0 \
                 and record.dbytes > 0:

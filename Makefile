@@ -2,9 +2,15 @@ SHELL := /bin/bash
 
 DATA_DIR = ./data
 
-ITERS = 2 5
+ifndef $ITERS
+ITERS:=2 5
+endif
+
 ATTACKS = hop zoo
 ROBUST = T_ROBUST F_ROBUST
+
+T_ROBUST := --robust
+F_ROBUST :=
 
 IOT_OPTIONS = --validator IOT23
 NB_OPTIONS = --validator NB15
@@ -12,16 +18,9 @@ NB_OPTIONS = --validator NB15
 DS_1 = -d ./data/CTU-1-1.csv $(IOT_OPTIONS)
 DS_2 = -d ./data/nb15-10K.csv $(NB_OPTIONS)
 
-T_ROBUST := --robust
-F_ROBUST :=
-
 DATASETS := DS_1 DS_2
 
 all:
-	$(foreach r, $(ROBUST), $(foreach attack, $(ATTACKS), $(foreach ds, $(DATASETS),  \
-        python -m src experiment -a $(attack) $($(ds)) $($(r)) ; )))
-
-iterated:
 	$(foreach i, $(ITERS), $(foreach r, $(ROBUST), $(foreach attack, $(ATTACKS), $(foreach ds, $(DATASETS),  \
         python -m src experiment -a $(attack) $($(ds)) $($(r)) --iter $(i) ; ))))
 
