@@ -10,7 +10,8 @@ Descriptions of datasets:
 
 ## Setup
 
-This repo includes submodules. Clone it, [including its submodules](https://stackoverflow.com/a/4438292).
+This repository includes a submodule. 
+Clone it including the [submodule](https://stackoverflow.com/a/4438292).
 
 Required Python environment: 3.8 or 3.9 [^1]
 
