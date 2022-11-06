@@ -4,44 +4,56 @@ Link to notes:
 
 <https://docs.google.com/document/d/1xqCDqrakSaXkOxijwse3zQ23Rm7-38m-rMJp7iLjS6A/edit?usp=sharing>
 
-## Setup
-
-This repository includes a submodule. 
-Clone it including the [submodule](https://stackoverflow.com/a/4438292).
-
-Required Python environment: 3.8 or 3.9 [^1]
-
-[^1]: This is a hard requirement. Numpy requires >= 3.8; robust XGBoost relies on Python features removed after 3.9.
-
-Install required dependencies:
-
-```
-python -m pip install -r requirements.txt
-```
-
-### Build and Install Robust XGBoost
-
-By default, attacks are configured to use a modified version of XGBoost classifier, enhanced with adversarial robustness
-property. This classifier is not installed with the other package dependencies.
-
-The XGBoost classifier must be built locally [from source](./RobustTrees) (also included as a submodule `RobustTrees`),
-Following the [instructions here](./RobustTrees/tree/master/python-package#from-source) to build it from source.
-
-After local build, set up Python environment to use this classifier in experiments:
-
-```
-python -m pip install -e "/absolute/local/path/to/RobustTrees/python-package"
-```
-
 ## Datasets
 
-We consider two data sources: 
+We consider two data sources:
 
 1. [Aposemat IoT-23](https://www.stratosphereips.org/datasets-iot23/) is a labeled dataset with malicious and benign IoT network traffic.
 
 2. [UNSW-NB15](https://research.unsw.edu.au/projects/unsw-nb15-dataset) is a network intrusion dataset that contains nine different attacks.
 
 Preprocessed, sampled data is included in `data/` directory. The input data is expected to be in csv format.
+
+## Setup
+
+These steps explain how to run this software from source.
+
+Required Python environment: 3.8 or 3.9 [^1]
+
+[^1]: This is a hard requirement. Numpy requires >= 3.8; robust XGBoost relies on Python features removed after 3.9.
+
+This repository includes a submodule. 
+Clone it including the [submodule](https://stackoverflow.com/a/4438292).
+
+### Build robust XGBoost
+
+By default, attacks are configured to use a modified version of XGBoost classifier, enhanced with adversarial robustness
+property. This classifier is not installed with the other package dependencies.
+The XGBoost classifier must be built locally [from source](https://github.com/chenhongge/RobustTrees) (also included as a submodule `RobustTrees`).
+Follow the [instructions here](https://github.com/chenhongge/RobustTrees/tree/master/python-package#from-source) to build it from source.
+
+### Install dependencies
+
+Install required Python dependencies:
+
+```
+python3 -m pip install -r requirements.txt
+```
+
+Install XGBoost from the local build location:
+
+```
+python3 -m pip install -e "/path/to/RobustTrees/python-package"
+```
+
+After setup, check the runtime:
+
+```
+python3 -m pip show xgboost
+```
+
+The version number should be 0.72.
+
 
 ## Usage
 

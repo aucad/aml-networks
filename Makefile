@@ -24,13 +24,13 @@ TIME = $(shell date)
 
 all:
 	@$(foreach i, $(ITERS), $(foreach r, $(ROBUST), $(foreach attack, $(ATTACKS), $(foreach ds, $(DATASETS),  \
-        python -m src experiment -a $(attack) $($(ds)) $($(r)) --iter $(i) ; )))) @echo "start $(TIME) end $(shell date)"
+        python3 -m src experiment -a $(attack) $($(ds)) $($(r)) --iter $(i) ; )))) @echo "start $(TIME) end $(shell date)"
 
 valid:
 	@$(foreach file, $(wildcard $(DATA_DIR)/CTU*),  \
-		python -m src validate -d $(file) $(IOT_OPTIONS) --capture;)
+		python3 -m src validate -d $(file) $(IOT_OPTIONS) --capture;)
 	@$(foreach file, $(wildcard $(DATA_DIR)/nb15*), \
-		python -m src validate -d $(file) $(NB_OPTIONS) --capture;)
+		python3 -m src validate -d $(file) $(NB_OPTIONS) --capture;)
 
 code_stats:
 	@cd src && find . -name '*.py' | xargs wc -l && cd ..
