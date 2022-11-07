@@ -1,9 +1,12 @@
 import json
 import glob
+import logging
 import os
 from statistics import mean
 
 from pytablewriter import SpaceAlignedTableWriter
+
+logger = logging.getLogger(__name__)
 
 
 class Results:
@@ -15,6 +18,11 @@ class Results:
         self.attacks = set()
         self.iters = set()
         self.directory = directory
+        self.load_results()
+
+    @property
+    def n_results(self):
+        return len(self.raw_rata)
 
     def add(self, result):
         self.raw_rata.append(result)
@@ -29,6 +37,7 @@ class Results:
         for file in json_files:
             data = json.load(open(file))
             self.add(data)
+        return self
 
     @staticmethod
     def extract_values(record):
@@ -46,6 +55,12 @@ class Results:
         ]
 
     def write_table(self):
+        if self.n_results == 0:
+            logger.warning("No results found in results directory.")
+            logger.warning("Nothing was plotted.")
+            return
+
+        fn = os.path.join(self.directory, 'table.txt')
         writer = SpaceAlignedTableWriter()
         writer.headers = ["#",
                           "Dataset", "Attack", "Robust", "Iters",
@@ -58,10 +73,10 @@ class Results:
             mat[n] = [n + 1] + r
         writer.value_matrix = mat
         writer.write_table()
-        writer.dump(os.path.join(self.directory, 'table.txt'))
+        writer.dump(fn)
+        logger.debug(f'Saved to {fn}')
 
 
-if __name__ == '__main__':
-    res = Results('output')
-    res.load_results()
+def plot_results(directory):
+    res = Results(directory)
     res.write_table()

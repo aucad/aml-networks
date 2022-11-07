@@ -63,6 +63,7 @@ There are two execution modes: `experiment` and `validate`.
 - `experiment` mode trains a classifier and performs adversarial
   attack according to provided arguments.
 - `validate` mode will check a dataset records for correctness.
+- `plot` mode generates tables from captured experiment results.
 
 **Quick start**
 

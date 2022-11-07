@@ -20,7 +20,8 @@ from argparse import ArgumentParser
 from sys import exit
 from typing import Optional, List
 
-from src import __version__, __title__, Experiment, Validator, utility
+from src import __version__, __title__, \
+    Experiment, Validator, Plot, utility
 
 
 def main():
@@ -31,23 +32,27 @@ def main():
     parser = ArgumentParser(prog=__title__, description=main.__doc__)
     args = parse_args(parser)
 
+    options = ['exp', 'vld', 'plot']
+    choice = [args.which if hasattr(args, 'which') else None] * len(options)
+    is_exp, is_vld, is_plot = [a == b for a, b in zip(choice, options)]
+    init_logger(logging.FATAL if args.silent else logging.DEBUG)
+    if hasattr(args, 'out'):
+        utility.ensure_dir(args.out)
+
+    if is_plot:
+        Plot(args.dir)
+        return
+
     if not args.dataset:
         parser.print_help()
         exit(1)
 
-    ts = utility.ts_str()
-    utility.ensure_dir(args.out)
-    is_exp, is_validator = args.which == 'exp', args.which == 'vld'
-    fn = utility.generate_name(ts, args, 'txt') \
-        if is_exp and not args.no_save else None
-    init_logger(logging.FATAL if args.silent else logging.DEBUG, fn)
-
-    if is_validator:
+    if is_vld:
         Validator.validate_dataset(
             args.validator, args.dataset, args.capture, args.out)
 
     if is_exp:
-        Experiment(ts, **args.__dict__).run()
+        Experiment(utility.ts_str(), **args.__dict__).run()
 
 
 def init_logger(level: int, fn: str = None):
@@ -71,11 +76,13 @@ def init_logger(level: int, fn: str = None):
 def parse_args(parser: ArgumentParser, args: Optional[List] = None):
     """Setup available program arguments."""
 
-    subparsers = parser.add_subparsers(help='commands')
+    subparsers = parser.add_subparsers()
     exp_args(subparsers.add_parser(
         name='experiment', help='run attack experiment'))
     vld_args(subparsers.add_parser(
         name='validate', help='dataset validator'))
+    plot_args(subparsers.add_parser(
+        name='plot', help='plot experiment results'))
 
     parser.add_argument(
         "-v", "--version",
@@ -181,6 +188,21 @@ def vld_args(parser: ArgumentParser):
         action='store',
         default="output",
         help="output directory [default: output]"
+    )
+    parser.add_argument(
+        "--silent",
+        action='store_true',
+        help="disable console log"
+    )
+
+
+def plot_args(parser: ArgumentParser):
+    parser.set_defaults(which='plot')
+    parser.add_argument(
+        dest="dir",
+        action='store',
+        default="output",
+        help="path to directory with experiment results [default: output]"
     )
     parser.add_argument(
         "--silent",

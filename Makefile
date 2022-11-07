@@ -41,6 +41,3 @@ clean:
 	@find . -name '*.pyo' -exec rm -f {} +
 	@find . -name '*~' -exec rm -f {} +
 	@find . -name '__pycache__' -exec rm -fr {} +
-
-lint:
-	flake8 ./src --count --show-source --statistics

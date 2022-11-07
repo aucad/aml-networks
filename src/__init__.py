@@ -19,3 +19,5 @@ from src.xgb import XgBoost
 from src.hopskip import HopSkip
 from src.zoo import Zoo
 from src.experiment import Experiment
+# noinspection PyPep8Naming
+from src.plotter import plot_results as Plot

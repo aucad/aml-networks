@@ -19,7 +19,6 @@ def get_size(bytes, suffix="B"):
 def machine_details():
     result = {}
     uname = platform.uname()
-    cpufreq = psutil.cpu_freq()
     svmem = psutil.virtual_memory()
     result["system"] = uname.system
     result["release"] = uname.release
@@ -28,9 +27,13 @@ def machine_details():
     result["processor"] = uname.processor
     result["physical_cores"] = psutil.cpu_count(logical=False)
     result["total_cores"] = psutil.cpu_count(logical=True)
-    result["max_frequency"] = cpufreq.max
-    result["min_frequency"] = cpufreq.min
-    result["current_frequency"] = cpufreq.current
+    try:
+        cpufreq = psutil.cpu_freq()
+        result["max_frequency"] = cpufreq.max
+        result["min_frequency"] = cpufreq.min
+        result["current_frequency"] = cpufreq.current
+    except FileNotFoundError:
+        pass
     result["cpu_usage_per_core"] = \
         psutil.cpu_percent(percpu=True, interval=1)
     result["total_cpu_usage"] = psutil.cpu_percent()
