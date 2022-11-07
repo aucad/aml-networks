@@ -24,7 +24,7 @@ TIME = $(shell date)
 
 all:
 	@$(foreach i, $(ITERS), $(foreach r, $(ROBUST), $(foreach attack, $(ATTACKS), $(foreach ds, $(DATASETS),  \
-        python3 -m src experiment -a $(attack) $($(ds)) $($(r)) --iter $(i) ; )))) @echo "start $(TIME) end $(shell date)"
+        python3 -m src experiment -a $(attack) $($(ds)) $($(r)) --iter $(i) ; ))))
 
 valid:
 	@$(foreach file, $(wildcard $(DATA_DIR)/CTU*),  \
