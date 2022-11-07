@@ -37,8 +37,8 @@ class Results:
         return [
             record['dataset_name'],
             record['attack'],
-            record['max_iter'],
             record['robust'],
+            record['max_iter'],
             round(mean(record['_Result__f_score']), 2),
             round(n_ev / n_rec, 2) if n_rec > 0 else 0,
             round(mean(record['_Result__n_valid']) / n_ev, 2)
@@ -48,7 +48,7 @@ class Results:
     def write_table(self):
         writer = SpaceAlignedTableWriter()
         writer.headers = ["#",
-                          "Dataset", "Attack", "Iters", "Robust",
+                          "Dataset", "Attack", "Robust", "Iters",
                           "F-score", "Evasions", "Valid"]
         mat = []
         for record in self.raw_rata:
