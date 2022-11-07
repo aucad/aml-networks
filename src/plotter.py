@@ -3,7 +3,7 @@ import glob
 import os
 from statistics import mean
 
-from pytablewriter import SpaceAlignedTableWriter, MarkdownTableWriter
+from pytablewriter import SpaceAlignedTableWriter
 
 
 class Results:
@@ -30,7 +30,8 @@ class Results:
             data = json.load(open(file))
             self.add(data)
 
-    def extract_values(self, record):
+    @staticmethod
+    def extract_values(record):
         n_rec = mean(record['_Result__n_records'])
         n_ev = mean(record['_Result__n_evasions'])
         return [
@@ -61,6 +62,6 @@ class Results:
 
 
 if __name__ == '__main__':
-    res = Results('output-2')
+    res = Results('output')
     res.load_results()
     res.write_table()
