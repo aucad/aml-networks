@@ -1,7 +1,5 @@
 SHELL := /bin/bash
 
-DATA_DIR = ./data
-
 ifndef $ITERS
 ITERS:=2 5
 endif
@@ -14,26 +12,25 @@ ifndef $TIMES
 TIMES:=1
 endif
 
-ATTACKS = hop zoo
-ROBUST = T_ROBUST F_ROBUST
+DATA_DIR := ./data
 
+ATTACKS := hop zoo
+
+ROBUST = T_ROBUST F_ROBUST
 T_ROBUST := --robust
 F_ROBUST :=
 
-IOT_OPTIONS = --validator IOT23
-NB_OPTIONS = --validator NB15
+IOT_OPTIONS := --validator IOT23
+NB_OPTIONS := --validator NB15
 
-DS_1 = -d ./data/CTU-1-1.csv $(IOT_OPTIONS)
-DS_2 = -d ./data/nb15-10K.csv $(NB_OPTIONS)
+DS_1 := -d ./data/CTU-1-1.csv $(IOT_OPTIONS)
+DS_2 := -d ./data/nb15-10K.csv $(NB_OPTIONS)
 
 DATASETS := DS_1 DS_2
 
-TIME = $(shell date)
-
 all:
 	@$(foreach i, $(ITERS), $(foreach r, $(ROBUST), $(foreach attack, $(ATTACKS), $(foreach ds, $(DATASETS),  \
-        python3 -m src experiment -a $(attack) $($(ds)) $($(r)) --iter $(i) -s $(SAMPLE) -t $(TIMES) ; )))) \
-    echo $(TIME) - $(shell date)
+        python3 -m src experiment -a $(attack) $($(ds)) $($(r)) --iter $(i) -s $(SAMPLE) -t $(TIMES) ; ))))
 
 valid:
 	@$(foreach file, $(wildcard $(DATA_DIR)/CTU*),  \
