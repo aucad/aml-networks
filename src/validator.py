@@ -179,14 +179,6 @@ class IotTCP(Protocol):
         # this is also true for the receiving
         if record.resp_pkts > record.resp_ip_bytes:
             return False, "resp packets > bytes"
-        # if record.orig_ip_bytes < record.resp_ip_bytes:
-        #     # unless either history ShADadFf and state SF
-        #     # or history DdA and state: OTH
-        #     if not ((record.history_ShADadFf == 1 and
-        #              record.conn_state_SF == 1) or
-        #             (record.history_DdA == 1 and
-        #              record.conn_state_OTH == 1)):
-        #         return False, "hist conn state"
         # if conn state REJ then orig_ip_bytes=0 and resp_ip_bytes=0
         if record.conn_state_REJ == 1:
             if record.orig_ip_bytes != 0 or record.resp_ip_bytes != 0:
