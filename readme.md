@@ -58,12 +58,12 @@ The version number should be 0.72.
 ## Usage
 
 This application is intended for use over command line interface.
-There are two execution modes: `experiment` and `validate`.
+There are 3 execution modes: `experiment`, `plot` and `validate`.
 
 - `experiment` mode trains a classifier and performs adversarial
   attack according to provided arguments.
-- `validate` mode will check a dataset records for correctness.
 - `plot` mode generates tables from captured experiment results.
+- `validate` mode will check a dataset records for correctness.
 
 **Quick start**
 
@@ -73,23 +73,34 @@ Run all experiments
 make all
 ```
 
+Plot results
+
+```
+make plot
+```
+
 Validate datasets
 
 ```
 make valid
 ```
 
-
 **CLI commands**
 
 ```
-python3 -m src {experiment|validate} [ARGS]
+python3 -m src {experiment|plot|validate} [ARGS]
 ```
 
 To see available options for experiments, run:
 
 ```
 python3 -m src experiment --help
+```
+
+To see available options for plotting results, run:
+
+```
+python3 -m src plot --help
 ```
 
 To see available options for the validator, run:
@@ -116,9 +127,9 @@ python3 -m src validate --help
 | 　`└─ experiment.py` | Runs an attack experiment                 |
 | 　`└─ hopskip.py`    | HopSkipJump attack implementation         |
 | 　`└─ machine.py`    | Captures current machine details          |
+| 　`└─ plotter.py`    | Experiment results plotting               |
 | 　`└─ tree.py`       | Decision tree classifier training         |
 | 　`└─ utility.py`    | Shared functionality utilities            |
 | 　`└─ validator.py`  | Network dataset  validator                |
 | 　`└─ xgb.py`        | XGBoost classifier training               |
 | 　`└─ zoo.py`        | ZOO attack implementation                 |
-
