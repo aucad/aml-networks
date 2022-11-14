@@ -28,9 +28,12 @@ DS_2 = -d ./data/nb15-10K.csv $(NB_OPTIONS)
 
 DATASETS := DS_1 DS_2
 
+TIME = $(shell date)
+
 all:
 	@$(foreach i, $(ITERS), $(foreach r, $(ROBUST), $(foreach attack, $(ATTACKS), $(foreach ds, $(DATASETS),  \
-        python3 -m src experiment -a $(attack) $($(ds)) $($(r)) --iter $(i) -s $(SAMPLE) -t $(TIMES) ; ))))
+        python3 -m src experiment -a $(attack) $($(ds)) $($(r)) --iter $(i) -s $(SAMPLE) -t $(TIMES) ; )))) \
+    echo $(TIME) - $(shell date)
 
 valid:
 	@$(foreach file, $(wildcard $(DATA_DIR)/CTU*),  \
