@@ -128,8 +128,8 @@ def exp_args(parser: ArgumentParser):
     parser.add_argument(
         '-f', '--folds',
         type=int,
-        choices=range(1, 11),
-        metavar="1-10",
+        choices=range(2, 11),
+        metavar="2-10",
         help='number of k-folds splits [default: 5]',
         default=5
     )
@@ -140,6 +140,20 @@ def exp_args(parser: ArgumentParser):
         metavar="1-500",
         help='max attack iterations',
         default=0
+    )
+    parser.add_argument(
+        '-s', '--sample_size',
+        type=int,
+        help='number of records to perturb (all if unset)',
+        default=0
+    )
+    parser.add_argument(
+        '-t', '--sample_times',
+        type=int,
+        choices=range(1, 10),
+        metavar="1-10",
+        help='number of times to sample [default: 1]',
+        default=1
     )
     parser.add_argument(
         "--robust",

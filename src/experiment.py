@@ -2,6 +2,7 @@ import json
 import logging
 import time
 from collections import namedtuple
+from random import sample
 from typing import Tuple, List
 
 import numpy as np
@@ -163,14 +164,25 @@ class Experiment:
                 self.mask_cols.append(col_i)
 
     def do_fold(self, fold_num: int, fold_indices: List[int]):
+
+        def attack_round(sample_size):
+            sample_idx = None if sample_size < 1 else \
+                sample(range(0, self.cls.n_test), sample_size)
+            self.attack.reset().set_cls(self.cls, sample_idx).run()
+            self.stats.append_attack(self.attack)
+
         self.cls.reset().load(
             self.X.copy(), self.y.copy(),
             *fold_indices, fold_num).train()
         self.stats.append_cls(self.cls)
-        if self.attack:
-            self.attack.reset().set_cls(self.cls).run()
-            self.stats.append_attack(self.attack)
         self.log_fold_result(fold_num)
+        ss = 0 if self.config.sample_size < 1 else \
+            min(self.config.sample_size, self.cls.n_test)
+
+        if self.attack:
+            for n in range(self.config.sample_times):
+                attack_round(ss)
+                self.log_fold_attack(n + 1)
 
     def run(self):
         config = self.config
@@ -192,7 +204,6 @@ class Experiment:
         for i, fold in enumerate(self.folds):
             self.do_fold(i + 1, fold)
         self.end_time = time.time_ns()
-
         self.log_experiment_result()
         self.save_result()
 
@@ -209,15 +220,21 @@ class Experiment:
         if self.attack:
             Show('Attack', self.attack.name)
             Show('Attack max iter', self.attack.max_iter)
+            if self.config.sample_size > 0:
+                Show('Records sample',
+                     f'{self.config.sample_size} x '
+                     f'{self.config.sample_times}')
 
     def log_fold_result(self, fold_n: int):
-        if fold_n == 1:
-            Show('=' * 52, '')
+        print('=' * 52)
         Show('Fold', fold_n)
         Show('Accuracy', f'{self.cls.accuracy * 100:.2f} %')
         Show('Precision', f'{self.cls.precision * 100:.2f} %')
         Show('Recall', f'{self.cls.recall * 100:.2f} %')
         Show('F-score', f'{self.cls.f_score * 100:.2f} %')
+
+    def log_fold_attack(self, sample_n: int):
+        Show('Sample', f'{sample_n} of {self.config.sample_times}')
         if self.attack:
             Ratio('Evasions', self.attack.n_evasions,
                   self.attack.n_records)
@@ -235,7 +252,7 @@ class Experiment:
                  .format(*self.attack.error))
 
     def log_experiment_result(self):
-        Show('=' * 52, '')
+        print('=' * 52, '')
         Show('Avg. Accuracy', f'{(self.stats.accuracy * 100):.2f} %')
         Show('Avg. Precision', f'{(self.stats.precision * 100):.2f} %')
         Show('Avg. Recall', f'{(self.stats.recall * 100):.2f} %')
@@ -266,6 +283,8 @@ class Experiment:
             'k_folds': self.config.folds,
             'validator': self.config.validator,
             'classifier': self.config.cls,
+            'sample_size': self.config.sample_size,
+            'sample_times': self.config.sample_times,
             'attack': self.config.attack,
             'attr_ranges': dict(
                 zip(self.attrs, self.attr_ranges.values())),

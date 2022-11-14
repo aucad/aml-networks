@@ -101,8 +101,9 @@ class Classifier:
 
     @property
     def f_score(self):
-        return (2 * self.precision * self.recall) / \
-               (self.precision + self.recall)
+        pr = self.precision + self.recall
+        return 0 if pr == 0 else \
+            (2 * self.precision * self.recall) / pr
 
     @staticmethod
     def formatter(x, y):

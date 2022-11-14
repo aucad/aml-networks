@@ -9,8 +9,8 @@ from src import Classifier, Validator, sdiv, utility
 class Attack:
 
     def __init__(
-            self, name, default_iter, validator, uuid, capture, iters,
-            silent
+            self, name, default_iter, validator, uuid,
+            capture, iters, silent
     ):
         self.uuid = uuid
         self.name = name
@@ -113,11 +113,12 @@ class Attack:
             f'{self.uuid}_{self.name}_{self.cls.name}_'
             f'{self.cls.fold_n}_{n}.png')
 
-    def set_cls(self, cls: Classifier):
+    def set_cls(self, cls: Classifier, indices=None):
         self.cls = cls
         self.out_dir = cls.out_dir
-        self.ori_x = cls.test_x.copy()
-        self.ori_y = cls.test_y.copy()
+        indices = indices or range(cls.n_test)
+        self.ori_x = cls.test_x.copy()[indices, :]
+        self.ori_y = cls.test_y.copy()[indices]
         return self
 
     @staticmethod

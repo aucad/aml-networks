@@ -6,6 +6,14 @@ ifndef $ITERS
 ITERS:=2 5
 endif
 
+ifndef $SAMPLE
+SAMPLE:=0
+endif
+
+ifndef $TIMES
+TIMES:=1
+endif
+
 ATTACKS = hop zoo
 ROBUST = T_ROBUST F_ROBUST
 
@@ -20,17 +28,18 @@ DS_2 = -d ./data/nb15-10K.csv $(NB_OPTIONS)
 
 DATASETS := DS_1 DS_2
 
-TIME = $(shell date)
-
 all:
 	@$(foreach i, $(ITERS), $(foreach r, $(ROBUST), $(foreach attack, $(ATTACKS), $(foreach ds, $(DATASETS),  \
-        python3 -m src experiment -a $(attack) $($(ds)) $($(r)) --iter $(i) ; ))))
+        python3 -m src experiment -a $(attack) $($(ds)) $($(r)) --iter $(i) -s $(SAMPLE) -t $(TIMES) ; ))))
 
 valid:
 	@$(foreach file, $(wildcard $(DATA_DIR)/CTU*),  \
 		python3 -m src validate -d $(file) $(IOT_OPTIONS) --capture;)
 	@$(foreach file, $(wildcard $(DATA_DIR)/nb15*), \
 		python3 -m src validate -d $(file) $(NB_OPTIONS) --capture;)
+
+plot:
+	@python3 -m src plot output
 
 code_stats:
 	@cd src && find . -name '*.py' | xargs wc -l && cd ..
