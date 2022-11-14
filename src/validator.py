@@ -263,6 +263,15 @@ class Validator:
     IOT23 = 'IOT23'
 
     @staticmethod
+    def determine_proto_val(attr, record, i):
+        try:
+            return attr, int(record[i])
+        except ValueError:
+            if str(record[i]) in ['tcp', 'udp', 'icmp']:
+                return str(record[i]), 1
+        return attr, 0
+
+    @staticmethod
     def determine_proto(validator_kind, attrs, record) \
             -> Union[Protocol, None]:
         """Determine protocol for a record, and instantiate
@@ -274,7 +283,7 @@ class Validator:
         rec_nd = dict([(a, b) for a, b in zip(attrs, record)])
         proto_label = next(
             (a for a, b in
-             [(lbl, int(record[i])) for i, lbl
+             [Validator.determine_proto_val(lbl, record, i) for i, lbl
               in enumerate(attrs) if 'proto' in lbl]
              if b == 1), 'other')
         if 'tcp' in proto_label:

@@ -79,7 +79,7 @@ def parse_args(parser: ArgumentParser, args: Optional[List] = None):
     subparsers = parser.add_subparsers()
     exp_args(subparsers.add_parser(
         name='experiment', help='run attack experiment'))
-    vld_args(subparsers.add_parser(
+    validator_args(subparsers.add_parser(
         name='validate', help='dataset validator'))
     plot_args(subparsers.add_parser(
         name='plot', help='plot experiment results'))
@@ -177,7 +177,7 @@ def exp_args(parser: ArgumentParser):
     )
 
 
-def vld_args(parser: ArgumentParser):
+def validator_args(parser: ArgumentParser):
     parser.set_defaults(which='vld')
     parser.add_argument(
         '-d', '--dataset',
@@ -195,7 +195,7 @@ def vld_args(parser: ArgumentParser):
     parser.add_argument(
         "--capture",
         action='store_true',
-        help="save generated records (original, adversarial)",
+        help="save invalid records to file",
     )
     parser.add_argument(
         "-o", "--out",
