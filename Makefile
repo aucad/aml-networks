@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 ifndef $ITERS
-ITERS:=2 5
+ITERS:=2 5 0
 endif
 
 ifndef $SAMPLE
