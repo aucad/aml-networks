@@ -162,15 +162,17 @@ class IotTCP(Protocol):
     def ensure_attrs():
         names = 'conn_state_S0 conn_state_SF conn_state_OTH ' \
                 'conn_state_REJ history_ShADadFf history_DdA ' \
-                'resp_ip_bytes resp_pkts orig_ip_bytes orig_pkts'
-        return Protocol.kv_dict(names, [0] * 10)
+                'resp_ip_bytes resp_pkts orig_ip_bytes orig_pkts ' \
+                'conn_state_RSTR'
+        return Protocol.kv_dict(names, [0] * 11)
 
     @staticmethod
     def validate(record) -> Tuple[bool, Union[str, None]]:
         if record.orig_pkts < record.resp_pkts:
             # the condition is true unless it is OTH
             if not record.resp_bytes >= record.orig_bytes and \
-                    record.conn_state_OTH != 1:
+                    not (record.conn_state_OTH == 1 or
+                         record.conn_state_RSTR == 1):
                 return False, "ori pkts < resp pkts"
         # in S0 resp_pkts = 0 and resp_ip_bytes = 0
         if record.conn_state_S0 == 1:
