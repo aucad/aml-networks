@@ -62,7 +62,7 @@ class NbTCP(Protocol):
 
     @staticmethod
     def validate(record) -> Tuple[bool, Union[str, None]]:
-        if record.swin != 255 or record.dwin != 255:
+        if record.swin != 255 and record.dwin != 255:
             # OK if dbytes==0 then dwin==0 or state is FIN
             if not ((record.dbytes == 0 and record.dwin == 0)
                     or record.state_FIN == 1):
