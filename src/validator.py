@@ -167,8 +167,11 @@ class IotTCP(Protocol):
 
     @staticmethod
     def validate(record) -> Tuple[bool, Union[str, None]]:
-        # if record.orig_pkts < record.resp_pkts:
-        #     return False, "ori pkts < resp pkts"
+        if record.orig_pkts < record.resp_pkts:
+            # the condition is true unless it is OTH
+            if not record.resp_bytes >= record.orig_bytes and \
+                    record.conn_state_OTH != 1:
+                return False, "ori pkts < resp pkts"
         # in S0 resp_pkts = 0 and resp_ip_bytes = 0
         if record.conn_state_S0 == 1:
             if record.resp_pkts != 0 or record.resp_ip_bytes != 0:
@@ -176,9 +179,13 @@ class IotTCP(Protocol):
         # number of packets would be smaller than the bytes sent,
         if record.orig_pkts > record.orig_ip_bytes:
             return False, "ori packets > bytes"
+        if record.orig_pkts > 0 and not record.orig_ip_bytes >= 20:
+            return False, "ori > 0 -> bytes >= 20"
         # this is also true for the receiving
         if record.resp_pkts > record.resp_ip_bytes:
             return False, "resp packets > bytes"
+        if record.resp_pkts > 0 and not record.resp_ip_bytes >= 20:
+            return False, "resp > 0 -> bytes >= 20"
         # if conn state REJ then orig_ip_bytes=0 and resp_ip_bytes=0
         if record.conn_state_REJ == 1:
             if record.orig_ip_bytes != 0 or record.resp_ip_bytes != 0:
