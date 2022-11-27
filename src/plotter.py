@@ -4,20 +4,21 @@ import logging
 import os
 from statistics import mean
 
-from pytablewriter import SpaceAlignedTableWriter
+from pytablewriter import SpaceAlignedTableWriter, LatexTableWriter
 
 logger = logging.getLogger(__name__)
 
 
 class Results:
 
-    def __init__(self, directory):
+    def __init__(self, directory, fmt):
         self.raw_rata = []
         self.robust = set()
         self.datasets = set()
         self.attacks = set()
         self.iters = set()
         self.directory = directory
+        self.format = fmt
         self.load_results()
 
     @property
@@ -60,8 +61,10 @@ class Results:
             logger.warning("Nothing was plotted.")
             return
 
-        fn = os.path.join(self.directory, 'table.txt')
-        writer = SpaceAlignedTableWriter()
+        file_ext = 'txt' if self.format != 'tex' else 'tex'
+        fn = os.path.join(self.directory, f'table.{file_ext}')
+        writer = SpaceAlignedTableWriter() if self.format != 'tex' \
+            else LatexTableWriter()
         writer.headers = ["#",
                           "Dataset", "Attack", "Robust", "Iters",
                           "F-score", "Evasions", "Valid"]
@@ -77,6 +80,6 @@ class Results:
         logger.debug(f'Saved to {fn}')
 
 
-def plot_results(directory):
-    res = Results(directory)
+def plot_results(directory, fmt):
+    res = Results(directory, fmt)
     res.write_table()

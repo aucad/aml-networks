@@ -30,7 +30,7 @@ class Experiment:
 
     class AttackLoader:
         """Load selected attack mode."""
-        HOP_SKIP = 'hop'
+        HOP_SKIP = 'hsj'
         ZOO = 'zoo'
 
         @staticmethod

@@ -14,7 +14,7 @@ endif
 
 DATA_DIR := ./data
 
-ATTACKS := hop zoo
+ATTACKS := hsj zoo
 
 ROBUST = T_ROBUST F_ROBUST
 T_ROBUST := --robust
@@ -31,6 +31,10 @@ DATASETS := DS_1 DS_2
 all:
 	@$(foreach i, $(ITERS), $(foreach r, $(ROBUST), $(foreach attack, $(ATTACKS), $(foreach ds, $(DATASETS),  \
         python3 -m src experiment -a $(attack) $($(ds)) $($(r)) --iter $(i) -s $(SAMPLE) -t $(TIMES) ; ))))
+
+sample:
+	@$(foreach i, $(ITERS), $(foreach r, $(ROBUST), $(foreach attack, $(ATTACKS), \
+        python3 -m src experiment -a $(attack) $(DS_2) $($(r)) --iter $(i) -s 50 -t 3 ; )))
 
 valid:
 	@$(foreach file, $(wildcard $(DATA_DIR)/CTU*),  \

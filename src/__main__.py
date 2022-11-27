@@ -40,7 +40,7 @@ def main():
         utility.ensure_dir(args.out)
 
     if is_plot:
-        Plot(args.dir)
+        Plot(args.dir, args.format)
         return
 
     if not args.dataset:
@@ -216,7 +216,13 @@ def plot_args(parser: ArgumentParser):
         dest="dir",
         action='store',
         default="output",
-        help="path to directory with experiment results [default: output]"
+        help="path to directory with results [default: output]"
+    )
+    parser.add_argument(
+        '-f', '--format',
+        action='store',
+        choices=['plain', 'tex'],
+        help='evasion attack [default: plain]'
     )
     parser.add_argument(
         "--silent",
