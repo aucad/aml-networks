@@ -7,7 +7,7 @@ ADAM coordinate descent to perform numerical estimation of gradients.
 Paper: https://arxiv.org/abs/1708.03999
 """
 
-from art.attacks.evasion import ZooAttack as ARTZooAttack
+from art.attacks.evasion import ZooAttack
 
 from src import Attack, utility
 
@@ -19,8 +19,7 @@ class Zoo(Attack):
 
     def generate_adv_examples(self, iters) -> None:
         """Generate the adversarial examples using ZOO attack."""
-
-        self.adv_x = ARTZooAttack(
+        self.adv_x = ZooAttack(
             # A trained classifier
             classifier=self.cls.classifier,
             # Confidence of adversarial examples: a higher value
