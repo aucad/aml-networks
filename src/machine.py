@@ -2,7 +2,7 @@ import psutil
 import platform
 
 
-def get_size(bytes, suffix="B"):
+def get_size(bytes_, suffix="B"):
     """
     Scale bytes to its proper format
     e.g:
@@ -11,34 +11,34 @@ def get_size(bytes, suffix="B"):
     """
     factor = 1024
     for unit in ["", "K", "M", "G", "T", "P"]:
-        if bytes < factor:
-            return f"{bytes:.2f}{unit}{suffix}"
-        bytes /= factor
+        if bytes_ < factor:
+            return f"{bytes_:.2f}{unit}{suffix}"
+        bytes_ /= factor
 
 
 def machine_details():
     result = {}
     uname = platform.uname()
-    svmem = psutil.virtual_memory()
+    mem = psutil.virtual_memory()
     result["system"] = uname.system
     result["release"] = uname.release
     result["version"] = uname.version
     result["machine"] = uname.machine
     result["processor"] = uname.processor
-    result["physical_cores"] = psutil.cpu_count(logical=False)
-    result["total_cores"] = psutil.cpu_count(logical=True)
+    result["cpu_physical_cores"] = psutil.cpu_count(logical=False)
+    result["cpu_total_cores"] = psutil.cpu_count(logical=True)
     try:
         cpufreq = psutil.cpu_freq()
-        result["max_frequency"] = cpufreq.max
-        result["min_frequency"] = cpufreq.min
-        result["current_frequency"] = cpufreq.current
+        result["cpu_max_frequency"] = cpufreq.max
+        result["cpu_min_frequency"] = cpufreq.min
+        result["cpu_current_frequency"] = cpufreq.current
     except FileNotFoundError:
         pass
     result["cpu_usage_per_core"] = \
         psutil.cpu_percent(percpu=True, interval=1)
-    result["total_cpu_usage"] = psutil.cpu_percent()
-    result["total"] = get_size(svmem.total)
-    result["available"] = get_size(svmem.available)
-    result["used"] = get_size(svmem.used)
-    result["percentage"] = svmem.percent
+    result["cpu_total_usage"] = psutil.cpu_percent()
+    result["virtual_mem_total_size"] = get_size(mem.total)
+    result["virtual_mem_available"] = get_size(mem.available)
+    result["virtual_mem_used"] = get_size(mem.used)
+    result["virtual_mem_percentage"] = mem.percent
     return result

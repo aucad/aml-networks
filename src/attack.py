@@ -1,3 +1,4 @@
+from collections import Counter
 from os import path
 from typing import Optional
 
@@ -92,6 +93,22 @@ class Attack:
         return err_min, err_max
 
     @property
+    def init_proto(self):
+        return self.get_proto_stats(self.ori_x)
+
+    @property
+    def adv_proto(self):
+        input_ = self.adv_x[self.evasions] \
+            if self.n_evasions > 0 else []
+        return self.get_proto_stats(input_)
+
+    @property
+    def adv_proto_valid(self):
+        input_ = self.adv_x[self.idx_valid_evades] \
+            if self.n_valid > 0 else []
+        return self.get_proto_stats(input_)
+
+    @property
     def label_stats(self) -> dict:
         result, final_labels = {}, []
         if self.use_validator:
@@ -106,6 +123,14 @@ class Attack:
             key = self.cls.text_label(label)
             result[key] = n
         return result
+
+    def get_proto_stats(self, records) -> dict:
+        if not self.use_validator:
+            return {}
+        labels = [Validator.determine_proto(
+            self.validator_kind, self.cls.attrs, r).name for r in
+                  records]
+        return dict(Counter(labels))
 
     def figure_name(self, n):
         return path.join(

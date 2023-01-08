@@ -46,6 +46,9 @@ class Results:
         acc = record['_Result__accuracy']
         n_rec = mean(record['_Result__n_records'])
         n_ev = mean(record['_Result__n_evasions'])
+        n_valid = sum(record['_Result__n_valid'])
+        bm = sum([r['benign'] for r in record['_Result__labels']])
+        mb = sum([r['malicious'] for r in record['_Result__labels']])
         return [
             record['dataset_name'],
             record['attack'],
@@ -55,7 +58,9 @@ class Results:
             f"{round(mean(acc), 2)} ± {round(stdev(acc), 2)}",
             round(n_ev / n_rec, 2) if n_rec > 0 else 0,
             round(mean(record['_Result__n_valid']) / n_ev, 2)
-            if n_ev > 0 else 0
+            if n_ev > 0 else 0,
+            f"{(100 * bm / n_valid) if n_valid > 0 else 0:.0f}/"
+            f"{(100 * mb / n_valid) if n_valid > 0 else 0:.0f}",
         ]
 
     def write_table(self):
@@ -70,7 +75,8 @@ class Results:
             else LatexTableWriter()
         writer.headers = ["#",
                           "Dataset", "Attack", "Robust", "Iters",
-                          "F-score", "Accuracy", "Evasions", "Valid"]
+                          "F-score", "Accuracy", "Evasions", "Valid",
+                          "B/M"]
         mat = []
         for record in self.raw_rata:
             mat.append(self.extract_values(record))

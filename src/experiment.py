@@ -54,6 +54,9 @@ class Experiment:
             self.__labels = []
             self.__validations = []
             self.__errors = []
+            self.__proto_init = None
+            self.__proto_evasions = []
+            self.__proto_valid = []
 
         def append_attack(self, attack: Attack):
             self.__n_evasions.append(attack.n_evasions)
@@ -62,6 +65,10 @@ class Experiment:
             self.__labels.append(attack.label_stats)
             self.__validations.append(attack.validation_reasons)
             self.__errors.append(attack.error)
+            self.__proto_evasions.append(attack.adv_proto)
+            self.__proto_valid.append(attack.adv_proto_valid)
+            if not self.__proto_init:
+                self.__proto_init = attack.init_proto
 
         def append_cls(self, cls: Classifier):
             self.__accuracy.append(cls.accuracy)
@@ -248,8 +255,6 @@ class Experiment:
                 Show('Invalid reasons',
                      utility.dump_num_dict(
                          self.attack.validation_reasons))
-            Show('L-norm', "{0:.6f} - {1:.6f}"
-                 .format(*self.attack.error))
 
     def log_experiment_result(self):
         print('=' * 52, '')

@@ -42,6 +42,10 @@ valid:
 	@$(foreach file, $(wildcard $(DATA_DIR)/nb15*), \
 		python3 -m src validate -d $(file) $(NB_OPTIONS) --capture;)
 
+proto:
+	@$(foreach r, $(ROBUST), $(foreach attack, $(ATTACKS), $(foreach ds, $(DATASETS),  \
+        python3 -m src experiment -a $(attack) $($(ds)) $($(r)) --iter 0 -s 0 -t 1 ; )))
+
 plot:
 	@python3 -m src plot output
 

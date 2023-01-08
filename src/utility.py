@@ -65,7 +65,8 @@ def show_ratio(label, num, denom):
     if denom == 0:
         return show(label, 0)
     ratio = 100 * num / denom
-    return show(label, f'{num} of {denom} - {ratio:.1f} %')
+    return show(label, f'{round(num, 0)} of {round(denom, 0)}'
+                       f' - {ratio:.1f} %')
 
 
 def clear_one_line():
