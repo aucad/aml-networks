@@ -54,7 +54,7 @@ class Experiment:
             self.__labels = []
             self.__validations = []
             self.__errors = []
-            self.__proto_init = None
+            self.__proto_init = []
             self.__proto_evasions = []
             self.__proto_valid = []
 
@@ -65,10 +65,9 @@ class Experiment:
             self.__labels.append(attack.label_stats)
             self.__validations.append(attack.validation_reasons)
             self.__errors.append(attack.error)
+            self.__proto_init.append(attack.init_proto)
             self.__proto_evasions.append(attack.adv_proto)
             self.__proto_valid.append(attack.adv_proto_valid)
-            if not self.__proto_init:
-                self.__proto_init = attack.init_proto
 
         def append_cls(self, cls: Classifier):
             self.__accuracy.append(cls.accuracy)

@@ -63,6 +63,28 @@ class Results:
             f"{(100 * mb / n_valid) if n_valid > 0 else 0:.0f}",
         ]
 
+    @staticmethod
+    def extract_proto_values(record, labels):
+        ev_protos = [round(p, 2) for p in [
+            mean([succ[lbl] / init[lbl]
+                  if lbl in init and init[lbl] > 0 and lbl in succ
+                  else 0 for init, succ in
+                  zip(record['_Result__proto_init'],
+                      record['_Result__proto_evasions'])])
+            for idx, lbl in enumerate(labels)]]
+        vd_protos = [round(p, 2) for p in [
+            mean([succ[lbl] / init[lbl]
+                  if lbl in init and init[lbl] > 0 and lbl in succ
+                  else 0 for init, succ in
+                  zip(record['_Result__proto_evasions'],
+                      record['_Result__proto_valid'])])
+            for idx, lbl in enumerate(labels)]]
+
+        return [record['dataset_name'],
+                record['attack'],
+                record['robust'],
+                record['max_iter']] + ev_protos + vd_protos
+
     def write_table(self):
         if self.n_results == 0:
             logger.warning("No results found in results directory.")
@@ -88,7 +110,38 @@ class Results:
         writer.dump(fn)
         logger.debug(f'Saved to {fn}')
 
+    def write_proto_table(self):
+        if self.n_results == 0:
+            logger.warning("No results found in results directory.")
+            logger.warning("Nothing was plotted.")
+            return
+
+        file_ext = 'txt' if self.format != 'tex' else 'tex'
+        fn = os.path.join(self.directory, f'table_proto.{file_ext}')
+        writer = SpaceAlignedTableWriter() if self.format != 'tex' \
+            else LatexTableWriter()
+        protos = []
+        for record in self.raw_rata:
+            for item in record['_Result__proto_init']:
+                protos += item.keys()
+        protos = sorted(list(set(protos)))
+        proto_labels = [f"E-{p}" for p in protos] + \
+                       [f"V-{p}" for p in protos]
+        writer.headers = ["#", "Dataset", "Attack", "Robust",
+                          "Iters"] + proto_labels
+        mat = []
+        for record in self.raw_rata:
+            mat.append(self.extract_proto_values(record, protos))
+        mat = sorted(mat, key=lambda x: (x[0], x[1], x[2], x[3]))
+        for n, r in enumerate(mat):
+            mat[n] = [n + 1] + r
+        writer.value_matrix = mat
+        writer.write_table()
+        writer.dump(fn)
+        logger.debug(f'Saved to {fn}')
+
 
 def plot_results(directory, fmt):
     res = Results(directory, fmt)
     res.write_table()
+    res.write_proto_table()
