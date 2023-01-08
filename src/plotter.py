@@ -2,7 +2,7 @@ import json
 import glob
 import logging
 import os
-from statistics import mean
+from statistics import mean, stdev
 
 from pytablewriter import SpaceAlignedTableWriter, LatexTableWriter
 
@@ -42,6 +42,8 @@ class Results:
 
     @staticmethod
     def extract_values(record):
+        fs = record['_Result__f_score']
+        acc = record['_Result__accuracy']
         n_rec = mean(record['_Result__n_records'])
         n_ev = mean(record['_Result__n_evasions'])
         return [
@@ -49,7 +51,8 @@ class Results:
             record['attack'],
             record['robust'],
             record['max_iter'],
-            round(mean(record['_Result__f_score']), 2),
+            f"{round(mean(fs), 2)} ± {round(stdev(fs), 2)}",
+            f"{round(mean(acc), 2)} ± {round(stdev(acc), 2)}",
             round(n_ev / n_rec, 2) if n_rec > 0 else 0,
             round(mean(record['_Result__n_valid']) / n_ev, 2)
             if n_ev > 0 else 0
@@ -67,7 +70,7 @@ class Results:
             else LatexTableWriter()
         writer.headers = ["#",
                           "Dataset", "Attack", "Robust", "Iters",
-                          "F-score", "Evasions", "Valid"]
+                          "F-score", "Accuracy", "Evasions", "Valid"]
         mat = []
         for record in self.raw_rata:
             mat.append(self.extract_values(record))
