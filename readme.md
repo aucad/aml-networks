@@ -1,7 +1,6 @@
-# Adversarial attacks in networks
+# Adversarial Machine Learning in NIDSs
 
-This repository implements an evaluation pipeline to measure success rate of adversarial machine learning
-evasion attacks in network settings.
+This repository implements an evaluation pipeline to measure success rate of adversarial machine learning evasion attacks in network intrusion detection systems (NIDSs).
 
 It involves evaluation of two network data sets and two adversarial black-box attacks, on a
 tree-based ensemble learner XGBoost. The classifier is enhanced with an adversarial robustness property. The classifier
