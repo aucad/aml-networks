@@ -134,9 +134,10 @@ class Results:
                     reasons = sorted(
                         list(ress.items()), reverse=True,
                         key=lambda x: x[1])
-                    for res in reasons:
-                        r, v = res[0].replace(proto, '', 1), res[1]
-                        mat.append([ds, att, proto, r, v])
+                    tot = sum([r[1] for r in reasons])
+                    for r, v in reasons:
+                        r, v = r.replace(proto, '', 1), v / tot
+                        mat.append([ds, att, proto, r, round(v, 2)])
         return headers, mat
 
     def write_table(self, headers, mat, file_name, sorter=None):
