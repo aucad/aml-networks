@@ -1,8 +1,14 @@
-# Adversarial attacks on tree-based classifiers
+# Adversarial attacks in networks
 
-Link to notes:
+This repository implements an evaluation pipeline to measure success rate of adversarial machine learning
+evasion attacks in network settings.
 
-<https://docs.google.com/document/d/1xqCDqrakSaXkOxijwse3zQ23Rm7-38m-rMJp7iLjS6A/edit?usp=sharing>
+It involves evaluation of two network data sets and two adversarial black-box attacks, on a
+tree-based ensemble learner XGBoost. The classifier is enhanced with an adversarial robustness property. The classifier
+must be [built from source](#build-robust-xgboost) before performing any experiments. 
+
+This repository then provides an implementation to perform various experiments in the specified adversarial setting.
+Instructions for running pre-defined experiments, and extended custom usage is explained in section [usage](#usage).
 
 ## Datasets
 
@@ -67,11 +73,21 @@ There are 3 execution modes: `experiment`, `plot` and `validate`.
 
 **Quick start**
 
-Run all experiments
+Run experiments
 
 ```
 make all
 ```
+
+The default experiment uses full cross-validation holdout set, and
+repeats experiments for three options of max iterations.
+
+There are two alternative pre-defined experiments:
+
+- `make sample` runs the experiment on limited input size of 50 records
+- `make proto` (subset of all); runs experiment for default iterations only.
+
+Custom experiments can be defined using the CLI commands.
 
 Plot results
 
