@@ -8,7 +8,7 @@ tree-based ensemble learner XGBoost. The classifier is enhanced with an adversar
 must be [built from source](#build-robust-xgboost) before performing any experiments. 
 
 This repository then provides an implementation to perform various experiments in the specified adversarial setting.
-Instructions for running pre-defined experiments, and extended custom usage is explained in section [usage](#usage).
+Instructions for running pre-defined experiments, and extended custom usage, is explained in section [usage](#usage).
 
 ## Datasets
 
@@ -84,8 +84,8 @@ repeats experiments for three options of max iterations.
 
 There are two alternative pre-defined experiments:
 
-- `make sample` runs the experiment on limited input size of 50 records
-- `make proto` (subset of all); runs experiment for default iterations only.
+- `make sample` runs the experiment on limited input size of 50 records.
+- `make proto` subset of all; runs experiment for default iterations only.
 
 Custom experiments can be defined using the CLI commands.
 
