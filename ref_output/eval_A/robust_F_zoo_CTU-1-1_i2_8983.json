@@ -1,0 +1,262 @@
+{
+    "dataset": "./data/CTU-1-1.csv",
+    "dataset_name": "CTU-1-1",
+    "n_records": 10000,
+    "n_attributes": 16,
+    "attrs": [
+        "proto_tcp",
+        "proto_udp",
+        "proto_icmp",
+        "duration",
+        "orig_bytes",
+        "resp_bytes",
+        "conn_state_OTH",
+        "missed_bytes",
+        "history_S",
+        "history_D",
+        "history_other",
+        "orig_pkts",
+        "orig_ip_bytes",
+        "resp_pkts",
+        "resp_ip_bytes",
+        "label"
+    ],
+    "immutable": [
+        0,
+        1,
+        2,
+        6,
+        7,
+        8,
+        9,
+        10
+    ],
+    "attr_mutable": [
+        "duration",
+        "orig_bytes",
+        "orig_ip_bytes",
+        "orig_pkts",
+        "resp_bytes",
+        "resp_ip_bytes",
+        "resp_pkts"
+    ],
+    "attr_immutable": [
+        "conn_state_OTH",
+        "history_D",
+        "history_S",
+        "history_other",
+        "missed_bytes",
+        "proto_icmp",
+        "proto_tcp",
+        "proto_udp"
+    ],
+    "robust": false,
+    "classes": [
+        "benign",
+        "malicious"
+    ],
+    "k_folds": 5,
+    "validator": "IOT23",
+    "classifier": "xgb",
+    "sample_size": 0,
+    "sample_times": 1,
+    "attack": "zoo",
+    "attr_ranges": {
+        "proto_tcp": 1.0,
+        "proto_udp": 1.0,
+        "proto_icmp": 1.0,
+        "duration": 173.569979,
+        "orig_bytes": 580.0,
+        "resp_bytes": 1552.0,
+        "conn_state_OTH": 1.0,
+        "missed_bytes": 0.0,
+        "history_S": 1.0,
+        "history_D": 1.0,
+        "history_other": 1.0,
+        "orig_pkts": 46.0,
+        "orig_ip_bytes": 2515.0,
+        "resp_pkts": 60.0,
+        "resp_ip_bytes": 3956.0
+    },
+    "start": 1674679970109082000,
+    "end": 1674680037921003000,
+    "current_utc": 1674680037921433000,
+    "max_iter": 2,
+    "_Result__accuracy": [
+        0.998,
+        0.997,
+        0.955,
+        0.8995,
+        0.908
+    ],
+    "_Result__precision": [
+        0.0,
+        0.0,
+        1.0,
+        1.0,
+        1.0
+    ],
+    "_Result__recall": [
+        1,
+        1,
+        0.91,
+        0.8995,
+        0.908
+    ],
+    "_Result__f_score": [
+        0.0,
+        0.0,
+        0.9528795811518325,
+        0.94709133982627,
+        0.9517819706498952
+    ],
+    "_Result__n_records": [
+        2000,
+        2000,
+        2000,
+        2000,
+        2000
+    ],
+    "_Result__n_evasions": [
+        11,
+        264,
+        1,
+        0,
+        0
+    ],
+    "_Result__n_valid": [
+        11,
+        264,
+        1,
+        0,
+        0
+    ],
+    "_Result__labels": [
+        {
+            "benign": 11,
+            "malicious": 0
+        },
+        {
+            "benign": 264,
+            "malicious": 0
+        },
+        {
+            "benign": 1,
+            "malicious": 0
+        },
+        {
+            "benign": 0,
+            "malicious": 0
+        },
+        {
+            "benign": 0,
+            "malicious": 0
+        }
+    ],
+    "_Result__validations": [
+        {},
+        {
+            "tcp resp packets > bytes": 2
+        },
+        {},
+        {},
+        {}
+    ],
+    "_Result__errors": [
+        [
+            0.1991831213235855,
+            0.2999976724386215
+        ],
+        [
+            0.14608415588736534,
+            0.43592407812264
+        ],
+        [
+            0.22360676776197053,
+            0.22360676776197053
+        ],
+        [
+            0,
+            0
+        ],
+        [
+            0,
+            0
+        ]
+    ],
+    "_Result__proto_init": [
+        {
+            "tcp": 2000
+        },
+        {
+            "tcp": 2000
+        },
+        {
+            "tcp": 1090,
+            "udp": 864,
+            "icmp": 46
+        },
+        {
+            "icmp": 63,
+            "udp": 1736,
+            "tcp": 201
+        },
+        {
+            "udp": 1733,
+            "tcp": 184,
+            "icmp": 83
+        }
+    ],
+    "_Result__proto_evasions": [
+        {
+            "tcp": 11
+        },
+        {
+            "tcp": 264
+        },
+        {
+            "tcp": 1
+        },
+        {},
+        {}
+    ],
+    "_Result__proto_valid": [
+        {
+            "tcp": 11
+        },
+        {
+            "tcp": 264
+        },
+        {
+            "tcp": 1
+        },
+        {},
+        {}
+    ],
+    "machine": {
+        "system": "Darwin",
+        "release": "22.2.0",
+        "version": "Darwin Kernel Version 22.2.0: Fri Nov 11 02:03:51 PST 2022; root:xnu-8792.61.2~4/RELEASE_ARM64_T6000",
+        "machine": "arm64",
+        "processor": "arm",
+        "cpu_physical_cores": 10,
+        "cpu_total_cores": 10,
+        "cpu_usage_per_core": [
+            16.0,
+            17.0,
+            3.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ],
+        "cpu_total_usage": 14.5,
+        "virtual_mem_total_size": "16.00GB",
+        "virtual_mem_available": "6.05GB",
+        "virtual_mem_used": "7.56GB",
+        "virtual_mem_percentage": 62.2
+    }
+}
