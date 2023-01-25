@@ -1,0 +1,621 @@
+{
+    "dataset": "./data/nb15-10K.csv",
+    "dataset_name": "nb15-10K",
+    "n_records": 10000,
+    "n_attributes": 33,
+    "attrs": [
+        "dur",
+        "proto_tcp",
+        "proto_udp",
+        "proto_other",
+        "service_",
+        "service_http",
+        "service_dns",
+        "service_other",
+        "state_FIN",
+        "state_INT",
+        "state_other",
+        "sbytes",
+        "dbytes",
+        "rate",
+        "sloss",
+        "dloss",
+        "sjit",
+        "djit",
+        "swin",
+        "stcpb",
+        "dtcpb",
+        "dwin",
+        "smean",
+        "dmean",
+        "trans_depth",
+        "ct_srv_src",
+        "ct_dst_ltm",
+        "ct_src_dport_ltm",
+        "ct_dst_sport_ltm",
+        "ct_dst_src_ltm",
+        "ct_src_ltm",
+        "ct_srv_dst",
+        "label"
+    ],
+    "immutable": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+    ],
+    "attr_mutable": [
+        "ct_dst_ltm",
+        "ct_dst_sport_ltm",
+        "ct_dst_src_ltm",
+        "ct_src_dport_ltm",
+        "ct_src_ltm",
+        "ct_srv_dst",
+        "ct_srv_src",
+        "dbytes",
+        "djit",
+        "dloss",
+        "dmean",
+        "dtcpb",
+        "dur",
+        "dwin",
+        "rate",
+        "sbytes",
+        "sjit",
+        "sloss",
+        "smean",
+        "stcpb",
+        "swin",
+        "trans_depth"
+    ],
+    "attr_immutable": [
+        "proto_other",
+        "proto_tcp",
+        "proto_udp",
+        "service_",
+        "service_dns",
+        "service_http",
+        "service_other",
+        "state_FIN",
+        "state_INT",
+        "state_other"
+    ],
+    "robust": true,
+    "classes": [
+        "benign",
+        "malicious"
+    ],
+    "k_folds": 5,
+    "validator": "NB15",
+    "classifier": "xgb",
+    "sample_size": 50,
+    "sample_times": 3,
+    "attack": "hsj",
+    "attr_ranges": {
+        "dur": 59.999989,
+        "proto_tcp": 1.0,
+        "proto_udp": 1.0,
+        "proto_other": 1.0,
+        "service_": 1.0,
+        "service_http": 1.0,
+        "service_dns": 1.0,
+        "service_other": 1.0,
+        "state_FIN": 1.0,
+        "state_INT": 1.0,
+        "state_other": 1.0,
+        "sbytes": 10508068.0,
+        "dbytes": 7085342.0,
+        "rate": 1000000.003,
+        "sloss": 3993.0,
+        "dloss": 2627.0,
+        "sjit": 1460480.016,
+        "djit": 199572.8686,
+        "swin": 255.0,
+        "stcpb": 4294729542.0,
+        "dtcpb": 4294383134.0,
+        "dwin": 255.0,
+        "smean": 1499.0,
+        "dmean": 1458.0,
+        "trans_depth": 2.0,
+        "ct_srv_src": 63.0,
+        "ct_dst_ltm": 50.0,
+        "ct_src_dport_ltm": 50.0,
+        "ct_dst_sport_ltm": 46.0,
+        "ct_dst_src_ltm": 63.0,
+        "ct_src_ltm": 50.0,
+        "ct_srv_dst": 62.0
+    },
+    "start": 1674683420239560000,
+    "end": 1674683431957378000,
+    "current_utc": 1674683431957760000,
+    "max_iter": 5,
+    "_Result__accuracy": [
+        0.6635,
+        0.7445,
+        0.788,
+        0.804,
+        0.8125
+    ],
+    "_Result__precision": [
+        0.0,
+        0.0,
+        0.7891566265060241,
+        1.0,
+        1.0
+    ],
+    "_Result__recall": [
+        1,
+        1,
+        0.786,
+        0.804,
+        0.8125
+    ],
+    "_Result__f_score": [
+        0.0,
+        0.0,
+        0.7875751503006012,
+        0.8913525498891353,
+        0.896551724137931
+    ],
+    "_Result__n_records": [
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50,
+        50
+    ],
+    "_Result__n_evasions": [
+        21,
+        18,
+        14,
+        27,
+        19,
+        27,
+        31,
+        30,
+        31,
+        41,
+        43,
+        41,
+        42,
+        36,
+        40
+    ],
+    "_Result__n_valid": [
+        2,
+        3,
+        0,
+        7,
+        5,
+        9,
+        18,
+        15,
+        11,
+        25,
+        33,
+        30,
+        31,
+        21,
+        27
+    ],
+    "_Result__labels": [
+        {
+            "benign": 2,
+            "malicious": 0
+        },
+        {
+            "benign": 3,
+            "malicious": 0
+        },
+        {
+            "benign": 0,
+            "malicious": 0
+        },
+        {
+            "benign": 7,
+            "malicious": 0
+        },
+        {
+            "benign": 5,
+            "malicious": 0
+        },
+        {
+            "benign": 9,
+            "malicious": 0
+        },
+        {
+            "benign": 4,
+            "malicious": 14
+        },
+        {
+            "benign": 4,
+            "malicious": 11
+        },
+        {
+            "benign": 2,
+            "malicious": 9
+        },
+        {
+            "benign": 0,
+            "malicious": 25
+        },
+        {
+            "benign": 0,
+            "malicious": 33
+        },
+        {
+            "benign": 0,
+            "malicious": 30
+        },
+        {
+            "benign": 0,
+            "malicious": 31
+        },
+        {
+            "benign": 0,
+            "malicious": 21
+        },
+        {
+            "benign": 0,
+            "malicious": 27
+        }
+    ],
+    "_Result__validations": [
+        {
+            "other nonzero tcp fields": 13,
+            "udp nonzero tcp fields": 8
+        },
+        {
+            "udp nonzero tcp fields": 5,
+            "other nonzero tcp fields": 12,
+            "tcp invalid swin/dwin": 1
+        },
+        {
+            "other nonzero tcp fields": 9,
+            "udp nonzero tcp fields": 5
+        },
+        {
+            "other nonzero tcp fields": 15,
+            "udp nonzero tcp fields": 6
+        },
+        {
+            "other nonzero tcp fields": 12,
+            "udp nonzero tcp fields": 4
+        },
+        {
+            "other nonzero tcp fields": 15,
+            "udp nonzero tcp fields": 4
+        },
+        {
+            "other nonzero tcp fields": 8,
+            "udp nonzero tcp fields": 9
+        },
+        {
+            "udp nonzero tcp fields": 7,
+            "other nonzero tcp fields": 9
+        },
+        {
+            "udp nonzero tcp fields": 12,
+            "other nonzero tcp fields": 10
+        },
+        {
+            "udp nonzero tcp fields": 16
+        },
+        {
+            "tcp invalid swin/dwin": 2,
+            "udp nonzero tcp fields": 9
+        },
+        {
+            "udp nonzero tcp fields": 12,
+            "tcp invalid swin/dwin": 1
+        },
+        {
+            "udp nonzero tcp fields": 16,
+            "tcp invalid swin/dwin": 1
+        },
+        {
+            "udp nonzero tcp fields": 19,
+            "tcp invalid swin/dwin": 2
+        },
+        {
+            "udp nonzero tcp fields": 14,
+            "tcp dbytes nonzero when dur is 0": 1
+        }
+    ],
+    "_Result__errors": [
+        [
+            0.08570881017860572,
+            1.5312270779371917
+        ],
+        [
+            0.08483848808589553,
+            1.282700423773307
+        ],
+        [
+            0,
+            0
+        ],
+        [
+            0.22053908569032496,
+            2.3852106178825
+        ],
+        [
+            0.14472339262471812,
+            1.5925937825593688
+        ],
+        [
+            0.025942712093265777,
+            1.8885620414550839
+        ],
+        [
+            0.06920303235144004,
+            1.4988551139501733
+        ],
+        [
+            0.11172333576201512,
+            2.1264533702023916
+        ],
+        [
+            0.0024502589182170114,
+            1.7268591724736688
+        ],
+        [
+            0.0014680061149980636,
+            1.196421310370897
+        ],
+        [
+            0.009541712772378239,
+            1.9226629847097336
+        ],
+        [
+            0.06427306080940574,
+            1.0850880369886908
+        ],
+        [
+            0.1886775177385572,
+            1.621569333514624
+        ],
+        [
+            0.001495523705217055,
+            1.7825613830413518
+        ],
+        [
+            0.00999885914963302,
+            1.4096234189351329
+        ]
+    ],
+    "_Result__proto_init": [
+        {
+            "other": 13,
+            "udp": 25,
+            "tcp": 12
+        },
+        {
+            "tcp": 16,
+            "udp": 22,
+            "other": 12
+        },
+        {
+            "tcp": 16,
+            "other": 9,
+            "udp": 25
+        },
+        {
+            "other": 15,
+            "tcp": 18,
+            "udp": 17
+        },
+        {
+            "other": 12,
+            "tcp": 18,
+            "udp": 20
+        },
+        {
+            "tcp": 18,
+            "udp": 17,
+            "other": 15
+        },
+        {
+            "other": 8,
+            "tcp": 28,
+            "udp": 14
+        },
+        {
+            "udp": 14,
+            "tcp": 27,
+            "other": 9
+        },
+        {
+            "tcp": 18,
+            "udp": 22,
+            "other": 10
+        },
+        {
+            "udp": 16,
+            "tcp": 28,
+            "other": 6
+        },
+        {
+            "tcp": 40,
+            "other": 1,
+            "udp": 9
+        },
+        {
+            "tcp": 36,
+            "udp": 12,
+            "other": 2
+        },
+        {
+            "udp": 16,
+            "tcp": 34
+        },
+        {
+            "udp": 19,
+            "other": 3,
+            "tcp": 28
+        },
+        {
+            "udp": 14,
+            "tcp": 32,
+            "other": 4
+        }
+    ],
+    "_Result__proto_evasions": [
+        {
+            "other": 13,
+            "udp": 6,
+            "tcp": 2
+        },
+        {
+            "tcp": 4,
+            "other": 12,
+            "udp": 2
+        },
+        {
+            "other": 9,
+            "udp": 5
+        },
+        {
+            "other": 15,
+            "tcp": 7,
+            "udp": 5
+        },
+        {
+            "other": 12,
+            "tcp": 5,
+            "udp": 2
+        },
+        {
+            "tcp": 8,
+            "other": 15,
+            "udp": 4
+        },
+        {
+            "other": 7,
+            "tcp": 18,
+            "udp": 6
+        },
+        {
+            "udp": 7,
+            "tcp": 15,
+            "other": 8
+        },
+        {
+            "udp": 11,
+            "other": 9,
+            "tcp": 11
+        },
+        {
+            "udp": 16,
+            "tcp": 25
+        },
+        {
+            "tcp": 35,
+            "udp": 8
+        },
+        {
+            "tcp": 31,
+            "udp": 10
+        },
+        {
+            "udp": 10,
+            "tcp": 32
+        },
+        {
+            "udp": 13,
+            "tcp": 23
+        },
+        {
+            "udp": 12,
+            "tcp": 28
+        }
+    ],
+    "_Result__proto_valid": [
+        {
+            "tcp": 2
+        },
+        {
+            "tcp": 3
+        },
+        {},
+        {
+            "tcp": 7
+        },
+        {
+            "tcp": 5
+        },
+        {
+            "tcp": 8,
+            "udp": 1
+        },
+        {
+            "tcp": 18
+        },
+        {
+            "tcp": 15
+        },
+        {
+            "tcp": 11
+        },
+        {
+            "tcp": 25
+        },
+        {
+            "tcp": 33
+        },
+        {
+            "tcp": 30
+        },
+        {
+            "tcp": 31
+        },
+        {
+            "tcp": 21
+        },
+        {
+            "tcp": 27
+        }
+    ],
+    "machine": {
+        "system": "Darwin",
+        "release": "22.2.0",
+        "version": "Darwin Kernel Version 22.2.0: Fri Nov 11 02:03:51 PST 2022; root:xnu-8792.61.2~4/RELEASE_ARM64_T6000",
+        "machine": "arm64",
+        "processor": "arm",
+        "cpu_physical_cores": 10,
+        "cpu_total_cores": 10,
+        "cpu_usage_per_core": [
+            6.0,
+            6.0,
+            1.0,
+            1.0,
+            1.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ],
+        "cpu_total_usage": 11.2,
+        "virtual_mem_total_size": "16.00GB",
+        "virtual_mem_available": "5.98GB",
+        "virtual_mem_used": "7.61GB",
+        "virtual_mem_percentage": 62.6
+    }
+}
