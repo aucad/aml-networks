@@ -129,7 +129,7 @@ python3 -m src validate --help
 
 | Directory           | Description                               |
 |:--------------------|:------------------------------------------|
-| `results`           | Results of various experiments            |
+| `analysis`          | Results of various initial experiments    |
 | 　`└─ comparisons`   | Comparison of classifiers, on IoT data    |
 | 　`└─ decision_tree` | Adversarial attacks on decision trees     |
 | 　`└─ xgboost`       | Adversarial attacks on XGBoost classifier |
