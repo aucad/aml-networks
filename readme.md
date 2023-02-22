@@ -81,11 +81,9 @@ Other custom experiments can be defined using the [CLI commands](#cli-commands).
 make all
 ```
 
-The default experiment uses full cross-validation holdout set, and repeats experiments for 3x different max iterations.
-Max iterations can be customized by parameters: `ITERS="n₀ … nₖ"`, for
-example `make all ITERS="5 10 50 0"`.  Value `0` is attack default max iterations, which varies by attack.
-
-
+Experiment uses full cross-validation holdout set and repeats experiments for different max iterations.
+Max iterations can be customized by specifying: `ITERS="n₀ … nₖ"`. For
+example: `make all ITERS="5 20 0"`.  Value `0` is attack default max iterations (varies by attack).
 
 ```
 make sample
@@ -100,7 +98,7 @@ make fast
 ```
 
 Subset of `make all`: this runs experiment for default max iterations only using full holdout set.
-Parameters for this attack are fixed, that is it does not accept custom arguments like the two experiments above.
+Parameters for this attack are fixed -- it does not accept custom arguments like the two experiments above.
 
 **Plot results**
 
@@ -108,7 +106,7 @@ Parameters for this attack are fixed, that is it does not accept custom argument
 make plot
 ```
 
-This command will generate table plots.
+This command will generate text-based table plots.
 
 ### CLI commands
 
