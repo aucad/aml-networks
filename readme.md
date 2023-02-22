@@ -72,6 +72,8 @@ There are 3 execution modes: `experiment`, `plot` and `validate`.
 ### Quick start
 
 This section explains how to run the pre-defined experiments.
+There are 3 pre-defined experiments.
+Other custom experiments can be defined using the [CLI commands](#cli-commands).
 
 **Run experiments**
 
@@ -80,11 +82,9 @@ make all
 ```
 
 The default experiment uses full cross-validation holdout set, and repeats experiments for 3x different max iterations.
-The value of max iterations can be customized by providing additional make parameters: `ITERS="n0 ... nk"`. For
-example `make all ITERS="5 10 50"`. Iters of `0` means use attack default max iterations.
+Max iterations can be customized by parameters: `ITERS="n₀ … nₖ"`, for
+example `make all ITERS="5 10 50 0"`.  Value `0` is attack default max iterations, which varies by attack.
 
-There are two alternative pre-defined experiments.
-Other custom experiments can be defined using the [CLI commands](#cli-commands).
 
 
 ```
@@ -100,14 +100,15 @@ make fast
 ```
 
 Subset of `make all`: this runs experiment for default max iterations only using full holdout set.
-
-
+Parameters for this attack are fixed, that is it does not accept custom arguments like the two experiments above.
 
 **Plot results**
 
 ```
 make plot
 ```
+
+This command will generate table plots.
 
 ### CLI commands
 
