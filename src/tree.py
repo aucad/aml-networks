@@ -30,9 +30,7 @@ class DecisionTree(Classifier):
     def predict(self, data):
         return self.model.predict(data)
 
-    def prep_model(self, robust):
+    def init_learner(self, robust):
         self.model = DecisionTreeClassifier()
         self.model.fit(self.train_x, self.train_y)
-
-    def prep_classifier(self):
         self.classifier = ScikitlearnDecisionTreeClassifier(self.model)

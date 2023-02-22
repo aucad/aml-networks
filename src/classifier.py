@@ -1,4 +1,34 @@
+import warnings
+
+warnings.filterwarnings("ignore")
+
+from typing import Union, Optional
+
 import numpy as np
+from art.estimators.classification import BlackBoxClassifier, \
+    CatBoostARTClassifier, DetectorClassifier, EnsembleClassifier, \
+    PyTorchClassifier, TensorFlowClassifier, TensorFlowV2Classifier, \
+    GPyGaussianProcessClassifier, LightGBMClassifier, XGBoostClassifier, \
+    KerasClassifier, MXClassifier
+from art.estimators.classification.classifier import ClassifierNeuralNetwork
+from art.estimators.classification.scikitlearn import \
+    ScikitlearnDecisionTreeClassifier, ScikitlearnAdaBoostClassifier, \
+    ScikitlearnExtraTreesClassifier, ScikitlearnGradientBoostingClassifier, \
+    ScikitlearnLogisticRegression, ScikitlearnClassifier, \
+    ScikitlearnExtraTreeClassifier, ScikitlearnBaggingClassifier, \
+    ScikitlearnRandomForestClassifier, ScikitlearnSVC
+from art.experimental.estimators.classification import JaxClassifier
+
+CLS_TYPE = Optional[Union[
+    BlackBoxClassifier, CatBoostARTClassifier, DetectorClassifier,
+    EnsembleClassifier, GPyGaussianProcessClassifier, KerasClassifier,
+    JaxClassifier, LightGBMClassifier, MXClassifier, PyTorchClassifier,
+    ScikitlearnClassifier, ScikitlearnDecisionTreeClassifier,
+    ScikitlearnExtraTreeClassifier, ScikitlearnAdaBoostClassifier,
+    ScikitlearnBaggingClassifier, ScikitlearnExtraTreesClassifier,
+    ScikitlearnGradientBoostingClassifier, ScikitlearnRandomForestClassifier,
+    ScikitlearnLogisticRegression, ScikitlearnSVC, TensorFlowClassifier,
+    TensorFlowV2Classifier, XGBoostClassifier, ClassifierNeuralNetwork]]
 
 
 class Classifier:
@@ -10,7 +40,7 @@ class Classifier:
         self.out_dir = out
         self.attrs = attrs[:]
         self.classes = np.unique(y)
-        self.classifier = None
+        self.classifier: CLS_TYPE = None
         self.model = None
         self.train_x = np.array([])
         self.train_y = np.array([])
@@ -118,16 +148,10 @@ class Classifier:
         """Predict label for specified record."""
         return self.model.predict(record)
 
-    def prep_model(self, robust):
+    def init_learner(self, robust):
         """Implement model training phase. If robust is true, the model should
         apply appropriate defense. This is called after data has been loaded
         and is ready; cf. `Classifier.train`.
-           """
-        pass
-
-    def prep_classifier(self):
-        """Initialize classifier value. Occurs after model training;
-           cf. `Classifier.train`.
         """
         pass
 
@@ -141,8 +165,7 @@ class Classifier:
         return self
 
     def train(self):
-        self.prep_model(self.robust)
-        self.prep_classifier()
+        self.init_learner(self.robust)
         records = ((self.test_x, self.test_y) if self.n_test > 0
                    else (self.train_x, self.train_y))
         predictions = self.predict(self.formatter(*records))

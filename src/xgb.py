@@ -28,7 +28,7 @@ class XgBoost(Classifier):
         ax = 1 if len(tmp.shape) == 2 else 0
         return tmp.argmax(axis=ax)
 
-    def prep_model(self, robust):
+    def init_learner(self, robust):
         """
         see:  https://xgboost.readthedocs.io/en/stable/parameter.html
         for full list of options
@@ -64,7 +64,6 @@ class XgBoost(Classifier):
             })
         sys.stdout = sys.__stdout__  # re-enable print
 
-    def prep_classifier(self):
         self.classifier = XGBoostClassifier(
             model=self.model,
             nb_features=self.n_features,
