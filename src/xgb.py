@@ -28,11 +28,6 @@ class XgBoost(Classifier):
         ax = 1 if len(tmp.shape) == 2 else 0
         return tmp.argmax(axis=ax)
 
-    # noinspection PyBroadException
-    def tree_plotter(self):
-        """Plot the tree and save to file."""
-        plot_tree(self.model, num_trees=20, rankdir='LR')
-
     def prep_model(self, robust):
         """
         see:  https://xgboost.readthedocs.io/en/stable/parameter.html

@@ -21,7 +21,7 @@ from src import Classifier
 class NeuralNetwork(Classifier):
 
     def __init__(self, *args):
-        super().__init__('neural_network', *args)
+        super().__init__('nnetwork', *args)
 
     @staticmethod
     def formatter(x, y):
@@ -36,6 +36,3 @@ class NeuralNetwork(Classifier):
 
     def prep_classifier(self):
         self.classifier = SklearnClassifier(self.model)
-
-    def tree_plotter(self):
-        pass

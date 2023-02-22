@@ -36,7 +36,3 @@ class DecisionTree(Classifier):
 
     def prep_classifier(self):
         self.classifier = ScikitlearnDecisionTreeClassifier(self.model)
-
-    def tree_plotter(self):
-        plot_tree(self.model, feature_names=self.attrs,
-                  class_names=self.class_names, filled=True)
