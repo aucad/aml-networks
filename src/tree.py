@@ -13,7 +13,7 @@ warnings.filterwarnings("ignore")
 
 from art.estimators.classification.scikitlearn \
     import ScikitlearnDecisionTreeClassifier
-from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn.tree import DecisionTreeClassifier
 
 from src import Classifier
 

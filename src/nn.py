@@ -8,6 +8,11 @@ at all attributes.
 """
 
 import warnings
+
+from sklearn.neural_network import MLPClassifier
+
+warnings.filterwarnings("ignore")
+
 from typing import Union, Optional
 
 from art.estimators.classification import TensorFlowV2Classifier, \
@@ -15,29 +20,21 @@ from art.estimators.classification import TensorFlowV2Classifier, \
     PyTorchClassifier, MXClassifier, TensorFlowClassifier
 from art.experimental.estimators.classification import JaxClassifier
 
-warnings.filterwarnings("ignore")
 
-from art.estimators.classification.scikitlearn \
-    import SklearnClassifier, ScikitlearnLogisticRegression, ScikitlearnSVC
-from sklearn.neural_network import MLPClassifier
-from art.defences.trainer import AdversarialTrainer, AdversarialTrainerMadryPGD
+from art.estimators.classification.scikitlearn import \
+    ScikitlearnLogisticRegression, ScikitlearnSVC, ScikitlearnClassifier
+from art.defences.trainer import AdversarialTrainer, \
+    AdversarialTrainerMadryPGD
 from art.attacks.evasion import FastGradientMethod
 
 from src import Classifier
 
-# AdversarialTrainer
+# AdversarialTrainer, AdversarialTrainerMadryPGD
 NN_CLS_TYPE = Optional[Union[
     EnsembleClassifier, GPyGaussianProcessClassifier,
     KerasClassifier, JaxClassifier, MXClassifier, PyTorchClassifier,
     ScikitlearnLogisticRegression, ScikitlearnSVC, TensorFlowClassifier,
     TensorFlowV2Classifier]]
-
-# AdversarialTrainerMadryPGD
-# NN_CLS_TYPE = Optional[Union[
-#     EnsembleClassifier, GPyGaussianProcessClassifier,
-#     KerasClassifier, JaxClassifier, MXClassifier, PyTorchClassifier,
-#     ScikitlearnLogisticRegression, ScikitlearnSVC, TensorFlowClassifier,
-#     TensorFlowV2Classifier]]
 
 
 class NeuralNetwork(Classifier):
@@ -53,26 +50,36 @@ class NeuralNetwork(Classifier):
     def predict(self, data):
         return self.model.predict(data)
 
-    def init_weak(self):
-        model = MLPClassifier()
-        model.fit(self.train_x, self.train_y)
-        return SklearnClassifier(model), model
+    @staticmethod
+    def init_model():
+        return MLPClassifier()
 
-    def init_robust(self, weak_cls):
-        robust_model = MLPClassifier()
-        robust_classifier = SklearnClassifier(robust_model)
-        attack_fgm = FastGradientMethod(estimator=weak_cls, eps=0.15)
+    @staticmethod
+    def init_classifier(model) -> NN_CLS_TYPE:
+        # FIXME: return compatible type
+        return ScikitlearnClassifier(model)
+
+    def init_weak(self):
+        model = self.init_model()
+        model.fit(self.train_x, self.train_y)
+        return self.init_classifier(model), model
+
+    def init_robust(self):
+        # TODO
+        self.model = self.init_model()
+        robust_classifier = self.init_classifier(self.model)
+        weak_classifier, _ = self.init_weak()
+        attack_fgm = FastGradientMethod(weak_classifier)
         trainer = AdversarialTrainer(
             classifier=robust_classifier,
             attacks=attack_fgm, ratio=0.5)
-        trainer.fit(x=self.train_x, y=self.train_y, nb_epochs=10)
+        trainer.fit(self.train_x.copy(),
+                    self.train_y.copy(),
+                    nb_epochs=5, batch_size=128)
         self.classifier = trainer.get_classifier()
-        self.model = robust_model
 
     def init_learner(self, robust):
-        weak_cls, weak_model = self.init_weak()
-        if robust:
-            self.init_robust(weak_cls)
-        else:
-            self.classifier = weak_cls
-            self.model = weak_model
+        # if robust:
+        #     self.init_robust()
+        # else:
+        self.classifier, self.model = self.init_weak()
