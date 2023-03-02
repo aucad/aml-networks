@@ -161,7 +161,8 @@ class Experiment:
         self.X = rows[:, :-1]
         self.y = rows[:, -1].astype(int).flatten()
         self.folds = [(tr_i, ts_i) for tr_i, ts_i
-                      in KFold(n_splits=n_splits).split(self.X)]
+                      in KFold(n_splits=n_splits, shuffle=True)
+                      .split(self.X)]
         self.mask_cols, n_feat = [], len(self.attrs) - 1
         for col_i in range(n_feat):
             self.attr_ranges[col_i] = max(self.X[:, col_i])
