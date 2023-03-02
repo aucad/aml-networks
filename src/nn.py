@@ -3,37 +3,25 @@
 """
 Neural network classifier training.
 """
-
+import os
 import warnings
 
 warnings.filterwarnings("ignore")
-from typing import Union, Optional
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 import tensorflow as tf
 
 tf.compat.v1.disable_eager_execution()
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
-from art.estimators.classification import TensorFlowV2Classifier, \
-    EnsembleClassifier, GPyGaussianProcessClassifier, \
-    PyTorchClassifier, MXClassifier, TensorFlowClassifier
-from art.experimental.estimators.classification import JaxClassifier
-
 from keras.models import Sequential
 from keras.layers import Dense
 
 from art.attacks.evasion import FastGradientMethod
 from art.estimators.classification import KerasClassifier
-from art.defences.trainer import AdversarialTrainer, \
-    AdversarialTrainerMadryPGD
+from art.defences.trainer import AdversarialTrainer
 
 from src import Classifier
-
-# AdversarialTrainer, AdversarialTrainerMadryPGD
-NN_CLS_TYPE = Optional[Union[
-    EnsembleClassifier, GPyGaussianProcessClassifier,
-    KerasClassifier, JaxClassifier, MXClassifier, PyTorchClassifier,
-    TensorFlowClassifier, TensorFlowV2Classifier]]
 
 
 class NeuralNetwork(Classifier):
@@ -50,21 +38,22 @@ class NeuralNetwork(Classifier):
         ax = 1 if len(tmp.shape) == 2 else 0
         return tmp.argmax(axis=ax)
 
-    def init_classifier(self) -> NN_CLS_TYPE:
+    def _set_cls(self, cls):
+        self.classifier = cls
+        self.model = cls.model
+
+    def init_classifier(self):
         model = Sequential()
-        model.add(Dense(units=32, activation='relu'))
-        model.add(Dense(2, activation="softmax"))
+        model.add(Dense(units=64, activation='relu'))
+        model.add(Dense(1, activation="softmax"))
         model.compile(
             loss="binary_crossentropy",
             optimizer="sgd", metrics=["accuracy"])
+        model.trainable = True
         model.fit(self.train_x, self.train_y,
                   verbose=False, epochs=5, batch_size=32)
         return KerasClassifier(
             model=model, clip_values=(0, 1))
-
-    def _set_cls(self, cls):
-        self.classifier = cls
-        self.model = cls.model
 
     def init_robust(self):
         robust_classifier = self.init_classifier()
@@ -73,13 +62,14 @@ class NeuralNetwork(Classifier):
         trainer = AdversarialTrainer(
             classifier=robust_classifier,
             attacks=attack_fgm, ratio=0.5)
-        trainer.fit(self.train_x.copy(),
-                    self.train_y.copy(),
-                    nb_epochs=5, batch_size=128)
+        trainer.fit(
+            self.train_x.copy(),
+            self.train_y.copy(),
+            nb_epochs=5, batch_size=128)
         self._set_cls(trainer.get_classifier())
 
     def init_learner(self, robust):
-        # if robust:
-        #     self.init_robust()
-        # else:
-        self._set_cls(self.init_classifier())
+        if robust:
+            self.init_robust()
+        else:
+            self._set_cls(self.init_classifier())
