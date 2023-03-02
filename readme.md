@@ -134,7 +134,6 @@ To see available options for the validator, run:
 python3 -m src validate --help
 ```
 
-
 ## Source code organization
 
 | Directory           | Description                               |
@@ -152,6 +151,7 @@ python3 -m src validate --help
 | 　`└─ experiment.py` | Runs an attack experiment                 |
 | 　`└─ hopskip.py`    | HopSkipJump attack implementation         |
 | 　`└─ machine.py`    | Captures current machine details          |
+| 　`└─ nn.py`         | Neural network classifier training        |
 | 　`└─ plotter.py`    | Experiment results plotting               |
 | 　`└─ tree.py`       | Decision tree classifier training         |
 | 　`└─ utility.py`    | Shared functionality utilities            |
