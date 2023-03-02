@@ -1,85 +1,75 @@
 # flake8: noqa: E402
 
 """
-This script builds a neural network classifier for provided dataset.
-Provide as input a path to a dataset, or script uses default
-dataset if none provided. The dataset must be numeric
-at all attributes.
+Neural network classifier training.
 """
-
+import os
 import warnings
 
-from sklearn.neural_network import MLPClassifier
-
 warnings.filterwarnings("ignore")
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-from typing import Union, Optional
+import tensorflow as tf
 
-from art.estimators.classification import TensorFlowV2Classifier, \
-    EnsembleClassifier, KerasClassifier, GPyGaussianProcessClassifier, \
-    PyTorchClassifier, MXClassifier, TensorFlowClassifier
-from art.experimental.estimators.classification import JaxClassifier
+tf.compat.v1.disable_eager_execution()
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
+from keras.models import Sequential
+from keras.layers import Dense
 
-from art.estimators.classification.scikitlearn import \
-    ScikitlearnLogisticRegression, ScikitlearnSVC, ScikitlearnClassifier
-from art.defences.trainer import AdversarialTrainer, \
-    AdversarialTrainerMadryPGD
 from art.attacks.evasion import FastGradientMethod
+from art.estimators.classification import KerasClassifier
+from art.defences.trainer import AdversarialTrainer
 
 from src import Classifier
-
-# AdversarialTrainer, AdversarialTrainerMadryPGD
-NN_CLS_TYPE = Optional[Union[
-    EnsembleClassifier, GPyGaussianProcessClassifier,
-    KerasClassifier, JaxClassifier, MXClassifier, PyTorchClassifier,
-    ScikitlearnLogisticRegression, ScikitlearnSVC, TensorFlowClassifier,
-    TensorFlowV2Classifier]]
 
 
 class NeuralNetwork(Classifier):
 
     def __init__(self, *args):
         super().__init__('neural_network', *args)
-        self.classifier: NN_CLS_TYPE = None
 
     @staticmethod
     def formatter(x, y):
         return x
 
     def predict(self, data):
-        return self.model.predict(data)
+        tmp = self.model.predict(data)
+        ax = 1 if len(tmp.shape) == 2 else 0
+        return tmp.argmax(axis=ax)
 
-    @staticmethod
-    def init_model():
-        return MLPClassifier()
+    def _set_cls(self, cls):
+        self.classifier = cls
+        self.model = cls.model
 
-    @staticmethod
-    def init_classifier(model) -> NN_CLS_TYPE:
-        # FIXME: return compatible type
-        return ScikitlearnClassifier(model)
-
-    def init_weak(self):
-        model = self.init_model()
-        model.fit(self.train_x, self.train_y)
-        return self.init_classifier(model), model
+    def init_classifier(self):
+        model = Sequential()
+        model.add(Dense(units=64, activation='relu'))
+        model.add(Dense(1, activation="softmax"))
+        model.compile(
+            loss="binary_crossentropy",
+            optimizer="sgd", metrics=["accuracy"])
+        model.trainable = True
+        model.fit(self.train_x, self.train_y,
+                  verbose=False, epochs=5, batch_size=32)
+        return KerasClassifier(
+            model=model, clip_values=(0, 1))
 
     def init_robust(self):
-        # TODO
-        self.model = self.init_model()
-        robust_classifier = self.init_classifier(self.model)
-        weak_classifier, _ = self.init_weak()
+        robust_classifier = self.init_classifier()
+        weak_classifier = self.init_classifier()
         attack_fgm = FastGradientMethod(weak_classifier)
         trainer = AdversarialTrainer(
             classifier=robust_classifier,
             attacks=attack_fgm, ratio=0.5)
-        trainer.fit(self.train_x.copy(),
-                    self.train_y.copy(),
-                    nb_epochs=5, batch_size=128)
-        self.classifier = trainer.get_classifier()
+        trainer.fit(
+            self.train_x.copy(),
+            self.train_y.copy(),
+            nb_epochs=5, batch_size=128)
+        self._set_cls(trainer.get_classifier())
 
     def init_learner(self, robust):
-        # if robust:
-        #     self.init_robust()
-        # else:
-        self.classifier, self.model = self.init_weak()
+        if robust:
+            self.init_robust()
+        else:
+            self._set_cls(self.init_classifier())

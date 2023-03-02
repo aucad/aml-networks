@@ -6,6 +6,6 @@ sklearn
 psutil==5.9.4
 Pillow==9.3.0
 pytablewriter==0.64.2
-keras
-tensorflow-macos; sys_platform == 'darwin'
-tensorflow; sys_platform != 'darwin'
+keras~=2.11.0
+tensorflow~=2.11.0; sys_platform != 'darwin' or platform_machine != 'arm64'
+tensorflow-macos; sys_platform == 'darwin' and platform_machine == 'arm64'
