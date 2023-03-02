@@ -10,10 +10,12 @@ from art.estimators.classification import BlackBoxClassifier, \
     PyTorchClassifier, TensorFlowClassifier, TensorFlowV2Classifier, \
     GPyGaussianProcessClassifier, LightGBMClassifier, XGBoostClassifier, \
     KerasClassifier, MXClassifier
-from art.estimators.classification.classifier import ClassifierNeuralNetwork
+from art.estimators.classification.classifier import \
+    ClassifierNeuralNetwork
 from art.estimators.classification.scikitlearn import \
     ScikitlearnDecisionTreeClassifier, ScikitlearnAdaBoostClassifier, \
-    ScikitlearnExtraTreesClassifier, ScikitlearnGradientBoostingClassifier, \
+    ScikitlearnExtraTreesClassifier, \
+    ScikitlearnGradientBoostingClassifier, \
     ScikitlearnLogisticRegression, ScikitlearnClassifier, \
     ScikitlearnExtraTreeClassifier, ScikitlearnBaggingClassifier, \
     ScikitlearnRandomForestClassifier, ScikitlearnSVC
@@ -26,9 +28,10 @@ CLS_TYPE = Optional[Union[
     ScikitlearnClassifier, ScikitlearnDecisionTreeClassifier,
     ScikitlearnExtraTreeClassifier, ScikitlearnAdaBoostClassifier,
     ScikitlearnBaggingClassifier, ScikitlearnExtraTreesClassifier,
-    ScikitlearnGradientBoostingClassifier, ScikitlearnRandomForestClassifier,
-    ScikitlearnLogisticRegression, ScikitlearnSVC, TensorFlowClassifier,
-    TensorFlowV2Classifier, XGBoostClassifier, ClassifierNeuralNetwork]]
+    ScikitlearnGradientBoostingClassifier,
+    ScikitlearnRandomForestClassifier, ScikitlearnLogisticRegression,
+    ScikitlearnSVC, TensorFlowClassifier, TensorFlowV2Classifier,
+    XGBoostClassifier, ClassifierNeuralNetwork]]
 
 
 class Classifier:
@@ -192,6 +195,7 @@ class Classifier:
     def score(self, true_labels, predictions, positive=0):
         """Calculate performance metrics."""
         tp, tp_tn, p_pred, p_actual = 0, 0, 0, 0
+        # print(np.sum(true_labels), np.sum(predictions))
         for actual, pred in zip(true_labels, predictions):
             int_pred = int(round(pred, 0))
             if int_pred == positive:
