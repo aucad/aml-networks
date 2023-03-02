@@ -14,7 +14,7 @@ tf.compat.v1.disable_eager_execution()
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 from keras.models import Sequential
-from keras.layers import Dense
+from keras.layers import Dense, Conv2D, Dropout
 
 from art.attacks.evasion import FastGradientMethod
 from art.estimators.classification import KerasClassifier
@@ -43,12 +43,13 @@ class NeuralNetwork(Classifier):
 
     def init_classifier(self):
         model = Sequential()
+        model.trainable = True
         model.add(Dense(units=64, activation='relu'))
-        model.add(Dense(1, activation="softmax"))
+        model.add(Dropout(0.25))
+        model.add(Dense(2, activation="softmax"))
         model.compile(
             loss="binary_crossentropy",
             optimizer="sgd", metrics=["accuracy"])
-        model.trainable = True
         model.fit(self.train_x, self.train_y,
                   verbose=False, epochs=5, batch_size=32)
         return KerasClassifier(
