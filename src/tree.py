@@ -1,10 +1,5 @@
-# flake8: noqa: E402
-
 """
-This script builds a decision tree classifier for provided dataset.
-Provide as input a path to a dataset, or script uses default
-dataset if none provided. The dataset must be numeric
-at all attributes.
+Train a decision tree.
 """
 
 import warnings
