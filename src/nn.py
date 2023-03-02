@@ -1,8 +1,7 @@
-# flake8: noqa: E402
-
 """
 Neural network classifier training.
 """
+
 import os
 import warnings
 
