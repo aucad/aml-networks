@@ -1,8 +1,5 @@
 """
-Build a XGBoost model for provided dataset.
-
-Provide as input a path to a dataset, or script uses default
-dataset if none provided. The dataset must be numeric at all attributes.
+Train XGBoost classifier.
 """
 import os
 import sys
