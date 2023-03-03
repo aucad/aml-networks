@@ -14,9 +14,10 @@ tf.compat.v1.disable_eager_execution()
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 from keras.models import Sequential
-from keras.layers import Dense
-from keras.optimizers import Adam
+from keras.layers import Dense, Dropout
+from keras.optimizers import Adam, SGD
 from keras import regularizers
+from keras import metrics
 
 from art.attacks.evasion import FastGradientMethod
 from art.estimators.classification import KerasClassifier
@@ -46,16 +47,15 @@ class NeuralNetwork(Classifier):
 
     def init_classifier(self):
         model = Sequential()
-        model.add(Dense(
-            units=100, activation='relu',
-            kernel_regularizer=regularizers.L2(l2=1e-4), ))
-        model.add(Dense(2, activation="softmax"))
-        model.compile(loss='binary_crossentropy', metrics=["accuracy"],
-                      optimizer=Adam(learning_rate=0.001, clipvalue=None, ))
+        model.add(Dense(200, activation='relu',
+            kernel_regularizer=regularizers.L2(l2=1e-4)))
+        model.add(Dense(self.n_classes, activation='softmax'))
+        model.compile(loss='binary_crossentropy',
+                      optimizer=Adam(lr=0.001))
         model.fit(self.train_x, self.train_y,
-                  shuffle=True, verbose=False, epochs=200, batch_size=200,
+                  shuffle=True, verbose=False, epochs=128, batch_size=256,
                   callbacks=[tf.keras.callbacks.EarlyStopping(
-                      monitor='loss', patience=8, min_delta=1e-4)])
+                      monitor='loss', patience=3, min_delta=1e-4)])
         return KerasClassifier(model=model, clip_values=(0, 1))
 
     def init_robust(self):
@@ -76,6 +76,3 @@ class NeuralNetwork(Classifier):
             self.init_robust()
         else:
             self._set_cls(self.init_classifier())
-        # self.model = MLPClassifier()
-        # self.model.fit(self.train_x, self.train_y)
-        # self.classifier = SklearnClassifier(self.model)
