@@ -14,11 +14,14 @@ tf.compat.v1.disable_eager_execution()
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 from keras.models import Sequential
-from keras.layers import Dense, Conv2D, Dropout
+from keras.layers import Dense
+from keras.optimizers import Adam
+from keras import regularizers
 
 from art.attacks.evasion import FastGradientMethod
 from art.estimators.classification import KerasClassifier
 from art.defences.trainer import AdversarialTrainer
+# from sklearn.neural_network import MLPClassifier
 
 from src import Classifier
 
@@ -43,17 +46,17 @@ class NeuralNetwork(Classifier):
 
     def init_classifier(self):
         model = Sequential()
-        model.trainable = True
-        model.add(Dense(units=64, activation='relu'))
-        model.add(Dropout(0.25))
+        model.add(Dense(
+            units=100, activation='relu',
+            kernel_regularizer=regularizers.L2(l2=1e-4), ))
         model.add(Dense(2, activation="softmax"))
-        model.compile(
-            loss="binary_crossentropy",
-            optimizer="sgd", metrics=["accuracy"])
+        model.compile(loss='binary_crossentropy', metrics=["accuracy"],
+                      optimizer=Adam(learning_rate=0.001, clipvalue=None, ))
         model.fit(self.train_x, self.train_y,
-                  verbose=False, epochs=5, batch_size=32)
-        return KerasClassifier(
-            model=model, clip_values=(0, 1))
+                  shuffle=True, verbose=False, epochs=200, batch_size=200,
+                  callbacks=[tf.keras.callbacks.EarlyStopping(
+                      monitor='loss', patience=8, min_delta=1e-4)])
+        return KerasClassifier(model=model, clip_values=(0, 1))
 
     def init_robust(self):
         robust_classifier = self.init_classifier()
@@ -73,3 +76,6 @@ class NeuralNetwork(Classifier):
             self.init_robust()
         else:
             self._set_cls(self.init_classifier())
+        # self.model = MLPClassifier()
+        # self.model.fit(self.train_x, self.train_y)
+        # self.classifier = SklearnClassifier(self.model)
