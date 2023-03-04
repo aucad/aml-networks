@@ -13,16 +13,15 @@ import tensorflow as tf
 tf.compat.v1.disable_eager_execution()
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
-from keras.models import Sequential
-from keras.layers import Dense, Dropout
-from keras.optimizers import Adam, SGD
-from keras import regularizers
-from keras import metrics
+from keras.layers import Dense, Flatten
+from keras.callbacks import EarlyStopping
+from keras.losses import SparseCategoricalCrossentropy
+from keras.metrics import SparseCategoricalAccuracy
+from keras.optimizers import SGD
 
 from art.attacks.evasion import FastGradientMethod
 from art.estimators.classification import KerasClassifier
 from art.defences.trainer import AdversarialTrainer
-# from sklearn.neural_network import MLPClassifier
 
 from src import Classifier
 
@@ -45,18 +44,25 @@ class NeuralNetwork(Classifier):
         self.classifier = cls
         self.model = cls.model
 
-    def init_classifier(self):
-        model = Sequential()
-        model.add(Dense(200, activation='relu',
-            kernel_regularizer=regularizers.L2(l2=1e-4)))
-        model.add(Dense(self.n_classes, activation='softmax'))
-        model.compile(loss='binary_crossentropy',
-                      optimizer=Adam(lr=0.001))
-        model.fit(self.train_x, self.train_y,
-                  shuffle=True, verbose=False, epochs=128, batch_size=256,
-                  callbacks=[tf.keras.callbacks.EarlyStopping(
-                      monitor='loss', patience=3, min_delta=1e-4)])
-        return KerasClassifier(model=model, clip_values=(0, 1))
+    def init_classifier(self, epochs=180, batch_size=256):
+        model = tf.keras.models.Sequential([
+            Flatten(),
+            Dense(100, activation='relu'),
+            Dense(self.n_classes, activation='softmax'),
+        ])
+        model.compile(
+            optimizer=SGD(),
+            loss=SparseCategoricalCrossentropy(),
+            metrics=[SparseCategoricalAccuracy()]
+        )
+        model.fit(
+            self.train_x, self.train_y,
+            batch_size=min(batch_size, self.n_train),
+            epochs=epochs,
+            shuffle=True,
+            verbose=False,
+        )
+        return KerasClassifier(model=model)
 
     def init_robust(self):
         robust_classifier = self.init_classifier()
