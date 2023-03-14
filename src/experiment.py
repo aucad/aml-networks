@@ -18,24 +18,24 @@ logger = logging.getLogger(__name__)
 class Experiment:
     class ClsLoader:
         """Load selected classifier."""
-        XGBOOST = 'xgb'
-        NEURAL_NETWORK = 'nn'
+        XGB = 'xgb'
+        DNN = 'dnn'
 
         @staticmethod
         def init(kind, *args) -> Classifier:
-            if kind == Experiment.ClsLoader.NEURAL_NETWORK:
+            if kind == Experiment.ClsLoader.DNN:
                 return NeuralNetwork(*args)
             else:
                 return XgBoost(*args)
 
     class AttackLoader:
         """Load selected attack mode."""
-        HOP_SKIP = 'hsj'
+        HSJ = 'hsj'
         ZOO = 'zoo'
 
         @staticmethod
         def load(kind, *args) -> Attack:
-            if kind == Experiment.AttackLoader.HOP_SKIP:
+            if kind == Experiment.AttackLoader.HSJ:
                 return HopSkip(*args)
             else:
                 return Zoo(*args)
@@ -116,9 +116,9 @@ class Experiment:
             return sdiv(self.n_valid, self.n_evasions)
 
     DEFAULT_DS = 'data/CTU-1-1.csv'
-    DEFAULT_CLS = ClsLoader.XGBOOST
-    ATTACKS = [AttackLoader.HOP_SKIP, AttackLoader.ZOO]
-    CLASSIFIERS = [ClsLoader.XGBOOST, ClsLoader.NEURAL_NETWORK]
+    DEFAULT_CLS = ClsLoader.XGB
+    ATTACKS = [AttackLoader.HSJ, AttackLoader.ZOO]
+    CLASSIFIERS = [ClsLoader.XGB, ClsLoader.DNN]
     VALIDATORS = [Validator.NB15, Validator.IOT23]
 
     def __init__(self, uuid, **kwargs):

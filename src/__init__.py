@@ -14,7 +14,7 @@ from src.utility import show as Show, show_ratio as Ratio, sdiv
 from src.validator import Validator
 from src.classifier import Classifier
 from src.attack import Attack
-from src.nn import NeuralNetwork
+from src.dnn import NeuralNetwork
 from src.xgb import XgBoost
 from src.hopskip import HopSkip
 from src.zoo import Zoo

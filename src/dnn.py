@@ -10,6 +10,7 @@ paper: https://arxiv.org/abs/1705.07204 (adversarial training)
 import os
 import warnings
 
+
 warnings.filterwarnings("ignore")
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
@@ -19,9 +20,10 @@ tf.compat.v1.disable_eager_execution()
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 from keras import backend as K
-from keras.layers import Dense, Flatten
+from keras.layers import Dense
 from keras.losses import SparseCategoricalCrossentropy
 from keras.metrics import SparseCategoricalAccuracy
+from keras.callbacks import EarlyStopping
 from keras.optimizers import SGD
 
 from art.attacks.evasion import FastGradientMethod
@@ -51,9 +53,12 @@ class NeuralNetwork(Classifier):
 
     def init_classifier(self, epochs=180, batch_size=256):
         model = tf.keras.models.Sequential([
-            Flatten(),
             Dense(100, activation='relu'),
-            Dense(self.n_classes, activation='softmax'),
+            Dense(100, activation='relu'),
+            Dense(100, activation='relu'),
+            Dense(100, activation='relu'),
+            Dense(100, activation='relu'),
+            Dense(self.n_classes, activation='softmax')
         ])
         model.compile(
             optimizer=SGD(),
@@ -63,6 +68,7 @@ class NeuralNetwork(Classifier):
         model.fit(
             self.train_x, self.train_y,
             batch_size=min(batch_size, self.n_train),
+            callbacks=[EarlyStopping(monitor='loss', patience=5)],
             epochs=epochs,
             shuffle=True,
             verbose=False,
