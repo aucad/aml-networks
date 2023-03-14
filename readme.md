@@ -1,13 +1,13 @@
 # Adversarial Machine Learning in Network Intrusion Detection Systems
 
-This repository implements an evaluation pipeline to measure success rate of adversarial machine learning evasion
-attacks in network intrusion detection systems (NIDS). It involves evaluation of select classifiers -- trained on
-network data sets (of benign and malicious traffic flows) -- against adversarial black-box attacks and defenses.
-Currently supported classifiers are Keras deep neural network and a tree-based ensemble learner XGBoost. Both
-classifiers are enhanced with an adversarial robustness property.
+This repository implements an **evaluation pipeline** to measure success rate of adversarial machine learning evasion
+attacks in network intrusion detection systems (NIDS). It involves evaluation of select classifiers — trained on network
+data sets of benign and malicious traffic flows — against adversarial black-box attacks, and with/out defenses. The
+currently supported classifiers are: Keras deep neural network, and a tree-based ensemble learner XGBoost. Both
+classifiers can be enhanced with an adversarial robustness during the training phase.
 
 This repository provides an implementation to perform various experiments in the specified setting. Instructions for
-running pre-defined experiments, and extended custom usage, is explained in section ["Usage"](#usage) below.
+running pre-defined experiments, and extended custom usage, is explained in ["Usage" section](#usage) below.
 
 **Datasets**: we consider two network traffic captures:
 
@@ -17,7 +17,7 @@ running pre-defined experiments, and extended custom usage, is explained in sect
 2. [UNSW-NB15](https://research.unsw.edu.au/projects/unsw-nb15-dataset) is a network intrusion dataset that contains
    nine different attacks.
 
-Preprocessed and sampled data is included in `data/` directory. 
+Preprocessed and sampled data is included in `data/` directory.
 
 ## Setup
 
@@ -25,14 +25,15 @@ These steps explain how to run this software from source.
 
 - :snake: **Required** Python environment: 3.8 or 3.9
 
-- :warning: **Submodule** This repository includes a submodule. Clone it including the
-  [submodule](https://stackoverflow.com/a/4438292).
+- :warning: **Submodule** This repository has a submodule. Clone it, including the submodule
+  [(instructions)](https://stackoverflow.com/a/4438292).
 
 ### Build robust XGBoost
 
 The evaluation uses a modified version of XGBoost classifier, enhanced with adversarial robustness property. This
-classifier is not installed with the other package dependencies. The XGBoost classifier must be built locally [from
-source](https://github.com/chenhongge/RobustTrees) (also included as a submodule `RobustTrees`). Follow the
+classifier is not installed with the other package dependencies. The XGBoost classifier must be built
+locally [from source](https://github.com/chenhongge/RobustTrees) (also included as a submodule `RobustTrees`). Follow
+the
 [instructions here](https://github.com/chenhongge/RobustTrees/tree/master/python-package#from-source) to build it from
 source.
 
@@ -69,38 +70,33 @@ This application is intended for use over command line interface (CLI). There ar
 | `plot`       | Generates tables from captured experiment results                                   |
 | `validate`   | Check a data set for network protocol correctness                                   |
 
-### Quick start
+### Quick start: Predefined experiments
 
-This section explains how to run the pre-defined experiments. There are 3 pre-defined experiments. Other custom
-experiments can be defined using the [CLI commands](#cli-commands).
+* `make all`
 
-**Run experiments**
-
-* `make all` 
-
-   Experiment uses full cross-validation holdout set and repeats experiments for different max iterations. Max iterations
-   can be customized by specifying: `ITERS="n₀ … nₖ"`. For example: `make all ITERS="5 20 0"`. Value `0` is attack default
-   max iterations (varies by attack).
+  Experiment uses full cross-validation holdout set and repeats experiments for different max iterations. Max iterations
+  can be customized by specifying: `ITERS="n₀ … nₖ"`. For example: `make all ITERS="5 20 0"`. Value `0` is attack
+  default max iterations (varies by attack).
 
 
 * `make sample`
 
-   Sampled run performs the experiment on limited input size - random sample of records of the holdout set. The sample size
-   can be customized with `make sample SAMPLE=m TIMES=n`, where `m` is the number of records to use and `n` is the number
-   of times to repeat the sampling. The result is reported as average of the `n` runs.
+  Perform experiments on limited input size by randomly sampling records of the holdout set. The sample size can be
+  customized by appending to the command `SAMPLE=m TIMES=n`, where `m` is the number of records to use and `n` is the
+  number of times to repeat the sampling. The result is reported as the average of `n` runs.
 
 * `make fast`
 
-   Subset of `make all`: this runs experiment for default max iterations only using full holdout set. Parameters for this
-   attack are fixed -- it does not accept custom arguments like the two experiments above.
+  Subset of "make all". This option runs experiment for default max iterations only using full holdout set. Parameters
+  for this attack are fixed -- it does not accept custom arguments like the two experiments above.
 
 * `make plot`
- 
-   plot results of an experiment. This command will generate text-based table plots.
 
-### CLI commands
+  plot results of an experiment. This command will generate text-based table plots.
 
-For custom experiments, construct appropriate commands.
+### Additional Custom Experiments
+
+Other custom experiments can be defined by constructing appropriate CLI commands.
 
 ```
 python3 -m src {experiment|plot|validate} [ARGS]
