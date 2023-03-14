@@ -1,37 +1,8 @@
-import warnings
-
-warnings.filterwarnings("ignore")
-
-from typing import Union, Optional
+# import warnings
+#
+# warnings.filterwarnings("ignore")
 
 import numpy as np
-from art.estimators.classification import BlackBoxClassifier, \
-    CatBoostARTClassifier, DetectorClassifier, EnsembleClassifier, \
-    PyTorchClassifier, TensorFlowClassifier, TensorFlowV2Classifier, \
-    GPyGaussianProcessClassifier, LightGBMClassifier, XGBoostClassifier, \
-    KerasClassifier, MXClassifier
-from art.estimators.classification.classifier import \
-    ClassifierNeuralNetwork
-from art.estimators.classification.scikitlearn import \
-    ScikitlearnDecisionTreeClassifier, ScikitlearnAdaBoostClassifier, \
-    ScikitlearnExtraTreesClassifier, \
-    ScikitlearnGradientBoostingClassifier, \
-    ScikitlearnLogisticRegression, ScikitlearnClassifier, \
-    ScikitlearnExtraTreeClassifier, ScikitlearnBaggingClassifier, \
-    ScikitlearnRandomForestClassifier, ScikitlearnSVC
-from art.experimental.estimators.classification import JaxClassifier
-
-CLS_TYPE = Optional[Union[
-    BlackBoxClassifier, CatBoostARTClassifier, DetectorClassifier,
-    EnsembleClassifier, GPyGaussianProcessClassifier, KerasClassifier,
-    JaxClassifier, LightGBMClassifier, MXClassifier, PyTorchClassifier,
-    ScikitlearnClassifier, ScikitlearnDecisionTreeClassifier,
-    ScikitlearnExtraTreeClassifier, ScikitlearnAdaBoostClassifier,
-    ScikitlearnBaggingClassifier, ScikitlearnExtraTreesClassifier,
-    ScikitlearnGradientBoostingClassifier,
-    ScikitlearnRandomForestClassifier, ScikitlearnLogisticRegression,
-    ScikitlearnSVC, TensorFlowClassifier, TensorFlowV2Classifier,
-    XGBoostClassifier, ClassifierNeuralNetwork]]
 
 
 class Classifier:
@@ -43,7 +14,7 @@ class Classifier:
         self.out_dir = out
         self.attrs = attrs[:]
         self.classes = np.unique(y)
-        self.classifier: CLS_TYPE = None
+        self.classifier = None
         self.model = None
         self.train_x = np.array([])
         self.train_y = np.array([])
