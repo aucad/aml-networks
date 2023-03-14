@@ -13,8 +13,8 @@ import tensorflow as tf
 tf.compat.v1.disable_eager_execution()
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
+from keras import backend as K
 from keras.layers import Dense, Flatten
-from keras.callbacks import EarlyStopping
 from keras.losses import SparseCategoricalCrossentropy
 from keras.metrics import SparseCategoricalAccuracy
 from keras.optimizers import SGD
@@ -82,3 +82,6 @@ class NeuralNetwork(Classifier):
             self.init_robust()
         else:
             self._set_cls(self.init_classifier())
+
+    def cleanup(self):
+        K.clear_session()

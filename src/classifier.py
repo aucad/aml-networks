@@ -158,6 +158,9 @@ class Classifier:
         """
         pass
 
+    def cleanup(self):
+        pass
+
     def load(self, x, y, fold_train, fold_test, fold_n):
         self.train_x = self.normalize(x[fold_train, :])
         self.train_y = y[fold_train].astype(int).flatten()

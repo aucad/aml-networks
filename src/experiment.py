@@ -215,6 +215,7 @@ class Experiment:
         self.start_time = time.time_ns()
         for i, fold in enumerate(self.folds):
             self.do_fold(i + 1, fold)
+            self.cls.cleanup()
         self.end_time = time.time_ns()
         self.log_experiment_result()
         self.save_result()
