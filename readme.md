@@ -23,9 +23,9 @@ Preprocessed and sampled data is included in `data/` directory.
 
 These steps explain how to run this software from source.
 
-- :warning: **<u>Required</u>** Python environment: 3.8 or 3.9
+- :snake: **Required** Python environment: 3.8 or 3.9
 
-- :warning: **<u>Submodule</u>** This repository includes a submodule. Clone it including the
+- :warning: **Submodule** This repository includes a submodule. Clone it including the
   [submodule](https://stackoverflow.com/a/4438292).
 
 ### Build robust XGBoost
@@ -76,36 +76,27 @@ experiments can be defined using the [CLI commands](#cli-commands).
 
 **Run experiments**
 
-```
-make all
-```
+* `make all` 
 
-Experiment uses full cross-validation holdout set and repeats experiments for different max iterations. Max iterations
-can be customized by specifying: `ITERS="n₀ … nₖ"`. For example: `make all ITERS="5 20 0"`. Value `0` is attack default
-max iterations (varies by attack).
+   Experiment uses full cross-validation holdout set and repeats experiments for different max iterations. Max iterations
+   can be customized by specifying: `ITERS="n₀ … nₖ"`. For example: `make all ITERS="5 20 0"`. Value `0` is attack default
+   max iterations (varies by attack).
 
-```
-make sample
-``` 
 
-Sampled run performs the experiment on limited input size - random sample of records of the holdout set. The sample size
-can be customized with `make sample SAMPLE=m TIMES=n`, where `m` is the number of records to use and `n` is the number
-of times to repeat the sampling. The result is reported as average of the `n` runs.
+* `make sample`
 
-```
-make fast
-```
+   Sampled run performs the experiment on limited input size - random sample of records of the holdout set. The sample size
+   can be customized with `make sample SAMPLE=m TIMES=n`, where `m` is the number of records to use and `n` is the number
+   of times to repeat the sampling. The result is reported as average of the `n` runs.
 
-Subset of `make all`: this runs experiment for default max iterations only using full holdout set. Parameters for this
-attack are fixed -- it does not accept custom arguments like the two experiments above.
+* `make fast`
 
-**Plot results**
+   Subset of `make all`: this runs experiment for default max iterations only using full holdout set. Parameters for this
+   attack are fixed -- it does not accept custom arguments like the two experiments above.
 
-```
-make plot
-```
-
-This command will generate text-based table plots.
+* `make plot`
+ 
+   plot results of an experiment. This command will generate text-based table plots.
 
 ### CLI commands
 
