@@ -1,12 +1,21 @@
 """
 Train XGBoost classifier.
+
+* The base model should be locally built from "RobustTrees":
+  <https://github.com/chenhongge/RobustTrees>
+
+* The instructions for building from source are provided here:
+  <https://github.com/chenhongge/RobustTrees/tree/master/python-package#from-source>
+
+This is a custom version of standard XGBoost with added robustness.
 """
 import os
 import sys
 
 from art.estimators.classification import XGBoostClassifier
+
 # noinspection PyPackageRequirements
-from xgboost import plot_tree, DMatrix, train as xg_train
+from xgboost import DMatrix, train as xg_train
 
 from src import Classifier
 
@@ -25,15 +34,10 @@ class XgBoost(Classifier):
         ax = 1 if len(tmp.shape) == 2 else 0
         return tmp.argmax(axis=ax)
 
-    # noinspection PyBroadException
-    def tree_plotter(self):
-        """Plot the tree and save to file."""
-        plot_tree(self.model, num_trees=20, rankdir='LR')
-
-    def prep_model(self, robust):
+    def init_learner(self, robust):
         """
+        For a full list of options
         see:  https://xgboost.readthedocs.io/en/stable/parameter.html
-        for full list of options
         """
         d_train = self.formatter(self.train_x, self.train_y)
         # https://stackoverflow.com/a/8391735
@@ -66,7 +70,6 @@ class XgBoost(Classifier):
             })
         sys.stdout = sys.__stdout__  # re-enable print
 
-    def prep_classifier(self):
         self.classifier = XGBoostClassifier(
             model=self.model,
             nb_features=self.n_features,

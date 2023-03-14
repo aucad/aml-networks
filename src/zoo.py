@@ -1,9 +1,10 @@
-"""Zeroth-Order Optimization (ZOO) evasion attack using tree-base
-classifier.
+"""
+Implementation of Zeroth-Order Optimization (ZOO) evasion attack.
 
 The black-box zeroth-order optimization attack from Pin-Yu Chen et
 al. (2018). This attack is a variant of the C&W attack which uses
 ADAM coordinate descent to perform numerical estimation of gradients.
+
 Paper: https://arxiv.org/abs/1708.03999
 """
 
@@ -74,7 +75,7 @@ class Zoo(Attack):
         Restore original attribute values along immutable columns.
 
         We perform this operation after the attack, because masking
-        is not supported for this attack.
+        is not supported by ZOO attack natively.
         """
         if x.shape != adv.shape:
             raise Exception(
@@ -85,7 +86,7 @@ class Zoo(Attack):
         return adv
 
     def run(self):
-        """Runs the zoo attack."""
+        """Run the zoo attack."""
         self.generate_adv_examples(self.max_iter)
         self.adv_x = self.pseudo_mask(
             self.cls.mask_cols, self.ori_x, self.adv_x)

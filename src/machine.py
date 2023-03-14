@@ -1,5 +1,10 @@
+"""
+Capture details of the current machine and runtime.
+"""
+
 import psutil
 import platform
+import sys
 
 
 def get_size(bytes_, suffix="B"):
@@ -41,4 +46,5 @@ def machine_details():
     result["virtual_mem_available"] = get_size(mem.available)
     result["virtual_mem_used"] = get_size(mem.used)
     result["virtual_mem_percentage"] = mem.percent
+    result["python_runtime"] = sys.version
     return result

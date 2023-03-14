@@ -1,3 +1,8 @@
+"""
+Collection of various utility/helper functions. File read/write operations,
+display and math helpers, etc.
+"""
+
 import csv
 import logging
 import os
@@ -12,10 +17,17 @@ logger = logging.getLogger(__name__)
 
 
 def name_only(file):
+    """Get name of file only - without path or extension."""
     return Path(file).stem
 
 
 def generate_name(ts, args, extension=None):
+    """Generate filename for experiment instance.
+
+    Arguments:
+        ts - timestamp
+        args - experiment arguments
+    """
     ds = name_only(args.dataset)
     rb = f'robust_{"T" if args.robust else "F"}_' \
         if hasattr(args, 'robust') else ''
@@ -61,12 +73,11 @@ def show(label: str, value: Any):
     logger.debug(text)
 
 
-def show_ratio(label, num, denom):
-    if denom == 0:
-        return show(label, 0)
-    ratio = 100 * num / denom
-    return show(label, f'{round(num, 0)} of {round(denom, 0)}'
-                       f' - {ratio:.1f} %')
+def show_ratio(label, numeric, denominator):
+    """Display (safely) a ratio value."""
+    a, b = round(numeric, 0), round(denominator, 0)
+    ratio = 100 * sdiv(numeric, denominator)
+    return show(label, f'{a} of {b} - {ratio:.1f} %')
 
 
 def clear_one_line():
@@ -88,10 +99,10 @@ def attr_fix(attrs):
     """Remove selected special chars from attributes so that
     the remaining forms a valid Python identifier."""
     return [a.replace(' ', '')
-            .replace('=', '_')
-            .replace('-', '')
-            .replace('^', '_')
-            .replace('conn_state_other', 'conn_state_OTH')
+                .replace('=', '_')
+                .replace('-', '')
+                .replace('^', '_')
+                .replace('conn_state_other', 'conn_state_OTH')
             for a in attrs]
 
 
@@ -104,19 +115,22 @@ def ts_str(length: int = 4) -> str:
     return str(round(time.time() * 1000))[-length:]
 
 
-def sdiv(num, denom):
-    """Save division."""
-    return 0 if denom == 0 else num / denom
+def sdiv(num, denominator):
+    """Safe division."""
+    return 0 if denominator == 0 else num / denominator
 
 
-def dump_num_dict(reasons):
-    reason_pairs = [(v, f'{v} * {k}')
-                    for k, v in reasons.items() if v > 0]
-    sorted_reasons = sorted(reason_pairs, reverse=True)
-    return '\n'.join([txt for _, txt in sorted_reasons])
+def dump_num_dict(reasons) -> str:
+    """
+    Sorted representation of <K, V> pairs, sorted by value in descending order
+    (value is assumed to be numeric).
+    """
+    pairs = [(v, f'{v} * {k}') for k, v in reasons.items() if v > 0]
+    return '\n'.join([txt for _, txt in sorted(pairs, reverse=True)])
 
 
 def read_dataset(dataset_path):
+    """Data set file reader."""
     df = pd.read_csv(dataset_path).fillna(0)
     attrs = attr_fix([col for col in df.columns])
     rows = np.array(df)
@@ -124,6 +138,7 @@ def read_dataset(dataset_path):
 
 
 def write_dataset(file_name, attrs, rows, int_cols=None):
+    """Data set file writer, to save some generated data set to file."""
     with open(file_name, 'w', newline='') as fp:
         w = csv.writer(fp, delimiter=',')
         w.writerow(attrs)

@@ -10,7 +10,8 @@ from sklearn.model_selection import KFold
 
 # noinspection PyUnresolvedReferences
 from src import Classifier, Attack, Validator, utility, \
-    HopSkip, Zoo, DecisionTree, XgBoost, Show, Ratio, sdiv, machine
+    HopSkip, Zoo, DecisionTree, NeuralNetwork, XgBoost, \
+    Show, Ratio, sdiv, machine
 
 logger = logging.getLogger(__name__)
 
@@ -20,11 +21,14 @@ class Experiment:
         """Load selected classifier."""
         XGBOOST = 'xgb'
         DECISION_TREE = 'tree'
+        NEURAL_NETWORK = 'nn'
 
         @staticmethod
         def init(kind, *args) -> Classifier:
             if kind == Experiment.ClsLoader.DECISION_TREE:
                 return DecisionTree(*args)
+            elif kind == Experiment.ClsLoader.NEURAL_NETWORK:
+                return NeuralNetwork(*args)
             else:
                 return XgBoost(*args)
 
@@ -118,7 +122,8 @@ class Experiment:
     DEFAULT_DS = 'data/CTU-1-1.csv'
     DEFAULT_CLS = ClsLoader.XGBOOST
     ATTACKS = [AttackLoader.HOP_SKIP, AttackLoader.ZOO]
-    CLASSIFIERS = [ClsLoader.DECISION_TREE, ClsLoader.XGBOOST]
+    CLASSIFIERS = [ClsLoader.DECISION_TREE, ClsLoader.XGBOOST,
+                   ClsLoader.NEURAL_NETWORK]
     VALIDATORS = [Validator.NB15, Validator.IOT23]
 
     def __init__(self, uuid, **kwargs):
@@ -162,7 +167,7 @@ class Experiment:
         self.y = rows[:, -1].astype(int).flatten()
         self.folds = [(tr_i, ts_i) for tr_i, ts_i
                       in KFold(n_splits=n_splits, shuffle=True)
-                      .split(self.X)]
+                          .split(self.X)]
         self.mask_cols, n_feat = [], len(self.attrs) - 1
         for col_i in range(n_feat):
             self.attr_ranges[col_i] = max(self.X[:, col_i])
@@ -210,6 +215,7 @@ class Experiment:
         self.start_time = time.time_ns()
         for i, fold in enumerate(self.folds):
             self.do_fold(i + 1, fold)
+            self.cls.cleanup()
         self.end_time = time.time_ns()
         self.log_experiment_result()
         self.save_result()
@@ -222,8 +228,8 @@ class Experiment:
         Show('Robust', self.config.robust)
         Show('Classes', ", ".join(self.cls.class_names))
         Show('K-folds', self.config.folds)
-        Show('Mutable', ", ".join(self.cls.mutable_attrs))
-        Show('Immutable', ", ".join(self.cls.immutable_attrs))
+        Show('Mutable', len(self.cls.mutable_attrs))
+        Show('Immutable', len(self.cls.immutable_attrs))
         if self.attack:
             Show('Attack', self.attack.name)
             Show('Attack max iter', self.attack.max_iter)

@@ -1,3 +1,13 @@
+"""
+Network Records Validator Implementation.
+
+Network packet validator evaluates generated adversarial records for
+structural correctness using a rule-based approach.
+
+The implementation is dataset specific as the feature names vary by dataset,
+and protocol-specific because constraints vary by protocol.
+"""
+
 from __future__ import annotations
 
 import os
@@ -9,7 +19,7 @@ from src import Show, utility
 
 
 class Protocol:
-    """Represents validatable instance"""
+    """Generic protocol superclass, represents a validatable instance."""
 
     def __init__(self, name: str, kind: namedtuple, **kwargs):
         self.name = name

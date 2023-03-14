@@ -11,7 +11,7 @@ Instructions for running pre-defined experiments, and extended custom usage, is 
 
 ## Datasets
 
-We consider two data sources:
+We consider two network capture data sources:
 
 1. [Aposemat IoT-23](https://www.stratosphereips.org/datasets-iot23/) is a labeled dataset with malicious and benign IoT network traffic.
 
@@ -23,12 +23,9 @@ Preprocessed, sampled data is included in `data/` directory. The input data is e
 
 These steps explain how to run this software from source.
 
-Required Python environment: 3.8 or 3.9 [^1]
+Required Python environment: 3.8 or 3.9 
 
-[^1]: This is a hard requirement. Numpy requires >= 3.8; robust XGBoost relies on Python features removed after 3.9.
-
-This repository includes a submodule. 
-Clone it including the [submodule](https://stackoverflow.com/a/4438292).
+This repository includes a submodule. Clone it including the [submodule](https://stackoverflow.com/a/4438292).
 
 ### Build robust XGBoost
 
@@ -62,45 +59,58 @@ The version number should be 0.72.
 
 ## Usage
 
-This application is intended for use over command line interface.
+This application is intended for use over command line interface (CLI).
 There are 3 execution modes: `experiment`, `plot` and `validate`.
 
-- `experiment` mode trains a classifier and performs adversarial
-  attack according to provided arguments.
-- `plot` mode generates tables from captured experiment results.
-- `validate` mode will check a dataset records for correctness.
+| Mode         | Description                                                                         |
+|:-------------|:------------------------------------------------------------------------------------|
+| `experiment` | Trains a classifier and performs adversarial attack according to provided arguments |
+| `plot`       | Generates tables from captured experiment results                                   |
+| `validate`   | Check a data set for network protocol correctness                                   |
+ 
 
-**Quick start**
+### Quick start
 
-Run experiments
+This section explains how to run the pre-defined experiments.
+There are 3 pre-defined experiments.
+Other custom experiments can be defined using the [CLI commands](#cli-commands).
+
+**Run experiments**
 
 ```
 make all
 ```
 
-The default experiment uses full cross-validation holdout set, and
-repeats experiments for three options of max iterations.
+Experiment uses full cross-validation holdout set and repeats experiments for different max iterations.
+Max iterations can be customized by specifying: `ITERS="n₀ … nₖ"`. For
+example: `make all ITERS="5 20 0"`.  Value `0` is attack default max iterations (varies by attack).
 
-There are two alternative pre-defined experiments:
+```
+make sample
+``` 
 
-- `make sample` runs the experiment on limited input size of 50 records.
-- `make proto` subset of all; runs experiment for default iterations only.
+Sampled run performs the experiment on limited input size - random sample of records of the holdout set.
+The sample size can be customized with `make sample SAMPLE=m TIMES=n`, where `m` is the number of records to use
+and `n` is the number of times to repeat the sampling. The result is reported as average of the `n` runs.
 
-Custom experiments can be defined using the CLI commands.
+```
+make fast
+```
 
-Plot results
+Subset of `make all`: this runs experiment for default max iterations only using full holdout set.
+Parameters for this attack are fixed -- it does not accept custom arguments like the two experiments above.
+
+**Plot results**
 
 ```
 make plot
 ```
 
-Validate datasets
+This command will generate text-based table plots.
 
-```
-make valid
-```
+### CLI commands
 
-**CLI commands**
+For custom experiments, construct appropriate commands.
 
 ```
 python3 -m src {experiment|plot|validate} [ARGS]
@@ -124,7 +134,6 @@ To see available options for the validator, run:
 python3 -m src validate --help
 ```
 
-
 ## Source code organization
 
 | Directory           | Description                               |
@@ -142,6 +151,7 @@ python3 -m src validate --help
 | 　`└─ experiment.py` | Runs an attack experiment                 |
 | 　`└─ hopskip.py`    | HopSkipJump attack implementation         |
 | 　`└─ machine.py`    | Captures current machine details          |
+| 　`└─ nn.py`         | Neural network classifier training        |
 | 　`└─ plotter.py`    | Experiment results plotting               |
 | 　`└─ tree.py`       | Decision tree classifier training         |
 | 　`└─ utility.py`    | Shared functionality utilities            |

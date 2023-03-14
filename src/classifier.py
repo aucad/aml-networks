@@ -1,4 +1,37 @@
+import warnings
+
+warnings.filterwarnings("ignore")
+
+from typing import Union, Optional
+
 import numpy as np
+from art.estimators.classification import BlackBoxClassifier, \
+    CatBoostARTClassifier, DetectorClassifier, EnsembleClassifier, \
+    PyTorchClassifier, TensorFlowClassifier, TensorFlowV2Classifier, \
+    GPyGaussianProcessClassifier, LightGBMClassifier, XGBoostClassifier, \
+    KerasClassifier, MXClassifier
+from art.estimators.classification.classifier import \
+    ClassifierNeuralNetwork
+from art.estimators.classification.scikitlearn import \
+    ScikitlearnDecisionTreeClassifier, ScikitlearnAdaBoostClassifier, \
+    ScikitlearnExtraTreesClassifier, \
+    ScikitlearnGradientBoostingClassifier, \
+    ScikitlearnLogisticRegression, ScikitlearnClassifier, \
+    ScikitlearnExtraTreeClassifier, ScikitlearnBaggingClassifier, \
+    ScikitlearnRandomForestClassifier, ScikitlearnSVC
+from art.experimental.estimators.classification import JaxClassifier
+
+CLS_TYPE = Optional[Union[
+    BlackBoxClassifier, CatBoostARTClassifier, DetectorClassifier,
+    EnsembleClassifier, GPyGaussianProcessClassifier, KerasClassifier,
+    JaxClassifier, LightGBMClassifier, MXClassifier, PyTorchClassifier,
+    ScikitlearnClassifier, ScikitlearnDecisionTreeClassifier,
+    ScikitlearnExtraTreeClassifier, ScikitlearnAdaBoostClassifier,
+    ScikitlearnBaggingClassifier, ScikitlearnExtraTreesClassifier,
+    ScikitlearnGradientBoostingClassifier,
+    ScikitlearnRandomForestClassifier, ScikitlearnLogisticRegression,
+    ScikitlearnSVC, TensorFlowClassifier, TensorFlowV2Classifier,
+    XGBoostClassifier, ClassifierNeuralNetwork]]
 
 
 class Classifier:
@@ -10,7 +43,7 @@ class Classifier:
         self.out_dir = out
         self.attrs = attrs[:]
         self.classes = np.unique(y)
-        self.classifier = None
+        self.classifier: CLS_TYPE = None
         self.model = None
         self.train_x = np.array([])
         self.train_y = np.array([])
@@ -107,18 +140,25 @@ class Classifier:
 
     @staticmethod
     def formatter(x, y):
+        """Format records to fit this classifier, if necessary.
+
+           The default format is np.array. If the implementing classifier needs
+           a different data format (e.g., DMatrix), then apply it here.
+        """
         return x
 
-    def predict(self, data):
-        return self.model.predict(data)
+    def predict(self, record):
+        """Predict label for specified record."""
+        return self.model.predict(record)
 
-    def prep_model(self, robust):
+    def init_learner(self, robust):
+        """Implement model training phase. If robust is true, the model should
+        apply appropriate defense. This is called after data has been loaded
+        and is ready; cf. `Classifier.train`.
+        """
         pass
 
-    def prep_classifier(self):
-        pass
-
-    def tree_plotter(self):
+    def cleanup(self):
         pass
 
     def load(self, x, y, fold_train, fold_test, fold_n):
@@ -131,8 +171,7 @@ class Classifier:
         return self
 
     def train(self):
-        self.prep_model(self.robust)
-        self.prep_classifier()
+        self.init_learner(self.robust)
         records = ((self.test_x, self.test_y) if self.n_test > 0
                    else (self.train_x, self.train_y))
         predictions = self.predict(self.formatter(*records))
