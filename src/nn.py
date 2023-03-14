@@ -1,5 +1,10 @@
 """
-Neural network classifier training.
+Neural network classifier implementation.
+
+The classifier is built using Keras and conditionally with  robustness
+from Adversarial Training.
+
+paper: https://arxiv.org/abs/1705.07204 (adversarial training)
 """
 
 import os
@@ -74,7 +79,8 @@ class NeuralNetwork(Classifier):
         trainer.fit(
             self.train_x.copy(),
             self.train_y.copy(),
-            nb_epochs=5, batch_size=128)
+            nb_epochs=5,
+            batch_size=min(128, self.n_train))
         self._set_cls(trainer.get_classifier())
 
     def init_learner(self, robust):

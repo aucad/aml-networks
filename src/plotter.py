@@ -1,3 +1,7 @@
+"""
+Utility for generating (table) plots of the captured results.
+"""
+
 import json
 import glob
 import logging
@@ -9,7 +13,7 @@ from pytablewriter import SpaceAlignedTableWriter, LatexTableWriter
 logger = logging.getLogger(__name__)
 
 
-class Results:
+class ResultsPlot:
 
     def __init__(self, directory, fmt):
         self.raw_rata = []
@@ -87,10 +91,10 @@ class Results:
                 record['attack'],
                 record['robust'],
                 record['max_iter']] + \
-               Results.proto_freq(
+               ResultsPlot.proto_freq(
                    record, labels, '_Result__proto_init',
                    '_Result__proto_evasions') + \
-               Results.proto_freq(
+               ResultsPlot.proto_freq(
                    record, labels, '_Result__proto_evasions',
                    '_Result__proto_valid')
 
@@ -158,7 +162,7 @@ class Results:
 
 
 def plot_results(directory, fmt):
-    res = Results(directory, fmt)
+    res = ResultsPlot(directory, fmt)
     if res.n_results == 0:
         logger.warning("No results found in results directory.")
         logger.warning("Nothing was plotted.")

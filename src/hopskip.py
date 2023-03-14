@@ -1,11 +1,12 @@
 """
-Applying HopSkipJumpAttack on tree-based classifier.
+HopSkipJumpAttack implementation.
 
-HopSkipJumpAttack - a family of algorithms based on a novel estimate
-of the gradient direction using binary information at the decision
-boundary. The proposed family includes both un-targeted and targeted
+HopSkipJumpAttack - (Chen et al., 2019) a family of algorithms based on a
+novel estimate of the gradient direction using binary information at the
+decision boundary. The proposed family includes both un-targeted and targeted
 attacks optimized for L2 and L∞ similarity metrics respectively.
-(Chen et al., 2019) Paper: https://arxiv.org/abs/1904.02144
+
+Paper: https://arxiv.org/abs/1904.02144
 """
 from typing import List
 

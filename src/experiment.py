@@ -167,7 +167,7 @@ class Experiment:
         self.y = rows[:, -1].astype(int).flatten()
         self.folds = [(tr_i, ts_i) for tr_i, ts_i
                       in KFold(n_splits=n_splits, shuffle=True)
-                      .split(self.X)]
+                          .split(self.X)]
         self.mask_cols, n_feat = [], len(self.attrs) - 1
         for col_i in range(n_feat):
             self.attr_ranges[col_i] = max(self.X[:, col_i])
@@ -228,8 +228,8 @@ class Experiment:
         Show('Robust', self.config.robust)
         Show('Classes', ", ".join(self.cls.class_names))
         Show('K-folds', self.config.folds)
-        Show('Mutable', ", ".join(self.cls.mutable_attrs))
-        Show('Immutable', ", ".join(self.cls.immutable_attrs))
+        Show('Mutable', len(self.cls.mutable_attrs))
+        Show('Immutable', len(self.cls.immutable_attrs))
         if self.attack:
             Show('Attack', self.attack.name)
             Show('Attack max iter', self.attack.max_iter)
