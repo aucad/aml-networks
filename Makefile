@@ -13,7 +13,7 @@ TIMES:=1
 endif
 
 ifndef $CLS
-CLS:=tree
+CLS:=xgb
 endif
 
 DATA_DIR := ./data

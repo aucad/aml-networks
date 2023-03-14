@@ -10,8 +10,7 @@ from sklearn.model_selection import KFold
 
 # noinspection PyUnresolvedReferences
 from src import Classifier, Attack, Validator, utility, \
-    HopSkip, Zoo, DecisionTree, NeuralNetwork, XgBoost, \
-    Show, Ratio, sdiv, machine
+    HopSkip, Zoo, NeuralNetwork, XgBoost, Show, Ratio, sdiv, machine
 
 logger = logging.getLogger(__name__)
 
@@ -20,14 +19,11 @@ class Experiment:
     class ClsLoader:
         """Load selected classifier."""
         XGBOOST = 'xgb'
-        DECISION_TREE = 'tree'
         NEURAL_NETWORK = 'nn'
 
         @staticmethod
         def init(kind, *args) -> Classifier:
-            if kind == Experiment.ClsLoader.DECISION_TREE:
-                return DecisionTree(*args)
-            elif kind == Experiment.ClsLoader.NEURAL_NETWORK:
+            if kind == Experiment.ClsLoader.NEURAL_NETWORK:
                 return NeuralNetwork(*args)
             else:
                 return XgBoost(*args)
@@ -122,8 +118,7 @@ class Experiment:
     DEFAULT_DS = 'data/CTU-1-1.csv'
     DEFAULT_CLS = ClsLoader.XGBOOST
     ATTACKS = [AttackLoader.HOP_SKIP, AttackLoader.ZOO]
-    CLASSIFIERS = [ClsLoader.DECISION_TREE, ClsLoader.XGBOOST,
-                   ClsLoader.NEURAL_NETWORK]
+    CLASSIFIERS = [ClsLoader.XGBOOST, ClsLoader.NEURAL_NETWORK]
     VALIDATORS = [Validator.NB15, Validator.IOT23]
 
     def __init__(self, uuid, **kwargs):
