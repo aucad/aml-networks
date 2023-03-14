@@ -20,6 +20,8 @@ DATA_DIR := ./data
 
 ATTACKS := hsj zoo
 
+CLASSIFIERS := xgb dnn
+
 ROBUST = T_ROBUST F_ROBUST
 T_ROBUST := --robust
 F_ROBUST :=
@@ -33,12 +35,14 @@ DS_2 := -d ./data/nb15-10K.csv $(NB_OPTIONS)
 DATASETS := DS_1 DS_2
 
 all:
-	@$(foreach i, $(ITERS), $(foreach r, $(ROBUST), $(foreach attack, $(ATTACKS), $(foreach ds, $(DATASETS),  \
-        python3 -m src experiment -a $(attack) $($(ds)) $($(r)) --iter $(i) -s $(SAMPLE) -t $(TIMES) -c $(CLS) ; ))))
+	 $(foreach i, $(ITERS), $(foreach c, $(CLASSIFIERS), $(foreach r, $(ROBUST), \
+     $(foreach attack, $(ATTACKS), $(foreach ds, $(DATASETS),  \
+        python3 -m src experiment -a $(attack) $($(ds)) $($(r)) --iter $(i) -s $(SAMPLE) -t $(TIMES) -c $(c) ; )))))
 
 sample:
-	@$(foreach i, $(ITERS), $(foreach r, $(ROBUST), $(foreach attack, $(ATTACKS), \
-        python3 -m src experiment -a $(attack) $(DS_2) $($(r)) --iter $(i) -s 50 -t 3  -c $(CLS) ; )))
+	@$(foreach i, $(ITERS), $(foreach c, $(CLASSIFIERS), $(foreach r, \
+    $(ROBUST), $(foreach attack, $(ATTACKS), \
+        python3 -m src experiment -a $(attack) $(DS_2) $($(r)) --iter $(i) -s 50 -t 3  -c $(c) ; ))))
 
 valid:
 	@$(foreach file, $(wildcard $(DATA_DIR)/CTU*),  \
