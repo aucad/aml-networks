@@ -6,10 +6,10 @@ from Adversarial Training.
 
 paper: https://arxiv.org/abs/1705.07204 (adversarial training)
 """
-
+import logging
 import os
+import sys
 import warnings
-
 
 warnings.filterwarnings("ignore")
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -78,7 +78,7 @@ class NeuralNetwork(Classifier):
     def init_robust(self):
         robust_classifier = self.init_classifier()
         weak_classifier = self.init_classifier()
-        attack_fgm = FastGradientMethod(weak_classifier)
+        attack_fgm = FastGradientMethod(estimator=weak_classifier)
         trainer = AdversarialTrainer(
             classifier=robust_classifier,
             attacks=attack_fgm, ratio=0.5)
@@ -86,7 +86,7 @@ class NeuralNetwork(Classifier):
             self.train_x.copy(),
             self.train_y.copy(),
             nb_epochs=5,
-            batch_size=min(128, self.n_train))
+            batch_size=min(256, self.n_train))
         self._set_cls(trainer.get_classifier())
 
     def init_learner(self, robust):

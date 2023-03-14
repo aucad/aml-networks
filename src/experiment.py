@@ -209,7 +209,13 @@ class Experiment:
 
         self.start_time = time.time_ns()
         for i, fold in enumerate(self.folds):
-            self.do_fold(i + 1, fold)
+            try:
+                self.do_fold(i + 1, fold)
+            except:
+                try:
+                    self.do_fold(i + 1, fold)
+                except:
+                    print('failed twice, will not retry')
             self.cls.cleanup()
         self.end_time = time.time_ns()
         self.log_experiment_result()
