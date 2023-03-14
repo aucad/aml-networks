@@ -35,7 +35,7 @@ DS_2 := -d ./data/nb15-10K.csv $(NB_OPTIONS)
 DATASETS := DS_1 DS_2
 
 all:
-	 $(foreach i, $(ITERS), $(foreach c, $(CLASSIFIERS), $(foreach r, $(ROBUST), \
+	@$(foreach i, $(ITERS), $(foreach c, $(CLASSIFIERS), $(foreach r, $(ROBUST), \
      $(foreach attack, $(ATTACKS), $(foreach ds, $(DATASETS),  \
         python3 -m src experiment -a $(attack) $($(ds)) $($(r)) --iter $(i) -s $(SAMPLE) -t $(TIMES) -c $(c) ; )))))
 
