@@ -2,6 +2,10 @@
 
 Preprocessed (small) datasets, ready for experiments.
 
+To evaluate additional data sources, make sure the input data is fully numeric and in csv format.
+Use these existing data sets as examples.
+
+
 | Dataset  | Origin                            | Sampled |  Rows | Benign | Malicious | 
 |:---------|:----------------------------------|:-------:|------:|-------:|----------:|
 | CTU-1-1  | IoT-23 > CTU-Malware-Capture-1-1  |   ✔️    | 10000 |   50 % |      50 % |

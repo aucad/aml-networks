@@ -1,17 +1,15 @@
 # Adversarial Machine Learning in Network Intrusion Detection Systems
 
 This repository implements an evaluation pipeline to measure success rate of adversarial machine learning evasion
-attacks in network intrusion detection systems (NIDS).
+attacks in network intrusion detection systems (NIDS). It involves evaluation of select classifiers -- trained on
+network data sets (of benign and malicious traffic flows) -- against adversarial black-box attacks and defenses.
+Currently supported classifiers are Keras deep neural network and a tree-based ensemble learner XGBoost. Both
+classifiers are enhanced with an adversarial robustness property.
 
-It involves evaluation of select classifiers -- trained on network data sets (of benign and malicious traffic flows) --
-against adversarial black-box attacks and defenses. Currently supported classifiers are deep neural network (Keras) and
-XGBoost, a tree-based ensemble learner. Both classifiers are enhanced with an adversarial robustness property.
+This repository provides an implementation to perform various experiments in the specified setting. Instructions for
+running pre-defined experiments, and extended custom usage, is explained in section ["Usage"](#usage) below.
 
-This repository provides an implementation to perform various experiments in the specified adversarial setting.
-Instructions for running pre-defined experiments, and extended custom usage, is explained in section [usage](#usage)
-below.
-
-**Datasets**: we consider two network traffic captures.
+**Datasets**: we consider two network traffic captures:
 
 1. [Aposemat IoT-23](https://www.stratosphereips.org/datasets-iot23/) is a labeled dataset with malicious and benign IoT
    network traffic.
@@ -19,24 +17,24 @@ below.
 2. [UNSW-NB15](https://research.unsw.edu.au/projects/unsw-nb15-dataset) is a network intrusion dataset that contains
    nine different attacks.
 
-Preprocessed and sampled data is included in `data/` directory. To evaluate additional data sources, make sure the input
-data is fully numeric and in csv format.
+Preprocessed and sampled data is included in `data/` directory. 
 
 ## Setup
 
 These steps explain how to run this software from source.
 
-**Required** Python environment: 3.8 or 3.9
+- :warning: **<u>Required</u>** Python environment: 3.8 or 3.9
 
-This repository includes a submodule. Clone it including the [submodule](https://stackoverflow.com/a/4438292).
+- :warning: **<u>Submodule</u>** This repository includes a submodule. Clone it including the
+  [submodule](https://stackoverflow.com/a/4438292).
 
 ### Build robust XGBoost
 
-This evaluation uses a modified XGBoost classifier, enhanced with adversarial robustness property. This classifier is
-not installed with the other package dependencies. The XGBoost classifier must be built
-locally [from source](https://github.com/chenhongge/RobustTrees) (also included as a submodule `RobustTrees`). Follow
-the [instructions here](https://github.com/chenhongge/RobustTrees/tree/master/python-package#from-source) to build it
-from source.
+The evaluation uses a modified version of XGBoost classifier, enhanced with adversarial robustness property. This
+classifier is not installed with the other package dependencies. The XGBoost classifier must be built locally [from
+source](https://github.com/chenhongge/RobustTrees) (also included as a submodule `RobustTrees`). Follow the
+[instructions here](https://github.com/chenhongge/RobustTrees/tree/master/python-package#from-source) to build it from
+source.
 
 ### Install dependencies
 
