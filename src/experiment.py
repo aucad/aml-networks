@@ -307,4 +307,4 @@ class Experiment:
             with open(self.output_file, "w") as outfile:
                 json.dump(self.to_dict(), outfile, indent=4)
             if not self.config.silent:
-                print('Saved result to', self.output_file)
+                print('Saved result to', self.output_file, '\n')
