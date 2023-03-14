@@ -86,7 +86,7 @@ This application is intended for use over command line interface (CLI). There ar
 * `make fast`
 
   Subset of make all. This option runs experiment, only for default max iterations, only using full holdout set. The
-  parameters for this attack are fixed -- it does not accept custom arguments like the two experiments above.
+  parameters for this attack are fixed -- it does not accept arguments like the two experiments above.
 
 * `make plot`
 

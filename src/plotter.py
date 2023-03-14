@@ -35,6 +35,7 @@ class ResultsPlot:
         self.robust.add(result['robust'])
         if 'attack' in result:
             self.attacks.add(result['attack'])
+        if 'iters' in result:
             self.iters.add(result['max_iter'])
 
     def load_results(self):
@@ -56,16 +57,19 @@ class ResultsPlot:
     def extract_values(record):
         fs = record['_Result__f_score']
         acc = record['_Result__accuracy']
-        n_rec = mean(record['_Result__n_records'])
-        n_ev = mean(record['_Result__n_evasions'])
+        n_rec = mean(record['_Result__n_records']) \
+            if len(record['_Result__n_records']) > 0 else 0
+        n_ev = mean(record['_Result__n_evasions']) \
+            if len(record['_Result__n_evasions']) > 0 else 0
         n_valid = sum(record['_Result__n_valid'])
         bm = sum([r['benign'] for r in record['_Result__labels']])
         mb = sum([r['malicious'] for r in record['_Result__labels']])
         return [
             record['dataset_name'],
-            record['attack'],
+            record['classifier'],
             record['robust'],
-            record['max_iter'],
+            (record['attack'] if 'attack' in record else '-') or '-',
+            record['max_iter'] if 'max_iter' in record else '-',
             f"{round(mean(fs), 2)} ± {round(stdev(fs), 2)}",
             f"{round(mean(acc), 2)} ± {round(stdev(acc), 2)}",
             round(n_ev / n_rec, 2) if n_rec > 0 else 0,
@@ -77,6 +81,8 @@ class ResultsPlot:
 
     @staticmethod
     def proto_freq(record, labels, init_key, succ_key):
+        if len(record[init_key]) == 0 or len(record[succ_key]) == 0:
+            return []
         return [round(p, 2) for p in [
             mean([succ[lbl] / init[lbl]
                   if lbl in init and init[lbl] > 0 and lbl in succ
@@ -88,9 +94,10 @@ class ResultsPlot:
     @staticmethod
     def extract_proto_values(record, labels):
         return [record['dataset_name'],
-                record['attack'],
+                record['classifier'],
                 record['robust'],
-                record['max_iter']] + \
+                (record['attack'] if 'attack' in record else '-') or '-',
+                record['max_iter'] if 'max_iter' in record else '-'] + \
                ResultsPlot.proto_freq(
                    record, labels, '_Result__proto_init',
                    '_Result__proto_evasions') + \
@@ -99,13 +106,13 @@ class ResultsPlot:
                    '_Result__proto_valid')
 
     def exp_table(self):
-        headers = ["#", "Dataset", "Attack", "Robust", "Iters",
+        headers = ["#", "Dataset", "Cls", "Robust", "Attack", "Iters",
                    "F-score", "Accuracy", "Evasions", "Valid", "B/M"]
         mat = [self.extract_values(record) for record in self.raw_rata]
         return headers, mat
 
     def proto_table(self):
-        headers = ["#", "Dataset", "Attack", "Robust", "Iters"] + \
+        headers = ["#", "Dataset", "Cls", "Robust", "Attack", "Iters"] + \
                   [f"E-{p}" for p in self.proto_names] + \
                   [f"V-{p}" for p in self.proto_names]
         mat = [self.extract_proto_values(record, self.proto_names)
@@ -149,8 +156,12 @@ class ResultsPlot:
         fn = os.path.join(self.directory, f'{file_name}.{file_ext}')
         writer = SpaceAlignedTableWriter() if self.format != 'tex' \
             else LatexTableWriter()
-        mat_sort = sorter or (lambda x: (x[0], x[1], x[2], x[3]))
-        mat = sorted(mat, key=mat_sort)
+
+        mat_sort = sorter or (lambda x: (x[0], x[1], x[2], x[3], x[4]))
+        try:
+            mat = sorted(mat, key=mat_sort)
+        except TypeError:
+            pass
 
         for n, r in enumerate(mat):
             mat[n] = [n + 1] + r
