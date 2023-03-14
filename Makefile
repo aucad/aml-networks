@@ -12,6 +12,10 @@ ifndef $TIMES
 TIMES:=1
 endif
 
+ifndef $CLS
+CLS:=tree
+endif
+
 DATA_DIR := ./data
 
 ATTACKS := hsj zoo
@@ -30,11 +34,11 @@ DATASETS := DS_1 DS_2
 
 all:
 	@$(foreach i, $(ITERS), $(foreach r, $(ROBUST), $(foreach attack, $(ATTACKS), $(foreach ds, $(DATASETS),  \
-        python3 -m src experiment -a $(attack) $($(ds)) $($(r)) --iter $(i) -s $(SAMPLE) -t $(TIMES) ; ))))
+        python3 -m src experiment -a $(attack) $($(ds)) $($(r)) --iter $(i) -s $(SAMPLE) -t $(TIMES) -c $(CLS) ; ))))
 
 sample:
 	@$(foreach i, $(ITERS), $(foreach r, $(ROBUST), $(foreach attack, $(ATTACKS), \
-        python3 -m src experiment -a $(attack) $(DS_2) $($(r)) --iter $(i) -s 50 -t 3 ; )))
+        python3 -m src experiment -a $(attack) $(DS_2) $($(r)) --iter $(i) -s 50 -t 3  -c $(CLS) ; )))
 
 valid:
 	@$(foreach file, $(wildcard $(DATA_DIR)/CTU*),  \
@@ -44,7 +48,7 @@ valid:
 
 fast:
 	@$(foreach r, $(ROBUST), $(foreach attack, $(ATTACKS), $(foreach ds, $(DATASETS),  \
-        python3 -m src experiment -a $(attack) $($(ds)) $($(r)) --iter 0 -s 0 -t 1 ; )))
+        python3 -m src experiment -a $(attack) $($(ds)) $($(r)) --iter 0 -s 0 -t 1 -c $(CLS) ; )))
 
 plot:
 	@python3 -m src plot output

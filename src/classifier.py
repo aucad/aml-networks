@@ -195,7 +195,6 @@ class Classifier:
     def score(self, true_labels, predictions, positive=0):
         """Calculate performance metrics."""
         tp, tp_tn, p_pred, p_actual = 0, 0, 0, 0
-        # print(np.sum(true_labels), np.sum(predictions))
         for actual, pred in zip(true_labels, predictions):
             int_pred = int(round(pred, 0))
             if int_pred == positive:
