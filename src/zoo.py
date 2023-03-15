@@ -18,8 +18,12 @@ class Zoo(Attack):
     def __init__(self, *args):
         super().__init__('zoo', 80, *args)
 
-    def generate_adv_examples(self, iters) -> None:
-        """Generate the adversarial examples using ZOO attack."""
+    def generate_adv_examples(self, iters: int) -> None:
+        """Generate the adversarial examples using ZOO attack.
+
+        Arguments:
+            iters - number of maximum iterations
+        """
         self.adv_x = ZooAttack(
             # A trained classifier
             classifier=self.cls.classifier,
@@ -70,22 +74,30 @@ class Zoo(Attack):
             utility.clear_one_line()
 
     @staticmethod
-    def pseudo_mask(mask_idx, x, adv):
+    def pseudo_mask(mask_idx, ori, adv):
         """
         Restore original attribute values along immutable columns.
 
         We perform this operation after the attack, because masking
         is not supported by ZOO attack natively.
+
+        Arguments:
+            mask_idx - masked indices, List[int]
+            ori - original records
+            adv - adversarial records
+
+        Returns:
+            Modified adversarial records, with pseudo masking applied.
         """
-        if x.shape != adv.shape:
+        if ori.shape != adv.shape:
             raise Exception(
-                f'Shapes do not match {x.shape} {adv.shape}')
+                f'Shapes do not match {ori.shape} {adv.shape}')
         for idx in mask_idx:
-            ori_values = x[:, idx]
+            ori_values = ori[:, idx]
             adv[:, idx] = ori_values
         return adv
 
-    def run(self):
+    def run(self) -> None:
         """Run the zoo attack."""
         self.generate_adv_examples(self.max_iter)
         self.adv_x = self.pseudo_mask(

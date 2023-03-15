@@ -6,20 +6,9 @@ from Adversarial Training.
 
 paper: https://arxiv.org/abs/1705.07204 (adversarial training)
 """
-import logging
-import os
-import sys
-import warnings
-
-warnings.filterwarnings("ignore")
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-
 import tensorflow as tf
 
-tf.compat.v1.disable_eager_execution()
-tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
-
-from keras import backend as K
+from keras import backend
 from keras.layers import Dense
 from keras.losses import SparseCategoricalCrossentropy
 from keras.metrics import SparseCategoricalAccuracy
@@ -31,6 +20,9 @@ from art.estimators.classification import KerasClassifier
 from art.defences.trainer import AdversarialTrainer
 
 from src import Classifier
+
+tf.compat.v1.disable_eager_execution()
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 
 class NeuralNetwork(Classifier):
@@ -96,4 +88,4 @@ class NeuralNetwork(Classifier):
             self._set_cls(self.init_classifier())
 
     def cleanup(self):
-        K.clear_session()
+        backend.clear_session()

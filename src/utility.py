@@ -8,6 +8,7 @@ import logging
 import os
 import time
 from pathlib import Path
+from statistics import mean
 from typing import Any
 
 import numpy as np
@@ -29,12 +30,12 @@ def generate_name(ts, args, extension=None):
         args - experiment arguments
     """
     ds = name_only(args.dataset)
-    rb = f'robust_{"T" if args.robust else "F"}_' \
-        if hasattr(args, 'robust') else ''
+    c = f'{args.cls}_'
+    rb = f'r{"T" if hasattr(args, "robust") else "F"}_'
     i = f'_i{args.iter}' if args.iter > 0 else ''
     atk = f'{args.attack}_' if hasattr(args, 'attack') else ''
     ext = f'.{extension}' if extension else ''
-    return os.path.join(args.out, f'{rb}{atk}{ds}{i}_{ts}{ext}')
+    return os.path.join(args.out, f'{c}{rb}{atk}{ds}{i}_{ts}{ext}')
 
 
 def show(label: str, value: Any):
@@ -95,14 +96,16 @@ def ensure_dir(dir_path: str):
     return os.path.exists(dir_path) or os.makedirs(dir_path)
 
 
-def attr_fix(attrs):
+def attr_fix(attrs: list[str]) -> list[str]:
     """Remove selected special chars from attributes so that
-    the remaining forms a valid Python identifier."""
-    return [a.replace(' ', '')
-                .replace('=', '_')
-                .replace('-', '')
-                .replace('^', '_')
-                .replace('conn_state_other', 'conn_state_OTH')
+    the remaining forms a valid Python identifier.
+
+    Arguments:
+        attrs - list of attributes.
+    """
+    return [a.replace(' ', '').replace('=', '_')
+            .replace('-', '').replace('^', '_')
+            .replace('conn_state_other', 'conn_state_OTH')
             for a in attrs]
 
 
@@ -116,7 +119,7 @@ def ts_str(length: int = 4) -> str:
 
 
 def sdiv(num, denominator):
-    """Safe division."""
+    """Safe division: attempting division by zero returns 0."""
     return 0 if denominator == 0 else num / denominator
 
 
@@ -146,3 +149,17 @@ def write_dataset(file_name, attrs, rows, int_cols=None):
             [int(val) if i in (int_cols or []) else val
              for i, val in enumerate(row)]
             for row in rows])
+
+
+def rget(my_dict, key, default_='-'):
+    """Try to get a dictionary value."""
+    return default_ if key not in my_dict else my_dict[key]
+
+
+def rarr(key):
+    return f'_Result__{key}'
+
+
+def smean(numbers):
+    """mean <-> if it can be calculated, otherwise 0."""
+    return mean(numbers) if len(numbers) > 0 else 0

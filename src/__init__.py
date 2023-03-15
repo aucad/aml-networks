@@ -9,6 +9,12 @@ __author__ = ""
 __license__ = ""
 __version__ = "1.0.0"
 
+import os
+import warnings
+
+warnings.filterwarnings("ignore")
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
 # noinspection PyPep8Naming
 from src.utility import show as Show, show_ratio as Ratio, sdiv
 from src.validator import Validator

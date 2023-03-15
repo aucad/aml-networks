@@ -16,6 +16,7 @@ python -m src --help
 
 """
 import logging
+
 from argparse import ArgumentParser
 from sys import exit
 from typing import Optional, List
@@ -33,7 +34,8 @@ def main():
     args = parse_args(parser)
 
     options = ['exp', 'vld', 'plot']
-    choice = [args.which if hasattr(args, 'which') else None] * len(options)
+    choice = [args.which if hasattr(args, 'which')
+              else None] * len(options)
     is_exp, is_vld, is_plot = [a == b for a, b in zip(choice, options)]
     init_logger(logging.FATAL if args.silent else logging.DEBUG)
     if hasattr(args, 'out'):

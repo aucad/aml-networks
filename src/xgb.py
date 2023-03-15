@@ -1,13 +1,13 @@
 """
 Train XGBoost classifier.
 
+This is a custom version of standard XGBoost with added robustness.
+
 * The base model should be locally built from "RobustTrees":
   <https://github.com/chenhongge/RobustTrees>
 
 * The instructions for building from source are provided here:
   <https://github.com/chenhongge/RobustTrees/tree/master/python-package#from-source>
-
-This is a custom version of standard XGBoost with added robustness.
 """
 import os
 import sys
@@ -34,14 +34,17 @@ class XgBoost(Classifier):
         ax = 1 if len(tmp.shape) == 2 else 0
         return tmp.argmax(axis=ax)
 
-    def init_learner(self, robust):
+    def init_learner(self, robust: bool) -> None:
         """
-        For a full list of options
-        see:  https://xgboost.readthedocs.io/en/stable/parameter.html
+        Full list of options:
+        <https://xgboost.readthedocs.io/en/stable/parameter.html>
         """
         d_train = self.formatter(self.train_x, self.train_y)
-        # https://stackoverflow.com/a/8391735
-        sys.stdout = open(os.devnull, 'w')  # block print
+
+        # Hack to _actually_ block print to console,
+        # thanks to https://stackoverflow.com/a/8391735
+        sys.stdout = open(os.devnull, 'w')
+
         self.model = xg_train(
             num_boost_round=20,
             dtrain=d_train,

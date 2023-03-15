@@ -2,13 +2,17 @@
 Utility for generating (table) plots of the captured results.
 """
 
-import json
 import glob
+import json
 import logging
 import os
 from statistics import mean, stdev
 
+import pandas as pd
 from pytablewriter import SpaceAlignedTableWriter, LatexTableWriter
+
+from src import sdiv
+from src.utility import smean, rarr, rget
 
 logger = logging.getLogger(__name__)
 
@@ -45,39 +49,26 @@ class ResultsPlot:
             self.add(data)
         return self
 
+    @staticmethod
+    def std_cols(record):
+        """For all tables"""
+        return [rget(record, 'dataset_name'),
+                rget(record, 'classifier'),
+                rget(record, 'robust'),
+                rget(record, 'attack'),
+                rget(record, 'max_iter')]
+
+    @property
+    def std_hd(self):
+        return ["Dataset", "Cls", "Robust", "Attack", "Iters"]
+
     @property
     def proto_names(self):
         protos = []
         for record in self.raw_rata:
-            for item in record['_Result__proto_init']:
+            for item in record[rarr('proto_init')]:
                 protos += item.keys()
         return sorted(list(set(protos)))
-
-    @staticmethod
-    def extract_values(record):
-        fs = record['_Result__f_score']
-        acc = record['_Result__accuracy']
-        n_rec = mean(record['_Result__n_records']) \
-            if len(record['_Result__n_records']) > 0 else 0
-        n_ev = mean(record['_Result__n_evasions']) \
-            if len(record['_Result__n_evasions']) > 0 else 0
-        n_valid = sum(record['_Result__n_valid'])
-        bm = sum([r['benign'] for r in record['_Result__labels']])
-        mb = sum([r['malicious'] for r in record['_Result__labels']])
-        return [
-            record['dataset_name'],
-            record['classifier'],
-            record['robust'],
-            (record['attack'] if 'attack' in record else '-') or '-',
-            record['max_iter'] if 'max_iter' in record else '-',
-            f"{round(mean(fs), 2)} ± {round(stdev(fs), 2)}",
-            f"{round(mean(acc), 2)} ± {round(stdev(acc), 2)}",
-            round(n_ev / n_rec, 2) if n_rec > 0 else 0,
-            round(mean(record['_Result__n_valid']) / n_ev, 2)
-            if n_ev > 0 else 0,
-            f"{(100 * bm / n_valid) if n_valid > 0 else 0:.0f}/"
-            f"{(100 * mb / n_valid) if n_valid > 0 else 0:.0f}",
-        ]
 
     @staticmethod
     def proto_freq(record, labels, init_key, succ_key):
@@ -87,37 +78,45 @@ class ResultsPlot:
             mean([succ[lbl] / init[lbl]
                   if lbl in init and init[lbl] > 0 and lbl in succ
                   else 0 for init, succ in
-                  zip(record[init_key],
-                      record[succ_key])])
+                  zip(record[init_key], record[succ_key])])
             for idx, lbl in enumerate(labels)]]
 
-    @staticmethod
-    def extract_proto_values(record, labels):
-        return [record['dataset_name'],
-                record['classifier'],
-                record['robust'],
-                (record['attack'] if 'attack' in record else '-') or '-',
-                record['max_iter'] if 'max_iter' in record else '-'] + \
-               ResultsPlot.proto_freq(
-                   record, labels, '_Result__proto_init',
-                   '_Result__proto_evasions') + \
-               ResultsPlot.proto_freq(
-                   record, labels, '_Result__proto_evasions',
-                   '_Result__proto_valid')
+    def evasion_table(self):
+        def extract_values(record):
+            lbl = record[rarr('labels')]
+            vld = record[rarr('n_valid')]
+            fs = record[rarr('f_score')]
+            ac = record[rarr('accuracy')]
+            nr = smean(record[rarr('n_records')])
+            ne = smean(record[rarr('n_evasions')])
+            nv = sum(vld) if ne > 0 else 0
+            bm = sum([r['benign'] for r in lbl])
+            mb = sum([r['malicious'] for r in lbl])
+            return ResultsPlot.std_cols(record) + [
+                f"{round(mean(fs), 2)} ± {round(stdev(fs), 2)}",
+                f"{round(mean(ac), 2)} ± {round(stdev(ac), 2)}",
+                round(sdiv(ne, nr), 2),
+                round(sdiv(smean(vld), ne), 2),
+                f"{100 * sdiv(bm, nv):.0f}/{100 * sdiv(mb, nv):.0f}"]
 
-    def exp_table(self):
-        headers = ["#", "Dataset", "Cls", "Robust", "Attack", "Iters",
-                   "F-score", "Accuracy", "Evasions", "Valid", "B/M"]
-        mat = [self.extract_values(record) for record in self.raw_rata]
-        return headers, mat
+        h = ["F-score", "Accuracy", "Evasions", "Valid", "B/M"]
+        mat = [extract_values(record) for record in self.raw_rata]
+        return self.std_hd + h, mat
 
     def proto_table(self):
-        headers = ["#", "Dataset", "Cls", "Robust", "Attack", "Iters"] + \
-                  [f"E-{p}" for p in self.proto_names] + \
-                  [f"V-{p}" for p in self.proto_names]
-        mat = [self.extract_proto_values(record, self.proto_names)
+        proto1 = rarr('proto_init'), rarr('proto_evasions')
+        proto2 = rarr('proto_evasions'), rarr('proto_valid')
+
+        def extract_proto_values(record, labels):
+            return (ResultsPlot.std_cols(record) +
+                    ResultsPlot.proto_freq(record, labels, *proto1) +
+                    ResultsPlot.proto_freq(record, labels, *proto2))
+
+        h = [f"E-{p}" for p in self.proto_names] + \
+            [f"V-{p}" for p in self.proto_names]
+        mat = [extract_proto_values(record, self.proto_names)
                for record in self.raw_rata]
-        return headers, mat
+        return self.std_hd + h, mat
 
     def reasons_table(self):
         headers = ["#", "Dataset", "Attack", "Proto", "Reason", "Freq"]
@@ -131,7 +130,7 @@ class ResultsPlot:
             for p in self.proto_names:
                 if p not in result[ds][att]:
                     result[ds][att][p] = {}
-                for folds in record['_Result__validations']:
+                for folds in record[rarr('validations')]:
                     for k, v in folds.items():
                         if str(k).startswith(p):
                             if k not in result[ds][att][p]:
@@ -156,13 +155,9 @@ class ResultsPlot:
         fn = os.path.join(self.directory, f'{file_name}.{file_ext}')
         writer = SpaceAlignedTableWriter() if self.format != 'tex' \
             else LatexTableWriter()
-
         mat_sort = sorter or (lambda x: (x[0], x[1], x[2], x[3], x[4]))
-        try:
-            mat = sorted(mat, key=mat_sort)
-        except TypeError:
-            pass
-
+        mat = sorted(mat, key=mat_sort)
+        headers = ["#"] + headers
         for n, r in enumerate(mat):
             mat[n] = [n + 1] + r
         writer.headers = headers
@@ -171,6 +166,12 @@ class ResultsPlot:
         writer.dump(fn)
         logger.debug(f'Saved to {fn}')
 
+    def show_duration(self):
+        div = 72 * "="
+        ts = pd.to_timedelta(sum(
+            [r['end'] - r['start'] for r in self.raw_rata]))
+        print(f'{div}\nExperiment duration: {ts}\n{div}')
+
 
 def plot_results(directory, fmt):
     res = ResultsPlot(directory, fmt)
@@ -178,7 +179,8 @@ def plot_results(directory, fmt):
         logger.warning("No results found in results directory.")
         logger.warning("Nothing was plotted.")
         return
-    res.write_table(*res.exp_table(), 'table')
+    res.write_table(*res.evasion_table(), 'table')
     res.write_table(*res.proto_table(), 'table_proto')
     res.write_table(*res.reasons_table(), 'table_reasons',
                     sorter=lambda x: (x[0], x[1], x[2], -x[4]))
+    res.show_duration()

@@ -160,10 +160,10 @@ class Experiment:
         self.attrs, rows = utility.read_dataset(ds_path)
         self.X = rows[:, :-1]
         self.y = rows[:, -1].astype(int).flatten()
-        self.folds = [(tr_i, ts_i) for tr_i, ts_i
-                      in KFold(n_splits=n_splits, shuffle=True)
-                          .split(self.X)]
         self.mask_cols, n_feat = [], len(self.attrs) - 1
+        self.folds = [
+            x for x in KFold(n_splits=n_splits, shuffle=True)
+            .split(self.X)]
         for col_i in range(n_feat):
             self.attr_ranges[col_i] = max(self.X[:, col_i])
             col_values = list(np.unique(self.X[:, col_i]))
@@ -209,13 +209,7 @@ class Experiment:
 
         self.start_time = time.time_ns()
         for i, fold in enumerate(self.folds):
-            try:
-                self.do_fold(i + 1, fold)
-            except:
-                try:
-                    self.do_fold(i + 1, fold)
-                except:
-                    print('failed twice, will not retry')
+            self.do_fold(i + 1, fold)
             self.cls.cleanup()
         self.end_time = time.time_ns()
         self.log_experiment_result()

@@ -1,7 +1,3 @@
-# import warnings
-#
-# warnings.filterwarnings("ignore")
-
 import numpy as np
 
 
@@ -113,8 +109,9 @@ class Classifier:
     def formatter(x, y):
         """Format records to fit this classifier, if necessary.
 
-           The default format is np.array. If the implementing classifier needs
-           a different data format (e.g., DMatrix), then apply it here.
+           The default format is np.array. If the implementing
+           classifier needs a different data format (e.g., DMatrix),
+           then apply it here.
         """
         return x
 
@@ -123,9 +120,10 @@ class Classifier:
         return self.model.predict(record)
 
     def init_learner(self, robust):
-        """Implement model training phase. If robust is true, the model should
-        apply appropriate defense. This is called after data has been loaded
-        and is ready; cf. `Classifier.train`.
+        """Implement model training phase. If robust is true,
+        the model should apply appropriate defense. This is called
+        after data has been loaded and is ready; cf.
+        `Classifier.train`.
         """
         pass
 

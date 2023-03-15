@@ -19,7 +19,9 @@ from src import Show, utility
 
 
 class Protocol:
-    """Generic protocol superclass, represents a validatable instance."""
+    """
+    Generic protocol superclass, represents a validatable instance.
+    """
 
     def __init__(self, name: str, kind: namedtuple, **kwargs):
         self.name = name

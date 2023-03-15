@@ -59,6 +59,9 @@ plot:
 code_stats:
 	@cd src && find . -name '*.py' | xargs wc -l && cd ..
 
+lint:
+	flake8 ./src --count --show-source --statistics
+
 clean:
 	@rm -fr output/
 	@find . -name '*.pyc' -exec rm -f {} +
