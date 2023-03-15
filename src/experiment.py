@@ -1,4 +1,5 @@
 import json
+import gc
 import logging
 import os
 import time
@@ -172,7 +173,7 @@ class Experiment:
         self.mask_cols, n_feat = [], len(self.attrs) - 1
         self.folds = [
             x for x in KFold(n_splits=n_splits, shuffle=True)
-            .split(self.X)]
+                .split(self.X)]
         for col_i in range(n_feat):
             self.attr_ranges[col_i] = max(self.X[:, col_i])
             col_values = list(np.unique(self.X[:, col_i]))
@@ -186,6 +187,7 @@ class Experiment:
                 sample(range(0, self.cls.n_test), sample_size)
             self.attack.reset().set_cls(self.cls, sample_idx).run()
             self.stats.append_attack(self.attack)
+            gc.collect()
 
         self.cls.reset().load(
             self.X.copy(), self.y.copy(),
@@ -198,7 +200,7 @@ class Experiment:
         if self.attack:
             for n in range(self.config.sample_times):
                 attack_round(ss)
-                self.log_fold_attack(n + 1)
+                self.log_fold_attack(n + 1, self.config.sample_times)
 
     def run(self):
         config, prev = self.config, self.is_repeat
@@ -223,9 +225,11 @@ class Experiment:
         for i, fold in enumerate(self.folds):
             self.do_fold(i + 1, fold)
             self.cls.cleanup()
+            gc.collect()
         self.end_time = time.time_ns()
         self.log_experiment_result()
         self.save_result()
+        self.cleanup()
 
     def log_experiment_setup(self):
         Show('Dataset', self.config.dataset)
@@ -253,8 +257,10 @@ class Experiment:
         Show('Recall', f'{self.cls.recall * 100:.2f} %')
         Show('F-score', f'{self.cls.f_score * 100:.2f} %')
 
-    def log_fold_attack(self, sample_n: int):
-        Show('Sample', f'{sample_n} of {self.config.sample_times}')
+    def log_fold_attack(self, sample_n: int, n_total: int):
+        if n_total > 1:
+            print('-' * 5)
+        Show('Sampling round', f'{sample_n}/{self.config.sample_times}')
         if self.attack:
             Ratio('Evasions', self.attack.n_evasions,
                   self.attack.n_records)
@@ -320,3 +326,15 @@ class Experiment:
                 json.dump(self.to_dict(), outfile, indent=4)
             if not self.config.silent:
                 print('Saved result to', self.output_file, '\n')
+
+    def cleanup(self):
+        del self.cls
+        del self.attack
+        del self.stats
+        del self.X
+        del self.y
+        del self.config
+        del self.folds
+        del self.mask_cols
+        del self.attr_ranges
+        gc.collect()

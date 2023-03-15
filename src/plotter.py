@@ -1,5 +1,5 @@
 """
-Utility for generating (table) plots of the captured results.
+Utility for generating plots of the captured results.
 """
 
 import glob
@@ -9,6 +9,7 @@ import os
 from statistics import mean, stdev
 
 import pandas as pd
+import numpy as np
 from pytablewriter import SpaceAlignedTableWriter, LatexTableWriter
 
 from src import sdiv
@@ -54,32 +55,28 @@ class ResultsPlot:
         """For all tables"""
         return [rget(record, 'dataset_name'),
                 rget(record, 'classifier'),
-                rget(record, 'robust'),
+                'T' if rget(record, 'robust') else 'F',
                 rget(record, 'attack'),
                 rget(record, 'max_iter')]
 
     @property
     def std_hd(self):
-        return ["Dataset", "Cls", "Robust", "Attack", "Iters"]
+        return ["Dataset", "CLS", "R", "Attack", "i"]
 
     @property
     def proto_names(self):
-        protos = []
-        for record in self.raw_rata:
-            for item in record[rarr('proto_init')]:
-                protos += item.keys()
-        return sorted(list(set(protos)))
+        all_keys = [[[k for k in i.keys()] for i in r[rarr('proto_init')]]
+                    for r in self.raw_rata]
+        # noinspection PyTypeChecker
+        return list(set(np.array(all_keys).flatten().tolist()))
 
     @staticmethod
-    def proto_freq(record, labels, init_key, succ_key):
-        if len(record[init_key]) == 0 or len(record[succ_key]) == 0:
-            return []
-        return [round(p, 2) for p in [
-            mean([succ[lbl] / init[lbl]
-                  if lbl in init and init[lbl] > 0 and lbl in succ
-                  else 0 for init, succ in
-                  zip(record[init_key], record[succ_key])])
-            for idx, lbl in enumerate(labels)]]
+    def proto_freq(record, labels, init_key, success_key):
+        """Average success rate by protocol"""
+        return [round(p, 2) for p in [smean(
+            [sdiv(rget(b, lbl, 0), rget(a, lbl, 0))
+             for a, b in zip(record[init_key], record[success_key])])
+            for lbl in labels]]
 
     def evasion_table(self):
         def extract_values(record):
@@ -99,7 +96,7 @@ class ResultsPlot:
                 round(sdiv(smean(vld), ne), 2),
                 f"{100 * sdiv(bm, nv):.0f}/{100 * sdiv(mb, nv):.0f}"]
 
-        h = ["F-score", "Accuracy", "Evasions", "Valid", "B/M"]
+        h = ["F-score", "Accuracy", "Evades", "Valid", "B / M"]
         mat = [extract_values(record) for record in self.raw_rata]
         return self.std_hd + h, mat
 
@@ -112,14 +109,14 @@ class ResultsPlot:
                     ResultsPlot.proto_freq(record, labels, *proto1) +
                     ResultsPlot.proto_freq(record, labels, *proto2))
 
-        h = [f"E-{p}" for p in self.proto_names] + \
-            [f"V-{p}" for p in self.proto_names]
+        h = [f"e/{p}" for p in self.proto_names] + \
+            [f"v/{p}" for p in self.proto_names]
         mat = [extract_proto_values(record, self.proto_names)
                for record in self.raw_rata]
         return self.std_hd + h, mat
 
     def reasons_table(self):
-        headers = ["#", "Dataset", "Attack", "Proto", "Reason", "Freq"]
+        headers = ["Dataset", "Attack", "Proto", "Reason", "Freq"]
         result = {}
         for record in self.raw_rata:
             ds, att = record['dataset_name'], record['attack']
@@ -155,8 +152,7 @@ class ResultsPlot:
         fn = os.path.join(self.directory, f'{file_name}.{file_ext}')
         writer = SpaceAlignedTableWriter() if self.format != 'tex' \
             else LatexTableWriter()
-        mat_sort = sorter or (lambda x: (x[0], x[1], x[2], x[3], x[4]))
-        mat = sorted(mat, key=mat_sort)
+        mat = sorted(mat, key=sorter) if sorter else mat
         headers = ["#"] + headers
         for n, r in enumerate(mat):
             mat[n] = [n + 1] + r
@@ -179,8 +175,9 @@ def plot_results(directory, fmt):
         logger.warning("No results found in results directory.")
         logger.warning("Nothing was plotted.")
         return
-    res.write_table(*res.evasion_table(), 'table')
-    res.write_table(*res.proto_table(), 'table_proto')
+    dt_sort = lambda x: (x[0], x[1], x[2], x[3], x[4])
+    res.write_table(*res.evasion_table(), 'table', sorter=dt_sort)
+    res.write_table(*res.proto_table(), 'table_proto', sorter=dt_sort)
     res.write_table(*res.reasons_table(), 'table_reasons',
                     sorter=lambda x: (x[0], x[1], x[2], -x[4]))
     res.show_duration()

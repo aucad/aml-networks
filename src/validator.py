@@ -146,7 +146,7 @@ class NbUDP(Protocol):
 # noinspection PyTypeChecker
 class NbOther(Protocol):
     def __init__(self, attrs=None, **kwargs):
-        super().__init__('other', self.v_model(attrs, kwargs), **kwargs)
+        super().__init__('oth', self.v_model(attrs, kwargs), **kwargs)
 
     @staticmethod
     def ensure_attrs():
@@ -210,7 +210,7 @@ class IotTCP(Protocol):
 # noinspection PyTypeChecker
 class IotOther(Protocol):
     def __init__(self, attrs=None, **kwargs):
-        super().__init__('other', self.v_model(attrs, kwargs), **kwargs)
+        super().__init__('oth', self.v_model(attrs, kwargs), **kwargs)
 
     @staticmethod
     def validate(record) -> Tuple[bool, Union[str, None]]:
@@ -298,7 +298,7 @@ class Validator:
             (a for a, b in
              [Validator.determine_proto_val(lbl, record, i) for i, lbl
               in enumerate(attrs) if 'proto' in lbl]
-             if b == 1), 'other')
+             if b == 1), 'oth')
         if 'tcp' in proto_label:
             if validator_kind == Validator.NB15:
                 return NbTCP(attrs, **rec_nd)

@@ -9,7 +9,7 @@ import os
 import time
 from pathlib import Path
 from statistics import mean
-from typing import Any
+from typing import Any, List
 
 import numpy as np
 import pandas as pd
@@ -97,7 +97,7 @@ def ensure_dir(dir_path: str):
     return os.path.exists(dir_path) or os.makedirs(dir_path)
 
 
-def attr_fix(attrs: list[str]) -> list[str]:
+def attr_fix(attrs: List[str]) -> List[str]:
     """Remove selected special chars from attributes so that
     the remaining forms a valid Python identifier.
 
