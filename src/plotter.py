@@ -183,10 +183,10 @@ def plot_results(directory, fmt):
         return
     res.write_table(
         *res.evasion_table(), 'table',
-        sorter=lambda x: (x[0], x[1], x[2], x[3], x[4]))
+        sorter=lambda x: (x[0], x[1], x[3], x[2], x[4]))
     res.write_table(
         *res.proto_table(), 'table_proto',
-        sorter=lambda x: (x[0], x[1], x[2], x[3], x[4]))
+        sorter=lambda x: (x[0], x[1], x[3], x[2], x[4]))
     res.write_table(
         *res.reasons_table(), 'table_reasons',
         sorter=lambda x: (x[0], x[1], x[2], -x[4]))
