@@ -33,10 +33,10 @@ def generate_name(ts, args, extension=None):
     c = f'{args.cls}_'
     rb = f'r{"T" if args.robust else "F"}_' \
         if hasattr(args, "robust") else ''
-    i = f'_i{args.iter}' if args.iter > 0 else ''
+    i = f'i{args.iter}_' if args.iter > 0 else ''
     atk = f'{args.attack}_' if hasattr(args, 'attack') else ''
     ext = f'.{extension}' if extension else ''
-    return os.path.join(args.out, f'{c}{rb}{atk}{ds}{i}_{ts}{ext}')
+    return os.path.join(args.out, f'{c}{rb}{atk}{i}{ds}_{ts}{ext}')
 
 
 def show(label: str, value: Any):
