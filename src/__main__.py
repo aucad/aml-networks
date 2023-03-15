@@ -173,6 +173,11 @@ def exp_args(parser: ArgumentParser):
         help="disable save result to file",
     )
     parser.add_argument(
+        "--resume",
+        action='store_true',
+        help="Resume experiment execution after stopping",
+    )
+    parser.add_argument(
         "--silent",
         action='store_true',
         help="disable console log"

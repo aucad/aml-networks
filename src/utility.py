@@ -31,7 +31,8 @@ def generate_name(ts, args, extension=None):
     """
     ds = name_only(args.dataset)
     c = f'{args.cls}_'
-    rb = f'r{"T" if hasattr(args, "robust") else "F"}_'
+    rb = f'r{"T" if args.robust else "F"}_' \
+        if hasattr(args, "robust") else ''
     i = f'_i{args.iter}' if args.iter > 0 else ''
     atk = f'{args.attack}_' if hasattr(args, 'attack') else ''
     ext = f'.{extension}' if extension else ''

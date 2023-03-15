@@ -24,8 +24,9 @@ ROBUST = T_ROBUST F_ROBUST
 T_ROBUST := --robust
 F_ROBUST :=
 
-IOT_OPTIONS := --validator IOT23
-NB_OPTIONS := --validator NB15
+ALWAYS := --resume
+IOT_OPTIONS := --validator IOT23 --resume
+NB_OPTIONS := --validator NB15 --resume
 
 DS_1 := -d ./data/CTU-1-1.csv $(IOT_OPTIONS)
 DS_2 := -d ./data/nb15-10K.csv $(NB_OPTIONS)
@@ -35,17 +36,20 @@ DATASETS := DS_1 DS_2
 all:
 	@$(foreach i, $(ITERS), $(foreach c, $(CLS), $(foreach r, $(ROBUST), \
      $(foreach attack, $(ATTACKS), $(foreach ds, $(DATASETS),  \
-        python3 -m src experiment -a $(attack) $($(ds)) $($(r)) --iter $(i) -s $(SAMPLE) -t $(TIMES) -c $(c) ; )))))
+     python3 -m src experiment $(ALWAYS) -a $(attack) $($(ds)) $($(r)) \
+      --iter $(i) -s $(SAMPLE) -t $(TIMES) -c $(c) ; )))))
 
 sample:
 	@$(foreach i, $(ITERS), $(foreach c, $(CLS), $(foreach r, $(ROBUST), \
      $(foreach attack, $(ATTACKS), \
-        python3 -m src experiment -a $(attack) $(DS_2) $($(r)) --iter $(i) -s 50 -t 3  -c $(c) ; ))))
+     python3 -m src experiment $(ALWAYS) -a $(attack) $(DS_2) $($(r)) \
+      --iter $(i) -s 50 -t 3  -c $(c) ; ))))
 
 fast:
 	@$(foreach r, $(ROBUST), $(foreach c, $(CLS), $(foreach attack, $(ATTACKS), \
      $(foreach ds, $(DATASETS),  \
-        python3 -m src experiment -a $(attack) $($(ds)) $($(r)) --iter 0 -s 0 -t 1 -c $(c) ; ))))
+     python3 -m src experiment $(ALWAYS) -a $(attack) $($(ds)) $($(r)) \
+      --iter 0 -s 0 -t 1 -c $(c) ; ))))
 
 valid:
 	@$(foreach file, $(wildcard $(DATA_DIR)/CTU*),  \

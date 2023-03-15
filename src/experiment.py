@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 import time
 from collections import namedtuple
 from random import sample
@@ -156,6 +157,14 @@ class Experiment:
     def output_file(self):
         return utility.generate_name(self.uuid, self.config, 'json')
 
+    @property
+    def is_repeat(self):
+        gen_name = utility.generate_name('', self.config, None)
+        match = gen_name.split('/').pop()
+        prev = [f for f in os.listdir(self.config.out)
+                if f.startswith(match)]
+        return prev[0] if len(prev) > 0 else None
+
     def load_csv(self, ds_path: str, n_splits: int):
         self.attrs, rows = utility.read_dataset(ds_path)
         self.X = rows[:, :-1]
@@ -192,7 +201,10 @@ class Experiment:
                 self.log_fold_attack(n + 1)
 
     def run(self):
-        config = self.config
+        config, prev = self.config, self.is_repeat
+        if config.resume and prev:
+            print('Saved result to', prev)
+            return
         self.load_csv(config.dataset, config.folds)
         cls_args = (config.cls, config.out, self.attrs, self.y,
                     config.robust, self.mask_cols, self.attr_ranges)
