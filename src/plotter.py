@@ -65,10 +65,11 @@ class ResultsPlot:
 
     @property
     def proto_names(self):
-        all_keys = [[[k for k in i.keys()] for i in r[rarr('proto_init')]]
-                    for r in self.raw_rata]
-        # noinspection PyTypeChecker
-        return list(set(np.array(all_keys).flatten().tolist()))
+        protos = []
+        for record in self.raw_rata:
+            for item in record[rarr('proto_init')]:
+                protos += item.keys()
+        return sorted(list(set(protos)))
 
     @staticmethod
     def proto_freq(record, labels, init_key, success_key):

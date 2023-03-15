@@ -6,6 +6,8 @@ from Adversarial Training.
 
 paper: https://arxiv.org/abs/1705.07204 (adversarial training)
 """
+from math import gcd
+
 import tensorflow as tf
 
 from keras import backend
@@ -66,7 +68,7 @@ class NeuralNetwork(Classifier):
             metrics=[SparseCategoricalAccuracy()])
         model.fit(
             self.train_x, self.train_y, epochs=self.epochs,
-            batch_size=min(self.bsz, self.n_train),
+            batch_size=gcd(self.bsz, self.n_train),
             **self.model_fit_kwargs)
         return KerasClassifier(model=model)
 
