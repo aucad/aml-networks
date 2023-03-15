@@ -8,8 +8,8 @@ import logging
 import os
 from statistics import mean, stdev
 
+# noinspection PyPackageRequirements
 import pandas as pd
-import numpy as np
 from pytablewriter import SpaceAlignedTableWriter, LatexTableWriter
 
 from src import sdiv
@@ -181,9 +181,13 @@ def plot_results(directory, fmt):
         logger.warning("No results found in results directory.")
         logger.warning("Nothing was plotted.")
         return
-    dt_sort = lambda x: (x[0], x[1], x[2], x[3], x[4])
-    res.write_table(*res.evasion_table(), 'table', sorter=dt_sort)
-    res.write_table(*res.proto_table(), 'table_proto', sorter=dt_sort)
-    res.write_table(*res.reasons_table(), 'table_reasons',
-                    sorter=lambda x: (x[0], x[1], x[2], -x[4]))
+    res.write_table(
+        *res.evasion_table(), 'table',
+        sorter=lambda x: (x[0], x[1], x[2], x[3], x[4]))
+    res.write_table(
+        *res.proto_table(), 'table_proto',
+        sorter=lambda x: (x[0], x[1], x[2], x[3], x[4]))
+    res.write_table(
+        *res.reasons_table(), 'table_reasons',
+        sorter=lambda x: (x[0], x[1], x[2], -x[4]))
     res.show_duration()
