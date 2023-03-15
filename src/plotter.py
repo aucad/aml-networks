@@ -153,7 +153,12 @@ class ResultsPlot:
         fn = os.path.join(self.directory, f'{file_name}.{file_ext}')
         writer = SpaceAlignedTableWriter() if self.format != 'tex' \
             else LatexTableWriter()
-        mat = sorted(mat, key=sorter) if sorter else mat
+        try:
+            mat = sorted(mat, key=sorter) if sorter else mat
+        except TypeError:
+            # sort can fail if nulls in data
+            pass
+
         headers = ["#"] + headers
         for n, r in enumerate(mat):
             mat[n] = [n + 1] + r

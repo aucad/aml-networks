@@ -49,11 +49,8 @@ class NeuralNetwork(Classifier):
 
     @property
     def model_fit_kwargs(self):
-        return {
-            'callbacks': [EarlyStopping(monitor='loss', patience=5)],
-            'shuffle': True,
-            'verbose': False
-        }
+        return {'callbacks': [EarlyStopping(monitor='loss', patience=5)],
+                'shuffle': True, 'verbose': False}
 
     def init_classifier(self):
         """Trains a deep neural network classifier."""
