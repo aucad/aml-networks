@@ -53,15 +53,15 @@ class ResultsPlot:
     @staticmethod
     def std_cols(record):
         """For all tables"""
-        return [rget(record, 'dataset_name'),
-                rget(record, 'classifier'),
+        return [rget(record, 'classifier'),
+                rget(record, 'dataset_name'),
                 'T' if rget(record, 'robust') else 'F',
                 rget(record, 'attack'),
                 rget(record, 'max_iter')]
 
     @property
     def std_hd(self):
-        return ["Dataset", "CLS", "R", "Attack", "i"]
+        return ["CLS", "Dataset", "R", "Attack", "i"]
 
     @property
     def proto_names(self):
