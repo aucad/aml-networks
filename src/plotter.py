@@ -94,7 +94,7 @@ class ResultsPlot:
                 f"{round(mean(fs), 2)} ± {round(stdev(fs), 2)}",
                 f"{round(mean(ac), 2)} ± {round(stdev(ac), 2)}",
                 round(sdiv(ne, nr), 2),
-                round(sdiv(smean(vld), ne), 2),
+                round(sdiv(smean(vld), ne), 2) if ne > 0 else 0,
                 f"{100 * sdiv(bm, nv):.0f}/{100 * sdiv(mb, nv):.0f}"]
 
         h = ["F-score", "Accuracy", "Evades", "Valid", "B / M"]

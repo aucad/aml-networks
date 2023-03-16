@@ -4,7 +4,8 @@ Neural network classifier implementation.
 The classifier is built using Keras and conditionally with  robustness
 from Adversarial Training.
 
-paper: https://arxiv.org/abs/1705.07204 (adversarial training)
+paper: https://arxiv.org/abs/1705.07204 - adversarial training
+paper: https://arxiv.org/abs/1607.02533 - BasicIterativeMethod
 """
 from math import gcd
 
@@ -17,7 +18,7 @@ from keras.metrics import SparseCategoricalAccuracy
 from keras.callbacks import EarlyStopping
 from keras.optimizers import SGD
 
-from art.attacks.evasion import FastGradientMethod
+from art.attacks.evasion import BasicIterativeMethod
 from art.estimators.classification import KerasClassifier
 from art.defences.trainer import AdversarialTrainer
 
@@ -55,8 +56,7 @@ class NeuralNetwork(Classifier):
     def init_classifier(self):
         """Trains a deep neural network classifier."""
         n_layers = max(1, len(self.mutable_attrs) // 4)
-        layers = [Dense(60, activation='relu')
-                  for _ in range(n_layers)] + \
+        layers = [Dense(60, activation='relu') for _ in range(n_layers)] + \
                  [Dense(self.n_classes, activation='softmax')]
         model = tf.keras.models.Sequential(layers)
         model.compile(
@@ -67,33 +67,28 @@ class NeuralNetwork(Classifier):
             self.train_x, self.train_y, epochs=self.epochs,
             batch_size=gcd(self.bsz, self.n_train),
             **self.model_fit_kwargs)
-        return KerasClassifier(model=model)
+        return KerasClassifier(model=model, clip_values=(0, 1))
 
     def init_robust(self):
         """Robust model training using Adversarial Training approach."""
         robust_classifier = self.init_classifier()
-        weak_classifier = self.init_classifier()
-        attack_fgm = FastGradientMethod(estimator=weak_classifier)
-
+        attack = BasicIterativeMethod(
+            robust_classifier, eps=0.3, eps_step=0.01, max_iter=40)
         trainer = AdversarialTrainer(
             # Model to train adversarially
             classifier=robust_classifier,
             # Attacks to use for data augmentation in adversarial training
-            attacks=attack_fgm,
-            # The proportion of samples in each batch to be replaced with
-            # their adversarial counterparts. Setting this value to 1 allows
-            # trains only on adversarial samples.
+            attacks=attack,
+            # Proportion of samples to be replaced with adversarial
+            # counterparts. Value 1 trains only on adversarial samples.
             ratio=0.5)
-
         trainer.fit(
             # Training set
             x=self.train_x.copy(),
             # Labels for the training set
             y=self.train_y.copy(),
             # Number of epochs to use for trainings
-            nb_epochs=50
-        )
-        utility.clear_one_line()
+            nb_epochs=50, batch_size=50)
         utility.clear_one_line()
         self._set_cls(trainer.get_classifier())
 

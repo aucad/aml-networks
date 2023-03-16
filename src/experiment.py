@@ -259,7 +259,8 @@ class Experiment:
     def log_fold_attack(self, sample_n: int, n_total: int):
         if n_total > 1:
             print('-' * 5)
-        Show('Sampling round', f'{sample_n}/{self.config.sample_times}')
+        if n_total > 1:
+            Show('Sampling round', f'{sample_n}/{self.config.sample_times}')
         if self.attack:
             Ratio('Evasions', self.attack.n_evasions,
                   self.attack.n_records)
