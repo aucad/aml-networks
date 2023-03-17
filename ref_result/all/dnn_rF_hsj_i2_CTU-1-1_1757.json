@@ -1,6 +1,6 @@
 {
-    "dataset": "./data/CTU-1-1.csv",
-    "dataset_name": "CTU-1-1",
+    "dataset": "./data/CTU.csv",
+    "dataset_name": "CTU",
     "n_records": 10000,
     "n_attributes": 16,
     "attrs": [

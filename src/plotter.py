@@ -54,14 +54,14 @@ class ResultsPlot:
     def std_cols(record):
         """For all tables"""
         return [rget(record, 'classifier'),
+                '✓' if rget(record, 'robust') else ' ',
                 rget(record, 'dataset_name'),
-                'T' if rget(record, 'robust') else 'F',
                 rget(record, 'attack'),
                 rget(record, 'max_iter')]
 
     @property
     def std_hd(self):
-        return ["CLS", "Dataset", "R", "Attack", "i"]
+        return ["CLS", "R", "DS", "ATK", "i"]
 
     @property
     def proto_names(self):
@@ -97,7 +97,7 @@ class ResultsPlot:
                 round(sdiv(smean(vld), ne), 2) if ne > 0 else 0,
                 f"{100 * sdiv(bm, nv):.0f}/{100 * sdiv(mb, nv):.0f}"]
 
-        h = ["F-score", "Accuracy", "Evades", "Valid", "B / M"]
+        h = ["F-score", "Accuracy", "Evade", "Valid", "B / M"]
         mat = [extract_values(record) for record in self.raw_rata]
         return self.std_hd + h, mat
 
@@ -117,7 +117,7 @@ class ResultsPlot:
         return self.std_hd + h, mat
 
     def reasons_table(self):
-        headers = ["Dataset", "Attack", "Proto", "Reason", "Freq"]
+        headers = ["DS", "ATK", "Proto", "Reason", "Freq"]
         result = {}
         for record in self.raw_rata:
             ds, att = record['dataset_name'], record['attack']
@@ -183,10 +183,10 @@ def plot_results(directory, fmt):
         return
     res.write_table(
         *res.evasion_table(), 'table',
-        sorter=lambda x: (x[0], x[1], x[3], x[2], x[4]))
+        sorter=lambda x: (x[0], x[2], x[3], x[1], x[4]))
     res.write_table(
         *res.proto_table(), 'table_proto',
-        sorter=lambda x: (x[0], x[1], x[3], x[2], x[4]))
+        sorter=lambda x: (x[0], x[2], x[3], x[1], x[4]))
     res.write_table(
         *res.reasons_table(), 'table_reasons',
         sorter=lambda x: (x[0], x[1], x[2], -x[4]))

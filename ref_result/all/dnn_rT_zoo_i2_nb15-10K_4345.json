@@ -1,6 +1,6 @@
 {
-    "dataset": "./data/nb15-10K.csv",
-    "dataset_name": "nb15-10K",
+    "dataset": "./data/nb15.csv",
+    "dataset_name": "nb15",
     "n_records": 10000,
     "n_attributes": 33,
     "attrs": [
