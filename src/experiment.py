@@ -119,7 +119,7 @@ class Experiment:
         def valid_ratio(self) -> float:
             return sdiv(self.n_valid, self.n_evasions)
 
-    DEFAULT_DS = 'data/CTU-1-1.csv'
+    DEFAULT_DS = 'data/CTU.csv'
     DEFAULT_CLS = ClsLoader.XGB
     ATTACKS = [AttackLoader.HSJ, AttackLoader.ZOO]
     CLASSIFIERS = [ClsLoader.XGB, ClsLoader.DNN]

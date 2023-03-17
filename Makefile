@@ -32,8 +32,8 @@ ALWAYS := --resume
 IOT_OPTIONS := --validator IOT23
 NB_OPTIONS := --validator NB15
 
-DS_1 := -d ./data/CTU-1-1.csv $(IOT_OPTIONS)
-DS_2 := -d ./data/nb15-10K.csv $(NB_OPTIONS)
+DS_1 := -d ./data/CTU.csv $(IOT_OPTIONS)
+DS_2 := -d ./data/nb15.csv $(NB_OPTIONS)
 
 DATASETS := DS_1 DS_2
 

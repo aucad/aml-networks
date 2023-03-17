@@ -1,15 +1,19 @@
 # Datasets
 
-Preprocessed (small) datasets, ready for experiments.
+We consider two network traffic captures:
 
-To evaluate additional data sources, make sure the input data is fully numeric and in csv format.
+1. [Aposemat IoT-23](https://www.stratosphereips.org/datasets-iot23/) is a labeled dataset with malicious and benign IoT
+   network traffic.
+
+2. [UNSW-NB15](https://research.unsw.edu.au/projects/unsw-nb15-dataset) is a network intrusion dataset that contains
+   nine different attacks.
+
+This directory includes pre-processed, small datasets, ready for experiments.
+
+| Dataset | Origin                            | Sampled |  Rows | Benign | Malicious | 
+|:--------|:----------------------------------|:-------:|------:|-------:|----------:|
+| CTU     | IoT-23 > CTU-Malware-Capture-1-1  |   ✔️    | 10000 |   50 % |      50 % |
+| nb15    | UNSW-NB15 > 175K training set     |   ✔️    | 10000 |   50 % |      50 % |
+
+To evaluate additional data sources, make sure the input data is fully numeric, and in csv format.
 Use these existing data sets as examples.
-
-
-| Dataset  | Origin                            | Sampled |  Rows | Benign | Malicious | 
-|:---------|:----------------------------------|:-------:|------:|-------:|----------:|
-| CTU-1-1  | IoT-23 > CTU-Malware-Capture-1-1  |   ✔️    | 10000 |   50 % |      50 % |
-| CTU-20-1 | IoT-23 > CTU-Malware-Capture-20-1 |    ➖    |  3209 |   99 % |       1 % |
-| CTU-44-1 | IoT-23 > CTU-Malware-Capture-44-1 |    ➖    |   237 |   90 % |      10 % | 
-| nb15-1-1 | UNSW-NB15 > UNSW-NB15_1.csv       |   ✔️    |  7000 |   97 % |       3 % |
-| nb15-10K | UNSW-NB15 > 175K training set     |   ✔️    | 10000 |   50 % |      50 % |
