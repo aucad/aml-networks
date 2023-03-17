@@ -55,7 +55,7 @@ class NeuralNetwork(Classifier):
 
     def init_classifier(self):
         """Trains a deep neural network classifier."""
-        n_layers = max(1, len(self.mutable_attrs) // 4)
+        n_layers = max(1, len(self.mutable) // 4)
         layers = [Dense(60, activation='relu') for _ in range(n_layers)] + \
                  [Dense(self.n_classes, activation='softmax')]
         model = tf.keras.models.Sequential(layers)

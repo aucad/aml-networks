@@ -85,12 +85,12 @@ This application is intended for use over command line interface (CLI). There ar
 
 * `make fast`
 
-  Subset of make all. This option runs experiment, only for default max iterations, only using full holdout set. The
-  parameters for this attack are fixed -- it does not accept arguments like the two experiments above.
+  This option runs a quick experiment, for fixed configuration of small record sample and low fixed iteration count. 
+  These parameters are fixed: it does not accept arguments like the two experiments above.
 
 * `make plot`
 
-  Plot results of a previously performed experiment. This command will generate text-based table plots.
+  Plot results of a previously performed experiment. 
 
 ### Additional Custom Experiments
 

@@ -229,7 +229,7 @@ def plot_args(parser: ArgumentParser):
         '-f', '--format',
         action='store',
         choices=['plain', 'tex'],
-        help='evasion attack [default: plain]'
+        help='table format [default: plain]'
     )
     parser.add_argument(
         "--silent",

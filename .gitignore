@@ -8,3 +8,6 @@ zoo_result_4.png
 ori.csv
 adv.csv
 output/*
+ref_result/all/table.txt
+ref_result/all/table_proto.txt
+ref_result/all/table_reasons.txt

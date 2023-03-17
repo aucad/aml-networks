@@ -102,5 +102,3 @@ class Zoo(Attack):
         self.generate_adv_examples(self.max_iter)
         self.adv_x = self.pseudo_mask(
             self.cls.mask_cols, self.ori_x, self.adv_x)
-        self.eval_examples()
-        self.post_run()

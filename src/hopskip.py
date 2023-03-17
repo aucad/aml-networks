@@ -65,5 +65,3 @@ class HopSkip(Attack):
         """Run HopSkipJumpAttack attack."""
         mask = self.get_mask(self.ori_x, self.cls.mask_cols)
         self.generate_adv_examples(self.max_iter, self.ori_x, mask)
-        self.eval_examples()
-        self.post_run()

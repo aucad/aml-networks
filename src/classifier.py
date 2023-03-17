@@ -10,21 +10,22 @@ class Classifier:
         self.out_dir = out
         self.attrs = attrs[:]
         self.classes = np.unique(y)
-        self.classifier = None
-        self.model = None
-        self.train_x = np.array([])
-        self.train_y = np.array([])
-        self.test_x = np.array([])
-        self.test_y = np.array([])
         self.attr_ranges = attr_ranges
         self.mask_cols = mask_cols
-        self.fold_n = 1
         self.robust = robust
+        self.classifier = None
+        self.model = None
+        self.train_x = None
+        self.train_y = None
+        self.test_x = None
+        self.test_y = None
+        self.fold_n = 1
         self.n_pred = 0
         self.n_true_pn = 0
         self.n_actl_pos = 0
         self.n_pred_pos = 0
         self.n_true_p = 0
+        self.reset()
 
     def reset(self):
         self.classifier = None
@@ -62,48 +63,41 @@ class Classifier:
         """convert text label to numeric"""
         return 'malicious' if i == 1 else 'benign'
 
-    @staticmethod
-    def int_label(text):
-        """convert numeric label to text label"""
-        return 0 if text.lower() == 'benign' else 1
-
     @property
     def class_names(self):
         """class labels as text"""
         return [self.text_label(cn) for cn in self.classes]
 
     @property
-    def mutable_attrs(self):
+    def mutable(self):
+        """mutable attributes names"""
         return sorted([
             a for i, a in enumerate(self.attrs)
             if i not in self.mask_cols and i < self.n_features])
 
     @property
-    def immutable_attrs(self):
+    def immutable(self):
+        """immutable attributes names"""
         return sorted([
             a for i, a in enumerate(self.attrs)
             if i in self.mask_cols and i < self.n_features])
 
     @property
     def accuracy(self):
-        return -1 if self.n_pred == 0 else \
-            self.n_true_pn / self.n_pred
+        return -1 if self.n_pred == 0 else self.n_true_pn / self.n_pred
 
     @property
     def precision(self):
-        return 1 if self.n_pred_pos == 0 else \
-            self.n_true_p / self.n_pred_pos
+        return 1 if self.n_pred_pos == 0 else self.n_true_p / self.n_pred_pos
 
     @property
     def recall(self):
-        return 1 if self.n_actl_pos == 0 else \
-            self.n_true_p / self.n_actl_pos
+        return 1 if self.n_actl_pos == 0 else self.n_true_p / self.n_actl_pos
 
     @property
     def f_score(self):
         pr = self.precision + self.recall
-        return 0 if pr == 0 else \
-            (2 * self.precision * self.recall) / pr
+        return 0 if pr == 0 else (2 * self.precision * self.recall) / pr
 
     @staticmethod
     def formatter(x, y):

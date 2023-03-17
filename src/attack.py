@@ -4,39 +4,36 @@ from typing import Optional
 
 import numpy as np
 
-from src import Classifier, Validator, sdiv, utility
+from src import Classifier, Validator, utility
 
 
 class Attack:
+    """Attack base class defines common functionality"""
 
-    def __init__(
-            self, name, default_iter, validator, uuid,
-            capture, iters, silent
-    ):
+    def __init__(self, name, def_iter, validator, uuid, save, iters, silent):
         self.uuid = uuid
         self.name = name
-        self.out_dir = None
-        self.plot_result = False
         self.validator_kind = validator
         self.cls: Optional[Classifier] = None
-        self.max_iter = default_iter if iters < 1 else iters
-        self.save_records = capture
-        self.evasions = np.array([])
-        self.ori_x = np.array([])
-        self.ori_y = np.array([])
-        self.adv_x = np.array([])
-        self.adv_y = np.array([])
-        self.valid_result = np.array([])
-        self.validation_reasons = {}
+        self.max_iter = def_iter if iters < 1 else iters
+        self.save_records = save
         self.silent = silent
+        self.ori_x = None
+        self.ori_y = None
+        self.adv_x = None
+        self.adv_y = None
+        self.evasions = None
+        self.valid_result = None
+        self.validation_reasons = None
+        self.reset()
 
     def reset(self):
         self.cls = None
-        self.evasions = np.array([])
         self.ori_x = np.array([])
         self.ori_y = np.array([])
         self.adv_x = np.array([])
         self.adv_y = np.array([])
+        self.evasions = np.array([])
         self.valid_result = np.array([])
         self.validation_reasons = {}
         return self
@@ -66,14 +63,6 @@ class Attack:
         return self.evasions.copy()
 
     @property
-    def evasion_success(self):
-        return sdiv(self.n_evasions, self.n_records) * 100
-
-    @property
-    def validation_success(self):
-        return sdiv(self.n_valid, self.n_evasions) * 100
-
-    @property
     def has_evasions(self):
         return len(self.idx_valid_evades) > 0
 
@@ -86,11 +75,7 @@ class Attack:
         target, x_adv = np.array(self.ori_x), np.array(self.adv_x)
         errors = np.linalg.norm((target - x_adv), axis=1)
         errors = errors[self.evasions] if len(self.evasions) else [0]
-        err_min, err_max = 0, 0
-        if self.has_evasions:
-            err_min = min(errors)
-            err_max = max(errors)
-        return err_min, err_max
+        return min(errors), max(errors) if self.has_evasions else (0, 0)
 
     @property
     def init_proto(self):
@@ -98,9 +83,8 @@ class Attack:
 
     @property
     def adv_proto(self):
-        input_ = self.adv_x[self.evasions] \
-            if self.n_evasions > 0 else []
-        return self.get_proto_stats(input_)
+        return self.get_proto_stats(
+            self.adv_x[self.evasions] if self.n_evasions > 0 else [])
 
     @property
     def adv_proto_valid(self):
@@ -110,37 +94,23 @@ class Attack:
 
     @property
     def label_stats(self) -> dict:
-        result, final_labels = {}, []
-        if self.use_validator:
-            if self.n_valid > 0:
-                final_labels = self.adv_y[self.idx_valid_evades] \
-                    .flatten().tolist()
+        labels = []
+        if self.use_validator and self.n_valid > 0:
+            labels = self.adv_y[self.idx_valid_evades].flatten().tolist()
         elif self.n_evasions > 0:
-            final_labels = self.adv_y[self.evasions] \
-                .flatten().tolist()
-        for label in self.cls.classes:
-            n = final_labels.count(label)
-            key = self.cls.text_label(label)
-            result[key] = n
-        return result
+            labels = self.adv_y[self.evasions].flatten().tolist()
+        return dict([(self.cls.text_label(c), labels.count(c))
+                     for c in self.cls.classes])
 
     def get_proto_stats(self, records) -> dict:
         if not self.use_validator:
             return {}
         labels = [Validator.determine_proto(
-            self.validator_kind, self.cls.attrs, r).name for r in
-                  records]
+            self.validator_kind, self.cls.attrs, r).name for r in records]
         return dict(Counter(labels))
-
-    def figure_name(self, n):
-        return path.join(
-            self.out_dir,
-            f'{self.uuid}_{self.name}_{self.cls.name}_'
-            f'{self.cls.fold_n}_{n}.png')
 
     def set_cls(self, cls: Classifier, indices=None):
         self.cls = cls
-        self.out_dir = cls.out_dir
         indices = indices or range(cls.n_test)
         self.ori_x = cls.test_x.copy()[indices, :]
         self.ori_y = cls.test_y.copy()[indices]
@@ -163,9 +133,8 @@ class Attack:
         # predictions for original instances
         ori_in = self.cls.formatter(self.ori_x, self.ori_y)
         original = self.cls.predict(ori_in).flatten().tolist()
-        correct = np.array(
-            (np.where(np.array(self.ori_y) == original)[0])
-            .flatten().tolist())
+        correct = np.array((np.where(
+            np.array(self.ori_y) == original)[0]).flatten().tolist())
 
         # adversarial predictions for same data
         adv_in = self.cls.formatter(self.adv_x, self.ori_y)
@@ -177,11 +146,6 @@ class Attack:
             (np.where(self.adv_y != original)[0]).flatten().tolist())
         self.evasions = np.intersect1d(evades, correct)
 
-    def post_run(self):
-        self.validate()
-        if self.has_evasions:
-            self.dump_result()
-
     def validate(self):
         if self.use_validator and self.n_evasions > 0:
             attrs = self.cls.attrs[:self.cls.n_features]
@@ -191,14 +155,12 @@ class Attack:
             self.validation_reasons = reasons
             self.valid_result = np.array(result)
 
-    def dump_result(self):
+    def dump_result(self, out_dir):
         """Write to csv file original and adversarial examples."""
-        if not self.save_records:
-            return
-        self.dump(self.ori_x, self.ori_y, 'ori')
-        self.dump(self.adv_x, self.adv_y, 'adv')
+        self.__dump(self.ori_x, self.ori_y, out_dir, 'ori')
+        self.__dump(self.adv_x, self.adv_y, out_dir, 'adv')
 
-    def dump(self, x, y, name):
+    def __dump(self, x, y, out_dir, name):
         x = self.cls.denormalize(x.copy())
         attrs = self.cls.attrs[:]
         int_cols = self.cls.mask_cols + [self.cls.n_features]
@@ -214,4 +176,4 @@ class Attack:
             attrs.append('valid')
 
         utility.write_dataset(
-            path.join(self.out_dir, fn), attrs, rows, int_cols)
+            path.join(out_dir, fn), attrs, rows, int_cols)

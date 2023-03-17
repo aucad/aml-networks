@@ -16,6 +16,10 @@ ifndef $CLS
 CLS:=xgb dnn
 endif
 
+ifndef $RESDIR
+RESDIR:=output
+endif
+
 DATA_DIR := ./data
 
 ATTACKS := hsj zoo
@@ -25,8 +29,8 @@ T_ROBUST := --robust
 F_ROBUST :=
 
 ALWAYS := --resume
-IOT_OPTIONS := --validator IOT23 --resume
-NB_OPTIONS := --validator NB15 --resume
+IOT_OPTIONS := --validator IOT23
+NB_OPTIONS := --validator NB15
 
 DS_1 := -d ./data/CTU-1-1.csv $(IOT_OPTIONS)
 DS_2 := -d ./data/nb15-10K.csv $(NB_OPTIONS)
@@ -49,7 +53,7 @@ fast:
 	@$(foreach r, $(ROBUST), $(foreach c, $(CLS), $(foreach attack, $(ATTACKS), \
 	$(foreach ds, $(DATASETS),  \
 	python3 -m src experiment $(ALWAYS) -a $(attack) $($(ds)) $($(r)) \
-		--iter 0 -s 0 -t 1 -c $(c) ; ))))
+		--iter 5 -s 500 -t 1 -c $(c) ; ))))
 
 valid:
 	@$(foreach file, $(wildcard $(DATA_DIR)/CTU*),  \
@@ -58,9 +62,9 @@ valid:
 		python3 -m src validate -d $(file) $(NB_OPTIONS) --capture;)
 
 plot:
-	@python3 -m src plot output
+	@python3 -m src plot $(RESDIR)
 
-code_stats:
+stats:
 	@cd src && find . -name '*.py' | xargs wc -l && cd ..
 
 lint:
