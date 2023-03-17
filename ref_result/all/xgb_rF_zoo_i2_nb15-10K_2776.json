@@ -1,0 +1,367 @@
+{
+    "dataset": "./data/nb15-10K.csv",
+    "dataset_name": "nb15-10K",
+    "n_records": 10000,
+    "n_attributes": 33,
+    "attrs": [
+        "dur",
+        "proto_tcp",
+        "proto_udp",
+        "proto_other",
+        "service_",
+        "service_http",
+        "service_dns",
+        "service_other",
+        "state_FIN",
+        "state_INT",
+        "state_other",
+        "sbytes",
+        "dbytes",
+        "rate",
+        "sloss",
+        "dloss",
+        "sjit",
+        "djit",
+        "swin",
+        "stcpb",
+        "dtcpb",
+        "dwin",
+        "smean",
+        "dmean",
+        "trans_depth",
+        "ct_srv_src",
+        "ct_dst_ltm",
+        "ct_src_dport_ltm",
+        "ct_dst_sport_ltm",
+        "ct_dst_src_ltm",
+        "ct_src_ltm",
+        "ct_srv_dst",
+        "label"
+    ],
+    "immutable": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+    ],
+    "attr_mutable": [
+        "ct_dst_ltm",
+        "ct_dst_sport_ltm",
+        "ct_dst_src_ltm",
+        "ct_src_dport_ltm",
+        "ct_src_ltm",
+        "ct_srv_dst",
+        "ct_srv_src",
+        "dbytes",
+        "djit",
+        "dloss",
+        "dmean",
+        "dtcpb",
+        "dur",
+        "dwin",
+        "rate",
+        "sbytes",
+        "sjit",
+        "sloss",
+        "smean",
+        "stcpb",
+        "swin",
+        "trans_depth"
+    ],
+    "attr_immutable": [
+        "proto_other",
+        "proto_tcp",
+        "proto_udp",
+        "service_",
+        "service_dns",
+        "service_http",
+        "service_other",
+        "state_FIN",
+        "state_INT",
+        "state_other"
+    ],
+    "robust": false,
+    "classes": [
+        "benign",
+        "malicious"
+    ],
+    "k_folds": 5,
+    "validator": "NB15",
+    "classifier": "xgb",
+    "sample_size": 0,
+    "sample_times": 1,
+    "attack": "zoo",
+    "attr_ranges": {
+        "dur": 59.999989,
+        "proto_tcp": 1.0,
+        "proto_udp": 1.0,
+        "proto_other": 1.0,
+        "service_": 1.0,
+        "service_http": 1.0,
+        "service_dns": 1.0,
+        "service_other": 1.0,
+        "state_FIN": 1.0,
+        "state_INT": 1.0,
+        "state_other": 1.0,
+        "sbytes": 10508068.0,
+        "dbytes": 7085342.0,
+        "rate": 1000000.003,
+        "sloss": 3993.0,
+        "dloss": 2627.0,
+        "sjit": 1460480.0159999998,
+        "djit": 199572.8686,
+        "swin": 255.0,
+        "stcpb": 4294729542.0,
+        "dtcpb": 4294383134.0,
+        "dwin": 255.0,
+        "smean": 1499.0,
+        "dmean": 1458.0,
+        "trans_depth": 2.0,
+        "ct_srv_src": 63.0,
+        "ct_dst_ltm": 50.0,
+        "ct_src_dport_ltm": 50.0,
+        "ct_dst_sport_ltm": 46.0,
+        "ct_dst_src_ltm": 63.0,
+        "ct_src_ltm": 50.0,
+        "ct_srv_dst": 62.0
+    },
+    "start": 1678917056416960255,
+    "end": 1678917270429965305,
+    "current_utc": 1678917270430780394,
+    "max_iter": 2,
+    "_Result__accuracy": [
+        0.939,
+        0.9435,
+        0.9285,
+        0.9405,
+        0.934
+    ],
+    "_Result__precision": [
+        0.9498495486459378,
+        0.9326171875,
+        0.9153225806451613,
+        0.9268527430221367,
+        0.9244917715392061
+    ],
+    "_Result__recall": [
+        0.929342492639843,
+        0.955955955955956,
+        0.9389865563598759,
+        0.9572564612326043,
+        0.9464816650148662
+    ],
+    "_Result__f_score": [
+        0.9394841269841271,
+        0.9441423628274839,
+        0.9270035732516589,
+        0.9418092909535453,
+        0.9353574926542606
+    ],
+    "_Result__n_records": [
+        2000,
+        2000,
+        2000,
+        2000,
+        2000
+    ],
+    "_Result__n_evasions": [
+        1038,
+        876,
+        949,
+        982,
+        941
+    ],
+    "_Result__n_valid": [
+        1018,
+        858,
+        931,
+        928,
+        853
+    ],
+    "_Result__labels": [
+        {
+            "benign": 330,
+            "malicious": 688
+        },
+        {
+            "benign": 284,
+            "malicious": 574
+        },
+        {
+            "benign": 328,
+            "malicious": 603
+        },
+        {
+            "benign": 331,
+            "malicious": 597
+        },
+        {
+            "benign": 359,
+            "malicious": 494
+        }
+    ],
+    "_Result__validations": [
+        {
+            "oth nonzero tcp fields": 1,
+            "udp nonzero tcp fields": 14,
+            "tcp dbytes nonzero when dur is 0": 8
+        },
+        {
+            "udp nonzero tcp fields": 9,
+            "oth nonzero tcp fields": 4,
+            "tcp dbytes nonzero when dur is 0": 12
+        },
+        {
+            "oth nonzero tcp fields": 10,
+            "udp nonzero tcp fields": 2,
+            "tcp dbytes nonzero when dur is 0": 14
+        },
+        {
+            "udp nonzero tcp fields": 42,
+            "oth nonzero tcp fields": 8,
+            "tcp dbytes nonzero when dur is 0": 8
+        },
+        {
+            "udp nonzero tcp fields": 73,
+            "tcp dbytes nonzero when dur is 0": 14,
+            "oth nonzero tcp fields": 6
+        }
+    ],
+    "_Result__errors": [
+        [
+            0.015591929666697979,
+            0.523992687573653
+        ],
+        [
+            0.0428203090434513,
+            0.4690415734407926
+        ],
+        [
+            0.0686877965927124,
+            0.479572986977053
+        ],
+        [
+            0.05412264122631981,
+            0.47954680391621335
+        ],
+        [
+            0.03126776827088717,
+            0.4793529077400682
+        ]
+    ],
+    "_Result__proto_init": [
+        {
+            "udp": 637,
+            "tcp": 1050,
+            "oth": 313
+        },
+        {
+            "oth": 299,
+            "udp": 671,
+            "tcp": 1030
+        },
+        {
+            "udp": 644,
+            "tcp": 1033,
+            "oth": 323
+        },
+        {
+            "oth": 291,
+            "udp": 633,
+            "tcp": 1076
+        },
+        {
+            "tcp": 1010,
+            "oth": 304,
+            "udp": 686
+        }
+    ],
+    "_Result__proto_evasions": [
+        {
+            "udp": 253,
+            "tcp": 723,
+            "oth": 62
+        },
+        {
+            "tcp": 596,
+            "udp": 228,
+            "oth": 52
+        },
+        {
+            "tcp": 663,
+            "oth": 72,
+            "udp": 214
+        },
+        {
+            "oth": 73,
+            "tcp": 713,
+            "udp": 196
+        },
+        {
+            "oth": 83,
+            "tcp": 506,
+            "udp": 352
+        }
+    ],
+    "_Result__proto_valid": [
+        {
+            "udp": 241,
+            "tcp": 716,
+            "oth": 61
+        },
+        {
+            "tcp": 589,
+            "udp": 221,
+            "oth": 48
+        },
+        {
+            "tcp": 656,
+            "oth": 62,
+            "udp": 213
+        },
+        {
+            "oth": 66,
+            "tcp": 705,
+            "udp": 157
+        },
+        {
+            "oth": 77,
+            "tcp": 493,
+            "udp": 283
+        }
+    ],
+    "machine": {
+        "system": "Linux",
+        "release": "5.4.0-1096-gcp",
+        "version": "#105~18.04.2-Ubuntu SMP Tue Nov 29 11:33:58 UTC 2022",
+        "machine": "x86_64",
+        "processor": "x86_64",
+        "cpu_physical_cores": 4,
+        "cpu_total_cores": 8,
+        "cpu_max_frequency": 0.0,
+        "cpu_min_frequency": 0.0,
+        "cpu_current_frequency": 2200.212,
+        "cpu_usage_per_core": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ],
+        "cpu_total_usage": 93.5,
+        "virtual_mem_total_size": "31.36GB",
+        "virtual_mem_available": "30.35GB",
+        "virtual_mem_used": "587.89MB",
+        "virtual_mem_percentage": 3.2,
+        "python_runtime": "3.8.0 (default, Feb 28 2023, 16:22:29) \n[GCC 8.4.0]"
+    }
+}

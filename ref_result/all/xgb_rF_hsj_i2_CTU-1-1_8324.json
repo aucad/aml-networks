@@ -1,0 +1,287 @@
+{
+    "dataset": "./data/CTU-1-1.csv",
+    "dataset_name": "CTU-1-1",
+    "n_records": 10000,
+    "n_attributes": 16,
+    "attrs": [
+        "proto_tcp",
+        "proto_udp",
+        "proto_icmp",
+        "duration",
+        "orig_bytes",
+        "resp_bytes",
+        "conn_state_OTH",
+        "missed_bytes",
+        "history_S",
+        "history_D",
+        "history_other",
+        "orig_pkts",
+        "orig_ip_bytes",
+        "resp_pkts",
+        "resp_ip_bytes",
+        "label"
+    ],
+    "immutable": [
+        0,
+        1,
+        2,
+        6,
+        7,
+        8,
+        9,
+        10
+    ],
+    "attr_mutable": [
+        "duration",
+        "orig_bytes",
+        "orig_ip_bytes",
+        "orig_pkts",
+        "resp_bytes",
+        "resp_ip_bytes",
+        "resp_pkts"
+    ],
+    "attr_immutable": [
+        "conn_state_OTH",
+        "history_D",
+        "history_S",
+        "history_other",
+        "missed_bytes",
+        "proto_icmp",
+        "proto_tcp",
+        "proto_udp"
+    ],
+    "robust": false,
+    "classes": [
+        "benign",
+        "malicious"
+    ],
+    "k_folds": 5,
+    "validator": "IOT23",
+    "classifier": "xgb",
+    "sample_size": 0,
+    "sample_times": 1,
+    "attack": "hsj",
+    "attr_ranges": {
+        "proto_tcp": 1.0,
+        "proto_udp": 1.0,
+        "proto_icmp": 1.0,
+        "duration": 173.56997900000002,
+        "orig_bytes": 580.0,
+        "resp_bytes": 1552.0,
+        "conn_state_OTH": 1.0,
+        "missed_bytes": 0.0,
+        "history_S": 1.0,
+        "history_D": 1.0,
+        "history_other": 1.0,
+        "orig_pkts": 46.0,
+        "orig_ip_bytes": 2515.0,
+        "resp_pkts": 60.0,
+        "resp_ip_bytes": 3956.0
+    },
+    "start": 1678916650479149866,
+    "end": 1678916755869089292,
+    "current_utc": 1678916755870450989,
+    "max_iter": 2,
+    "_Result__accuracy": [
+        0.9525,
+        0.95,
+        0.9565,
+        0.955,
+        0.9475
+    ],
+    "_Result__precision": [
+        0.9988864142538976,
+        1.0,
+        1.0,
+        1.0,
+        0.9988623435722411
+    ],
+    "_Result__recall": [
+        0.905146316851665,
+        0.902818270165209,
+        0.9104938271604939,
+        0.9122807017543859,
+        0.8940936863543788
+    ],
+    "_Result__f_score": [
+        0.9497088406564319,
+        0.9489274770173647,
+        0.9531502423263328,
+        0.9541284403669724,
+        0.9435787211176786
+    ],
+    "_Result__n_records": [
+        2000,
+        2000,
+        2000,
+        2000,
+        2000
+    ],
+    "_Result__n_evasions": [
+        882,
+        847,
+        899,
+        0,
+        1
+    ],
+    "_Result__n_valid": [
+        238,
+        266,
+        174,
+        0,
+        0
+    ],
+    "_Result__labels": [
+        {
+            "benign": 238,
+            "malicious": 0
+        },
+        {
+            "benign": 266,
+            "malicious": 0
+        },
+        {
+            "benign": 174,
+            "malicious": 0
+        },
+        {
+            "benign": 0,
+            "malicious": 0
+        },
+        {
+            "benign": 0,
+            "malicious": 0
+        }
+    ],
+    "_Result__validations": [
+        {
+            "tcp ori pkts < resp pkts": 314,
+            "tcp ori packets > bytes": 346,
+            "tcp resp packets > bytes": 2,
+            "tcp ori > 0 -> bytes >= 20": 42
+        },
+        {
+            "tcp ori packets > bytes": 363,
+            "tcp resp > 0 -> bytes >= 20": 94,
+            "tcp ori pkts < resp pkts": 103,
+            "tcp ori > 0 -> bytes >= 20": 48,
+            "tcp resp packets > bytes": 33
+        },
+        {
+            "tcp ori pkts < resp pkts": 267,
+            "tcp ori packets > bytes": 404,
+            "tcp resp > 0 -> bytes >= 20": 21,
+            "tcp ori > 0 -> bytes >= 20": 70,
+            "tcp resp packets > bytes": 21
+        },
+        {},
+        {
+            "tcp ori pkts < resp pkts": 1
+        }
+    ],
+    "_Result__errors": [
+        [
+            0.21214787379296168,
+            1.6584661883036256
+        ],
+        [
+            0.01744547850497047,
+            1.7743224525890282
+        ],
+        [
+            0.032350509806787324,
+            1.747132014760967
+        ],
+        [
+            0,
+            0
+        ],
+        [
+            0,
+            0
+        ]
+    ],
+    "_Result__proto_init": [
+        {
+            "tcp": 1103,
+            "udp": 860,
+            "icmp": 37
+        },
+        {
+            "tcp": 1071,
+            "udp": 883,
+            "icmp": 46
+        },
+        {
+            "tcp": 1115,
+            "udp": 841,
+            "icmp": 44
+        },
+        {
+            "tcp": 1064,
+            "udp": 900,
+            "icmp": 36
+        },
+        {
+            "tcp": 1122,
+            "udp": 849,
+            "icmp": 29
+        }
+    ],
+    "_Result__proto_evasions": [
+        {
+            "tcp": 882
+        },
+        {
+            "tcp": 847
+        },
+        {
+            "tcp": 899
+        },
+        {},
+        {
+            "tcp": 1
+        }
+    ],
+    "_Result__proto_valid": [
+        {
+            "tcp": 238
+        },
+        {
+            "tcp": 266
+        },
+        {
+            "tcp": 174
+        },
+        {},
+        {}
+    ],
+    "machine": {
+        "system": "Linux",
+        "release": "5.4.0-1096-gcp",
+        "version": "#105~18.04.2-Ubuntu SMP Tue Nov 29 11:33:58 UTC 2022",
+        "machine": "x86_64",
+        "processor": "x86_64",
+        "cpu_physical_cores": 4,
+        "cpu_total_cores": 8,
+        "cpu_max_frequency": 0.0,
+        "cpu_min_frequency": 0.0,
+        "cpu_current_frequency": 2200.212,
+        "cpu_usage_per_core": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ],
+        "cpu_total_usage": 92.3,
+        "virtual_mem_total_size": "31.36GB",
+        "virtual_mem_available": "30.35GB",
+        "virtual_mem_used": "581.36MB",
+        "virtual_mem_percentage": 3.2,
+        "python_runtime": "3.8.0 (default, Feb 28 2023, 16:22:29) \n[GCC 8.4.0]"
+    }
+}
