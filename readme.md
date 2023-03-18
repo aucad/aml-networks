@@ -85,7 +85,7 @@ This application is intended for use over command line interface (CLI). There ar
 
 * `make fast`
 
-  This option runs a quick experiment, for fixed configuration of small record sample and low fixed iteration count. 
+  This option runs a quick experiment, for a configuration of sampled records and a low iteration count. 
   These parameters are fixed: it does not accept arguments like the two experiments above.
 
 * `make plot`

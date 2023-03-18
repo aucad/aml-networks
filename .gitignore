@@ -11,3 +11,6 @@ output/*
 ref_result/all/table.txt
 ref_result/all/table_proto.txt
 ref_result/all/table_reasons.txt
+ref_result/sample/table.txt
+ref_result/sample/table_proto.txt
+ref_result/sample/table_reasons.txt
