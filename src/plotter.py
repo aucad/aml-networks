@@ -126,14 +126,14 @@ class ResultsPlot:
             ne = smean(record[rarr('n_evasions')])
             nv = sum(vld) if ne > 0 else 0
             bm = sum([r['benign'] for r in lbl])
-            mb = sum([r['malicious'] for r in lbl])
             av_ev = round(sdiv(ne, nr), 2)
+            bl = sdiv(bm, nv)
             return ResultsPlot.std_cols(record) + [
                 f"{round(mean(fs), 2)} ± {round(stdev(fs), 2)}",
                 f"{round(mean(ac), 2)} ± {round(stdev(ac), 2)}",
                 av_ev,
                 round(sdiv(smean(vld), ne), 2) if av_ev > 0 else 0,
-                f"{100 * sdiv(bm, nv):.0f}--{100 * sdiv(mb, nv):.0f}"
+                f"{100 * bl:.0f}--{100 * (1. - bl):.0f}"
                 if av_ev > 0 else 0]
 
         h = ["F-score", "Accuracy", "Evade", "Valid", "B / M"]
