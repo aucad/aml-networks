@@ -9,6 +9,15 @@ classifiers can be enhanced with an adversarial robustness during the training p
 This repository provides an implementation to perform various experiments in the specified setting. Instructions for
 running pre-defined experiments, and extended custom usage, is explained in ["Usage" section](#usage) below.
 
+## Setup
+
+These steps explain how to run this software from source.
+
+- :snake: **Required** Python environment: 3.8 or 3.9
+
+- :warning: **Submodule** This repository has a submodule. Clone it, including the submodule
+  [(instructions)](https://stackoverflow.com/a/4438292).
+
 **Datasets**: we consider two network traffic captures:
 
 1. [Aposemat IoT-23](https://www.stratosphereips.org/datasets-iot23/) is a labeled dataset with malicious and benign IoT
@@ -18,15 +27,6 @@ running pre-defined experiments, and extended custom usage, is explained in ["Us
    nine different attacks.
 
 Preprocessed and sampled data is included in `data/` directory.
-
-## Setup
-
-These steps explain how to run this software from source.
-
-- :snake: **Required** Python environment: 3.8 or 3.9
-
-- :warning: **Submodule** This repository has a submodule. Clone it, including the submodule
-  [(instructions)](https://stackoverflow.com/a/4438292).
 
 ### Step 1: Build robust XGBoost
 

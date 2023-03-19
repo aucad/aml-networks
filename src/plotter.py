@@ -9,6 +9,7 @@ import os
 from statistics import mean, stdev
 
 # noinspection PyPackageRequirements
+import numpy as np
 import pandas as pd
 from pytablewriter import SpaceAlignedTableWriter, LatexTableWriter
 
@@ -69,15 +70,51 @@ class ResultsPlot:
         for record in self.raw_rata:
             for item in record[rarr('proto_init')]:
                 protos += item.keys()
-        return sorted(list(set(protos)))
+        return sorted(list(set(protos).intersection(
+            {'tcp', 'udp', 'oth'})))
 
     @staticmethod
-    def proto_freq(record, labels, init_key, success_key):
+    def proto_freq(record, labels, init_key, success_key, ev_key):
         """Average success rate by protocol"""
-        return [round(p, 2) for p in [smean(
-            [sdiv(rget(b, lbl, 0), rget(a, lbl, 0))
-             for a, b in zip(record[init_key], record[success_key])])
-            for lbl in labels]]
+        total = sum(record[init_key])
+        rec = smean(record[rarr(ev_key)])
+        return [round(sdiv(sum([
+            rget(b, lbl, 0) for b in record[success_key]]), total), 2)
+                if round(sdiv(total, rec), 2) > 0 else 0
+                for lbl in labels]
+
+    def classifier_table(self):
+
+        def row_values(rec):
+            return [
+                rget(rec, 'dataset_name'),
+                rget(rec, 'classifier'),
+                rget(rec, 'robust'),
+                rec[rarr('f_score')],
+                rec[rarr('accuracy')]]
+
+        def match_rows(tbl, ds, cl, rb):
+            temp = tbl[tbl[:, 0] == ds, :]
+            temp = temp[temp[:, 1] == cl, :]
+            return temp[temp[:, 2] == rb, :]
+
+        def collapse(ds, cl, rb, rows):
+            fs = np.array([np.array(f) for f in rows[:, 3]]) \
+                .flatten().tolist()
+            ac = np.array([np.array(f) for f in rows[:, 4]]) \
+                .flatten().tolist()
+            # noinspection PyTypeChecker
+            return [ds, cl, rb,
+                    f"{round(mean(fs), 2)} ± {round(stdev(fs), 2)}",
+                    f"{round(mean(ac), 2)} ± {round(stdev(ac), 2)}"]
+
+        h = ["DS", "CLS", "R", "F-score", "Accuracy"]
+        tb = np.array([row_values(record) for record in self.raw_rata])
+        mat = [collapse(d, c, r, match_rows(tb, d, c, r))
+               for d in np.unique(tb[:, 0])
+               for c in np.unique(tb[:, 1])
+               for r in np.unique(tb[:, 2])]
+        return h, mat
 
     def evasion_table(self):
         def extract_values(record):
@@ -90,25 +127,29 @@ class ResultsPlot:
             nv = sum(vld) if ne > 0 else 0
             bm = sum([r['benign'] for r in lbl])
             mb = sum([r['malicious'] for r in lbl])
+            av_ev = round(sdiv(ne, nr), 2)
             return ResultsPlot.std_cols(record) + [
                 f"{round(mean(fs), 2)} ± {round(stdev(fs), 2)}",
                 f"{round(mean(ac), 2)} ± {round(stdev(ac), 2)}",
-                round(sdiv(ne, nr), 2),
-                round(sdiv(smean(vld), ne), 2) if ne > 0 else 0,
-                f"{100 * sdiv(bm, nv):.0f}/{100 * sdiv(mb, nv):.0f}"]
+                av_ev,
+                round(sdiv(smean(vld), ne), 2) if av_ev > 0 else 0,
+                f"{100 * sdiv(bm, nv):.0f}--{100 * sdiv(mb, nv):.0f}"
+                if av_ev > 0 else 0]
 
         h = ["F-score", "Accuracy", "Evade", "Valid", "B / M"]
         mat = [extract_values(record) for record in self.raw_rata]
         return self.std_hd + h, mat
 
     def proto_table(self):
-        proto1 = rarr('proto_init'), rarr('proto_evasions')
-        proto2 = rarr('proto_evasions'), rarr('proto_valid')
+        proto1 = rarr('n_evasions'), rarr('proto_evasions'), 'n_records'
+        proto2 = rarr('n_valid'), rarr('proto_valid'), 'n_evasions'
 
         def extract_proto_values(record, labels):
-            return (ResultsPlot.std_cols(record) +
-                    ResultsPlot.proto_freq(record, labels, *proto1) +
-                    ResultsPlot.proto_freq(record, labels, *proto2))
+            evades = ResultsPlot.proto_freq(record, labels, *proto1)
+            valid = [v if e > 0 else 0 for e, v in zip(
+                evades, ResultsPlot.proto_freq(
+                    record, labels, *proto2))]
+            return ResultsPlot.std_cols(record) + evades + valid
 
         h = [f"e/{p}" for p in self.proto_names] + \
             [f"v/{p}" for p in self.proto_names]
@@ -182,7 +223,10 @@ def plot_results(directory, fmt):
         logger.warning("Nothing was plotted.")
         return
     res.write_table(
-        *res.evasion_table(), 'table',
+        *res.classifier_table(), 'table_cls',
+        sorter=lambda x: (x[0], x[1], x[2]))
+    res.write_table(
+        *res.evasion_table(), 'table_evades',
         sorter=lambda x: (x[0], x[2], x[3], x[1], x[4]))
     res.write_table(
         *res.proto_table(), 'table_proto',

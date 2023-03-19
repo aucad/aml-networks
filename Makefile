@@ -47,7 +47,7 @@ sample:
 	@$(foreach i, $(ITERS), $(foreach c, $(CLS), $(foreach r, $(ROBUST), \
 	$(foreach attack, $(ATTACKS), \
 	python3 -m src experiment $(ALWAYS) -a $(attack) $(DS_2) $($(r)) \
-		--iter $(i) -s 50 -t 3  -c $(c) ; ))))
+		--iter 0 -s 50 -t 3  -c $(c) ; ))))
 
 fast:
 	@$(foreach r, $(ROBUST), $(foreach c, $(CLS), $(foreach attack, $(ATTACKS), \
