@@ -1,0 +1,269 @@
+{
+    "dataset": "./data/CTU.csv",
+    "dataset_name": "CTU",
+    "n_records": 10000,
+    "n_attributes": 16,
+    "attrs": [
+        "proto_tcp",
+        "proto_udp",
+        "proto_icmp",
+        "duration",
+        "orig_bytes",
+        "resp_bytes",
+        "conn_state_OTH",
+        "missed_bytes",
+        "history_S",
+        "history_D",
+        "history_other",
+        "orig_pkts",
+        "orig_ip_bytes",
+        "resp_pkts",
+        "resp_ip_bytes",
+        "label"
+    ],
+    "immutable": [
+        0,
+        1,
+        2,
+        6,
+        7,
+        8,
+        9,
+        10
+    ],
+    "attr_mutable": [
+        "duration",
+        "orig_bytes",
+        "orig_ip_bytes",
+        "orig_pkts",
+        "resp_bytes",
+        "resp_ip_bytes",
+        "resp_pkts"
+    ],
+    "attr_immutable": [
+        "conn_state_OTH",
+        "history_D",
+        "history_S",
+        "history_other",
+        "missed_bytes",
+        "proto_icmp",
+        "proto_tcp",
+        "proto_udp"
+    ],
+    "robust": false,
+    "classes": [
+        "benign",
+        "malicious"
+    ],
+    "k_folds": 5,
+    "validator": "IOT23",
+    "classifier": "dnn",
+    "sample_size": 0,
+    "sample_times": 1,
+    "attack": "zoo",
+    "attr_ranges": {
+        "proto_tcp": 1.0,
+        "proto_udp": 1.0,
+        "proto_icmp": 1.0,
+        "duration": 173.56997900000002,
+        "orig_bytes": 580.0,
+        "resp_bytes": 1552.0,
+        "conn_state_OTH": 1.0,
+        "missed_bytes": 0.0,
+        "history_S": 1.0,
+        "history_D": 1.0,
+        "history_other": 1.0,
+        "orig_pkts": 46.0,
+        "orig_ip_bytes": 2515.0,
+        "resp_pkts": 60.0,
+        "resp_ip_bytes": 3956.0
+    },
+    "start": 1679374248977145046,
+    "end": 1679375433503686994,
+    "current_utc": 1679375433504671982,
+    "max_iter": 2,
+    "_Result__accuracy": [
+        0.951,
+        0.951,
+        0.952,
+        0.955,
+        0.9535
+    ],
+    "_Result__precision": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+    ],
+    "_Result__recall": [
+        0.9011099899091827,
+        0.9050387596899225,
+        0.9052319842053307,
+        0.9074074074074074,
+        0.90625
+    ],
+    "_Result__f_score": [
+        0.9479830148619959,
+        0.9501525940996949,
+        0.950259067357513,
+        0.9514563106796117,
+        0.9508196721311475
+    ],
+    "_Result__n_records": [
+        2000,
+        2000,
+        2000,
+        2000,
+        2000
+    ],
+    "_Result__n_evasions": [
+        0,
+        0,
+        0,
+        0,
+        0
+    ],
+    "_Result__n_valid": [
+        0,
+        0,
+        0,
+        0,
+        0
+    ],
+    "_Result__labels": [
+        {
+            "benign": 0,
+            "malicious": 0
+        },
+        {
+            "benign": 0,
+            "malicious": 0
+        },
+        {
+            "benign": 0,
+            "malicious": 0
+        },
+        {
+            "benign": 0,
+            "malicious": 0
+        },
+        {
+            "benign": 0,
+            "malicious": 0
+        }
+    ],
+    "_Result__validations": [
+        {},
+        {},
+        {},
+        {},
+        {}
+    ],
+    "_Result__errors": [
+        [
+            0,
+            [
+                0,
+                0
+            ]
+        ],
+        [
+            0,
+            [
+                0,
+                0
+            ]
+        ],
+        [
+            0,
+            [
+                0,
+                0
+            ]
+        ],
+        [
+            0,
+            [
+                0,
+                0
+            ]
+        ],
+        [
+            0,
+            [
+                0,
+                0
+            ]
+        ]
+    ],
+    "_Result__proto_init": [
+        {
+            "tcp": 1107,
+            "udp": 852,
+            "icmp": 41
+        },
+        {
+            "tcp": 1066,
+            "udp": 899,
+            "icmp": 35
+        },
+        {
+            "tcp": 1083,
+            "udp": 885,
+            "icmp": 32
+        },
+        {
+            "tcp": 1118,
+            "udp": 839,
+            "icmp": 43
+        },
+        {
+            "tcp": 1101,
+            "udp": 858,
+            "icmp": 41
+        }
+    ],
+    "_Result__proto_evasions": [
+        {},
+        {},
+        {},
+        {},
+        {}
+    ],
+    "_Result__proto_valid": [
+        {},
+        {},
+        {},
+        {},
+        {}
+    ],
+    "machine": {
+        "system": "Linux",
+        "release": "5.4.0-1096-gcp",
+        "version": "#105~18.04.2-Ubuntu SMP Tue Nov 29 11:33:58 UTC 2022",
+        "machine": "x86_64",
+        "processor": "x86_64",
+        "cpu_physical_cores": 4,
+        "cpu_total_cores": 8,
+        "cpu_max_frequency": 0.0,
+        "cpu_min_frequency": 0.0,
+        "cpu_current_frequency": 2200.226,
+        "cpu_usage_per_core": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ],
+        "cpu_total_usage": 14.0,
+        "virtual_mem_total_size": "31.36GB",
+        "virtual_mem_available": "30.47GB",
+        "virtual_mem_used": "514.91MB",
+        "virtual_mem_percentage": 2.8,
+        "python_runtime": "3.8.0 (default, Feb 28 2023, 16:22:29) \n[GCC 8.4.0]"
+    }
+}
