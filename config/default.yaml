@@ -1,0 +1,54 @@
+hsj:
+  # Attack instance parameters
+  # https://adversarial-robustness-toolbox.readthedocs.io/en/latest/modules/attacks/evasion.html#hopskipjump-attack
+  # size of the batch used by the estimator during inference.
+  batch_size: 64
+  # Maximum number of evaluations for estimating gradient.
+  max_eval: 1000
+  # Initial number of evaluations for estimating gradient.
+  init_eval: 100
+  # Maximum number of trials for initial generation of adversarial examples.
+  init_size: 100
+zoo: # Attack instance parameters
+  # https://adversarial-robustness-toolbox.readthedocs.io/en/latest/modules/attacks/evasion.html#zeroth-order-optimization-zoo-attack
+  # Confidence of adversarial examples: a higher value produces examples that are farther away, from the original input,
+  # but classified with higher confidence as the target class.
+  confidence: 0.25
+  # The initial learning rate for the attack algorithm. Smaller values produce better results but are slower to
+  # converge.
+  learning_rate: 0.1
+  # Number of times to adjust constant with binary search (positive value).
+  binary_search_steps: 10
+  # The initial trade-off constant c to use to tune the relative importance of distance and confidence. If
+  # binary_search_steps is large, the initial constant is not important, as discussed in Carlini and Wagner (2016).
+  initial_const: 0.001
+  # True if gradient descent should be abandoned when it gets stuck.
+  abort_early: True
+  # True if to use the resizing strategy from the paper: first, compute attack on inputs resized to 32x32, then increase
+  # size if needed to 64x64, followed by 128x128.
+  use_resize: False
+  # True if to use importance sampling when choosing coordinates to update.
+  use_importance: False
+  # Step size for numerical estimation of derivatives.
+  variable_h: 0.3
+xgb: # Tree booster params
+  # <https://xgboost.readthedocs.io/en/stable/parameter.html#parameters-for-tree-booster>
+  # Step size shrinkage used in update to prevents overfitting.
+  eta: 0.3
+  # Minimum loss reduction required to make a further partition on a leaf node of the tree.
+  gamma: 0
+  # Maximum depth of a tree
+  max_depth: 6
+  # Minimum sum of instance weight (hessian) needed in a child
+  min_child_weight: 1
+dnn:
+  # Keras model: https://keras.io/guides/sequential_model/
+  model:
+    # hidden layers
+    layers: [ 60 ]
+  # Keras model training args
+  model_fit:
+    # model training epochs
+    epochs: 80
+    # batch size
+    batch_size: 64

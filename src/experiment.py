@@ -121,11 +121,12 @@ class Experiment:
 
     DEFAULT_DS = 'data/CTU.csv'
     DEFAULT_CLS = ClsLoader.XGB
+    DEFAULT_CF = 'config/default.yaml'
     ATTACKS = [AttackLoader.HSJ, AttackLoader.ZOO]
     CLASSIFIERS = [ClsLoader.XGB, ClsLoader.DNN]
     VALIDATORS = [Validator.NB15, Validator.IOT23]
 
-    def __init__(self, uuid, **kwargs):
+    def __init__(self, uuid, config_obj, **kwargs):
         self.uuid = uuid
         self.start_time = 0
         self.end_time = 0
@@ -138,8 +139,10 @@ class Experiment:
         self.mask_cols = []
         self.attr_ranges = {}
         self.stats = Experiment.Result()
-        config_keys = ",".join(kwargs.keys())
-        self.config = namedtuple('exp', config_keys)(**kwargs)
+        config_keys = ",".join(
+            list(kwargs.keys()) + list(config_obj.keys()))
+        self.config = (namedtuple('exp', config_keys)
+                       (**kwargs, **config_obj))
 
     @property
     def n_records(self) -> int:
@@ -168,6 +171,10 @@ class Experiment:
                 if f.startswith(match)]
         return prev[0] if len(prev) > 0 else None
 
+    def custom_config(self, key):
+        return getattr(self.config, key) \
+            if key and hasattr(self.config, key) else None
+
     def load_csv(self, ds_path: str, n_splits: int):
         self.attrs, rows = utility.read_dataset(ds_path)
         self.X = rows[:, :-1]
@@ -180,6 +187,36 @@ class Experiment:
             col_values = list(np.unique(self.X[:, col_i]))
             if set(col_values).issubset({0, 1}):
                 self.mask_cols.append(col_i)
+
+    def run(self):
+        config, prev = self.config, self.is_repeat
+        if config.resume and prev:
+            return print('Saved result to', prev)
+        self.load_csv(config.dataset, config.folds)
+        cls_args = (config.cls, config.out, self.attrs, self.y,
+                    config.robust, self.mask_cols, self.attr_ranges,
+                    self.custom_config(config.cls))
+        atk_args = (config.attack, config.validator, self.uuid,
+                    config.capture, config.iter, config.silent,
+                    self.custom_config(config.attack))
+        self.cls = ClsLoader.init(*cls_args)
+        self.attack = AttackLoader.load(*atk_args) \
+            if config.attack else None
+        self.log_experiment_setup()
+
+        if config.validator:
+            Validator.validate_dataset(
+                config.validator, config.dataset)
+
+        self.start_time = time.time_ns()
+        for i, fold in enumerate(self.folds):
+            self.exec_fold(i + 1, fold)
+            self.cls.cleanup()
+            gc.collect()
+        self.end_time = time.time_ns()
+        self.log_experiment_result()
+        self.save_result()
+        self.cleanup()
 
     def exec_fold(self, fold_num: int, fold_indices: List[int]):
         self.cls.reset() \
@@ -202,34 +239,6 @@ class Experiment:
                 self.stats.append_attack(self.attack)
                 gc.collect()
                 self.log_fold_attack(n + 1, self.config.sample_times)
-
-    def run(self):
-        config, prev = self.config, self.is_repeat
-        if config.resume and prev:
-            return print('Saved result to', prev)
-        self.load_csv(config.dataset, config.folds)
-        cls_args = (config.cls, config.out, self.attrs, self.y,
-                    config.robust, self.mask_cols, self.attr_ranges)
-        atk_args = (config.attack, config.validator, self.uuid,
-                    config.capture, config.iter, config.silent)
-        self.cls = ClsLoader.init(*cls_args)
-        self.attack = AttackLoader.load(*atk_args) \
-            if config.attack else None
-        self.log_experiment_setup()
-
-        if config.validator:
-            Validator.validate_dataset(
-                config.validator, config.dataset)
-
-        self.start_time = time.time_ns()
-        for i, fold in enumerate(self.folds):
-            self.exec_fold(i + 1, fold)
-            self.cls.cleanup()
-            gc.collect()
-        self.end_time = time.time_ns()
-        self.log_experiment_result()
-        self.save_result()
-        self.cleanup()
 
     def log_experiment_setup(self):
         Show('Dataset', self.config.dataset)
@@ -261,11 +270,14 @@ class Experiment:
         if n_total > 1:
             print('-' * 5)
         if n_total > 1:
-            Show('Sampling round', f'{sample_n}/{self.config.sample_times}')
+            Show('Sampling round',
+                 f'{sample_n}/{self.config.sample_times}')
         if self.attack:
-            Ratio('Evasions', self.attack.n_evasions, self.attack.n_records)
+            Ratio('Evasions', self.attack.n_evasions,
+                  self.attack.n_records)
             if self.attack.use_validator:
-                Ratio('Valid', self.attack.n_valid, self.attack.n_evasions)
+                Ratio('Valid', self.attack.n_valid,
+                      self.attack.n_evasions)
             if self.attack.has_evasions:
                 Show('Class labels',
                      utility.dump_num_dict(self.attack.label_stats))
@@ -280,9 +292,11 @@ class Experiment:
         Show('Avg. Recall', f'{(self.stats.recall * 100):.2f} %')
         Show('Avg. F-score', f'{(self.stats.f_score * 100):.2f} %')
         if self.attack:
-            Ratio('Evasions', self.stats.n_evasions, self.stats.n_records)
+            Ratio('Evasions', self.stats.n_evasions,
+                  self.stats.n_records)
             if self.attack.use_validator:
-                Ratio('Valid', self.stats.n_valid, self.stats.n_evasions)
+                Ratio('Valid', self.stats.n_valid,
+                      self.stats.n_evasions)
         Show('Time', "{0} min {1:.2f} s".format(*self.duration))
 
     def to_dict(self) -> dict:

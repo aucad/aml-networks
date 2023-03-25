@@ -32,12 +32,27 @@ class NeuralNetwork(Classifier):
 
     def __init__(self, *args):
         super().__init__('neural_network', *args)
-        self.epochs = 80
-        self.bsz = 64  # batch size
 
     @staticmethod
     def formatter(x, y):
         return x
+
+    def __c_key(self, key):
+        return self.cls_conf[key] if key in self.cls_conf else {}
+
+    def __model(self, key):
+        m = self.__c_key('model')
+        return m[key] if key in m else None
+
+    def __m_train(self, key=None):
+        m = self.__c_key('model_fit')
+        return m if not key else (m[key] if key in m else None)
+
+    def dnn_config(self):
+        lrs = self.__model('layers') or \
+              [60 for _ in range(max(1, len(self.mutable) // 4))]
+        bs = gcd(self.n_train, (self.__m_train('batch_size') or 64))
+        return lrs, {'epochs': 80, **self.__m_train(), 'batch_size': bs}
 
     def predict(self, data):
         tmp = self.model.predict(data)
@@ -48,15 +63,10 @@ class NeuralNetwork(Classifier):
         self.classifier = cls
         self.model = cls.model
 
-    @property
-    def model_fit_kwargs(self):
-        return {'callbacks': [EarlyStopping(monitor='loss', patience=5)],
-                'shuffle': True, 'verbose': False}
-
     def init_classifier(self):
         """Trains a deep neural network classifier."""
-        n_layers = max(1, len(self.mutable) // 4)
-        layers = [Dense(60, activation='relu') for _ in range(n_layers)] + \
+        layers, args = self.dnn_config()
+        layers = [Dense(v, activation='relu') for v in layers] + \
                  [Dense(self.n_classes, activation='softmax')]
         model = tf.keras.models.Sequential(layers)
         model.compile(
@@ -64,9 +74,9 @@ class NeuralNetwork(Classifier):
             loss=SparseCategoricalCrossentropy(),
             metrics=[SparseCategoricalAccuracy()])
         model.fit(
-            self.train_x, self.train_y, epochs=self.epochs,
-            batch_size=gcd(self.bsz, self.n_train),
-            **self.model_fit_kwargs)
+            self.train_x, self.train_y,
+            shuffle=True, verbose=False, **args,
+            callbacks=[EarlyStopping(monitor='loss', patience=5)])
         return KerasClassifier(model=model, clip_values=(0, 1))
 
     def init_robust(self):
@@ -77,7 +87,7 @@ class NeuralNetwork(Classifier):
         trainer = AdversarialTrainer(
             # Model to train adversarially
             classifier=robust_classifier,
-            # Attacks to use for data augmentation in adversarial training
+            # Attacks to use for data augmentation
             attacks=attack,
             # Proportion of samples to be replaced with adversarial
             # counterparts. Value 1 trains only on adversarial samples.

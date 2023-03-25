@@ -29,8 +29,8 @@ T_ROBUST := --robust
 F_ROBUST :=
 
 ALWAYS := --resume
-IOT_OPTIONS := --validator IOT23
-NB_OPTIONS := --validator NB15
+IOT_OPTIONS := --validator IOT23 --config config/iot.yaml
+NB_OPTIONS := --validator NB15 --config config/unsw.yaml
 
 DS_1 := -d ./data/CTU.csv $(IOT_OPTIONS)
 DS_2 := -d ./data/nb15.csv $(NB_OPTIONS)
@@ -47,7 +47,7 @@ sample:
 	@$(foreach i, $(ITERS), $(foreach c, $(CLS), $(foreach r, $(ROBUST), \
 	$(foreach attack, $(ATTACKS), \
 	python3 -m src experiment $(ALWAYS) -a $(attack) $(DS_2) $($(r)) \
-		--iter 0 -s 50 -t 3  -c $(c) ; ))))
+		--iter 0 -s 50 -t 3 -c $(c) ; ))))
 
 fast:
 	@$(foreach r, $(ROBUST), $(foreach c, $(CLS), $(foreach attack, $(ATTACKS), \

@@ -70,6 +70,7 @@ class XgBoost(Classifier):
                 # try silence most console output
                 'verbose_eval': False,
                 'silent': True,
+                **self.cls_conf
             })
         sys.stdout = sys.__stdout__  # re-enable print
 
