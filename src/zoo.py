@@ -24,51 +24,52 @@ class Zoo(Attack):
         Arguments:
             iters - number of maximum iterations
         """
-        self.adv_x = ZooAttack(
+        self.adv_x = ZooAttack(**{
             # A trained classifier
-            classifier=self.cls.classifier,
+            'classifier': self.cls.classifier,
             # Confidence of adversarial examples: a higher value
             # produces examples that are farther away, from the
             # original input, but classified with higher confidence
             # as the target class.
-            confidence=0.5,
+            'confidence': 0.5,
             # Should the attack target one specific class
             # this doesn't matter in a binary problem!
-            targeted=False,
+            'targeted': False,
             # The initial learning rate for the attack algorithm.
             # Smaller values produce better results but are slower to
             # converge.
-            learning_rate=1e-1,
+            'learning_rate': 1e-1,
             # The maximum number of iterations.
-            max_iter=iters,
+            'max_iter': iters,
             # Number of times to adjust constant with binary search
             # (positive value).
-            binary_search_steps=10,
+            'binary_search_steps': 10,
             # The initial trade-off constant c to use to tune the
             # relative importance of distance and confidence. If
             # binary_search_steps is large, the initial constant is not
             # important, as discussed in Carlini and Wagner (2016).
-            initial_const=1e-3,
+            'initial_const': 1e-3,
             # True if gradient descent should be abandoned when it gets
             # stuck.
-            abort_early=True,
+            'abort_early': True,
             # True if to use the resizing strategy from the paper:
             # first, compute attack on inputs resized to 32x32,
             # then increase size if needed to 64x64, followed by
             # 128x128.
-            use_resize=False,
+            'use_resize': False,
             # True if to use importance sampling when choosing
             # coordinates to update.
-            use_importance=False,
+            'use_importance': False,
             # Number of coordinate updates to run in parallel.
-            nb_parallel=5,
+            'nb_parallel': 5,
             # Internal size of batches on which adversarial samples are
             # generated. Only size 1 is supported.
-            batch_size=1,
+            'batch_size': 1,
             # Step size for numerical estimation of derivatives.
-            variable_h=0.8,
+            'variable_h': 0.8,
             # Show progress bar.
-            verbose=not self.silent) \
+            'verbose': not self.silent,
+            **self.attack_conf}) \
             .generate(x=self.ori_x)
         if not self.silent:
             utility.clear_one_line()

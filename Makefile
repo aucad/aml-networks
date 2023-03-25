@@ -29,8 +29,8 @@ T_ROBUST := --robust
 F_ROBUST :=
 
 ALWAYS := --resume
-IOT_OPTIONS := --validator IOT23
-NB_OPTIONS := --validator NB15
+IOT_OPTIONS := --validator IOT23 --config config/iot.yaml
+NB_OPTIONS := --validator NB15 --config config/unsw.yaml
 
 DS_1 := -d ./data/CTU.csv $(IOT_OPTIONS)
 DS_2 := -d ./data/nb15.csv $(NB_OPTIONS)

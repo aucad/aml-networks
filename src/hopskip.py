@@ -37,27 +37,28 @@ class HopSkip(Attack):
     def generate_adv_examples(
             self, iters: int, x: np.array, mask: np.array):
         """Create attack instance."""
-        self.adv_x = ARTHopSkipJump(
+        self.adv_x = ARTHopSkipJump(**{
             # a trained classifier
-            classifier=self.cls.classifier,
-            # size of the batch used by the estimator during inference.
-            batch_size=64,
-            # should the attack target one specific class.
-            targeted=False,
-            # Order of the norm. Possible values: "inf", np.inf or 2.
-            norm=2,
+            'classifier': self.cls.classifier,
             # Maximum number of iterations.
-            max_iter=iters,
+            'max_iter': iters,
+            # Show progress bars
+            'verbose': not self.silent,
+            # size of the batch used by the estimator during inference.
+            'batch_size': 64,
+            # should the attack target one specific class.
+            'targeted': False,
             # Maximum number of evaluations for estimating gradient.
-            max_eval=1000,
+            'max_eval': 1000,
             # Initial number of evaluations for estimating gradient.
-            init_eval=100,
+            'init_eval': 100,
             # Maximum number of trials for initial generation of
             # adversarial examples.
-            init_size=100,
-            # Show progress bars
-            verbose=not self.silent
-        ).generate(x_adv_init=None, x=x, mask=np.array(mask))
+            'init_size': 100,
+            # Order of the norm. Possible values: "inf", np.inf or 2.
+            'norm': 2,
+            **self.attack_conf}) \
+            .generate(x_adv_init=None, x=x, mask=np.array(mask))
         if not self.silent:
             utility.clear_one_line()
 

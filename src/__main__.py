@@ -16,8 +16,10 @@ python -m src --help
 
 """
 import logging
+import yaml
 
 from argparse import ArgumentParser
+from pathlib import Path
 from sys import exit
 from typing import Optional, List
 
@@ -54,7 +56,12 @@ def main():
             args.validator, args.dataset, args.capture, args.out)
 
     if is_exp:
-        Experiment(utility.ts_str(), **args.__dict__).run()
+        df_args = yaml.safe_load(
+            Path(Experiment.DEFAULT_CF).read_text())
+        ex_args = yaml.safe_load(
+            Path(args.config).read_text()) if args.config else {}
+        c_args = {**df_args, **ex_args}
+        Experiment(utility.ts_str(), c_args, **args.__dict__).run()
 
 
 def init_logger(level: int, fn: str = None):
@@ -181,6 +188,12 @@ def exp_args(parser: ArgumentParser):
         "--silent",
         action='store_true',
         help="disable console log"
+    )
+    parser.add_argument(
+        '--config',
+        action="store",
+        default=None,
+        help=f'path to config file  [default: None]',
     )
 
 

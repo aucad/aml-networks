@@ -10,7 +10,8 @@ from src import Classifier, Validator, utility
 class Attack:
     """Attack base class defines common functionality"""
 
-    def __init__(self, name, def_iter, validator, uuid, save, iters, silent):
+    def __init__(self, name, def_iter, validator, uuid, save, iters,
+                 silent, attack_conf):
         self.uuid = uuid
         self.name = name
         self.validator_kind = validator
@@ -26,6 +27,7 @@ class Attack:
         self.valid_result = None
         self.validation_reasons = None
         self.reset()
+        self.attack_conf = attack_conf or {}
 
     def reset(self):
         self.cls = None
@@ -96,7 +98,8 @@ class Attack:
     def label_stats(self) -> dict:
         labels = []
         if self.use_validator and self.n_valid > 0:
-            labels = self.adv_y[self.idx_valid_evades].flatten().tolist()
+            labels = self.adv_y[
+                self.idx_valid_evades].flatten().tolist()
         elif self.n_evasions > 0:
             labels = self.adv_y[self.evasions].flatten().tolist()
         return dict([(self.cls.text_label(c), labels.count(c))
@@ -106,7 +109,8 @@ class Attack:
         if not self.use_validator:
             return {}
         labels = [Validator.determine_proto(
-            self.validator_kind, self.cls.attrs, r).name for r in records]
+            self.validator_kind, self.cls.attrs, r).name for r in
+                  records]
         return dict(Counter(labels))
 
     def set_cls(self, cls: Classifier, indices=None):

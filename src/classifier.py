@@ -4,7 +4,8 @@ import numpy as np
 class Classifier:
 
     def __init__(
-            self, name, out, attrs, y, robust, mask_cols, attr_ranges
+            self, name, out, attrs, y, robust, mask_cols, attr_ranges,
+            cls_conf
     ):
         self.name = name
         self.out_dir = out
@@ -26,6 +27,7 @@ class Classifier:
         self.n_pred_pos = 0
         self.n_true_p = 0
         self.reset()
+        self.cls_conf = cls_conf or {}
 
     def reset(self):
         self.classifier = None
