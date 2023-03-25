@@ -122,19 +122,18 @@ class ResultsPlot:
             vld = record[rarr('n_valid')]
             fs = record[rarr('f_score')]
             ac = record[rarr('accuracy')]
-            nr = smean(record[rarr('n_records')])
-            ne = smean(record[rarr('n_evasions')])
-            nv = sum(vld) if ne > 0 else 0
+            nr = sum(record[rarr('n_records')])
+            ne = sum(record[rarr('n_evasions')])
             bm = sum([r['benign'] for r in lbl])
-            av_ev = round(sdiv(ne, nr), 2)
-            bl = sdiv(bm, nv)
+            evades = sdiv(ne, nr)
+            does_evade = evades >= 0.005
+            valid, bl = sdiv(sum(vld), ne), sdiv(bm, ne)
             return ResultsPlot.std_cols(record) + [
                 f"{round(mean(fs), 2)} ± {round(stdev(fs), 2)}",
                 f"{round(mean(ac), 2)} ± {round(stdev(ac), 2)}",
-                av_ev,
-                round(sdiv(smean(vld), ne), 2) if av_ev > 0 else 0,
-                f"{100 * bl:.0f}--{100 * (1. - bl):.0f}"
-                if av_ev > 0 else 0]
+                round(evades, 2),
+                round(valid, 2) if does_evade else 0,
+                f"{100 * bl:.0f}--{100 * (1. - bl):.0f}" if does_evade else '--']
 
         h = ["F-score", "Accuracy", "Evade", "Valid", "B / M"]
         mat = [extract_values(record) for record in self.raw_rata]
