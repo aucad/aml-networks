@@ -193,7 +193,7 @@ def exp_args(parser: ArgumentParser):
         '--config',
         action="store",
         default=None,
-        help=f'path to config file  [default: None]',
+        help='path to config file  [default: None]',
     )
 
 

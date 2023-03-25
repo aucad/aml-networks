@@ -133,7 +133,8 @@ class ResultsPlot:
                 f"{round(mean(ac), 2)} ± {round(stdev(ac), 2)}",
                 round(evades, 2),
                 round(valid, 2) if does_evade else 0,
-                f"{100 * bl:.0f}--{100 * (1. - bl):.0f}" if does_evade else '--']
+                f"{100 * bl:.0f}--{100 * (1. - bl):.0f}"
+                if does_evade else '--']
 
         h = ["F-score", "Accuracy", "Evade", "Valid", "B / M"]
         mat = [extract_values(record) for record in self.raw_rata]
