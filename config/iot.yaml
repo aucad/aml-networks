@@ -1,12 +1,3 @@
-zoo:
-  confidence: 0.25
-  learning_rate: 0.1
-  binary_search_steps: 10
-  initial_const: 0.001
-  abort_early: True
-  use_resize: False
-  use_importance: False
-  variable_h: 0.05
 dnn:
   model:
     layers: [ 60 ]
