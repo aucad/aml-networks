@@ -1,17 +1,14 @@
-# Adversarial Machine Learning in NIDSs
+# Adversarial Machine Learning in Network Intrusion Detection Systems
 
-This repository implements an **evaluation pipeline** to measure success rate of adversarial machine learning evasion
-attacks in network intrusion detection systems (NIDS). It involves evaluation of select classifiers — trained on network
-data sets of benign and malicious traffic flows — against adversarial black-box attacks, and with/out defenses. The
-currently supported classifiers are: Keras deep neural network, and a tree-based ensemble learner XGBoost. Both
-classifiers can be enhanced with an adversarial robustness during the training phase.
+This repository implements an **evaluation pipeline** to measure success rate of adversarial machine learning evasion attacks in network intrusion detection systems (NIDS). 
 
-This repository provides an implementation to perform various experiments in the specified setting. Instructions for
-running pre-defined experiments, and extended custom usage, is explained in ["Usage" section](#usage) below.
+It involves evaluation of select classifiers — trained on network data sets of benign and malicious traffic flows — against adversarial black-box attacks, and with/out defenses. The currently supported classifiers are: Keras deep neural network, and a tree-based ensemble learner XGBoost. Both classifiers can be enhanced with an adversarial robustness during the training phase.
 
-## Setup
+This repository provides an implementation to perform various experiments in the specified setting. Instructions for running pre-defined experiments, and extended custom usage, is explained in ["Usage" section](#usage) below.
 
-These steps explain how to run this software from source.
+## Getting Started
+
+These steps explain how to build and run experiments from source.
 
 - :snake: **Required** Python environment: 3.8 or 3.9
 
@@ -69,30 +66,38 @@ This application is intended for use over command line interface (CLI). There ar
 | `plot`       | Generates tables from captured experiment results                                        |
 | `validate`   | Check a data set for network protocol correctness                                        |
 
-### Quick start: Predefined experiments
+### Quick start: Predefined Experiments
 
-* `make all`
+```
+make all
+```
 
-  This experiment uses full cross-validation holdout set and repeats experiments for different max iterations. Max
-  iterations can be customized by appending to the command `ITERS="n0 … nk"`, e.g., `ITERS="5 20 0"`. Value `0` means
-  attack default max iterations, and it varies by attack.
+This experiment uses full cross-validation holdout set and repeats experiments for different max iterations. Max
+iterations can be customized by appending to the command `ITERS="n0 … nk"`, e.g., `ITERS="5 20 0"`. Value `0` means
+attack default max iterations, and it varies by attack.
 
-* `make sample`
+```
+make sample
+```
 
-  Perform experiments on _limited input size_, by randomly sampling records of the holdout set. The sample size can be
-  customized by appending to the command `SAMPLE=m TIMES=n`, where `m` is the number of records to use and `n` is the
-  number of times to repeat the sampling. The result is reported as the average of `n` runs.
+Perform experiments on _limited input size_, by randomly sampling records of the holdout set. The sample size can be
+customized by appending to the command `SAMPLE=m TIMES=n`, where `m` is the number of records to use and `n` is the
+number of times to repeat the sampling. The result is reported as the average of `n` runs.
 
-* `make fast`
+```
+make fast
+```
 
-  This option runs a quick experiment, for a configuration of sampled records and a low iteration count. 
-  These parameters are fixed: it does not accept arguments like the two experiments above.
+This option runs a quick experiment, for a configuration of sampled records and a low iteration count. 
+These parameters are fixed: it does not accept arguments like the two experiments above.
 
-* `make plot`
+```
+make plot
+```
 
-  Plot results of a previously performed experiment. 
+Plot results of a previously performed experiment. 
 
-### Additional Custom Experiments
+### Configuring Additional Experiments
 
 Other custom experiments can be defined by constructing appropriate CLI commands.
 
