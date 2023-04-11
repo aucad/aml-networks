@@ -1,4 +1,4 @@
-# Adversarial Machine Learning in Network Intrusion Detection Systems
+# Adversarial Machine Learning in NIDSs
 
 This repository implements an **evaluation pipeline** to measure success rate of adversarial machine learning evasion
 attacks in network intrusion detection systems (NIDS). It involves evaluation of select classifiers — trained on network
