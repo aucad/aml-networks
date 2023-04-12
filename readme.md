@@ -2,9 +2,9 @@
 
 This repository implements an **evaluation pipeline** to measure success rate of adversarial machine learning evasion attacks in network intrusion detection systems (NIDS). 
 
-It involves evaluation of select classifiers — trained on network data sets of benign and malicious traffic flows — against adversarial black-box attacks, and with/out defenses. The currently supported classifiers are: Keras deep neural network, and a tree-based ensemble learner XGBoost. Both classifiers can be enhanced with an adversarial robustness during the training phase.
+It involves evaluation of select classifiers — trained on network data sets of benign and malicious traffic flows — against adversarial black-box attacks, and with/out defenses. The currently supported classifiers are: Keras deep neural network, and a tree-based ensemble learner XGBoost. Both classifiers can be enhanced with an adversarial defense during training phase.
 
-This repository provides an implementation to perform various experiments in the specified setting. Instructions for running pre-defined experiments, and extended custom usage, is explained in ["Usage" section](#usage) below.
+This repository provides an implementation to perform various experiments in the specified setting. Instructions for running pre-defined experiments, and extended custom usage, is explained in [Usage section](#usage) below.
 
 ## Getting Started
 
@@ -14,6 +14,9 @@ These steps explain how to build and run experiments from source.
 
 - :warning: **Submodule** This repository has a submodule. Clone it, including the submodule
   [(instructions)](https://stackoverflow.com/a/4438292).
+
+This implementation is not compatible with Apple M1 chip hosts due to a dependency. Use a machine with x86 architecture.
+
 
 **Datasets**: we consider two network traffic captures:
 
@@ -68,6 +71,9 @@ This application is intended for use over command line interface (CLI). There ar
 
 ### Quick start: Predefined Experiments
 
+
+**Full evaluation**
+
 ```
 make all
 ```
@@ -75,7 +81,9 @@ make all
 This experiment uses full cross-validation holdout set and repeats experiments for different max iterations. Max
 iterations can be customized by appending to the command `ITERS="n0 … nk"`, e.g., `ITERS="5 20 0"`. Value `0` means
 attack default max iterations, and it varies by attack. 
-<br/>:warning: Running this experiment on 8 core/32 GB RAM Linux box takes 24 h.
+<br/>:warning: Running this experiment on 8 core/32 GB RAM Linux machine takes 24 h.
+
+**Random sample of limited input**
 
 ```
 make sample
@@ -84,11 +92,15 @@ make sample
 Perform experiments on _limited input size_, by randomly sampling records of the holdout set. The sample size can be
 customized by appending to the command `SAMPLE=m TIMES=n`, where `m` is the number of records to use and `n` is the
 number of times to repeat the sampling. The result is reported as the average of `n` runs.
-<br/>:warning: Running this experiment on 8 core/32 GB RAM Linux box takes ~90 minutes.
+<br/>:warning: Running this experiment on 8 core/32 GB RAM Linux machine takes ~90 minutes.
+
+**Run a "quick" experiment**
 
 ```
 make fast
 ```
+
+**Plot results**
 
 This option runs a quick experiment, for a configuration of sampled records and a low iteration count. 
 These parameters are fixed: it does not accept arguments like the two experiments above.
