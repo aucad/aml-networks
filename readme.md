@@ -100,10 +100,10 @@ number of times to repeat the sampling. The result is reported as the average of
 make fast
 ```
 
-**Plot results**
-
 This option runs a quick experiment, for a configuration of sampled records and a low iteration count. 
 These parameters are fixed: it does not accept arguments like the two experiments above.
+
+**Plot results**
 
 ```
 make plot
