@@ -1,4 +1,4 @@
-# Adversarial Machine Learning in Network Intrusion Detection Systems
+# Adversarial Machine Learning in NIDS
 
 This repository implements an **evaluation pipeline** to measure success rate of adversarial machine learning evasion attacks in network intrusion detection systems (NIDS). 
 
@@ -74,7 +74,8 @@ make all
 
 This experiment uses full cross-validation holdout set and repeats experiments for different max iterations. Max
 iterations can be customized by appending to the command `ITERS="n0 … nk"`, e.g., `ITERS="5 20 0"`. Value `0` means
-attack default max iterations, and it varies by attack.
+attack default max iterations, and it varies by attack. 
+<br/>:warning: Running this experiment on 8 core/32 GB RAM Linux box takes 24 h.
 
 ```
 make sample
@@ -83,6 +84,7 @@ make sample
 Perform experiments on _limited input size_, by randomly sampling records of the holdout set. The sample size can be
 customized by appending to the command `SAMPLE=m TIMES=n`, where `m` is the number of records to use and `n` is the
 number of times to repeat the sampling. The result is reported as the average of `n` runs.
+<br/>:warning: Running this experiment on 8 core/32 GB RAM Linux box takes ~90 minutes.
 
 ```
 make fast
