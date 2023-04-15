@@ -10,6 +10,7 @@ from statistics import mean, stdev
 
 # noinspection PyPackageRequirements
 import numpy as np
+# noinspection PyPackageRequirements
 import pandas as pd
 from pytablewriter import SpaceAlignedTableWriter, LatexTableWriter
 
@@ -120,8 +121,6 @@ class ResultsPlot:
         def extract_values(record):
             lbl = record[rarr('labels')]
             vld = record[rarr('n_valid')]
-            fs = record[rarr('f_score')]
-            ac = record[rarr('accuracy')]
             nr = sum(record[rarr('n_records')])
             ne = sum(record[rarr('n_evasions')])
             bm = sum([r['benign'] for r in lbl])
@@ -129,14 +128,12 @@ class ResultsPlot:
             does_evade = evades >= 0.005
             valid, bl = sdiv(sum(vld), ne), sdiv(bm, ne)
             return ResultsPlot.std_cols(record) + [
-                f"{round(mean(fs), 2)} ± {round(stdev(fs), 2)}",
-                f"{round(mean(ac), 2)} ± {round(stdev(ac), 2)}",
                 round(evades, 2),
                 round(valid, 2) if does_evade else 0,
                 f"{100 * bl:.0f}--{100 * (1. - bl):.0f}"
                 if does_evade else '--']
 
-        h = ["F-score", "Accuracy", "Evade", "Valid", "B / M"]
+        h = ["Evade", "Valid", "B / M"]
         mat = [extract_values(record) for record in self.raw_rata]
         return self.std_hd + h, mat
 
@@ -231,7 +228,7 @@ def plot_results(directory, fmt):
     res.write_table(
         *res.proto_table(), 'table_proto',
         sorter=lambda x: (x[0], x[2], x[3], x[1], x[4]))
-    res.write_table(
-        *res.reasons_table(), 'table_reasons',
-        sorter=lambda x: (x[0], x[1], x[2], -x[4]))
+    # res.write_table(
+    #     *res.reasons_table(), 'table_reasons',
+    #     sorter=lambda x: (x[0], x[1], x[2], -x[4]))
     res.show_duration()

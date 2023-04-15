@@ -79,8 +79,8 @@ make plot
 
 Plot results of a previously performed experiment. 
 By default, the plot data source is `output` directory. 
-To plot some other directory append `RES_DIR` to the command,
-e.g. `RES_DIR=ref_result/all`.
+To plot some other directory append `RESDIR` to the command,
+e.g. `make plot RESDIR=ref_result/all`.
 
 ## Usage: Running Custom Experiments
 
