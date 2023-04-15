@@ -36,12 +36,15 @@ The container has all environment dependencies pre-configured.
 docker build -t aml-networks .
 ```
 
-**Launch the container** add output directory to persist experiment results
+**Create output directory** to persist experiment results
 
 ```
-# create directory for experiment results
 mkdir output
+```
 
+**Launch the container** mount the output directory
+
+```
 # Launch the container
 docker run -v $(pwd)/output:/aml-networks/output -it --rm aml-networks /bin/bash
 ```
