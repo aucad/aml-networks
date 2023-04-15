@@ -30,26 +30,25 @@ running pre-defined experiments, and extended custom usage, is explained below.
 The easiest way to run various experiments is using a [Docker](https://docs.docker.com/engine/install/) container.
 The container has all environment dependencies pre-configured.
 
-**Build a container** make sure to include the dot
+1. **Build a container** make sure to include the dot
 
-```
-docker build -t aml-networks .
-```
+    ```
+    docker build -t aml-networks .
+    ```
 
-**Create output directory** to persist experiment results
+2. **Create output directory** to persist experiment results
 
-```
-mkdir output
-```
+    ```
+    mkdir output
+    ```
 
-**Launch the container** mount the output directory
+3. **Launch the container** mount the output directory
 
-```
-# Launch the container
-docker run -v $(pwd)/output:/aml-networks/output -it --rm aml-networks /bin/bash
-```
+    ```
+    docker run -v $(pwd)/output:/aml-networks/output -it --rm aml-networks /bin/bash
+    ```
 
-Once the container is running, you are ready to run experiments, as explained in the next section.
+The container is now ready to run experiments as explained in the next section.
 
 ## Usage: Run Predefined Experiments
 
