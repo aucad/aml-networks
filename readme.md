@@ -59,7 +59,7 @@ make all
 ```
 
 This experiment uses full cross-validation holdout set and repeats experiments for different max iterations. Max
-iterations can be customized by appending to the command `ITERS`, e.g., `ITERS="5 10 20"`.
+iterations can be customized by appending to the command e.g., `ITERS="5 10 20"`.
 
 **Random sample of limited input** :warning: ~ 90 min
 
@@ -68,8 +68,8 @@ make sample
 ```
 
 Perform experiments on _limited input size_, by randomly sampling records of the holdout set. The sample size can be
-customized by appending to the command `SAMPLE=m TIMES=n`, where `m` is the number of records to use and `n` is the
-number of times to repeat the sampling. The result is reported as the average of `n` runs.
+customized by appending to the command `SAMPLE=m TIMES=n`, where $m$ is the number of records to use and $n$ is the
+number of times to repeat the sampling. The result is reported as average.
 
 **Plot results** < 1 min
 
@@ -77,7 +77,9 @@ number of times to repeat the sampling. The result is reported as the average of
 make plot
 ```
 
-Plot results of a previously performed experiment.
+Plot results of a previously performed experiment. By default, the plot is of 
+results in output directory. To plot some other directory append `RES_DIR=some_path`
+to the command.
 
 ## Usage: Running Custom Experiments
 
