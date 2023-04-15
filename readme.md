@@ -14,7 +14,7 @@ running pre-defined experiments, and extended custom usage, is explained below.
 
 - `config`     — Experiment configuration files              
 - `data`       — Preprocessed data sets ready for experiments
-- `ref_result` — Referential result, for comparison          
+- `ref_result` — Referential result for comparison          
 - `src`        — Implementation source code                  
 
 **Datasets**: we consider two network traffic captures:
@@ -48,17 +48,7 @@ docker run -v $(pwd)/output:/aml-networks/output -it --rm aml-networks /bin/bash
 
 Once the container is running, you are ready to run experiments, as explained in the next section.
 
-## Usage
-
-This application is intended for use over command line interface (CLI). There are three execution modes:
-
-| Mode         | Description                                                                              |
-|:-------------|:-----------------------------------------------------------------------------------------|
-| `experiment` | Trains a classifier and performs adversarial attack according to specified configuration |
-| `plot`       | Generates tables from captured experiment results                                        |
-| `validate`   | Check a data set for network protocol correctness                                        |
-
-### Quick start: Predefined Experiments
+## Usage: Running Predefined Experiments
 
 The runtime estimates are for 8-core/32 GB RAM Linux machine.
 
@@ -89,9 +79,17 @@ make plot
 
 Plot results of a previously performed experiment.
 
-### Custom Experiments
+## Usage: Running Custom Experiments
 
-Other custom experiments can be defined by constructing appropriate commands.
+This is a terminal application. There are three execution modes:
+
+| Mode         | Description                                                                              |
+|:-------------|:-----------------------------------------------------------------------------------------|
+| `experiment` | Trains a classifier and performs adversarial attack according to specified configuration |
+| `plot`       | Generates tables from captured experiment results                                        |
+| `validate`   | Check a data set for network protocol correctness                                        |
+
+Custom experiments can be defined by constructing appropriate commands.
 
 ```
 python3 -m src {experiment|plot|validate} [ARGS]
