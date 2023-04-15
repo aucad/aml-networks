@@ -1,10 +1,10 @@
 # Adversarial Machine Learning in NIDS
 
-This repository implements an **evaluation pipeline** to measure success rate of adversarial machine learning evasion attacks in network intrusion detection systems (NIDS). 
+This repository implements an evaluation infrastructure to measure success rate of adversarial machine learning evasion attacks in network intrusion detection systems (NIDS). 
 
-It involves evaluation of select classifiers — trained on network data sets of benign and malicious traffic flows — against adversarial black-box attacks, and with/out defenses. The currently supported classifiers are: Keras deep neural network, and a tree-based ensemble learner XGBoost. Both classifiers can be enhanced with an adversarial defense during training phase.
+It involves evaluation of classifiers — trained on network data sets of benign and malicious traffic flows — against adversarial black-box attacks. The currently supported classifiers are: Keras deep neural network, and a tree-based ensemble learner XGBoost. Both classifiers can be enhanced with an adversarial defense during training phase.
 
-This repository provides an implementation to perform various experiments in the specified setting. Instructions for running pre-defined experiments, and extended custom usage, is explained in [Usage section](#usage) below.
+This repository provides an implementation to perform various experiments in the specified setting. Instructions for running pre-defined experiments, and extended custom usage, is explained below.
 
 ## Getting Started
 
@@ -20,11 +20,9 @@ This implementation is not compatible with Apple M1 chip hosts due to a dependen
 
 **Datasets**: we consider two network traffic captures:
 
-1. [Aposemat IoT-23](https://www.stratosphereips.org/datasets-iot23/) is a labeled dataset with malicious and benign IoT
-   network traffic.
+1. [Aposemat IoT-23](https://www.stratosphereips.org/datasets-iot23/) is a labeled dataset with malicious and benign IoT network traffic.
 
-2. [UNSW-NB15](https://research.unsw.edu.au/projects/unsw-nb15-dataset) is a network intrusion dataset that contains
-   nine different attacks.
+2. [UNSW-NB15](https://research.unsw.edu.au/projects/unsw-nb15-dataset) is a network intrusion dataset that contains nine different attacks.
 
 Preprocessed and sampled data is included in `data/` directory.
 
@@ -79,9 +77,8 @@ make all
 ```
 
 This experiment uses full cross-validation holdout set and repeats experiments for different max iterations. Max
-iterations can be customized by appending to the command `ITERS="n0 … nk"`, e.g., `ITERS="5 20 0"`. Value `0` means
-attack default max iterations, and it varies by attack. 
-<br/>:warning: &nbsp; Running this experiment on 8 core/32 GB RAM Linux machine takes 24 h.
+iterations can be customized by appending to the command `ITERS`, e.g., `ITERS="5 10 20"`. 
+<br/>:warning: &nbsp; This experiment takes 24h on 8-core 32 GB RAM Linux machine.
 
 **Random sample of limited input**
 
