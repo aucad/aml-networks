@@ -4,8 +4,8 @@ This repository implements an evaluation infrastructure to measure success rate 
 attacks in network intrusion detection systems (NIDS).
 
 It involves evaluation of classifiers — trained on network data sets of benign and malicious traffic flows — against
-adversarial black-box attacks. The currently supported classifiers are: Keras deep neural network, and a tree-based
-ensemble learner XGBoost. Both classifiers can be enhanced with an adversarial defense during training phase.
+adversarial black-box attacks. The currently supported classifiers are Keras deep neural network, and a tree-based
+ensemble learner XGBoost. Both classifiers can be enhanced with an adversarial defense.
 
 This repository provides an implementation to perform various experiments in the specified setting. Instructions for
 running pre-defined experiments, and extended custom usage, is explained below.
@@ -52,7 +52,7 @@ Once the container is running, you are ready to run experiments, as explained in
 
 The runtime estimates are for 8-core/32 GB RAM Linux machine.
 
-**Full evaluation** :warning: ~ 24h
+**Full evaluation** ~ 24h
 
 ```
 make all
@@ -61,7 +61,7 @@ make all
 This experiment uses full cross-validation holdout set and repeats experiments for different max iterations. Max
 iterations can be customized by appending to the command e.g., `ITERS="5 10 20"`.
 
-**Random sample of limited input** :warning: ~ 90 min
+**Random sample of limited input** ~ 90 min
 
 ```
 make sample
@@ -69,7 +69,7 @@ make sample
 
 Perform experiments on _limited input size_, by randomly sampling records of the holdout set. The sample size can be
 customized by appending to the command `SAMPLE=m TIMES=n`, where $m$ is the number of records to use and $n$ is the
-number of times to repeat the sampling. The result is reported as average.
+number of times to repeat the sampling. The result is reported as average of $n$ runs.
 
 **Plot results** < 1 min
 
@@ -77,13 +77,14 @@ number of times to repeat the sampling. The result is reported as average.
 make plot
 ```
 
-Plot results of a previously performed experiment. By default, the plot is of 
-results in output directory. To plot some other directory append `RES_DIR=some_path`
-to the command.
+Plot results of a previously performed experiment. 
+By default, the plot data source is `output` directory. 
+To plot some other directory append `RES_DIR` to the command,
+e.g. `RES_DIR=ref_result/all`.
 
 ## Usage: Running Custom Experiments
 
-This is a terminal application. There are three execution modes:
+There are three execution modes:
 
 | Mode         | Description                                                                              |
 |:-------------|:-----------------------------------------------------------------------------------------|
