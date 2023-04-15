@@ -10,14 +10,12 @@ ensemble learner XGBoost. Both classifiers can be enhanced with an adversarial d
 This repository provides an implementation to perform various experiments in the specified setting. Instructions for
 running pre-defined experiments, and extended custom usage, is explained below.
 
-## Repository Organization
+**Repository Organization**
 
-| Directory  | Description                                  |
-|:-----------|:---------------------------------------------|
-| config     | Experiment configuration files               |
-| data       | Preprocessed data sets ready for experiments |
-| ref_result | Referential result, for comparison           |
-| src        | Implementation source code                   |
+- `config`     — Experiment configuration files              
+- `data`       — Preprocessed data sets ready for experiments
+- `ref_result` — Referential result, for comparison          
+- `src`        — Implementation source code                  
 
 **Datasets**: we consider two network traffic captures:
 
@@ -38,7 +36,7 @@ The container has all environment dependencies pre-configured.
 docker build -t aml-networks .
 ```
 
-**Launch the container**
+**Launch the container** - add output directory to persist experiment results
 
 ```
 # create directory for experiment results
@@ -62,7 +60,9 @@ This application is intended for use over command line interface (CLI). There ar
 
 ### Quick start: Predefined Experiments
 
-**Full evaluation**
+The runtime estimates are for 8-core/32 GB RAM Linux machine.
+
+**Full evaluation** :warning: ~ 24h
 
 ```
 make all
@@ -70,9 +70,8 @@ make all
 
 This experiment uses full cross-validation holdout set and repeats experiments for different max iterations. Max
 iterations can be customized by appending to the command `ITERS`, e.g., `ITERS="5 10 20"`.
-<br/>:warning: &nbsp; This experiment takes 24h on 8-core 32 GB RAM Linux machine.
 
-**Random sample of limited input**
+**Random sample of limited input** :warning: ~ 90 min
 
 ```
 make sample
@@ -81,18 +80,8 @@ make sample
 Perform experiments on _limited input size_, by randomly sampling records of the holdout set. The sample size can be
 customized by appending to the command `SAMPLE=m TIMES=n`, where `m` is the number of records to use and `n` is the
 number of times to repeat the sampling. The result is reported as the average of `n` runs.
-<br/>:warning: &nbsp; Running this experiment on 8 core/32 GB RAM Linux machine takes ~90 minutes.
 
-**Run a "quick" experiment**
-
-```
-make fast
-```
-
-This option runs a quick experiment, for a configuration of sampled records and a low iteration count.
-These parameters are fixed: it does not accept arguments like the two experiments above.
-
-**Plot results**
+**Plot results** < 1 min
 
 ```
 make plot
@@ -100,9 +89,9 @@ make plot
 
 Plot results of a previously performed experiment.
 
-### Configuring Additional Experiments
+### Custom Experiments
 
-Other custom experiments can be defined by constructing appropriate CLI commands.
+Other custom experiments can be defined by constructing appropriate commands.
 
 ```
 python3 -m src {experiment|plot|validate} [ARGS]
@@ -125,6 +114,8 @@ To see available options for the validator, run:
 ```
 python3 -m src validate --help
 ```
+
+---
 
 ## Development Setup and Running Natively on Host
 
