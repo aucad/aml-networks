@@ -3,9 +3,9 @@
 This repository implements an evaluation infrastructure to measure success rate of adversarial machine learning evasion
 attacks in network intrusion detection systems (NIDS).
 
-It involves evaluation of classifiers — trained on network data sets of benign and malicious traffic flows — against
-adversarial black-box attacks. The currently supported classifiers are Keras deep neural network, and a tree-based
-ensemble learner XGBoost. Both classifiers can be enhanced with an adversarial defense.
+It involves evaluation of classifiers — trained on network data sets of benign and malicious traffic flows — against 
+adversarial black-box attacks. Supported classifiers are Keras deep neural network, and a tree-based ensemble learner 
+XGBoost. Both classifiers can be enhanced with an adversarial defense.
 
 This repository provides an implementation to perform various experiments in the specified setting. Instructions for
 running pre-defined experiments, and extended custom usage, is explained below.
@@ -17,7 +17,7 @@ running pre-defined experiments, and extended custom usage, is explained below.
 - `ref_result` — Referential result for comparison          
 - `src`        — Implementation source code                  
 
-**Datasets**: we consider two network traffic captures:
+**Datasets**: 
 
 1. [Aposemat IoT-23](https://www.stratosphereips.org/datasets-iot23/) is a labeled dataset with malicious and benign IoT
    network traffic.
@@ -30,13 +30,13 @@ running pre-defined experiments, and extended custom usage, is explained below.
 The easiest way to run various experiments is using a [Docker](https://docs.docker.com/engine/install/) container.
 The container has all environment dependencies pre-configured.
 
-**Build a container** - make sure to include the dot
+**Build a container** make sure to include the dot
 
 ```
 docker build -t aml-networks .
 ```
 
-**Launch the container** - add output directory to persist experiment results
+**Launch the container** add output directory to persist experiment results
 
 ```
 # create directory for experiment results
@@ -48,7 +48,7 @@ docker run -v $(pwd)/output:/aml-networks/output -it --rm aml-networks /bin/bash
 
 Once the container is running, you are ready to run experiments, as explained in the next section.
 
-## Usage: Running Predefined Experiments
+## Usage: Run Predefined Experiments
 
 The runtime estimates are for 8-core/32 GB RAM Linux machine.
 
@@ -82,7 +82,7 @@ By default, the plot data source is `output` directory.
 To plot some other directory append `RESDIR` to the command,
 e.g. `make plot RESDIR=ref_result/all`.
 
-## Usage: Running Custom Experiments
+## Usage: Run Custom Experiments
 
 There are three execution modes:
 
@@ -130,7 +130,7 @@ You should also follow these steps to prepare a development environment.
 
 This implementation is not compatible with Apple M1 chip hosts due to a dependency. Use a machine with x86 architecture.
 
-### Step 1: Build robust XGBoost
+**Step 1: Build robust XGBoost**
 
 The evaluation uses a modified version of XGBoost classifier, enhanced with adversarial robustness property. This
 classifier is not installed with the other package dependencies. The XGBoost classifier must be built
@@ -139,7 +139,7 @@ the
 [instructions here](https://github.com/chenhongge/RobustTrees/tree/master/python-package#from-source) to build it from
 source.
 
-### Step 2: Install dependencies
+**Step 2: Install dependencies**
 
 Install required Python dependencies.
 
