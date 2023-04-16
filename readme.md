@@ -16,11 +16,10 @@ This repository provides an implementation to perform various experiments in thi
 - `ref_result` — Referential result for comparison          
 - `src`        — Implementation source code                  
 
-**Datasets**: 
+**Datasets**
 
-1. [Aposemat IoT-23](https://www.stratosphereips.org/datasets-iot23/) contains IoT network traffic.
-
-2. [UNSW-NB15](https://research.unsw.edu.au/projects/unsw-nb15-dataset) contains traditional network intrusion data.
+- [Aposemat IoT-23](https://www.stratosphereips.org/datasets-iot23/) contains IoT network traffic.
+- [UNSW-NB15](https://research.unsw.edu.au/projects/unsw-nb15-dataset) contains traditional network intrusion data.
 
 ## Getting Started
 
