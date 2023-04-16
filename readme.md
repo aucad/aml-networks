@@ -13,7 +13,7 @@ This repository provides an implementation to perform various experiments in thi
 
 - `config`     — Experiment configuration files              
 - `data`       — Preprocessed datasets ready for experiments
-- `ref_result` — Referential result for comparison          
+- `result`     — Referential result for comparison          
 - `src`        — Implementation source code                  
 
 **Datasets**
@@ -76,7 +76,7 @@ make plot
 ```
 
 Plot results of a previously performed experiment. The plot data source defaults to `output` directory. 
-To plot some other directory append `RESDIR` to the command, e.g. `make plot RESDIR=ref_result/all`.
+To plot some other directory append `RESDIR` to the command, e.g. `make plot RESDIR=result/all`.
 
 ## Run Custom Experiments
 
