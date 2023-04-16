@@ -4,11 +4,10 @@ This repository implements an evaluation infrastructure to measure success rate 
 attacks in network intrusion detection systems (NIDS).
 
 It involves evaluation of classifiers — trained on network data sets of benign and malicious traffic flows — against 
-adversarial black-box attacks. Supported classifiers are Keras deep neural network, and a tree-based ensemble learner 
-XGBoost. Both classifiers can be enhanced with an adversarial defense.
+adversarial black-box evasion attacks. Supported classifiers are Keras deep neural network, and a tree-based ensemble 
+learner XGBoost. Both classifiers can be enhanced with an adversarial defense.
 
-This repository provides an implementation to perform various experiments in the specified setting. Instructions for
-running pre-defined experiments, and extended custom usage, is explained below.
+This repository provides an implementation to perform various experiments in this specified setting. 
 
 **Repository Organization**
 
@@ -19,15 +18,13 @@ running pre-defined experiments, and extended custom usage, is explained below.
 
 **Datasets**: 
 
-1. [Aposemat IoT-23](https://www.stratosphereips.org/datasets-iot23/) is a labeled dataset with malicious and benign IoT
-   network traffic.
+1. [Aposemat IoT-23](https://www.stratosphereips.org/datasets-iot23/) contains IoT network traffic.
 
-2. [UNSW-NB15](https://research.unsw.edu.au/projects/unsw-nb15-dataset) is a network intrusion dataset that contains
-   nine different attacks.
+2. [UNSW-NB15](https://research.unsw.edu.au/projects/unsw-nb15-dataset) contains traditional network intrusion data.
 
 ## Getting Started
 
-The easiest way to run various experiments is using a [Docker](https://docs.docker.com/engine/install/) container.
+The easiest way to run these experiments is using [Docker](https://docs.docker.com/engine/install/).
 
 1. **Create output directory** to persist experiment results.
 
@@ -35,42 +32,43 @@ The easiest way to run various experiments is using a [Docker](https://docs.dock
     mkdir output
     ```
    
-2. **Build a container** make sure to include "." dot at the end.
+2. **Build a container**
 
     ```
     docker build -t aml-networks .
     ```
 
-3. **Launch the container** mount the output directory.
+3. **Launch the container**
 
     ```
     docker run -v $(pwd)/output:/aml-networks/output -it --rm aml-networks /bin/bash
     ```
 
-The container is now ready to run experiments as explained in the next section.
-
 ## Usage: Run Predefined Experiments
 
-The runtime estimates are for 8-core/32 GB RAM Linux machine.
+The runtime estimates are for 8-core/32 GB RAM Linux machine, actual time may vary.
 
-**Full evaluation** ~ 24h
+**Limited model queries** ~24h
 
 ```
-make all
+make query
 ```
 
-This experiment uses full cross-validation holdout set and repeats experiments for different max iterations. Max
-iterations can be customized by appending to the command e.g., `ITERS="5 10 20"`.
+This experiment uses full cross-validation holdout set and repeats experiments using different query limits. 
+By default, it will run attacks with limits 2 / 5 / default iterations. Query limits can be customized by appending 
+to the command e.g., `LIMIT="5 10 20"`.
 
-**Random sample of limited input** ~ 90 min
+**Random sampling of limited input** ~90 min
 
 ```
 make sample
 ```
 
-Perform experiments on _limited input size_, by randomly sampling records of the holdout set. The sample size can be
+Perform experiments on limited input size, by randomly sampling records of the holdout set. The sample size can be
 customized by appending to the command `SAMPLE=m TIMES=n`, where $m$ is the number of records to use and $n$ is the
-number of times to repeat the sampling. The result is reported as average of $n$ runs.
+number of times to repeat the sampling. The result is reported as average of $n$ runs. Model query limit is unset,
+(attack's default limit).
+
 
 **Plot results** < 1 min
 
@@ -78,10 +76,8 @@ number of times to repeat the sampling. The result is reported as average of $n$
 make plot
 ```
 
-Plot results of a previously performed experiment. 
-By default, the plot data source is `output` directory. 
-To plot some other directory append `RESDIR` to the command,
-e.g. `make plot RESDIR=ref_result/all`.
+Plot results of a previously performed experiment. By default the plot data source is `output` directory. 
+To plot some other directory append `RESDIR` to the command, e.g. `make plot RESDIR=ref_result/all`.
 
 ## Usage: Run Custom Experiments
 
@@ -119,10 +115,10 @@ python3 -m src validate --help
 
 ---
 
-## Development Setup and Running Natively on Host
+## Native Execution
 
-These steps explain how to run experiments from source.
-You should also follow these steps to prepare a development environment.
+These steps explain how to run experiments from source natively on host machine.
+You should also follow these steps, if you want to prepare a development environment and make code changes.
 
 - :snake: **Required** Python environment: 3.8 or 3.9
 
