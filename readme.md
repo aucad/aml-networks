@@ -25,27 +25,27 @@ This repository provides an implementation to perform various experiments in thi
 
 The easiest way to run these experiments is using [Docker](https://docs.docker.com/engine/install/).
 
-1. **Create output directory** to persist experiment results.
+1. **Create an output directory to persist experiment results.**
 
     ```
     mkdir output
     ```
    
-2. **Build a container**
+2. **Build a container.**
 
     ```
     docker build -t aml-networks .
     ```
 
-3. **Launch the container**
+3. **Launch the container.**
 
     ```
     docker run -v $(pwd)/output:/aml-networks/output -it --rm aml-networks /bin/bash
     ```
 
-## Usage: Run Predefined Experiments
+## Run Predefined Experiments
 
-The runtime estimates are for 8-core/32 GB RAM Linux machine, actual time may vary.
+The runtime estimates are for 8-core 32 GB RAM Linux machine, actual time may vary.
 
 :one: **Limited model queries** ~24h
 
@@ -78,7 +78,7 @@ make plot
 Plot results of a previously performed experiment. By default the plot data source is `output` directory. 
 To plot some other directory append `RESDIR` to the command, e.g. `make plot RESDIR=ref_result/all`.
 
-## Usage: Run Custom Experiments
+## Run Custom Experiments
 
 There are three execution modes:
 
