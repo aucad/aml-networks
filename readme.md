@@ -4,7 +4,7 @@ This repository implements an evaluation infrastructure to measure success rate 
 attacks in network intrusion detection systems (NIDS).
 
 It involves evaluation of classifiers — trained on network data sets of benign and malicious traffic flows — against 
-adversarial black-box evasion attacks. Supported classifiers are Keras deep neural network, and a tree-based ensemble 
+adversarial black-box evasion attacks. Supported classifiers are Keras deep neural network and a tree-based ensemble 
 learner XGBoost. Both classifiers can be enhanced with an adversarial defense.
 
 This repository provides an implementation to perform various experiments in this specified setting. 
@@ -75,18 +75,18 @@ meaning attack's default limit is used.
 make plot
 ```
 
-Plot results of a previously performed experiment. By default the plot data source is `output` directory. 
+Plot results of a previously performed experiment. The plot data source defaults to `output` directory. 
 To plot some other directory append `RESDIR` to the command, e.g. `make plot RESDIR=ref_result/all`.
 
 ## Run Custom Experiments
 
 There are three execution modes:
 
-| Mode         | Description                                                                              |
-|:-------------|:-----------------------------------------------------------------------------------------|
-| `experiment` | Trains a classifier and performs adversarial attack according to specified configuration |
-| `plot`       | Generates tables from captured experiment results                                        |
-| `validate`   | Check a data set for network protocol correctness                                        |
+```
+experiment - Performs adversarial attack experiments
+plot       - Generate tables from captured experiment results
+validate   - Check a dataset for network protocol correctness
+```
 
 Custom experiments can be defined by constructing appropriate commands.
 
