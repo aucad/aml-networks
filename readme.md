@@ -12,7 +12,7 @@ This repository provides an implementation to perform various experiments in thi
 **Repository Organization**
 
 - `config`     — Experiment configuration files              
-- `data`       — Preprocessed data sets ready for experiments
+- `data`       — Preprocessed datasets ready for experiments
 - `ref_result` — Referential result for comparison          
 - `src`        — Implementation source code                  
 
@@ -48,17 +48,17 @@ The easiest way to run these experiments is using [Docker](https://docs.docker.c
 
 The runtime estimates are for 8-core/32 GB RAM Linux machine, actual time may vary.
 
-**Limited model queries** ~24h
+:one: **Limited model queries** ~24h
 
 ```
 make query
 ```
 
-This experiment uses full cross-validation holdout set and repeats experiments using different query limits. 
-By default, it will run attacks with limits 2 / 5 / default iterations. Query limits can be customized by appending 
-to the command e.g., `LIMIT="5 10 20"`.
+This experiment uses full cross-validation holdout set and repeats experiments using different model query limits. 
+By default it runs attacks with limits 2, 5, and default iterations. Query limits can be customized by appending 
+to the command a limit argument, for example `LIMIT="5 10 20"`.
 
-**Random sampling of limited input** ~90 min
+:two: **Random sampling of limited input** ~90 min
 
 ```
 make sample
@@ -67,10 +67,10 @@ make sample
 Perform experiments on limited input size, by randomly sampling records of the holdout set. The sample size can be
 customized by appending to the command `SAMPLE=m TIMES=n`, where $m$ is the number of records to use and $n$ is the
 number of times to repeat the sampling. The result is reported as average of $n$ runs. Model query limit is unset,
-(attack's default limit).
+meaning attack's default limit is used.
 
 
-**Plot results** < 1 min
+:eight_pointed_black_star: **Plot results** < 1 min
 
 ```
 make plot
