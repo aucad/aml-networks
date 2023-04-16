@@ -131,10 +131,9 @@ Use a machine with x86 architecture.
 
 The evaluation uses a modified version of XGBoost classifier, enhanced with adversarial robustness property. This
 classifier is not installed with the other package dependencies. The XGBoost classifier must be built
-locally [from source](https://github.com/chenhongge/RobustTrees) (also included as a submodule `RobustTrees`). Follow
-the
-[instructions here](https://github.com/chenhongge/RobustTrees/tree/master/python-package#from-source) to build it from
-source.
+locally [from source](https://github.com/chenhongge/RobustTrees) (also included as a submodule `RobustTrees`). 
+Follow the [instructions here](https://github.com/chenhongge/RobustTrees/tree/master/python-package#from-source) 
+to build it from source.
 
 **Step 2: Install dependencies**
 
