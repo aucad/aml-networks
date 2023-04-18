@@ -5,11 +5,11 @@ LIMIT:=2 5 0
 endif
 
 ifndef $SAMPLE
-SAMPLE:=0
+SAMPLE:=50
 endif
 
 ifndef $TIMES
-TIMES:=1
+TIMES:=3
 endif
 
 ifndef $CLS
@@ -43,16 +43,15 @@ query:
 	python3 -m src experiment $(ALWAYS) -a $(attack) $($(ds)) $($(r)) --iter $(i) -c $(c) ; )))))
 
 sample:
-	@$(foreach c, $(CLS), $(foreach r, $(ROBUST), \
-	$(foreach attack, $(ATTACKS), \
+	@$(foreach c, $(CLS), $(foreach r, $(ROBUST), $(foreach attack, $(ATTACKS), \
 	python3 -m src experiment $(ALWAYS) -a $(attack) $(DS_2) $($(r)) \
-		--iter 0 -s 50 -t 3 -c $(c) ; )))
+	--iter 0 -s $(SAMPLE) -t $(TIMES) -c $(c) ; )))
 
 valid:
 	@$(foreach file, $(wildcard $(DATA_DIR)/CTU*),  \
-		python3 -m src validate -d $(file) $(IOT_OPTIONS) --capture;)
+		python3 -m src validate -d $(file) --validator IOT23 --capture;)
 	@$(foreach file, $(wildcard $(DATA_DIR)/nb15*), \
-		python3 -m src validate -d $(file) $(NB_OPTIONS) --capture;)
+		python3 -m src validate -d $(file) --validator NB15 --capture;)
 
 plot:
 	@python3 -m src plot $(RESDIR)
