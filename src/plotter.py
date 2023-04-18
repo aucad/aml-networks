@@ -92,7 +92,8 @@ class ResultsPlot:
                 rget(rec, 'classifier'),
                 rget(rec, 'robust'),
                 rec[rarr('f_score')],
-                rec[rarr('accuracy')]]
+                rec[rarr('accuracy')],
+                rec[rarr('recall')]]
 
         def match_rows(tbl, ds, cl, rb):
             temp = tbl[tbl[:, 0] == ds, :]
@@ -104,12 +105,15 @@ class ResultsPlot:
                 .flatten().tolist()
             ac = np.array([np.array(f) for f in rows[:, 4]]) \
                 .flatten().tolist()
+            rc = np.array([np.array(f) for f in rows[:, 5]]) \
+                .flatten().tolist()
             # noinspection PyTypeChecker
             return [ds, cl, rb,
                     f"{round(mean(fs), 2)} ± {round(stdev(fs), 2)}",
-                    f"{round(mean(ac), 2)} ± {round(stdev(ac), 2)}"]
+                    f"{round(mean(ac), 2)} ± {round(stdev(ac), 2)}",
+                    f"{round(mean(rc), 2)} ± {round(stdev(rc), 2)}"]
 
-        h = ["DS", "CLS", "R", "F-score", "Accuracy"]
+        h = ["DS", "CLS", "R", "F-score", "Accuracy", "Recall"]
         tb = np.array([row_values(record) for record in self.raw_rata])
         mat = [collapse(d, c, r, match_rows(tb, d, c, r))
                for d in np.unique(tb[:, 0])
@@ -228,7 +232,7 @@ def plot_results(directory, fmt):
     res.write_table(
         *res.proto_table(), 'table_proto',
         sorter=lambda x: (x[0], x[2], x[3], x[1], x[4]))
-    # res.write_table(
-    #     *res.reasons_table(), 'table_reasons',
-    #     sorter=lambda x: (x[0], x[1], x[2], -x[4]))
+    res.write_table(
+        *res.reasons_table(), 'table_reasons',
+        sorter=lambda x: (x[0], x[1], x[2], -x[4]))
     res.show_duration()
