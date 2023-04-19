@@ -37,15 +37,15 @@ Same steps apply to both IoT-23 and UNSW-NB15 data. These steps are easy to do w
    ```
 
 2. For each remaining nominal attribute, check if they have many values, e.g., `history` for IoT-23.
-   Merge low-frequency values. After this, at most 2--3 distinct values should remain for nominal attributes.
+   Merge low-frequency values. After this, at most 2 or 3 distinct values should remain for nominal attributes.
 
 3. One hot encode nominal attributes (in Weka it is called "Nominal to Binary" filter)
 
 4. Change class labels to numeric values: Benign = 0 and Malicious = 1.
 
-5. Missing values should be actual nulls (not '-' '?' etc.).
+5. Missing values should be actual nulls (not `-` `?` etc.).
 
 6. Use Weka's supervised instance `SpreadSubsample` with `distributionSpread=1.0`, 
-   to obtain a random sample of desired size, with equal class distribution. [Details](https://waikato.github.io/weka-blog/posts/2019-01-30-sampling/)
+   to obtain a random sample of desired size, with equal class distribution (see [details here](https://waikato.github.io/weka-blog/posts/2019-01-30-sampling/)).
 
 7. Save as a comma-separated file; the expects inputs is csv-format.
