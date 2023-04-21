@@ -3,7 +3,7 @@
 This repository implements an evaluation infrastructure to measure success rate of adversarial machine learning evasion
 attacks in network intrusion detection systems (NIDS).
 
-It involves evaluation of classifiers — trained on network data sets of benign and malicious traffic flows — against 
+It enables evaluating classifiers, trained on network data sets of benign and malicious traffic flows, against 
 adversarial black-box evasion attacks. Supported classifiers are Keras deep neural network and a tree-based ensemble 
 learner XGBoost. Both classifiers can be enhanced with an adversarial defense.
 
