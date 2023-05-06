@@ -1,4 +1,4 @@
-# Adversarial Machine Learning in NIDS
+# Evaluating AML Threats in NIDS
 
 This repository implements an evaluation infrastructure to measure success rate of adversarial machine learning evasion
 attacks in network intrusion detection systems (NIDS).
@@ -43,7 +43,7 @@ The easiest way to run these experiments is using [Docker](https://docs.docker.c
     docker run -v $(pwd)/output:/aml-networks/output -it --rm aml-networks /bin/bash
     ```
 
-## Run Predefined Experiments
+## Run Paper Experiments
 
 The runtime estimates are for 8-core 32 GB RAM Linux machine, actual time may vary.
 

@@ -194,12 +194,12 @@ class IotTCP(Protocol):
         if record.orig_pkts > record.orig_ip_bytes:
             return False, "ori packets > bytes"
         if record.orig_pkts > 0 and not record.orig_ip_bytes >= 20:
-            return False, "ori > 0 -> bytes >= 20"
+            return False, "ori packets > 0, bytes ~20"
         # this is also true for the receiving
         if record.resp_pkts > record.resp_ip_bytes:
             return False, "resp packets > bytes"
         if record.resp_pkts > 0 and not record.resp_ip_bytes >= 20:
-            return False, "resp > 0 -> bytes >= 20"
+            return False, "resp packets > 0, bytes ~0"
         # if conn state REJ then orig_ip_bytes=0 and resp_ip_bytes=0
         if record.conn_state_REJ == 1:
             if record.orig_ip_bytes != 0 or record.resp_ip_bytes != 0:
