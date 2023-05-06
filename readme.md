@@ -114,25 +114,6 @@ python3 -m src validate --help
 
 ---
 
-## About this Repository
-
-```
--------------------------------------------------------------------------------
-Language                     files          blank        comment           code
--------------------------------------------------------------------------------
-CSV                              3              0              0          30003
-JSON                            56              0              0          20414
-Python                          13            320            289           1554
-Markdown                         2             75              0            190
-make                             1             18              0             52
-YAML                             3              0             29             31
-Dockerfile                       1              4              0             18
-Text                             2              1              0             13
--------------------------------------------------------------------------------
-SUM:                            81            418            318          52276
--------------------------------------------------------------------------------
-```
-
 ## Native Execution
 
 These steps explain how to run experiments from source natively on host machine.
