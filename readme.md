@@ -114,6 +114,26 @@ python3 -m src validate --help
 
 ---
 
+## About this Repository
+
+```
+github.com/AlDanial/cloc v 1.96  T=0.19 s (420.7 files/s, 275235.9 lines/s)
+-------------------------------------------------------------------------------
+Language                     files          blank        comment           code
+-------------------------------------------------------------------------------
+CSV                              3              0              0          30003
+JSON                            56              0              0          20414
+Python                          13            320            289           1554
+Markdown                         2             73              0            173
+make                             1             18              0             52
+YAML                             3              0             29             31
+Dockerfile                       1              4              0             18
+Text                             2              1              0             13
+-------------------------------------------------------------------------------
+SUM:                            81            416            318          52258
+-------------------------------------------------------------------------------
+```
+
 ## Native Execution
 
 These steps explain how to run experiments from source natively on host machine.
