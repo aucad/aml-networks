@@ -17,16 +17,9 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Build image
-        run: docker build \
-          --tag aml-nids . \
-          --file Dockerfile \
-          --label "runnumber=${GITHUB_RUN_ID}" \
-          --label "org.opencontainers.image.source=https://github.com/iotcad/aml-networks" \
-          --label "org.opencontainers.image.description=Evaluating AML Threats in NIDS" \
-          --label "org.opencontainers.image.licenses=MIT"
-
-      - name: Save image
-        run: docker save aml-nids | gzip > aml.tar.gz
+        run: |
+          docker build -t aml-nids . 
+          docker save aml-nids | gzip > aml.tar.gz
 
       - name: Auto pre-release
         uses: marvinpinto/action-automatic-releases@latest
