@@ -212,8 +212,7 @@ class ResultsPlot:
 def plot_results(directory, fmt):
     res = ResultsPlot(directory, fmt)
     if res.n_results == 0:
-        logger.warning("No results found in results directory.")
-        logger.warning("Nothing was plotted.")
+        logger.warning(f"Nothing was plotted, no results found in: {directory}")
         return
     res.write_table(
         *res.classifier_table(), 'table_cls',

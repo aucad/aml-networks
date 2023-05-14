@@ -76,7 +76,13 @@ make plot_result
 ```
 
 Plot results of a previously performed experiment. The plot data source defaults to `output` directory. 
-To plot some other directory, use command: `make plot RESDIR=result/query` where `RESDIR` is path to some directory with experiment results.
+
+To plot results stored some other directory (e.g. result), use the following command,
+where `[path]` is a path to some directory with experiment results.
+
+```
+make plot RESDIR=[path]
+``` 
 
 ## Run Custom Experiments
 
