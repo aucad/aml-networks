@@ -72,11 +72,11 @@ meaning attack's default limit is used.
 :eight_pointed_black_star: **Plot results** < 1 min
 
 ```
-make plot
+make plot_result
 ```
 
 Plot results of a previously performed experiment. The plot data source defaults to `output` directory. 
-To plot some other directory append `RESDIR` to the command, e.g. `make plot RESDIR=result/all`.
+To plot some other directory, use command: `make plot RESDIR=result/query` where `RESDIR` is path to some directory with experiment results.
 
 ## Run Custom Experiments
 

@@ -40,11 +40,12 @@ DATASETS := DS_1 DS_2
 query:
 	@$(foreach i, $(LIMIT), $(foreach c, $(CLS), $(foreach r, $(ROBUST), \
 	$(foreach attack, $(ATTACKS), $(foreach ds, $(DATASETS),  \
-	python3 -m src experiment $(ALWAYS) -a $(attack) $($(ds)) $($(r)) --iter $(i) -c $(c) ; )))))
+	python3 -m src experiment $(ALWAYS) --out output/query -a $(attack) $($(ds)) $($(r)) \
+	--iter $(i) -c $(c) ; )))))
 
 sample:
 	@$(foreach c, $(CLS), $(foreach r, $(ROBUST), $(foreach attack, $(ATTACKS), \
-	python3 -m src experiment $(ALWAYS) -a $(attack) $(DS_2) $($(r)) \
+	python3 -m src experiment $(ALWAYS) --out output/sample -a $(attack) $(DS_2) $($(r)) \
 	--iter 0 -s $(SAMPLE) -t $(TIMES) -c $(c) ; )))
 
 valid:
@@ -55,6 +56,9 @@ valid:
 
 plot:
 	@python3 -m src plot $(RESDIR)
+
+plot_result:
+	@python3 -m src plot output/query && python3 -m src plot output/sample
 
 stats:
 	@cd src && find . -name '*.py' | xargs wc -l && cd ..
