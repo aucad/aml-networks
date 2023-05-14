@@ -6,7 +6,7 @@ Adversarial machine learning in network setting.
 
 __title__ = "src"
 __author__ = ""
-__license__ = ""
+__license__ = "MIT"
 __version__ = "1.0.0"
 
 import os
