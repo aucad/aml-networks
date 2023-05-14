@@ -1,8 +1,8 @@
 name: Build
 
 on:
-  push:
-    branches: [ main ]
+#  push:
+#    branches: [ main ]
   workflow_dispatch:
     branches: [ main ]
 
@@ -19,18 +19,13 @@ jobs:
           submodules: recursive
 
       - name: Build image
-        run: |
-          docker build -t aml-nids . 
-          docker save aml-nids | gzip > aml.tar.gz
+        run:  docker build -t aml-nids .
+      - name: Save image
+        run: docker save aml-nids | gzip > aml.tar.gz
 
-      - name: Auto pre-release
-        uses: marvinpinto/action-automatic-releases@latest
+      - name: Archive artifact
+        uses: actions/upload-artifact@v3
         with:
-          automatic_release_tag: "latest"
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          prerelease: true
-          draft: true
-          files: |
-            aml.tar.gz
-            readme.md
-            LICENSE
+          name: aml-image
+          path: aml.tar.gz
+          retention-days: 1
