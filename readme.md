@@ -25,64 +25,56 @@ This repository provides an implementation to perform various experiments in thi
 
 The easiest way to run these experiments is using [Docker](https://docs.docker.com/engine/install/).
 
-1. Create an output directory to persist experiment results
+1. **Pull the pre-built container image (amd64)**
+
+    ```
+    docker pull ghcr.io/iotcad/aml-networks:build
+    ```
+
+2. **Create a directory to persist experiment results**
 
     ```
     mkdir output
     ```
-   
-2. Build a container
 
-    ```
-    docker build -t aml-networks .
-    ```
-
-3. Launch the container
+3. **Launch the container**
 
     ```
     docker run -v $(pwd)/output:/aml-networks/output -it --rm aml-networks /bin/bash
     ```
 
-## Run Paper Experiments
+
+## Reproduce Paper Experiments
 
 The runtime estimates are for 8-core 32 GB RAM Linux machine, actual time may vary.
 
-:one: **Limited model queries** ~24h
+#### 1️⃣ Limited model queries ~24h
 
 ```
 make query
 ```
 
 This experiment uses full cross-validation holdout set and repeats experiments using different model query limits. 
-By default it runs attacks with limits 2, 5, and default iterations. Query limits can be customized by appending 
-to the command a limit argument, for example `LIMIT="5 10 20"`.
+By default, it runs attacks with limits 2, 5, and default iterations. 
 
-:two: **Random sampling of limited input** ~90 min
+#### 2️⃣ Random sampling of limited input ~90 min
 
 ```
 make sample
 ```
 
-Perform experiments on limited input size, by randomly sampling records of the holdout set. The sample size can be
-customized by appending to the command `SAMPLE=m TIMES=n`, where $m$ is the number of records to use and $n$ is the
-number of times to repeat the sampling. The result is reported as average of $n$ runs. Model query limit is unset,
-meaning attack's default limit is used.
+Perform experiments on limited input size, by randomly sampling records of the holdout set. 
+By default, the sample size $n$=50 and sampling is repeated 3 times. The result is reported as average of $n$ runs. 
+Model query limit is the attack's default.
 
-
-:eight_pointed_black_star: **Plot results** < 1 min
+#### ✴️ Plot results < 1 min
 
 ```
-make plot_result
+make plots
 ```
 
-Plot results of a previously performed experiment. The plot data source defaults to `output` directory. 
+Plot results of the two previous experiments. The plot data source is the `output` directory. 
 
-To plot results stored some other directory (e.g. result), use the following command,
-where `[path]` is a path to some directory with experiment results.
-
-```
-make plot RESDIR=[path]
-``` 
 
 ## Run Custom Experiments
 
@@ -118,47 +110,4 @@ To see available options for the validator, run:
 python3 -m src validate --help
 ```
 
----
-
-## Native Execution
-
-These steps explain how to run experiments from source natively on host machine.
-You should also follow these steps, if you want to prepare a development environment and make code changes.
-
-- :snake: **Required** Python environment: 3.8 or 3.9
-
-- :warning: **Submodule** This repository has a submodule. Clone it, including the submodule
-  [(instructions)](https://stackoverflow.com/a/4438292).
-
-This implementation is not compatible with Apple chip hosts due to a dependency (issue with TensorFlow). 
-Use a machine with x86 architecture.
-
-**Step 1: Build robust XGBoost**
-
-The evaluation uses a modified version of XGBoost classifier, enhanced with adversarial robustness property. This
-classifier is not installed with the other package dependencies. The XGBoost classifier must be built
-locally [from source](https://github.com/chenhongge/RobustTrees) (also included as a submodule `RobustTrees`). 
-Follow the [instructions here](https://github.com/chenhongge/RobustTrees/tree/master/python-package#from-source) 
-to build it from source.
-
-**Step 2: Install dependencies**
-
-Install required Python dependencies.
-
-```
-python3 -m pip install -r requirements-dev.txt
-```
-
-Install XGBoost from the local build location:
-
-```
-python3 -m pip install -e "/path/to/RobustTrees/python-package"
-```
-
-After setup, check the runtime:
-
-```
-python3 -m pip show xgboost
-```
-
-The version number should be 0.72.
+For native execution see [these instructions](https://github.com/iotcad/aml-networks/blob/main/.github/CONTRIBUTING.md).

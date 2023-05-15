@@ -57,11 +57,8 @@ valid:
 plot:
 	@python3 -m src plot $(RESDIR)
 
-plot_result:
+plots:
 	@python3 -m src plot output/query && python3 -m src plot output/sample
-
-stats:
-	@cd src && find . -name '*.py' | xargs wc -l && cd ..
 
 lint:
 	flake8 ./src --count --show-source --statistics
