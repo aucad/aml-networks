@@ -72,7 +72,7 @@ meaning attack's default limit is used.
 :eight_pointed_black_star: **Plot results** < 1 min
 
 ```
-make plot_result
+make plots
 ```
 
 Plot results of a previously performed experiment. The plot data source defaults to `output` directory. 

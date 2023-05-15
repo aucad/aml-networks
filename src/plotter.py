@@ -15,7 +15,7 @@ import pandas as pd
 from pytablewriter import SpaceAlignedTableWriter, LatexTableWriter
 
 from src import sdiv
-from src.utility import smean, rarr, rget
+from src.utility import rarr, rget
 
 logger = logging.getLogger(__name__)
 
@@ -137,12 +137,16 @@ class ResultsPlot:
         return self.std_hd + h, mat
 
     def proto_table(self):
-        headers, mat = self.flatten([[f"e/{p}", f"v/{p}"] for p in self.proto_names]), []
+        headers, mat = self.flatten(
+            [[f"e/{p}", f"v/{p}"] for p in self.proto_names]), []
         p_keys = ['proto_init', 'proto_evasions', 'proto_valid']
         for record in self.raw_rata:
             m = ResultsPlot.std_cols(record)
-            psum = lambda arr_key: sum(
-                [x[p] if p in x else 0 for x in record[rarr(arr_key)]])
+
+            def psum(arr_key):
+                return sum([x[p] if p in x else 0
+                            for x in record[rarr(arr_key)]])
+
             for p in self.proto_names:
                 init, evs, val = [psum(k) for k in p_keys]
                 m += [round(sdiv(evs, init), 2), round(sdiv(val, init), 2)]
@@ -212,7 +216,9 @@ class ResultsPlot:
 def plot_results(directory, fmt):
     res = ResultsPlot(directory, fmt)
     if res.n_results == 0:
-        logger.warning(f"Nothing was plotted, no results found in: {directory}")
+        logger.warning(
+            "Nothing was plotted, "
+            f"no results found in: {directory}")
         return
     res.write_table(
         *res.classifier_table(), 'table_cls',

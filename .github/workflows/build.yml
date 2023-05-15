@@ -1,31 +1,24 @@
 name: Build
 
 on:
-#  push:
-#    branches: [ main ]
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
     branches: [ main ]
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
-    permissions:
-      packages: write
-      contents: read
-
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: recursive
-
-      - name: Build image
-        run:  docker build -t aml-nids .
-      - name: Save image
-        run: docker save aml-nids | gzip > aml.tar.gz
-
-      - name: Archive artifact
-        uses: actions/upload-artifact@v3
+      - uses: actions/setup-python@v4
         with:
-          name: aml-image
-          path: aml.tar.gz
-          retention-days: 1
+          python-version: "3.9"
+      - name: Install dependencies
+        run: python -m pip install -r requirements-dev.txt
+      - name: Lint source
+        run:  make lint
