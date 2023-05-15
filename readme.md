@@ -25,16 +25,16 @@ This repository provides an implementation to perform various experiments in thi
 
 The easiest way to run these experiments is using [Docker](https://docs.docker.com/engine/install/).
 
-1. Create an output directory to persist experiment results
-
-    ```
-    mkdir output
-    ```
-   
-2. Build a container
+1. Run from repository root, command to build a container 
 
     ```
     docker build -t aml-networks .
+    ```
+
+2. Create an output directory to persist experiment results
+
+    ```
+    mkdir output
     ```
 
 3. Launch the container
@@ -162,3 +162,5 @@ python3 -m pip show xgboost
 ```
 
 The version number should be 0.72.
+
+You are now ready to run experiments and make code changes. 
