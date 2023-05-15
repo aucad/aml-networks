@@ -14,7 +14,6 @@ RUN pip3 install --upgrade pip
 
 #RUN git clone --recurse-submodules https://github.com/iotcad/aml-networks.git
 COPY . /aml-networks/.
-RUN git submodule update --init --recursive
 WORKDIR aml-networks/RobustTrees
 
 RUN chmod 777 build.sh
