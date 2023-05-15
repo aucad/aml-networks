@@ -28,7 +28,7 @@ The easiest way to run these experiments is using [Docker](https://docs.docker.c
 1. **Pull the pre-built container image (amd64)**
 
     ```
-    docker pull ghcr.io/iotcad/aml-networks:build
+    docker pull ghcr.io/iotcad/aml-networks:main
     ```
 
 2. **Create a directory to persist experiment results**
@@ -40,7 +40,7 @@ The easiest way to run these experiments is using [Docker](https://docs.docker.c
 3. **Launch the container**
 
     ```
-    docker run -v $(pwd)/output:/aml-networks/output -it --rm aml-networks /bin/bash
+    docker run -v $(pwd)/output:/aml-networks/output -it --rm ghcr.io/iotcad/aml-networks:main /bin/bash
     ```
 
 
