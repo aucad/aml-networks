@@ -25,13 +25,13 @@ This repository provides an implementation to perform various experiments in thi
 
 The easiest way to run these experiments is using [Docker](https://docs.docker.com/engine/install/).
 
-1. Run from repository root, command to build a container 
+1. Get a pre-built (amd64) image:
 
     ```
-    docker build -t aml-networks .
+    docker pull ghcr.io/iotcad/aml-networks:build
     ```
 
-2. Create an output directory to persist experiment results
+2. Create a directory to persist experiment results
 
     ```
     mkdir output
@@ -42,6 +42,7 @@ The easiest way to run these experiments is using [Docker](https://docs.docker.c
     ```
     docker run -v $(pwd)/output:/aml-networks/output -it --rm aml-networks /bin/bash
     ```
+
 
 ## Run Paper Experiments
 
@@ -129,6 +130,7 @@ You should also follow these steps, if you want to prepare a development environ
 
 - :warning: **Submodule** This repository has a submodule. Clone it, including the submodule
   [(instructions)](https://stackoverflow.com/a/4438292).
+
 
 This implementation is not compatible with Apple chip hosts due to a dependency (issue with TensorFlow). 
 Use a machine with x86 architecture.
