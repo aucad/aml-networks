@@ -13,10 +13,10 @@ This repository provides an implementation to perform various experiments in thi
 
 | Directory | Description                                 |
 |-----------|---------------------------------------------|
+| `aml`     | Implementation source code                  |
 | `config`  | Experiment configuration files              |
 | `data`    | Preprocessed datasets ready for experiments |
 | `result`  | Referential result for comparison           |
-| `src`     | Implementation source code                  |
 
 **Datasets**
 
