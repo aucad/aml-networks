@@ -46,7 +46,10 @@ The easiest way to run these experiments is using [Docker](https://docs.docker.c
     ```
 
 
-**Alternatively,** build a container for current hardware:
+**Alternatively,** build a container for current hardware.
+
+<details>
+<summary>Container build steps</summary>
 
 ```
 git clone --recurse-submodules https://github.com/iotcad/aml-networks.git
@@ -58,6 +61,7 @@ cd aml-networks && docker build -t aml-networks . & cd ..
 docker run -v $(pwd)/output:/aml-networks/output -it --rm aml-networks /bin/bash
 ```
 
+</details>
 
 ## Reproduce Paper Experiments
 
