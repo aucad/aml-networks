@@ -11,7 +11,7 @@ import numpy as np
 from sklearn.model_selection import KFold
 
 # noinspection PyUnresolvedReferences
-from src import Classifier, Attack, Validator, utility, \
+from aml import Classifier, Attack, Validator, utility, \
     HopSkip, Zoo, NeuralNetwork, XgBoost, Show, Ratio, sdiv, machine
 
 logger = logging.getLogger(__name__)

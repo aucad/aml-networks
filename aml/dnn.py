@@ -22,7 +22,7 @@ from art.attacks.evasion import BasicIterativeMethod
 from art.estimators.classification import KerasClassifier
 from art.defences.trainer import AdversarialTrainer
 
-from src import Classifier, utility
+from aml import Classifier, utility
 
 tf.compat.v1.disable_eager_execution()
 tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)

@@ -17,7 +17,7 @@ from art.estimators.classification import XGBoostClassifier
 # noinspection PyPackageRequirements
 from xgboost import DMatrix, train as xg_train
 
-from src import Classifier
+from aml import Classifier
 
 
 class XgBoost(Classifier):

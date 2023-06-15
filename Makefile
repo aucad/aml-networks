@@ -40,28 +40,28 @@ DATASETS := DS_1 DS_2
 query:
 	@$(foreach i, $(LIMIT), $(foreach c, $(CLS), $(foreach r, $(ROBUST), \
 	$(foreach attack, $(ATTACKS), $(foreach ds, $(DATASETS),  \
-	python3 -m src experiment $(ALWAYS) --out output/query -a $(attack) $($(ds)) $($(r)) \
+	python3 -m aml experiment $(ALWAYS) --out output/query -a $(attack) $($(ds)) $($(r)) \
 	--iter $(i) -c $(c) ; )))))
 
 sample:
 	@$(foreach c, $(CLS), $(foreach r, $(ROBUST), $(foreach attack, $(ATTACKS), \
-	python3 -m src experiment $(ALWAYS) --out output/sample -a $(attack) $(DS_2) $($(r)) \
+	python3 -m aml experiment $(ALWAYS) --out output/sample -a $(attack) $(DS_2) $($(r)) \
 	--iter 0 -s $(SAMPLE) -t $(TIMES) -c $(c) ; )))
 
 valid:
 	@$(foreach file, $(wildcard $(DATA_DIR)/CTU*),  \
-		python3 -m src validate -d $(file) --validator IOT23 --capture;)
+		python3 -m aml validate -d $(file) --validator IOT23 --capture;)
 	@$(foreach file, $(wildcard $(DATA_DIR)/nb15*), \
-		python3 -m src validate -d $(file) --validator NB15 --capture;)
+		python3 -m aml validate -d $(file) --validator NB15 --capture;)
 
 plot:
-	@python3 -m src plot $(RESDIR)
+	@python3 -m aml plot $(RESDIR)
 
 plots:
-	@python3 -m src plot output/query && python3 -m src plot output/sample
+	@python3 -m aml plot output/query && python3 -m aml plot output/sample
 
 lint:
-	flake8 ./src --count --show-source --statistics
+	flake8 ./aml --count --show-source --statistics
 
 clean:
 	@rm -fr output/

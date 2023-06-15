@@ -13,7 +13,7 @@ from typing import List
 import numpy as np
 from art.attacks.evasion import HopSkipJump as ARTHopSkipJump
 
-from src import Attack, utility
+from aml import Attack, utility
 
 
 class HopSkip(Attack):

@@ -14,8 +14,8 @@ import numpy as np
 import pandas as pd
 from pytablewriter import SpaceAlignedTableWriter, LatexTableWriter
 
-from src import sdiv
-from src.utility import rarr, rget
+from aml import sdiv
+from aml.utility import rarr, rget
 
 logger = logging.getLogger(__name__)
 
