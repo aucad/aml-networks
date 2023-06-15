@@ -108,25 +108,25 @@ validate   - Check a dataset for network protocol correctness
 Custom experiments can be defined by constructing appropriate commands.
 
 ```
-python3 -m src {experiment|plot|validate} [ARGS]
+python3 -m aml {experiment|plot|validate} [ARGS]
 ```
 
 To see available options for experiments, run:
 
 ```
-python3 -m src experiment --help
+python3 -m aml experiment --help
 ```
 
 To see available options for plotting results, run:
 
 ```
-python3 -m src plot --help
+python3 -m aml plot --help
 ```
 
 To see available options for the validator, run:
 
 ```
-python3 -m src validate --help
+python3 -m aml validate --help
 ```
 
 For native execution see [these instructions](https://github.com/iotcad/aml-networks/blob/main/.github/CONTRIBUTING.md).

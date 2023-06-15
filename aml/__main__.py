@@ -5,13 +5,13 @@ performing adversarial attacks on those models.
 Usage:
 
 ```
-python -m src
+python -m aml
 ```
 
 List all available options:
 
 ```
-python -m src --help
+python -m aml --help
 ```
 
 """
@@ -23,7 +23,7 @@ from pathlib import Path
 from sys import exit
 from typing import Optional, List
 
-from src import __version__, __title__, \
+from aml import __version__, __title__, \
     Experiment, Validator, Plot, utility
 
 
@@ -39,7 +39,8 @@ def main():
     choice = [args.which if hasattr(args, 'which')
               else None] * len(options)
     is_exp, is_vld, is_plot = [a == b for a, b in zip(choice, options)]
-    init_logger(logging.FATAL if args.silent else logging.DEBUG)
+    init_logger(logging.FATAL if 'silent' in args and args.silent
+                else logging.DEBUG)
     if hasattr(args, 'out'):
         utility.ensure_dir(args.out)
 
@@ -47,7 +48,7 @@ def main():
         Plot(args.dir, args.format)
         return
 
-    if not args.dataset:
+    if 'dataset' not in args or not args.dataset:
         parser.print_help()
         exit(1)
 

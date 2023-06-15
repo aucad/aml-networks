@@ -10,7 +10,7 @@ Paper: https://arxiv.org/abs/1708.03999
 
 from art.attacks.evasion import ZooAttack
 
-from src import Attack, utility
+from aml import Attack, utility
 
 
 class Zoo(Attack):

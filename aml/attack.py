@@ -4,7 +4,7 @@ from typing import Optional
 
 import numpy as np
 
-from src import Classifier, Validator, utility
+from aml import Classifier, Validator, utility
 
 
 class Attack:
