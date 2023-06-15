@@ -1,6 +1,6 @@
 adversarial-robustness-toolbox==1.12.1
 pandas==1.5.1; sys_platform == 'darwin'
-pandas==1.1.5; sys_platform != 'darwin'
+pandas==1.5.3; sys_platform != 'darwin'
 numpy~=1.23.4
 psutil==5.9.4
 Pillow==9.4.0

@@ -9,12 +9,14 @@ learner XGBoost. Both classifiers can be enhanced with an adversarial defense.
 
 This repository provides an implementation to perform various experiments in this specified setting. 
 
-**Repository Organization**
+**Source code organization**
 
-- `config`     — Experiment configuration files              
-- `data`       — Preprocessed datasets ready for experiments
-- `result`     — Referential result for comparison          
-- `src`        — Implementation source code                  
+| Directory | Description                                 |
+|-----------|---------------------------------------------|
+| `config`  | Experiment configuration files              |
+| `data`    | Preprocessed datasets ready for experiments |
+| `result`  | Referential result for comparison           |
+| `src`     | Implementation source code                  |
 
 **Datasets**
 
@@ -44,6 +46,19 @@ The easiest way to run these experiments is using [Docker](https://docs.docker.c
     ```
 
 
+**Alternatively,** build a container for current hardware:
+
+```
+git clone --recurse-submodules https://github.com/iotcad/aml-networks.git
+
+mkdir output
+
+cd aml-networks && docker build -t aml-networks . & cd ..
+
+docker run -v $(pwd)/output:/aml-networks/output -it --rm aml-networks /bin/bash
+```
+
+
 ## Reproduce Paper Experiments
 
 The runtime estimates are for 8-core 32 GB RAM Linux machine, actual time may vary.
@@ -67,7 +82,7 @@ Perform experiments on limited input size, by randomly sampling records of the h
 By default, the sample size $n$=50 and sampling is repeated 3 times. The result is reported as average of $n$ runs. 
 Model query limit is the attack's default.
 
-#### ✴️ Plot results < 1 min
+#### 3️⃣️ Plot results < 1 min
 
 ```
 make plots
