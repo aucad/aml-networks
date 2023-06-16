@@ -3,16 +3,16 @@
 This repository implements an evaluation infrastructure to measure success rate of adversarial machine learning evasion
 attacks in network intrusion detection systems (NIDS).
 
-It enables evaluating classifiers, trained on network data sets of benign and malicious traffic flows, against 
-adversarial black-box evasion attacks. Supported classifiers are Keras deep neural network and a tree-based ensemble 
-learner XGBoost. Both classifiers can be enhanced with an adversarial defense.
+It enables evaluating classifiers, trained on network data sets, against adversarial black-box evasion attacks. 
+Supported classifiers are Keras deep neural network and a tree-based ensemble learner XGBoost. Both classifiers can be 
+enhanced with an adversarial defense.
 
 This repository provides an implementation to perform various experiments in this specified setting. 
 
 **Source code organization**
 
 | Directory | Description                                 |
-|-----------|---------------------------------------------|
+|:----------|:--------------------------------------------|
 | `aml`     | Implementation source code                  |
 | `config`  | Experiment configuration files              |
 | `data`    | Preprocessed datasets ready for experiments |
@@ -37,27 +37,37 @@ The easiest way to run these experiments is using [Docker](https://docs.docker.c
 
     ```
     docker run -v $(pwd)/output:/usr/src/aml-networks/output \
-         -it --rm ghcr.io/iotcad/aml-networks:main /bin/bash
+               -it --rm ghcr.io/iotcad/aml-networks:main /bin/bash
     ```
 
-**Alternatively,** build a container for current hardware.
+**Alternatively,** build a container locally, to match current hardware.
 
 <details>
 <summary>Container build instructions</summary>
 
-```
-git clone https://github.com/iotcad/aml-networks.git
+1. Clone repository
 
-cd aml-networks && docker build -t aml-networks . & cd ..
+   ```
+   git clone https://github.com/iotcad/aml-networks.git
+   ```
 
-docker run -v $(pwd)/output:/usr/src/aml-networks/output -it --rm aml-networks /bin/bash
-```
+2. Build the container
+
+   ```
+   cd aml-networks && docker build -t aml-networks . & cd ..
+   ```
+
+3. Run the container
+
+   ```
+   docker run -v $(pwd)/output:/usr/src/aml-networks/output -it --rm aml-networks /bin/bash
+   ```
 
 </details>
 
 ## Reproduce Paper Experiments
 
-The runtime estimates are for 8-core 32 GB RAM Linux machine, actual time may vary.
+The runtime estimates are for 8-core 32 GB RAM Linux machine. Actual time may vary.
 
 #### 1️⃣ Limited model queries ~24h
 
