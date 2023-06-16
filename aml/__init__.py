@@ -5,7 +5,6 @@ Adversarial machine learning in network setting.
 """
 
 __title__ = "aml"
-__author__ = ""
 __license__ = "MIT"
 __version__ = "1.0.0"
 

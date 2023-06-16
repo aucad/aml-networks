@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM --platform=linux/amd64 ubuntu:20.04
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt update -y \
@@ -12,9 +12,9 @@ RUN apt update -y \
 RUN mkdir -p /usr/src/aml-networks
 COPY . /usr/src/aml-networks/.
 
-RUN rm -rf "/usr/src/aml-networks/RobustTrees"
-RUN git clone --recurse-submodules https://github.com/chenhongge/RobustTrees.git "/usr/src/aml-networks/RobustTrees"
-RUN cd /usr/src/aml-networks/RobustTrees && make -j4
+RUN rm -rf "/usr/src/aml-networks/RobustTrees" \
+    && git clone --recurse-submodules https://github.com/chenhongge/RobustTrees.git "/usr/src/aml-networks/RobustTrees" \
+    && cd /usr/src/aml-networks/RobustTrees && make -j4
 
 RUN pip3 install -r "/usr/src/aml-networks/requirements.txt" --user
 RUN python3 -m pip install -e "/usr/src/aml-networks/RobustTrees/python-package" --user

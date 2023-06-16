@@ -8,9 +8,9 @@ You should also follow these steps, if you want to prepare a development environ
 - :warning: **Submodule** This repository has a submodule. Clone it, including the submodule
   [(instructions)](https://stackoverflow.com/a/4438292).
 
-
-This implementation is not compatible with Apple chip hosts due to a dependency (issue with TensorFlow).
-Use a machine with x86 architecture.
+This implementation is not compatible with Apple M1 machines due to underlying dependency (tensorflow-macos); and 
+although it does not prevent most experiments, some issues may arise sporadically.
+A machine with AMD64/x86 architecture is recommended.
 
 **Step 1: Build robust XGBoost**
 

@@ -103,9 +103,12 @@ class ResultsPlot:
                 .flatten().tolist()
             # noinspection PyTypeChecker
             return [ds, cl, rb,
-                    f"{round(mean(fs), 2)} ± {round(stdev(fs), 2)}",
-                    f"{round(mean(ac), 2)} ± {round(stdev(ac), 2)}",
-                    f"{round(mean(rc), 2)} ± {round(stdev(rc), 2)}"]
+                    f"{round(mean(fs), 2)} ± {round(stdev(fs), 2)}"
+                    if len(fs) > 0 else '',
+                    f"{round(mean(ac), 2)} ± {round(stdev(ac), 2)}"
+                    if len(ac) > 0 else '',
+                    f"{round(mean(rc), 2)} ± {round(stdev(rc), 2)}"
+                    if len(rc) > 0 else '']
 
         h = ["DS", "CLS", "R", "F-score", "Accuracy", "Recall"]
         tb = np.array([row_values(record) for record in self.raw_rata])
