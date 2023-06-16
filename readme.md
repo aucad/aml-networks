@@ -27,7 +27,7 @@ This repository provides an implementation to perform various experiments in thi
 
 The easiest way to run these experiments is using [Docker](https://docs.docker.com/engine/install/).
 
-1. **Pull the pre-built container image (amd64)**
+1. **Pull the pre-built container image**
 
     ```
     docker pull ghcr.io/iotcad/aml-networks:main
