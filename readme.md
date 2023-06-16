@@ -40,10 +40,12 @@ The easiest way to run these experiments is using [Docker](https://docs.docker.c
                -it --rm ghcr.io/iotcad/aml-networks:main /bin/bash
     ```
 
-**Alternatively,** build a container locally, to match current hardware.
+**Alternatively,** build a container locally, or [build from source](https://github.com/iotcad/aml-networks/blob/main/.github/CONTRIBUTING.md)
 
 <details>
 <summary>Container build instructions</summary>
+
+This should work for amd64 machines, but on other machines recommend building from source. 
 
 1. Clone repository
 

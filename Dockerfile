@@ -1,3 +1,5 @@
+ARG BUILD_ARCH=amd64
+
 FROM ubuntu:20.04
 ENV DEBIAN_FRONTEND noninteractive
 

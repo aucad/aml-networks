@@ -43,7 +43,3 @@ jobs:
           push: true
           secrets: |
             "github_token=${{ secrets.GITHUB_TOKEN }}"
-      - name: 🚀 Github release
-        uses: ncipollo/release-action@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
