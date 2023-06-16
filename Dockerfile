@@ -16,7 +16,7 @@ COPY . /usr/src/aml-networks/.
 
 RUN rm -rf "/usr/src/aml-networks/RobustTrees"
 RUN git clone --recurse-submodules https://github.com/chenhongge/RobustTrees.git "/usr/src/aml-networks/RobustTrees"
-RUN cd /usr/src/aml-networks/RobustTrees && chmod 777 build.sh && ./build.sh
+RUN cd /usr/src/aml-networks/RobustTrees && make -j4 #chmod 777 build.sh && ./build.sh
 
 RUN pip3 install -r "/usr/src/aml-networks/requirements.txt" --user
 RUN python3 -m pip install -e "/usr/src/aml-networks/RobustTrees/python-package" --user
