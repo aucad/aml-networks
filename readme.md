@@ -33,28 +33,20 @@ The easiest way to run these experiments is using [Docker](https://docs.docker.c
     docker pull ghcr.io/iotcad/aml-networks:main
     ```
 
-2. **Create a directory to persist experiment results**
+2. **Launch the container**
 
     ```
-    mkdir output
+    docker run -v $(pwd)/output:/usr/src/aml-networks/output \
+         -it --rm ghcr.io/iotcad/aml-networks:main /bin/bash
     ```
-
-3. **Launch the container**
-
-    ```
-    docker run -v $(pwd)/output:/usr/src/aml-networks/output -it --rm ghcr.io/iotcad/aml-networks:main /bin/bash
-    ```
-
 
 **Alternatively,** build a container for current hardware.
 
 <details>
-<summary>Container build steps</summary>
+<summary>Container build instructions</summary>
 
 ```
-git clone --recurse-submodules https://github.com/iotcad/aml-networks.git
-
-mkdir output
+git clone https://github.com/iotcad/aml-networks.git
 
 cd aml-networks && docker build -t aml-networks . & cd ..
 
