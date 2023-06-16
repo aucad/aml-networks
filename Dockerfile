@@ -12,6 +12,7 @@ RUN apt update -y \
 RUN mkdir -p /usr/src/aml-networks
 COPY . /usr/src/aml-networks/.
 
+RUN rm -rf "/usr/src/aml-networks/RobustTrees"
 RUN git clone --recurse-submodules https://github.com/chenhongge/RobustTrees.git "/usr/src/aml-networks/RobustTrees"
 RUN cd /usr/src/aml-networks/RobustTrees && chmod 777 build.sh && ./build.sh
 
