@@ -12,9 +12,11 @@ RUN apt update -y \
 RUN mkdir -p /usr/src/aml-networks
 COPY . /usr/src/aml-networks/.
 
-RUN git clone --recurse-submodules https://github.com/chenhongge/RobustTrees.git "/usr/src/aml-networks/RobustTrees"
-RUN chmod 777 /usr/src/aml-networks/RobustTrees/build.sh
-RUN cd /usr/src/aml-networks/RobustTrees && ./build.sh
+#RUN git clone --recurse-submodules https://github.com/chenhongge/RobustTrees.git "/usr/src/aml-networks/RobustTrees"
+RUN git clone https://github.com/chenhongge/RobustTrees.git "/usr/src/aml-networks/RobustTrees"
+RUN cd /usr/src/aml-networks/RobustTrees \
+    && git submodule update --init --recursive \
+    && chmod 777 build.sh && ./build.sh
 
 RUN pip3 install -r "/usr/src/aml-networks/requirements.txt" --user
 RUN python3 -m pip install -e "/usr/src/aml-networks/RobustTrees/python-package" --user
