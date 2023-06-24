@@ -9,7 +9,7 @@ RUN apt update -y \
     && apt install -y python3.9-dev python3-pip \
     && update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1 \
     && update-alternatives --set python3 /usr/bin/python3.9 \
-    && pip3 install --upgrade pip setuptools wheel --user
+    && python3 -m pip install --upgrade pip setuptools wheel
 
 RUN mkdir -p /usr/src/aml-networks
 COPY . /usr/src/aml-networks/.
@@ -19,6 +19,6 @@ RUN rm -rf "/usr/src/aml-networks/RobustTrees" \
     && cd /usr/src/aml-networks/RobustTrees && make -j4
 
 RUN pip3 install -r "/usr/src/aml-networks/requirements.txt" --user
-RUN python3 -m pip install "/usr/src/aml-networks/RobustTrees/python-package" --user --config-settings use_system_libxgboost=True
+RUN python3 -m pip install -e "/usr/src/aml-networks/RobustTrees/python-package" --user
 
 WORKDIR ./usr/src/aml-networks
