@@ -7,7 +7,7 @@ It enables evaluating classifiers, trained on network data sets, against adversa
 Supported classifiers are Keras deep neural network and a tree-based ensemble learner XGBoost. Both classifiers can be 
 enhanced with an adversarial defense.
 
-This repository provides an implementation to perform various experiments in this specified setting. 
+This repository provides an implementation to perform experiments in this specified setting. 
 
 **Source code organization**
 
@@ -40,14 +40,15 @@ The easiest way to run these experiments is using [Docker](https://docs.docker.c
                -it --rm ghcr.io/iotcad/aml-networks:latest /bin/bash
     ```
 
-**Alternatively,** build a container locally.
+
 
 <details>
-<summary>Container build instructions</summary>
+<summary>Alternatively, build a container locally.</summary>
 
 <br/>
 
-_For non-amd64 machines: [build from source](https://github.com/iotcad/aml-networks/blob/main/.github/CONTRIBUTING.md)._ 
+NOTE: The Docker environment is intended for amd64 machines only.
+For other architectures, you must [build from source](https://github.com/iotcad/aml-networks/blob/main/.github/CONTRIBUTING.md).
 
 1. Clone repository
 
@@ -73,32 +74,32 @@ _For non-amd64 machines: [build from source](https://github.com/iotcad/aml-netwo
 
 The runtime estimates are for 8-core 32 GB RAM Linux machine. Actual time may vary.
 
-#### 1️⃣ Limited model queries ~24h
+#### 1. Limited model queries 
 
 ```
 make query
 ```
 
-This experiment uses full cross-validation holdout set and repeats experiments using different model query limits. 
+(~24h) This experiment uses full cross-validation holdout set and repeats experiments using different model query limits. 
 By default, it runs attacks with limits 2, 5, and default iterations. 
 
-#### 2️⃣ Random sampling of limited input ~90 min
+#### 2. Limited sampled input 
 
 ```
 make sample
 ```
 
-Perform experiments on limited input size, by randomly sampling records of the holdout set. 
-By default, the sample size $n$=50 and sampling is repeated 3 times. The result is reported as average of $n$ runs. 
-Model query limit is the attack's default.
+(~90 min) Perform experiments on limited input size, by randomly sampling records of the holdout set. 
+By default, the sample size `n`=50 and sampling is repeated 3 times. The result is reported as average of `n` runs. 
+Model query limit is the attack's default query limit.
 
-#### 3️⃣️ Plot results < 1 min
+#### 3. Plot results 
 
 ```
 make plots
 ```
 
-Plot results of the two previous experiments. The plot data source is the `output` directory. 
+(< 1 min) Plot results of the two previous experiments. The plot data source is the `output` directory. 
 
 
 ## Run Custom Experiments

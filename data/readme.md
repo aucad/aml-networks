@@ -18,19 +18,19 @@ This directory includes pre-processed, small datasets, ready for experiments.
 To evaluate additional data sources, make sure the input data is fully numeric, and in csv format.
 Use these existing data sets as examples.
 
-### Preprocessing instructions
+### Preprocessing steps
 
 Same steps apply to both IoT-23 and UNSW-NB15 data. 
 These steps are easy to do with [Weka](https://waikato.github.io/weka-wiki/downloading_weka/).
 
-1. Remove irrelevant features not included in the feature table above.
+1. Remove irrelevant features not included in the feature table below.
 
 2. For each remaining nominal attribute:
    - Check if they have many values, e.g., `history` for IoT-23.
-   - Merge low-frequency values (use `MergeManyValues` filter in Weka)
+   - Merge low-frequency values (`MergeManyValues` filter in Weka)
    - After this, at most 2 or 3 distinct values should remain for nominal attributes.
 
-3. One hot encode nominal attributes (iuse `NomialToBinary` filter in Weka)
+3. One hot encode nominal attributes (`NomialToBinary` filter in Weka)
 
 4. Change class labels to numeric values: Benign = `0` and Malicious = `1`.
 
