@@ -1,22 +1,22 @@
 # Evaluating AML Threats in NIDS
 
-This repository implements an evaluation infrastructure to measure success rate of adversarial machine learning evasion
-attacks in network intrusion detection systems (NIDS).
+Implementation of an evaluation system, to measure success rate of adversarial machine learning (AML) evasion
+attacks, in network intrusion detection systems (NIDS).
 
-It enables evaluating classifiers, trained on network data sets, against adversarial black-box evasion attacks. 
-Supported classifiers are Keras deep neural network and a tree-based ensemble learner XGBoost. Both classifiers can be 
-enhanced with an adversarial defense.
-
-This repository provides an implementation to perform experiments in this specified setting. 
+The setup allows to evaluate classifiers, trained on network data sets, against adversarial black-box evasion attacks. 
+Supported classifiers are Keras deep neural network and a tree-based ensemble learner XGBoost. 
+Both classifiers can be enhanced with an adversarial defense.
 
 **Source code organization**
 
-| Directory | Description                                 |
-|:----------|:--------------------------------------------|
-| `aml`     | Implementation source code                  |
-| `config`  | Experiment configuration files              |
-| `data`    | Preprocessed datasets ready for experiments |
-| `result`  | Referential result for comparison           |
+| Directory     | Description                                           |
+|:--------------|:------------------------------------------------------|
+| `.github`     | Actions workflow files                                |
+| `aml`         | Implementation source code                            |
+| `config`      | Experiment configuration files                        |
+| `data`        | Preprocessed datasets ready for experiments           |
+| `result`      | Referential result for comparison                     |
+| `RobustTrees` | (submodule) XGBoost enhanced with adversarial defense |
 
 **Datasets**
 
@@ -36,19 +36,16 @@ The easiest way to run these experiments is using [Docker](https://docs.docker.c
 2. **Launch the container**
 
     ```
-    docker run -v $(pwd)/output:/usr/src/aml-networks/output \
-               -it --rm ghcr.io/iotcad/aml-networks:latest /bin/bash
+    docker run -v $(pwd)/output:/usr/src/aml-networks/output -it --rm ghcr.io/iotcad/aml-networks:latest /bin/bash
     ```
-
-
 
 <details>
 <summary>Alternatively, build a container locally.</summary>
 
 <br/>
 
-NOTE: The Docker environment is intended for amd64 machines only.
-For other architectures, you must [build from source](https://github.com/iotcad/aml-networks/blob/main/.github/CONTRIBUTING.md).
+NOTE: The Docker environment assumes an amd64 host machine.
+For other architectures, [build from source](#native-execution).
 
 1. Clone repository
 
@@ -72,7 +69,7 @@ For other architectures, you must [build from source](https://github.com/iotcad/
 
 ## Reproduce Paper Experiments
 
-The runtime estimates are for 8-core 32 GB RAM Linux machine. Actual time may vary.
+The runtime estimates are for 8-core 32 GB RAM Linux (Ubuntu 20.04) machine. Actual time may vary.
 
 #### 1. Limited model queries 
 
@@ -136,4 +133,67 @@ To see available options for the validator, run:
 python3 -m aml validate --help
 ```
 
-For native execution see [these instructions](https://github.com/iotcad/aml-networks/blob/main/.github/CONTRIBUTING.md).
+## Native Execution
+
+These steps explain how to run experiments from source natively on host machine.
+You should also follow these steps, if you want to prepare a development environment and make code changes.
+
+This implementation is not compatible with Apple M1 machines due to underlying dependency (tensorflow-macos); and
+although it does not prevent most experiments, some issues may surface periodically.
+A machine with AMD64 architecture is recommended for high fidelity.
+
+- :snake: **Required** Python environment: 3.8 or 3.9
+
+- :warning: **Submodule** This repository has a submodule. Clone it [including the submodule](https://stackoverflow.com/a/4438292) typically:
+
+  ```
+  git clone --recurse-submodules https://github.com/iotcad/aml-networks.git
+  ```
+
+**Step 1: Build robust XGBoost**
+
+The evaluation uses a modified version of XGBoost classifier, enhanced with adversarial robustness property. This
+classifier is not installed with the other package dependencies and **must be built
+locally from source** (the submodule `RobustTrees`).
+
+By default, you will need gcc compiler with OpenMP support. Assuming a suitable environment, run:
+
+```
+cd RobustTrees
+make -j4
+```
+
+If the build causes issues, follow [these instructions](https://github.com/chenhongge/RobustTrees/tree/master/python-package#from-source)
+to build it from source, and explore the various build options for different environments.
+
+
+**Step 2: Install dependencies**
+
+Install required Python dependencies.
+
+```
+python3 -m pip install -r requirements-dev.txt
+```
+
+Install XGBoost from the local build location:
+
+```
+python3 -m pip install -e "/path/to/RobustTrees/python-package"
+```
+
+After setup, check the xgboost runtime:
+
+```
+python3 -m pip show xgboost
+```
+
+The version number should be 0.72.
+
+Next, run:
+
+```
+python3 -m aml
+```
+
+This should produce a help prompt with instructions.
+You are now ready to run experiments and make code changes. 
