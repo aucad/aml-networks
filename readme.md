@@ -49,7 +49,7 @@ The easiest way to run these experiments is using [Docker](https://docs.docker.c
 For other hosts, <a href="#native-execution">build from source</a>. **</i>
 </p>
 
-1. Clone repository
+1. Clone the repository
 
    ```
    git clone https://github.com/iotcad/aml-networks.git
