@@ -45,7 +45,7 @@ The easiest way to run these experiments is using [Docker](https://docs.docker.c
 <br/>
 
 <p align="center">
-<i>** This Docker environment assumes amd64 host. 
+<i>** This Docker build assumes amd64 host. 
 For other hosts, <a href="#native-execution">build from source</a>. **</i>
 </p>
 
@@ -196,5 +196,5 @@ Next, run:
 python3 -m aml
 ```
 
-This should produce a help prompt with instructions.
-You are now ready to run experiments and make code changes. 
+This should produce a help prompt.
+You are ready to run experiments and make code changes. 
