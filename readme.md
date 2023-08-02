@@ -44,8 +44,8 @@ The easiest way to run these experiments is using [Docker](https://docs.docker.c
 
 <br/>
 
-NOTE: The Docker environment assumes an amd64 host machine.
-For other architectures, [build from source](#native-execution).
+_ℹ️ Docker environment assumes an amd64 host machine.  
+For other hosts, [build from source](#native-execution)._
 
 1. Clone repository
 
@@ -69,7 +69,7 @@ For other architectures, [build from source](#native-execution).
 
 ## Reproduce Paper Experiments
 
-The runtime estimates are for 8-core 32 GB RAM Linux (Ubuntu 20.04) machine. Actual time may vary.
+The runtime estimates are for 8-core 32 GB RAM Linux (Ubuntu 20.04) machine. Actual times vary.
 
 #### 1. Limited model queries 
 
@@ -140,7 +140,6 @@ You should also follow these steps, if you want to prepare a development environ
 
 This implementation is not compatible with Apple M1 machines due to underlying dependency (tensorflow-macos); and
 although it does not prevent most experiments, some issues may surface periodically.
-A machine with AMD64 architecture is recommended for high fidelity.
 
 - :snake: **Required** Python environment: 3.8 or 3.9
 
@@ -153,8 +152,8 @@ A machine with AMD64 architecture is recommended for high fidelity.
 **Step 1: Build robust XGBoost**
 
 The evaluation uses a modified version of XGBoost classifier, enhanced with adversarial robustness property. This
-classifier is not installed with the other package dependencies and **must be built
-locally from source** (the submodule `RobustTrees`).
+classifier is not installed with the other package dependencies and must be built
+locally from source (the submodule `RobustTrees`).
 
 By default, you will need gcc compiler with OpenMP support. Assuming a suitable environment, run:
 
