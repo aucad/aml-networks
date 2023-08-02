@@ -45,8 +45,8 @@ The easiest way to run these experiments is using [Docker](https://docs.docker.c
 <br/>
 
 <p align="center">
-<i>ℹ️ Docker environment assumes an amd64 host machine. 
-For other hosts, <a href="#native-execution">build from source</a>.</i>
+<i>** Docker environment assumes an amd64 host machine. 
+For other hosts, <a href="#native-execution">build from source</a>. **</i>
 </p>
 
 1. Clone repository
