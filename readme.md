@@ -7,11 +7,6 @@ The system allows to evaluate classifiers trained on network data sets against a
 Supported classifiers are Keras deep neural network and a tree-based ensemble learner XGBoost. 
 Both classifiers can be enhanced with an adversarial defense.
 
-**Datasets**
-
-- [Aposemat IoT-23](https://www.stratosphereips.org/datasets-iot23/) contains IoT network traffic.
-- [UNSW-NB15](https://research.unsw.edu.au/projects/unsw-nb15-dataset) contains traditional network intrusion data.
-
 **Source code organization**
 
 | Directory     | Description                                           |
@@ -23,40 +18,44 @@ Both classifiers can be enhanced with an adversarial defense.
 | `result`      | Referential result for comparison                     |
 | `RobustTrees` | (submodule) XGBoost enhanced with adversarial defense |
 
+**Datasets**
+
+- [Aposemat IoT-23](https://www.stratosphereips.org/datasets-iot23/) contains IoT network traffic.
+- [UNSW-NB15](https://research.unsw.edu.au/projects/unsw-nb15-dataset) contains traditional network intrusion data.
+
+
 ## Getting Started
 
-The easiest way to run these experiments is using [Docker](https://docs.docker.com/engine/install/).
+The easiest way to run experiments is with [Docker](https://docs.docker.com/engine/install/).
 
-1. **Pull the pre-built container image**
+#### 1. Pull the pre-built container image
 
-    ```
-    docker pull ghcr.io/aucad/aml-networks:latest
-    ```
+```
+docker pull ghcr.io/aucad/aml-networks:latest
+```
 
-2. **Launch the container**
+#### 2. Launch the container
 
-    ```
-    docker run -v $(pwd)/output:/usr/src/aml-networks/output -it --rm ghcr.io/aucad/aml-networks:latest /bin/bash
-    ```
+```
+docker run -v $(pwd)/output:/usr/src/aml-networks/output -it --rm ghcr.io/aucad/aml-networks:latest /bin/bash
+```
 
 <details>
 <summary>Alternatively, build a container locally.</summary>
 
 <br/>
 
-<p align="center">
-<i>** This build assumes amd64 host. Otherwise <a href="#native-execution">build from source</a>. **</i>
-</p>
+*This build assumes amd64 host. Otherwise [build from source](#native-execution).*
 
-   Clone repository, build container, then launch the container: 
+Steps: Clone this repository, build a container, then launch the container.
 
-   ```
-   git clone https://github.com/aucad/aml-networks.git
-   
-   cd aml-networks && docker build -t aml-networks . & cd ..
-   
-   docker run -v $(pwd)/output:/usr/src/aml-networks/output -it --rm aml-networks /bin/bash
-   ```
+```
+git clone https://github.com/aucad/aml-networks.git
+
+cd aml-networks && docker build -t aml-networks . & cd ..
+
+docker run -v $(pwd)/output:/usr/src/aml-networks/output -it --rm aml-networks /bin/bash
+```
 
 </details>
 
@@ -71,7 +70,7 @@ make query
 ```
 
 (~24h) This experiment uses the full holdout set and repeats experiments with different model query limits. 
-By default, it runs attacks with max iterations: 2, 5, default (varies by attack). 
+By default, the max iteration limits are: 2, 5, default (varies by attack). 
 
 #### 2. Limited sampled input 
 
@@ -79,8 +78,8 @@ By default, it runs attacks with max iterations: 2, 5, default (varies by attack
 make sample
 ```
 
-(~90 min) Run experiments on limited input size by randomly sampling the holdout set. 
-By default, the sample size n=50 and sampling is repeated 3 times. The result is average of n runs.
+(~90 min) Run experiments using limited input size by randomly sampling the holdout set. 
+By default, the sample size is 50 and sampling is repeated 3 times. The result is the average of 3 runs.
 
 #### 3. Plot results 
 
@@ -88,7 +87,7 @@ By default, the sample size n=50 and sampling is repeated 3 times. The result is
 make plots
 ```
 
-(< 1 min) Plot results of the two previous experiments. The plot data source is the `output` directory. 
+(< 1 min) Plot results of the two previous experiments. The plot data source is `output/` directory. 
 
 
 ## Run Custom Experiments
@@ -132,9 +131,6 @@ You should also follow these steps, if you want to prepare a development environ
 
 **Step 0: Environment setup**
 
-This implementation is not compatible with Apple M1 machines due to underlying dependency (tensorflow-macos); and
-although it does not prevent most experiments, some issues may surface periodically.
-
 - :snake: **Required** Python environment: 3.8 or 3.9
 
 - :warning: **Submodule** This repository has a submodule. [Clone including submodule](https://stackoverflow.com/a/4438292):
@@ -143,22 +139,22 @@ although it does not prevent most experiments, some issues may surface periodica
   git clone --recurse-submodules https://github.com/aucad/aml-networks.git
   ```
 
+This implementation is not compatible with Apple M1 machines due to underlying dependency (tensorflow-macos); and
+although it does not prevent most experiments, some issues may surface periodically.
+
 **Step 1: Build robust XGBoost**
 
-The evaluation uses a modified version of XGBoost classifier, enhanced with adversarial robustness property. This
-classifier is not installed with the other package dependencies and must be built
-locally from source (the submodule `RobustTrees`).
-
-By default, you will need gcc compiler with OpenMP support. Assuming a suitable environment, run:
+The evaluation uses a modified version of XGBoost classifier, enhanced with adversarial robustness property. 
+This classifier is not installed with the other package dependencies and must be built locally from source, i.e. the submodule `RobustTrees`.
+By default, you will need gcc compiler with OpenMP support. 
+To build robust XGBoost, run:
 
 ```
 cd RobustTrees
 make -j4
 ```
 
-If the build causes issues, follow [these instructions](https://github.com/chenhongge/RobustTrees/tree/master/python-package#from-source)
-to build it from source, and explore the various build options for different environments.
-
+If the build causes issues, follow [these instructions](https://github.com/chenhongge/RobustTrees/tree/master/python-package#from-source) to build it from source.
 
 **Step 2: Install dependencies**
 
@@ -174,19 +170,19 @@ Install XGBoost from the local build location:
 python3 -m pip install -e "/path/to/RobustTrees/python-package"
 ```
 
-After setup, check the xgboost runtime:
+**Step 3: (optional) Check installation**
+
+
+Check the xgboost runtime, the version number should be 0.72.
 
 ```
 python3 -m pip show xgboost
 ```
 
-The version number should be 0.72.
-
-Next, run:
+Run a help command, which should produce a help prompt.
 
 ```
 python3 -m aml
 ```
 
-This should produce a help prompt.
 You are ready to run experiments and make code changes. 
