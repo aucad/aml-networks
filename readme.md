@@ -27,37 +27,20 @@ Both classifiers can be enhanced with an adversarial defense.
 ## Getting Started
 
 The easiest way to run experiments is with [Docker][DOC].
+The docker build assumes amd64-compatible host. Otherwise, [build from source](#native-execution).
 
-#### 1. Pull the pre-built container image
+#### 1. Clone repo and build a container image
 
 ```
-docker pull ghcr.io/aucad/aml-networks:latest
+git clone https://github.com/aucad/aml-networks.git && cd aml-networks
+docker build -t aml-networks . 
 ```
 
 #### 2. Launch the container
 
 ```
-docker run -v $(pwd)/output:/usr/src/aml-networks/output -it --rm ghcr.io/aucad/aml-networks:latest /bin/bash
-```
-
-<details>
-<summary>Alternatively, build a container locally.</summary>
-
-<br/>
-
-*This build assumes amd64 host. Otherwise, [build from source](#native-execution).*
-
-Steps: Clone this repository, build a container, then launch the container.
-
-```
-git clone https://github.com/aucad/aml-networks.git && cd aml-networks
-
-docker build -t aml-networks . 
-
 docker run -v $(pwd)/output:/usr/src/aml-networks/output -it --rm aml-networks /bin/bash
 ```
-
-</details>
 
 ## Reproduce Paper Experiments
 
