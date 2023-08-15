@@ -11,14 +11,11 @@ RUN apt update -y \
     && update-alternatives --set python3 /usr/bin/python3.9 \
     && python3 -m pip install --upgrade pip setuptools wheel
 
-RUN mkdir -p /usr/src/aml-networks
-COPY . /usr/src/aml-networks/.
-
-RUN rm -rf "/usr/src/aml-networks/RobustTrees" \
-    && git clone --recurse-submodules https://github.com/chenhongge/RobustTrees.git "/usr/src/aml-networks/RobustTrees" \
+RUN mkdir -p /usr/src/aml-networks \
+    && git clone --recurse-submodules https://github.com/aucad/aml-networks.git "/usr/src/aml-networks" \
     && cd /usr/src/aml-networks/RobustTrees && make -j4
 
-RUN pip3 install -r "/usr/src/aml-networks/requirements.txt" --user
-RUN python3 -m pip install -e "/usr/src/aml-networks/RobustTrees/python-package" --user
+RUN pip3 install -r "/usr/src/aml-networks/requirements.txt" --user \
+    && python3 -m pip install "/usr/src/aml-networks/RobustTrees/python-package" --user
 
 WORKDIR ./usr/src/aml-networks

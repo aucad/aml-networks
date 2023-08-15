@@ -20,13 +20,13 @@ Both classifiers can be enhanced with an adversarial defense.
 
 **Datasets**
 
-- [Aposemat IoT-23](https://www.stratosphereips.org/datasets-iot23/) contains IoT network traffic.
-- [UNSW-NB15](https://research.unsw.edu.au/projects/unsw-nb15-dataset) contains traditional network intrusion data.
+- [Aposemat IoT-23][IOT] contains IoT network traffic.
+- [UNSW-NB15][UNS] contains traditional network intrusion data.
 
 
 ## Getting Started
 
-The easiest way to run experiments is with [Docker](https://docs.docker.com/engine/install/).
+The easiest way to run experiments is with [Docker][DOC].
 
 #### 1. Pull the pre-built container image
 
@@ -45,14 +45,14 @@ docker run -v $(pwd)/output:/usr/src/aml-networks/output -it --rm ghcr.io/aucad/
 
 <br/>
 
-*This build assumes amd64 host. Otherwise [build from source](#native-execution).*
+*This build assumes amd64 host. Otherwise, [build from source](#native-execution).*
 
 Steps: Clone this repository, build a container, then launch the container.
 
 ```
-git clone https://github.com/aucad/aml-networks.git
+git clone https://github.com/aucad/aml-networks.git && cd aml-networks
 
-cd aml-networks && docker build -t aml-networks . & cd ..
+docker build -t aml-networks . 
 
 docker run -v $(pwd)/output:/usr/src/aml-networks/output -it --rm aml-networks /bin/bash
 ```
@@ -133,7 +133,7 @@ You should also follow these steps, if you want to prepare a development environ
 
 - :snake: **Required** Python environment: 3.8 or 3.9
 
-- :warning: **Submodule** This repository has a submodule. [Clone including submodule](https://stackoverflow.com/a/4438292):
+- :warning: **Submodule** This repository has a submodule. Clone it including the submodule:
 
   ```
   git clone --recurse-submodules https://github.com/aucad/aml-networks.git
@@ -154,7 +154,7 @@ cd RobustTrees
 make -j4
 ```
 
-If the build causes issues, follow [these instructions](https://github.com/chenhongge/RobustTrees/tree/master/python-package#from-source) to build it from source.
+If the build causes issues, follow [these instructions][RBT] to build it from source.
 
 **Step 2: Install dependencies**
 
@@ -186,3 +186,8 @@ python3 -m aml
 ```
 
 You are ready to run experiments and make code changes. 
+
+[IOT]: https://www.stratosphereips.org/datasets-iot23/
+[UNS]: https://research.unsw.edu.au/projects/unsw-nb15-dataset
+[DOC]: https://docs.docker.com/engine/install/
+[RBT]: https://github.com/chenhongge/RobustTrees/tree/master/python-package#from-source
