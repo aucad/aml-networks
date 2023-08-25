@@ -57,10 +57,10 @@ def main():
             args.validator, args.dataset, args.capture, args.out)
 
     if is_exp:
-        df_args = yaml.safe_load(
-            Path(Experiment.DEFAULT_CF).read_text())
-        ex_args = yaml.safe_load(
-            Path(args.config).read_text()) if args.config else {}
+        with open(Path(Experiment.DEFAULT_CF), 'r', encoding='utf-8') as fp1:
+            df_args = (yaml.safe_load(fp1))
+        with open(Path(Experiment.DEFAULT_CF), 'r', encoding='utf-8') as fp2:
+            ex_args = (yaml.safe_load(fp2))
         c_args = {**df_args, **ex_args}
         Experiment(utility.ts_str(), c_args, **args.__dict__).run()
 
