@@ -3,7 +3,7 @@
 This repository contains an implementation of an _evaluation system_ to run experiments. An experiment measures success rate of adversarial machine learning (AML) evasion attacks in network intrusion detection systems (NIDS).
 
 The system allows to evaluate classifiers trained on network data sets against adversarial black-box evasion attacks. 
-Supported classifiers are Keras deep neural network and a tree-based ensemble learner XGBoost. 
+Supported classifiers are . 
 Both classifiers can be enhanced with an adversarial defense.
 
 <br/>
@@ -24,6 +24,16 @@ Both classifiers can be enhanced with an adversarial defense.
 
 <br/>
 
+**Experiment Options**
+
+| Option | Description |
+|:---------|:--------|
+| Datasets | [Aposemat IoT-23][IOT] contains IoT network traffic<br/>[UNSW-NB15][UNS] contains traditional network intrusion data |
+| Classfiers | Keras deep neural network (DNN)<br/>A tree-based ensemble learner XGBoost (XGB) |
+| Defenses | For DNN, the defense if Adversarial Training<br/>For XGB, the defense is RobustTrees |
+| Attacks | Zeroth-Order Optimization (ZOO)<br/>HopSkipJump attack (HSJ) |
+
+
 **Source code organization**
 
 | Directory     | Description                                           |
@@ -35,10 +45,6 @@ Both classifiers can be enhanced with an adversarial defense.
 | `result`      | Referential result for comparison                     |
 | `RobustTrees` | (submodule) XGBoost enhanced with adversarial defense |
 
-**Datasets**
-
-- [Aposemat IoT-23][IOT] contains IoT network traffic.
-- [UNSW-NB15][UNS] contains traditional network intrusion data.
 
 
 ## Getting Started
