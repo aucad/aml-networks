@@ -1,9 +1,7 @@
 # Evaluating AML Threats in NIDS
 
 This repository contains an implementation of an _evaluation system_ to run experiments. An experiment measures success rate of adversarial machine learning (AML) evasion attacks in network intrusion detection systems (NIDS).
-
 The system allows to evaluate classifiers trained on network data sets against adversarial black-box evasion attacks. 
-Supported classifiers are . 
 Both classifiers can be enhanced with an adversarial defense.
 
 <br/>
