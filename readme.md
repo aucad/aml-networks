@@ -11,11 +11,11 @@ Both classifiers can be enhanced with an adversarial defense.
 **Experiment Overview**
 
 <pre>
-       ┌───────────────┐           ┌───────────┐          ┌───────────────┐                 
-       │  classifier   │ ────────→ │  Evasion  │ ───────→ │   validator   │ ───────→    valid & evasive
-       │  (+defense)   │ ◁-------- │  attack   │          │ [constraints] │           adversarial examples
-       └───────────────┘   query   └───────────┘          └───────────────┘                              
-INPUT    Training data              Testing data                                            OUTPUT
+┌───────────────┐          ┌───────────┐         ┌───────────────┐                
+│  classifier   │ ───────→ │  Evasion  │ ──────→ │   validator   │ ──────→  valid & evasive
+│  (+defense)   │ ◁------- │  attack   │         │ [constraints] │          adversarial examples
+└───────────────┘   query  └───────────┘         └───────────────┘                             
+ Training data              Testing data 
 </pre>
 
 * The input is NIDS data and the validator is configured to know the applicable domain constraints.
