@@ -1,18 +1,35 @@
 # Evaluating AML Threats in NIDS
 
-Implementation of an evaluation system, to measure success rate of adversarial machine learning (AML) evasion
-attacks, in network intrusion detection systems (NIDS).
+This repository contains an implementation of an _evaluation system_ to run experiments. An experiment measures success rate of adversarial machine learning (AML) evasion attacks in network intrusion detection systems (NIDS).
 
 The system allows to evaluate classifiers trained on network data sets against adversarial black-box evasion attacks. 
 Supported classifiers are Keras deep neural network and a tree-based ensemble learner XGBoost. 
 Both classifiers can be enhanced with an adversarial defense.
+
+<br/>
+
+**Experiment Overview**
+
+<pre>
+       ┌───────────────┐           ┌───────────┐          ┌───────────────┐                 
+       │  classifier   │ ────────→ │  Evasion  │ ───────→ │   validator   │ ───────→    valid & evasive
+       │  (+defense)   │ ◁-------- │  attack   │          │ [constraints] │           adversarial examples
+       └───────────────┘   query   └───────────┘          └───────────────┘                              
+INPUT    Training data              Testing data                                            OUTPUT
+</pre>
+
+* The input is NIDS data and the validator is configured to know the applicable domain constraints.
+* One experiment run repeats 5 times, for different disjoint partitions of the input data, using 5-folds cross-validation.
+* Various metrics are recorded: classifier accuracy, evasions before and after validators, time, etc.
+
+<br/>
 
 **Source code organization**
 
 | Directory     | Description                                           |
 |:--------------|:------------------------------------------------------|
 | `.github`     | Actions workflow files                                |
-| `aml`         | Implementation source code                            |
+| `aml`         | Evaluation system implementation source code          |
 | `config`      | Experiment configuration files                        |
 | `data`        | Preprocessed datasets ready for experiments           |
 | `result`      | Referential result for comparison                     |
@@ -52,8 +69,8 @@ The runtime estimates are for 8-core 32 GB RAM Linux (Ubuntu 20.04) machine. Act
 make query
 ```
 
-(~24h) This experiment uses the full holdout set and repeats experiments with different model query limits. 
-By default, the max iteration limits are: 2, 5, default (varies by attack). 
+(~24h) This experiment uses the full testing set and repeats experiments with different model query limits. 
+By default, the max query limits are: 2, 5, default (varies by attack). 
 
 #### 2. Limited sampled input 
 
@@ -61,7 +78,7 @@ By default, the max iteration limits are: 2, 5, default (varies by attack).
 make sample
 ```
 
-(~90 min) Run experiments using limited input size by randomly sampling the holdout set. 
+(~90 min) Run experiments using limited input size by randomly sampling the testing set. 
 By default, the sample size is 50 and sampling is repeated 3 times. The result is the average of 3 runs.
 
 #### 3. Plot results 
