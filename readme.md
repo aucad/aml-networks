@@ -19,7 +19,7 @@ Both classifiers can be enhanced with an adversarial defense.
 </pre>
 
 * The input is NIDS data and the validator is configured to know the applicable domain constraints.
-* One experiment run repeats 5 times, for different disjoint partitions of the input data, using 5-folds cross-validation.
+* One experiment run repeats 5 times, for different disjoint partitions of the input data.
 * Various metrics are recorded: classifier accuracy, evasions before and after validators, time, etc.
 
 <br/>
