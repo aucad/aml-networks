@@ -11,10 +11,10 @@ Both classifiers can be enhanced with an adversarial defense.
 **Experiment Overview**
 
 <pre>
-┌───────────────┐          ┌───────────┐         ┌───────────────┐                
+┌───────────────┐          ┌───────────┐         ┌───────────────┐          
 │  classifier   │ ───────→ │  Evasion  │ ──────→ │   validator   │ ──────→  valid & evasive
-│  (+defense)   │ ◁------- │  attack   │         │ [constraints] │          adversarial examples
-└───────────────┘   query  └───────────┘         └───────────────┘                             
+│  (+defense)   │ ◁------- │  attack   │         │ [constraints] │          adversarial
+└───────────────┘   query  └───────────┘         └───────────────┘          examples                       
  Training data              Testing data 
 </pre>
 
