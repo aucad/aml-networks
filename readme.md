@@ -6,7 +6,7 @@ Both classifiers can be enhanced with an adversarial defense.
 
 <br/>
 
-**Experiment Overview**
+**Experiment overview**
 
 <pre>
 ┌───────────────┐          ┌───────────┐         ┌───────────────┐          
@@ -22,13 +22,13 @@ Both classifiers can be enhanced with an adversarial defense.
 
 <br/>
 
-**Experiment Options**
+**Experiment options**
 
 | Option | Description |
 |:---------|:--------|
 | Datasets | [Aposemat IoT-23][IOT] contains IoT network traffic<br/>[UNSW-NB15][UNS] contains traditional network intrusion data |
 | Classfiers | Keras deep neural network (DNN)<br/>A tree-based ensemble learner XGBoost (XGB) |
-| Defenses | For DNN, the defense if Adversarial Training<br/>For XGB, the defense is RobustTrees |
+| Defenses | For DNN, the defense is Adversarial Training<br/>For XGB, the defense is RobustTrees |
 | Attacks | Zeroth-Order Optimization (ZOO)<br/>HopSkipJump attack (HSJ) |
 
 
