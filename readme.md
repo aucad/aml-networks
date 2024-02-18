@@ -3,7 +3,6 @@
 This repository contains an implementation of an evaluation system to run experiments. 
 An experiment measures success rate of adversarial machine learning (AML) evasion attacks in network intrusion detection systems (NIDS).
 The system allows to evaluate classifiers trained on network data sets against adversarial black-box evasion attacks. 
-Both classifiers can be enhanced with an adversarial defense.
 
 
 **Experiment options**
@@ -47,7 +46,7 @@ docker run -v $(pwd)/output:/usr/src/aml-networks/output -it --rm aml-networks /
 
 ## Reproduce Paper Experiments
 
-The runtime estimates are for 8-core 32 GB RAM Linux (Ubuntu 20.04) machine. Actual times vary.
+The runtime estimates are for 8-core 32 GB RAM Linux (Ubuntu 20.04) machine, not using docker; actual times may vary.
 
 #### 1. Limited model queries 
 
