@@ -151,6 +151,14 @@ class NbOther(Protocol):
     @staticmethod
     def ensure_attrs():
         """Defaults for undefined attributes."""
+        names = 'smeansz Spkts sbytes dmeansz Dpkts dbytes ' \
+                'swin dwin stcpb dtcpb synack ' \
+                'ackdat tcprtt sjit Sload'
+        return Protocol.kv_dict(names, [0] * 15)
+
+    @staticmethod
+    def ensure_attrs():
+        """Defaults for undefined attributes."""
         names = 'swin dwin stcpb dtcpb synack ackdat tcprtt'
         return Protocol.kv_dict(names, [0] * 7)
 
@@ -211,6 +219,14 @@ class IotTCP(Protocol):
 class IotOther(Protocol):
     def __init__(self, attrs=None, **kwargs):
         super().__init__('oth', self.v_model(attrs, kwargs), **kwargs)
+
+    @staticmethod
+    def ensure_attrs():
+        names = 'conn_state_S0 conn_state_SF conn_state_OTH ' \
+                'conn_state_REJ history_ShADadFf history_DdA ' \
+                'resp_ip_bytes resp_pkts orig_ip_bytes orig_pkts ' \
+                'conn_state_RSTR'
+        return Protocol.kv_dict(names, [0] * 11)
 
     @staticmethod
     def validate(record) -> Tuple[bool, Union[str, None]]:
