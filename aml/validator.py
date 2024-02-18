@@ -151,14 +151,6 @@ class NbOther(Protocol):
     @staticmethod
     def ensure_attrs():
         """Defaults for undefined attributes."""
-        names = 'smeansz Spkts sbytes dmeansz Dpkts dbytes ' \
-                'swin dwin stcpb dtcpb synack ' \
-                'ackdat tcprtt sjit Sload'
-        return Protocol.kv_dict(names, [0] * 15)
-
-    @staticmethod
-    def ensure_attrs():
-        """Defaults for undefined attributes."""
         names = 'swin dwin stcpb dtcpb synack ackdat tcprtt'
         return Protocol.kv_dict(names, [0] * 7)
 
